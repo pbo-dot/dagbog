@@ -22,7 +22,24 @@ function SpeechCtor(): (new () => SpeechRec) | undefined {
 
 export const speechInputAvailable = () => !!SpeechCtor();
 
-export function startDictation(onFinal: (text: string) => void, onInterim: (text: string) => void, onEnd: (err?: string) => void) {
+/** Samler alle resultater i sessionen til én tekst. Chrome på Android sender
+ *  ofte hver ny version af sætningen som et nyt resultat ("Dette", "Dette er",
+ *  "Dette er en" …), så et resultat der starter med det forrige erstatter det. */
+export function joinResults(parts: string[]): string {
+  const out: string[] = [];
+  for (const raw of parts) {
+    const t = raw.trim();
+    if (!t) continue;
+    const prev = out[out.length - 1];
+    if (prev !== undefined && t.toLowerCase().startsWith(prev.toLowerCase())) out[out.length - 1] = t;
+    else if (prev !== undefined && prev.toLowerCase().startsWith(t.toLowerCase())) continue;
+    else out.push(t);
+  }
+  return out.join(' ');
+}
+
+/** onUpdate får hele sessionens endelige tekst + den foreløbige del. */
+export function startDictation(onUpdate: (final: string, interim: string) => void, onEnd: (err?: string) => void) {
   const Ctor = SpeechCtor();
   if (!Ctor) {
     onEnd('Taleindtastning understøttes ikke i denne browser.');
@@ -33,13 +50,17 @@ export function startDictation(onFinal: (text: string) => void, onInterim: (text
   rec.continuous = true;
   rec.interimResults = true;
   rec.onresult = (e) => {
-    let interim = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
+    const finals: string[] = [];
+    const interims: string[] = [];
+    for (let i = 0; i < e.results.length; i++) {
       const r = e.results[i];
-      if (r.isFinal) onFinal(r[0].transcript.trim());
-      else interim += r[0].transcript;
+      (r.isFinal ? finals : interims).push(r[0].transcript);
     }
-    onInterim(interim);
+    const final = joinResults(finals);
+    let interim = joinResults(interims);
+    // Foreløbig tekst der gentager det endelige, vises ikke dobbelt
+    if (final && interim.toLowerCase().startsWith(final.toLowerCase())) interim = interim.slice(final.length).trim();
+    onUpdate(final, interim);
   };
   rec.onerror = (e) => onEnd(e.error === 'not-allowed' ? 'Mikrofonen er ikke tilladt.' : undefined);
   rec.onend = () => onEnd();

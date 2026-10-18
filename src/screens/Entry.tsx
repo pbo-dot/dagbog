@@ -135,13 +135,16 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
     }
     setMicError('');
     setListening(true);
+    // Det dikterede erstatter hele tiden sit eget stykke efter den eksisterende tekst
+    const base = text && !/\s$/.test(text) ? `${text} ` : text;
     stopRef.current = startDictation(
-      (final) => {
-        dirty.current = true;
-        setText((t) => (t && !/\s$/.test(t) ? `${t} ${final}` : t + final));
-        setInterim('');
+      (final, interimText) => {
+        if (final) {
+          dirty.current = true;
+          setText(base + final);
+        }
+        setInterim(interimText);
       },
-      setInterim,
       (err) => {
         setListening(false);
         setInterim('');
