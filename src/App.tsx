@@ -1,0 +1,167 @@
+import { useEffect, useRef, useState } from 'react';
+import { updateAppBadge, waiting } from './lib/device';
+import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
+import { StoreProvider, useStore } from './lib/store';
+import { EntryScreen } from './screens/Entry';
+import { LockScreen, SetupScreen } from './screens/Lock';
+import { DayScreen, MemoryScreen, MonthScreen } from './screens/Memory';
+import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
+import { SettingsScreen } from './screens/Settings';
+import { WeekScreen } from './screens/Week';
+import { go, Icon, useRoute } from './ui';
+
+const TABS = [
+  { id: 'skriv', label: 'Skriv', icon: Icon.pen },
+  { id: 'uge', label: 'Uge', icon: Icon.week },
+  { id: 'husk', label: 'Husk', icon: Icon.memory },
+  { id: 'mennesker', label: 'Mennesker', icon: Icon.people },
+  { id: 'moenstre', label: 'Mønstre', icon: Icon.patterns },
+];
+
+/** Låser efter valgt tid uden aktivitet, og når appen har været skjult. */
+function useAutoLock() {
+  const { data, lock } = useStore();
+  const minutes = data.settings.autoLockMinutes;
+  const hiddenAt = useRef<number | null>(null);
+  useEffect(() => {
+    const limit = minutes * 60_000;
+    let timer: ReturnType<typeof setTimeout>;
+    // Uden aktivitet: lås efter valgt tid (mindst 5 min ved "straks")
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(lock, (minutes === 0 ? 5 : minutes) * 60_000);
+    };
+    const onVis = () => {
+      if (document.hidden) {
+        hiddenAt.current = Date.now();
+        if (minutes === 0) lock();
+      } else if (hiddenAt.current && Date.now() - hiddenAt.current >= limit) {
+        lock();
+      }
+    };
+    const events = ['pointerdown', 'keydown', 'scroll'];
+    events.forEach((e) => window.addEventListener(e, arm, { passive: true }));
+    document.addEventListener('visibilitychange', onVis);
+    arm();
+    return () => {
+      clearTimeout(timer);
+      events.forEach((e) => window.removeEventListener(e, arm));
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [minutes, lock]);
+}
+
+/** Laver ugeopsummering og månedskapitel i baggrunden, når det er tid. */
+function useAutoGenerate() {
+  const store = useStore();
+  const running = useRef(false);
+  const failed = useRef(new Set<string>());
+  const pending = pendingGeneration(store.data);
+  const key = `${pending.week ?? ''}|${pending.month ?? ''}`;
+  useEffect(() => {
+    if (running.current || key === '|') return;
+    running.current = true;
+    (async () => {
+      try {
+        if (pending.week && !failed.current.has(pending.week)) {
+          try {
+            await store.put('weeks', pending.week, await generateWeek(store.data, pending.week, true));
+          } catch {
+            failed.current.add(pending.week);
+          }
+        }
+        if (pending.month && !failed.current.has(pending.month)) {
+          try {
+            await store.put('months', pending.month, await generateMonth(store.data, pending.month));
+          } catch {
+            failed.current.add(pending.month);
+          }
+        }
+      } finally {
+        running.current = false;
+      }
+    })();
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+function Unlocked() {
+  const route = useRoute();
+  const { data } = useStore();
+  const [, tick] = useState(0);
+  useAutoLock();
+  useAutoGenerate();
+
+  // Opdatér prikker hvert minut (påmindelsestidspunkt kan passeres)
+  useEffect(() => {
+    const t = setInterval(() => tick((n) => n + 1), 60_000);
+    return () => clearInterval(t);
+  }, []);
+
+  const w = waiting(data);
+  useEffect(() => {
+    updateAppBadge(waiting(data, new Date(), true));
+    const onHide = () => document.hidden && updateAppBadge(waiting(data, new Date(), true));
+    document.addEventListener('visibilitychange', onHide);
+    return () => document.removeEventListener('visibilitychange', onHide);
+  }, [data]);
+
+  const [tab = 'skriv', a, b] = route;
+  let screen;
+  switch (tab) {
+    case 'skriv': screen = <EntryScreen key={a ?? 'today'} date={a} />; break;
+    case 'uge': screen = <WeekScreen key={a ?? 'now'} id={a} />; break;
+    case 'husk':
+      if (a === 'maaned' && b) screen = <MonthScreen id={b} />;
+      else if (a === 'dag' && b) screen = <DayScreen date={b} />;
+      else screen = <MemoryScreen />;
+      break;
+    case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
+    case 'moenstre': screen = <PatternsScreen />; break;
+    case 'indstillinger': screen = <SettingsScreen />; break;
+    default: screen = <EntryScreen />;
+  }
+
+  const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month };
+
+  return (
+    <>
+      <main className="app">
+        {!a && tab !== 'indstillinger' && (
+          <div className="row" style={{ justifyContent: 'flex-end', margin: '-10px -10px 0 0' }}>
+            <button className="btn ghost" onClick={() => go('indstillinger')} aria-label="Indstillinger">
+              <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{Icon.gear}</span>
+            </button>
+          </div>
+        )}
+        {screen}
+      </main>
+      <nav className="tabbar">
+        <div className="inner">
+          {TABS.map((t) => (
+            <button key={t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => go(t.id)} aria-current={tab === t.id ? 'page' : undefined}>
+              {t.icon}
+              <span>{t.label}</span>
+              {dots[t.id] && <span className="dot" aria-label="Nyt" />}
+            </button>
+          ))}
+        </div>
+      </nav>
+    </>
+  );
+}
+
+function Root() {
+  const { status } = useStore();
+  if (status === 'loading') return null;
+  if (status === 'setup') return <SetupScreen />;
+  if (status === 'locked') return <LockScreen />;
+  return <Unlocked />;
+}
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <Root />
+    </StoreProvider>
+  );
+}
