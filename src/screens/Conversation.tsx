@@ -193,6 +193,26 @@ export function NewConversationScreen() {
     }
   }, []);
 
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  /** Tekst fra en fil, fx en transskription gemt fra Pixel Optager. */
+  const readFile = async (file?: File) => {
+    if (fileRef.current) fileRef.current.value = '';
+    if (!file) return;
+    setError('');
+    if (file.size > 5_000_000) return setError('Filen er for stor.');
+    try {
+      const t = (await file.text()).trim();
+      if (!t) return setError('Filen er tom.');
+      setTranscript((cur) => (cur.trim() ? `${cur.trimEnd()}\n\n${t}` : t));
+      // Datoen fra filen (hvornår den blev gemt), hvis den ligger før i dag
+      const d = toISO(new Date(file.lastModified));
+      if (file.lastModified && d <= today()) setDate(d);
+    } catch {
+      setError('Filen kunne ikke læses. Vælg en tekstfil (.txt).');
+    }
+  };
+
   const paste = async () => {
     setError('');
     try {
@@ -322,7 +342,7 @@ export function NewConversationScreen() {
       <Header back="samtale" />
       <h1>Ny samtale</h1>
       <p className="small muted">
-        Tryk <strong>Optag</strong>, og læg telefonen mellem jer. Eller sæt tekst ind fra fx Pixel Optager. Teksten sendes først til Claude, når du trykker "Lav resumé".
+        Tryk <strong>Optag</strong>, og læg telefonen mellem jer. Eller sæt tekst ind fra fx Pixel Optager (kopiér teksten, eller gem den som tekstfil og tryk "Hent tekstfil"). Teksten sendes først til Claude, når du trykker "Lav resumé".
       </p>
       <label className="field">Dato
         <input type="date" value={date} max={today()} onChange={(e) => e.target.value && setDate(e.target.value)} />
@@ -340,7 +360,11 @@ export function NewConversationScreen() {
         <textarea rows={10} value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Teksten kommer her, når du optager, eller sæt den ind …" />
       </label>
       {interim && <p className="interim">{interim}</p>}
-      <button className="btn" style={{ alignSelf: 'flex-start' }} onClick={paste} disabled={recording}>Sæt ind fra udklipsholder</button>
+      <div className="row wrap">
+        <button className="btn" onClick={paste} disabled={recording}>Sæt ind fra udklipsholder</button>
+        <button className="btn" onClick={() => fileRef.current?.click()} disabled={recording}>Hent tekstfil</button>
+        <input ref={fileRef} type="file" accept=".txt,text/plain,.srt,.vtt,.md" style={{ display: 'none' }} onChange={(e) => readFile(e.target.files?.[0])} />
+      </div>
       <div className="stack-sm">
         <h3>Hvem var med? (valgfrit)</h3>
         <PeopleChips value={peopleIds} onChange={setPeopleIds} />
