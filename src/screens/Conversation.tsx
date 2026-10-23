@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
-import { diaryBlock, matchPeople, personNote, takeSharedText, withConversation } from '../lib/conversation';
+import { calendarLink, diaryBlock, matchPeople, personNote, takeSharedText, withConversation } from '../lib/conversation';
 import { formatFull, formatShort, toISO, today } from '../lib/dates';
 import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { openInboxItem, takeInboxItem, type InboxItem } from '../lib/inbox';
 import { useStore } from '../lib/store';
-import type { Conversation } from '../lib/types';
+import type { CalendarEvent, Conversation } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, Toast, uid } from '../ui';
 
 const lines = (s: string) => s.split('\n').map((l) => l.replace(/^[-–•*]\s*/, '').trim()).filter(Boolean);
@@ -92,7 +92,7 @@ export function ConversationsScreen() {
             En lille app ved navn "DB" med en smiley 😀 som ikon. Skærmen er hvid med en lille prik i toppen: grå når den ikke optager, blå når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
           </p>
           <p className="small muted">
-            Installér den: åbn <strong>pbo-dot.github.io/db</strong> i Chrome, og vælg ⋮ → "Installér app". Når DB åbnes, starter optagelsen med det samme; et tryk på skærmen stopper den.
+            Installér den: åbn <strong>pbo-dot.github.io/db</strong> i Chrome, og vælg ⋮ → "Installér app". Når DB åbnes, starter optagelsen med det samme; et tryk på skærmen stopper den. Hold fingeren på skærmen for at vælge baggrund (ur, sort eller eget billede).
           </p>
           <a className="btn" style={{ alignSelf: 'flex-start' }} href="https://pbo-dot.github.io/db/" target="_blank" rel="noopener">Åbn DB</a>
         </div>
@@ -217,6 +217,7 @@ export function NewConversationScreen() {
         summary: ai.summary,
         agreements: ai.agreements,
         remember: ai.remember,
+        events: ai.events.filter((e) => /^\d{4}-\d{2}-\d{2}$/.test(e.date)),
         people: [...new Set([...peopleIds, ...found])],
         transcript: transcript.trim(),
         byAI: true,
@@ -229,7 +230,7 @@ export function NewConversationScreen() {
   };
 
   const withoutAI = () =>
-    setDraft({ date, title: 'Samtale', summary: '', agreements: [], remember: [], people: peopleIds, transcript: transcript.trim(), byAI: false });
+    setDraft({ date, title: 'Samtale', summary: '', agreements: [], remember: [], events: [], people: peopleIds, transcript: transcript.trim(), byAI: false });
 
   const save = async () => {
     if (!draft) return;
@@ -276,6 +277,25 @@ export function NewConversationScreen() {
         <label className="field">Husk (én pr. linje)
           <textarea rows={3} value={draft.remember.join('\n')} onChange={(e) => set({ remember: lines(e.target.value) })} />
         </label>
+        {(draft.events ?? []).length > 0 && (
+          <div className="stack-sm">
+            <h3>Til kalenderen</h3>
+            <p className="tiny muted">Aftaler med en dato. Når samtalen er gemt, kan du lægge dem i din kalender med ét tryk.</p>
+            {(draft.events ?? []).map((ev, i) => {
+              const setEv = (patch: Partial<CalendarEvent>) => set({ events: (draft.events ?? []).map((x, j) => (j === i ? { ...x, ...patch } : x)) });
+              return (
+                <div key={i} className="card stack-sm">
+                  <input type="text" value={ev.title} onChange={(e) => setEv({ title: e.target.value })} aria-label="Titel" />
+                  <div className="row">
+                    <input type="date" value={ev.date} onChange={(e) => e.target.value && setEv({ date: e.target.value })} aria-label="Dato" />
+                    <input type="time" value={ev.time} onChange={(e) => setEv({ time: e.target.value })} aria-label="Klokkeslæt" />
+                  </div>
+                  <button className="btn ghost tiny" style={{ alignSelf: 'flex-start' }} onClick={() => set({ events: (draft.events ?? []).filter((_, j) => j !== i) })}>Fjern</button>
+                </div>
+              );
+            })}
+          </div>
+        )}
         <div className="stack-sm">
           <h3>Hvem var med?</h3>
           <PeopleChips value={draft.people} onChange={(ids) => set({ people: ids })} />
@@ -370,6 +390,26 @@ export function ConversationScreen({ id }: { id: string }) {
         <section className="stack-sm">
           <h3>Husk</h3>
           <ul className="serif" style={{ margin: 0, paddingLeft: 20 }}>{c.remember.map((a, i) => <li key={i}>{a}</li>)}</ul>
+        </section>
+      )}
+      {(c.events ?? []).length > 0 && (
+        <section className="stack-sm">
+          <h3>Til kalenderen</h3>
+          <div className="list">
+            {(c.events ?? []).map((ev, i) => (
+              <div key={i} className="list-item">
+                <span className="tiny muted">
+                  {formatFull(ev.date)}{ev.time ? ` kl. ${ev.time.replace(':', '.')}` : ' (hele dagen)'}{ev.place ? ` · ${ev.place}` : ''}
+                </span>
+                <span className="serif">{ev.title}</span>
+                <a className="btn small" style={{ alignSelf: 'flex-start' }} href={calendarLink(ev, `Fra samtalen "${c.title}".`)}
+                  {...(/Android/i.test(navigator.userAgent) ? {} : { target: '_blank', rel: 'noopener' })}>
+                  Tilføj til kalender
+                </a>
+              </div>
+            ))}
+          </div>
+          <p className="tiny muted">Kalenderen åbner med aftalen udfyldt. Den gemmes først, når du trykker Gem der.</p>
         </section>
       )}
       {c.byAI && <p className="tiny muted">Resuméet er lavet af Claude ud fra teksten fra optagelsen. Det kan indeholde fejl; tjek teksten, hvis noget er vigtigt.</p>}

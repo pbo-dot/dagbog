@@ -71,6 +71,15 @@ export interface Person {
   updatedAt: number;
 }
 
+/** En aftale med tidspunkt fra en samtale, som kan lægges i kalenderen. */
+export interface CalendarEvent {
+  title: string;
+  date: string; // YYYY-MM-DD
+  time: string; // HH:MM, eller tom for hele dagen
+  durationMinutes: number;
+  place: string;
+}
+
 /** En samtale, fx tekst fra Pixel Optager, med Claudes resumé. */
 export interface Conversation {
   id: string;
@@ -80,6 +89,7 @@ export interface Conversation {
   agreements: string[]; // aftaler
   remember: string[]; // ting at huske eller gøre
   people: string[]; // id'er på personer under Mennesker
+  events?: CalendarEvent[]; // aftaler med dato, der kan lægges i kalenderen
   transcript: string; // den indsatte tekst
   byAI: boolean;
   createdAt: number;

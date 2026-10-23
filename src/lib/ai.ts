@@ -222,6 +222,17 @@ const ConversationSchema = z.object({
   agreements: z.array(z.string()).describe('Konkrete aftaler: hvem gør hvad og hvornår. Tom liste hvis ingen.'),
   remember: z.array(z.string()).describe('Ting personen skal huske eller gøre, fx tider, navne, medicin, beskeder. Tom liste hvis ingen.'),
   people: z.array(z.string()).describe('Navne på dem, personen talte med eller som blev nævnt. Kun navne, der står i teksten.'),
+  events: z
+    .array(
+      z.object({
+        title: z.string().describe('Kort titel til kalenderen, fx "Kontrol hos lægen"'),
+        date: z.string().describe('Datoen YYYY-MM-DD. Regn relative angivelser ("i morgen", "om tre uger", "på fredag") ud fra samtalens dato.'),
+        time: z.string().describe('Klokkeslæt HH:MM, eller tom streng hvis der ikke blev nævnt et klokkeslæt'),
+        durationMinutes: z.number().describe('Varighed i minutter; 60 hvis det ikke blev nævnt'),
+        place: z.string().describe('Sted, eller tom streng'),
+      }),
+    )
+    .describe('Aftaler og begivenheder med en dato (nævnt direkte eller som "om tre uger"), som personen kan lægge i sin kalender. Kun det, der står i teksten. Tom liste hvis ingen.'),
 });
 export type ConversationAI = z.infer<typeof ConversationSchema>;
 
@@ -235,7 +246,7 @@ const MEMORY_HELPER = `Du hjælper en person med at huske sine samtaler. Persone
 export async function summarizeConversation(settings: Settings, date: string, transcript: string, knownPeople: string[]): Promise<ConversationAI> {
   const text = transcript.trim();
   if (!text) throw new AIError('Der er ingen tekst at lave et resumé af.');
-  const prompt = `Samtalen er fra ${formatFull(date)}.${knownPeople.length ? `\nKendte personer i dagbogen (brug samme stavemåde, hvis de nævnes): ${knownPeople.join(', ')}.` : ''}
+  const prompt = `Samtalen er fra ${formatFull(date)} (${date}).${knownPeople.length ? `\nKendte personer i dagbogen (brug samme stavemåde, hvis de nævnes): ${knownPeople.join(', ')}.` : ''}
 
 TEKST FRA OPTAGELSEN:
 ${text.length > 400_000 ? text.slice(0, 400_000) : text}

@@ -1,5 +1,5 @@
 // Samtaler: resuméet lægges i dagens dagbog og som noter på de personer, der var med.
-import type { Conversation, Draft, Entry, Person } from './types';
+import type { CalendarEvent, Conversation, Draft, Entry, Person } from './types';
 
 /** Teksten, der lægges i dagbogen for samtalens dag. */
 export function diaryBlock(c: Conversation, people: Record<string, Person>): string {
@@ -66,4 +66,57 @@ export function takeSharedText(): string | null {
   const t = shared;
   shared = null;
   return t;
+}
+
+// ---------- Kalender ----------
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+/** Start og slut for en aftale; uden klokkeslæt er det en heldagsaftale. */
+function eventTimes(ev: CalendarEvent) {
+  const [y, m, d] = ev.date.split('-').map(Number);
+  const tm = /^(\d{1,2}):(\d{2})$/.exec(ev.time.trim());
+  if (!tm) return { allDay: true as const, y, m, d };
+  const start = new Date(y, m - 1, d, Number(tm[1]), Number(tm[2]));
+  const end = new Date(start.getTime() + Math.max(5, ev.durationMinutes || 60) * 60_000);
+  return { allDay: false as const, start, end };
+}
+
+const stamp = (t: Date) =>
+  `${t.getFullYear()}${pad2(t.getMonth() + 1)}${pad2(t.getDate())}T${pad2(t.getHours())}${pad2(t.getMinutes())}00`;
+
+/** Google Kalender i browseren med aftalen udfyldt; den gemmes først, når man trykker Gem. */
+export function googleCalendarUrl(ev: CalendarEvent, details: string): string {
+  const t = eventTimes(ev);
+  let dates: string;
+  if (t.allDay) {
+    const next = new Date(t.y, t.m - 1, t.d + 1);
+    dates = `${t.y}${pad2(t.m)}${pad2(t.d)}/${next.getFullYear()}${pad2(next.getMonth() + 1)}${pad2(next.getDate())}`;
+  } else {
+    dates = `${stamp(t.start)}/${stamp(t.end)}`;
+  }
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: ev.title, dates, details });
+  if (ev.place) q.set('location', ev.place);
+  if (!t.allDay) q.set('ctz', Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Copenhagen');
+  return `https://calendar.google.com/calendar/render?${q.toString()}`;
+}
+
+/**
+ * På Android: åbner telefonens kalender-app med aftalen udfyldt (den gemmes
+ * først, når man trykker Gem). Ellers Google Kalender i browseren.
+ */
+export function calendarLink(ev: CalendarEvent, details: string, android = /Android/i.test(navigator.userAgent)): string {
+  const web = googleCalendarUrl(ev, details);
+  if (!android) return web;
+  const t = eventTimes(ev);
+  const begin = t.allDay ? Date.UTC(t.y, t.m - 1, t.d) : t.start.getTime();
+  const end = t.allDay ? Date.UTC(t.y, t.m - 1, t.d + 1) : t.end.getTime();
+  const e = encodeURIComponent;
+  return (
+    'intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.item/event;' +
+    `S.title=${e(ev.title)};S.description=${e(details)};` +
+    (ev.place ? `S.eventLocation=${e(ev.place)};` : '') +
+    `l.beginTime=${begin};l.endTime=${end};B.allDay=${t.allDay};` +
+    `S.browser_fallback_url=${e(web)};end`
+  );
 }
