@@ -34,7 +34,7 @@ const minutes = (ms: number) => {
 /** Er optageren stadig i gang med denne optagelse? */
 const stillRecording = (i: InboxItem) => !i.done && Date.now() - i.updatedAt < 30_000;
 
-/** Optagelser fra Optager-appen, der venter på et resumé. */
+/** Optagelser fra DB-appen, der venter på et resumé. */
 function InboxList() {
   const store = useStore();
   const [confirm, setConfirm] = useState<string | null>(null);
@@ -86,13 +86,13 @@ export function ConversationsScreen() {
       <button className="btn primary" onClick={() => go('samtale/ny')}>Ny samtale</button>
       <InboxList />
       <details className="small">
-        <summary className="muted">Optager-appen (optag uden at åbne dagbogen)</summary>
+        <summary className="muted">DB-appen 😀 (optag uden at åbne dagbogen)</summary>
         <div className="stack-sm" style={{ marginTop: 8 }}>
           <p className="small muted">
-            En lille app med kun en knap: grå når den ikke optager, rød når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
+            En lille app ved navn "DB" med en smiley 😀 som eneste knap: grå kant når den ikke optager, rød når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
           </p>
           <p className="small muted">Installér den: tryk på knappen, og vælg i Chrome-menuen (⋮) "Installér app" eller "Føj til startskærm".</p>
-          <a className="btn" style={{ alignSelf: 'flex-start' }} href="./optag/" target="_blank" rel="noopener">Åbn Optager</a>
+          <a className="btn" style={{ alignSelf: 'flex-start' }} href="./optag/" target="_blank" rel="noopener">Åbn DB</a>
         </div>
       </details>
       <h3>Gemte samtaler</h3>
@@ -179,7 +179,7 @@ export function NewConversationScreen() {
 
   const clock = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`;
 
-  // Tekst delt fra en anden app (fx Pixel Optager), eller en optagelse fra Optager-appen
+  // Tekst delt fra en anden app (fx Pixel Optager), eller en optagelse fra DB-appen
   useEffect(() => {
     const t = takeSharedText();
     if (t) setTranscript(t);

@@ -1,4 +1,4 @@
-// Optager: en neutral app med én knap. Grå = optager ikke, rød = optager.
+// DB: en neutral optager-app med én knap (en smiley). Grå kant = optager ikke, rød = optager.
 // Teksten krypteres med dagbogens offentlige nøgle og kan kun læses i Dagbog.
 import { keepScreenOn, speechInputAvailable, startLongDictation } from './lib/device';
 import { inboxPublicKey, putInbox, type InboxItem } from './lib/inbox';
@@ -70,7 +70,7 @@ async function start() {
       show(false);
       if (it && it.text.trim()) {
         await save({ ...it, done: true });
-        msg.textContent = err ? `${err} Det optagne er gemt.` : 'Gemt. Åbn Dagbog for at lave et resumé.';
+        msg.textContent = err ? `${err} Det optagne er gemt.` : 'Gemt ✓';
       } else {
         msg.textContent = err ?? 'Der blev ikke opfanget noget tale.';
       }
@@ -95,7 +95,7 @@ document.addEventListener('visibilitychange', () => {
   }
   publicKey = await inboxPublicKey();
   if (!publicKey) {
-    msg.textContent = 'Åbn Dagbog og lås op én gang først. Så kan Optager bruges.';
+    msg.textContent = 'Ikke klar endnu: åbn hovedappen og lås den op én gang.';
     return;
   }
   button.disabled = false;
