@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Entry, type Settings } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type Person, type Settings } from './types';
 
 export class AIError extends Error {}
 
@@ -263,6 +263,80 @@ Lav et resumé af samtalen.`;
     });
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave et resumé af samtalen.');
     return res.parsed_output;
+  } catch (e) {
+    explain(e);
+  }
+}
+
+// ---------------- Spørg dagbogen ----------------
+
+const AskSchema = z.object({
+  answer: z.string().describe('Svaret i ren tekst på naturligt dansk (et til fire korte afsnit adskilt af tomme linjer). Ingen overskrifter eller punktlister, medmindre spørgsmålet beder om en liste.'),
+  sources: z.array(
+    z.object({
+      date: z.string().describe('Datoen YYYY-MM-DD for en dag eller samtale, svaret bygger på'),
+      note: z.string().describe('Meget kort om hvad der står den dag (højst 10 ord)'),
+    }),
+  ).describe('De vigtigste dage, svaret bygger på, højst 8, ældste først. Tom liste hvis dagbogen ikke siger noget om det.'),
+});
+export type AskAI = z.infer<typeof AskSchema>;
+
+const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres private dagbog, deres samtaler og deres noter om mennesker. Du får hele materialet nedenfor.
+
+- Svar kun ud fra materialet. Står der ikke noget om det, så sig det ærligt og kort, fx "Det har du ikke skrevet noget om."
+- Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
+- Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
+- Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
+- Svar i du-form, enkelt og varmt, uden at finde på noget.`;
+
+function conversationBlock(c: Conversation, people: Record<string, Person>): string {
+  const names = c.people.map((id) => people[id]?.name).filter(Boolean);
+  const transcript = c.transcript.length > 3000 ? `${c.transcript.slice(0, 3000)} …` : c.transcript;
+  return [
+    `### Samtale ${c.date}: ${c.title}${names.length ? ` (med ${names.join(', ')})` : ''}`,
+    c.summary,
+    c.agreements.length ? `Aftaler: ${c.agreements.join('; ')}` : '',
+    c.remember.length ? `Husk: ${c.remember.join('; ')}` : '',
+    transcript ? `Tekst fra optagelsen: ${transcript}` : '',
+  ].filter(Boolean).join('\n');
+}
+
+function personBlock(p: Person): string {
+  return [`### ${p.name}`, p.important ? `Vigtigt for dem lige nu: ${p.important}` : '', ...p.notes.map((n) => `${n.date}: ${n.text}`)]
+    .filter(Boolean)
+    .join('\n');
+}
+
+/** Materialet til "Spørg dagbogen": dage, samtaler og personer. Nyeste beholdes, hvis det er for langt. */
+export function askCorpus(entries: Entry[], conversations: Conversation[], people: Record<string, Person>): string {
+  const days = [...entries].sort((a, b) => a.date.localeCompare(b.date)).map((e) => entryBlock(e));
+  const talks = [...conversations].sort((a, b) => a.date.localeCompare(b.date)).map((c) => conversationBlock(c, people));
+  const persons = Object.values(people).map(personBlock);
+  let corpus = `## DAGBOG\n\n${days.join('\n\n')}`;
+  if (talks.length) corpus += `\n\n## SAMTALER\n\n${talks.join('\n\n')}`;
+  if (persons.length) corpus += `\n\n## MENNESKER\n\n${persons.join('\n\n')}`;
+  return corpus.length > 2_000_000 ? corpus.slice(corpus.length - 2_000_000) : corpus;
+}
+
+export async function askDiary(settings: Settings, corpus: string, today: string, history: ChatTurn[], question: string): Promise<AskAI> {
+  const messages: Anthropic.Beta.BetaMessageParam[] = [
+    ...history.map((t) => ({ role: t.role, content: t.text })),
+    { role: 'user', content: question },
+  ];
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.analysisModel,
+      max_tokens: 16000,
+      output_config: { effort: 'medium', format: betaZodOutputFormat(AskSchema) },
+      system: [
+        { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).` },
+        { type: 'text', text: corpus, cache_control: { type: 'ephemeral' } },
+      ],
+      messages,
+      ...fallbackFor(settings.ai.analysisModel),
+    });
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke svare på dette.');
+    return { ...res.parsed_output, sources: res.parsed_output.sources.slice(0, 8) };
   } catch (e) {
     explain(e);
   }

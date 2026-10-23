@@ -3,6 +3,7 @@ import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
+import { AskScreen } from './screens/Ask';
 import { ConversationScreen, ConversationsScreen, NewConversationScreen } from './screens/Conversation';
 import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
@@ -132,6 +133,7 @@ function Unlocked() {
       break;
     case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
     case 'moenstre': screen = <PatternsScreen />; break;
+    case 'spoerg': screen = <AskScreen />; break;
     case 'samtale':
       if (a === 'ny') screen = <NewConversationScreen />;
       else if (a) screen = <ConversationScreen id={a} />;
@@ -142,7 +144,7 @@ function Unlocked() {
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month || inbox.some((i) => i.done) };
-  const activeTab = tab === 'samtale' ? 'husk' : tab;
+  const activeTab = tab === 'samtale' || tab === 'spoerg' ? 'husk' : tab;
 
   return (
     <>
