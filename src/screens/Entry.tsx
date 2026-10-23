@@ -271,7 +271,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
         </div>
         {photoError && <p className="tiny error">{photoError}</p>}
-        <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => go('samtale/ny')}>+ Samtale (resumé af en optaget samtale)</button>
+        <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => go('samtale/ny')}>+ Samtale (optag en samtale og få et resumé)</button>
       </div>
 
       <div className="stack-sm">

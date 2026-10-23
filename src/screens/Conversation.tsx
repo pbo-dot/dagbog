@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
 import { diaryBlock, matchPeople, personNote, takeSharedText, withConversation } from '../lib/conversation';
 import { formatFull, formatShort, today } from '../lib/dates';
+import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { Conversation } from '../lib/types';
@@ -33,7 +34,7 @@ export function ConversationsScreen() {
       <Header back="husk" />
       <h1>Samtaler</h1>
       <p className="small muted">
-        Optag en samtale med Pixel Optager, og del teksten til Dagbog (Del → Dagbog), eller kopiér den og tryk "Ny samtale".
+        Tryk "Ny samtale" og "Optag samtale", eller optag med Pixel Optager og del teksten til Dagbog (Del → Dagbog).
         Claude laver et resumé med aftaler og ting at huske, og det lægges i dagbogen.
       </p>
       <button className="btn primary" onClick={() => go('samtale/ny')}>Ny samtale</button>
@@ -67,6 +68,57 @@ export function NewConversationScreen() {
   const [toDiary, setToDiary] = useState(true);
   const [toPeople, setToPeople] = useState(true);
   const canAI = aiReady(data);
+  const [recording, setRecording] = useState(false);
+  const [interim, setInterim] = useState('');
+  const [startedAt, setStartedAt] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const stopRef = useRef<(() => void) | null>(null);
+  const releaseRef = useRef<(() => void) | null>(null);
+
+  // Stop optagelsen, hvis skærmen forlades
+  useEffect(() => () => {
+    stopRef.current?.();
+    releaseRef.current?.();
+    setKeepUnlocked(false);
+  }, []);
+
+  // Uret under optagelse
+  useEffect(() => {
+    if (!recording) return;
+    const t = setInterval(() => setElapsed(Math.floor((Date.now() - startedAt) / 1000)), 1000);
+    return () => clearInterval(t);
+  }, [recording, startedAt]);
+
+  const record = async () => {
+    if (recording) {
+      stopRef.current?.();
+      return;
+    }
+    setError('');
+    const base = transcript.trim() ? `${transcript.trimEnd()}\n\n` : '';
+    setRecording(true);
+    setStartedAt(Date.now());
+    setElapsed(0);
+    setKeepUnlocked(true);
+    releaseRef.current = await keepScreenOn();
+    stopRef.current = startLongDictation(
+      (text, interimText) => {
+        if (text) setTranscript(base + text);
+        setInterim(interimText);
+      },
+      (err) => {
+        setRecording(false);
+        setInterim('');
+        stopRef.current = null;
+        releaseRef.current?.();
+        releaseRef.current = null;
+        setKeepUnlocked(false);
+        if (err) setError(err);
+      },
+    );
+  };
+
+  const clock = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`;
 
   // Tekst delt fra en anden app (fx Pixel Optager)
   useEffect(() => {
@@ -180,14 +232,26 @@ export function NewConversationScreen() {
     <div className="stack" style={{ gap: 18 }}>
       <Header back="samtale" />
       <h1>Ny samtale</h1>
-      <p className="small muted">Sæt teksten fra optagelsen ind (fx fra Pixel Optager: Del → Kopiér tekst). Teksten sendes til Claude, når du trykker "Lav resumé".</p>
+      <p className="small muted">
+        Tryk <strong>Optag</strong>, og læg telefonen mellem jer. Eller sæt tekst ind fra fx Pixel Optager. Teksten sendes først til Claude, når du trykker "Lav resumé".
+      </p>
       <label className="field">Dato
         <input type="date" value={date} max={today()} onChange={(e) => e.target.value && setDate(e.target.value)} />
       </label>
+      {speechInputAvailable() && (
+        <div className="stack-sm">
+          <button className={`btn ${recording ? 'danger' : 'primary'} block`} onClick={record}>
+            <span style={{ width: 20, height: 20, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{recording ? Icon.stop : Icon.mic}</span>
+            {recording ? `Stop optagelsen (${clock})` : 'Optag samtale'}
+          </button>
+          {recording && <p className="tiny muted">Optager … Hold skærmen tændt og Dagbog åben; telefonen går ikke i dvale, og dagbogen låser sig ikke imens.</p>}
+        </div>
+      )}
       <label className="field">Tekst fra optagelsen
-        <textarea rows={10} value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Sæt teksten ind her …" />
+        <textarea rows={10} value={transcript} onChange={(e) => setTranscript(e.target.value)} placeholder="Teksten kommer her, når du optager, eller sæt den ind …" />
       </label>
-      <button className="btn" style={{ alignSelf: 'flex-start' }} onClick={paste}>Sæt ind fra udklipsholder</button>
+      {interim && <p className="interim">{interim}</p>}
+      <button className="btn" style={{ alignSelf: 'flex-start' }} onClick={paste} disabled={recording}>Sæt ind fra udklipsholder</button>
       <div className="stack-sm">
         <h3>Hvem var med? (valgfrit)</h3>
         <PeopleChips value={peopleIds} onChange={setPeopleIds} />
@@ -196,11 +260,11 @@ export function NewConversationScreen() {
       {error && <p className="error">{error}</p>}
       <div className="row wrap">
         {canAI && (
-          <button className="btn primary" onClick={summarize} disabled={busy || !transcript.trim()}>
+          <button className="btn primary" onClick={summarize} disabled={busy || recording || !transcript.trim()}>
             {busy ? <><span className="spinner" /> Claude læser …</> : 'Lav resumé'}
           </button>
         )}
-        <button className={canAI ? 'btn ghost' : 'btn primary'} onClick={withoutAI} disabled={busy || !transcript.trim()}>Gem uden AI</button>
+        <button className={canAI ? 'btn ghost' : 'btn primary'} onClick={withoutAI} disabled={busy || recording || !transcript.trim()}>Gem uden AI</button>
       </div>
     </div>
   );

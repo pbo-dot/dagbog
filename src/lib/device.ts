@@ -68,6 +68,100 @@ export function startDictation(onUpdate: (final: string, interim: string) => voi
   return () => rec.stop();
 }
 
+/**
+ * Lang optagelse (fx en samtale): talegenkendelsen i Chrome stopper af sig selv
+ * efter en pause, så den startes igen, indtil brugeren trykker stop. Teksten fra
+ * hver omgang lægges efter den forrige. Returnerer en stop-funktion.
+ */
+export function startLongDictation(
+  onUpdate: (text: string, interim: string) => void,
+  onEnd: (err?: string) => void,
+) {
+  const Ctor = SpeechCtor();
+  if (!Ctor) {
+    onEnd('Optagelse understøttes ikke i denne browser.');
+    return () => {};
+  }
+  let stopped = false;
+  let done = '';
+  let failures = 0;
+  let rec: SpeechRec | null = null;
+  const finish = (err?: string) => {
+    if (stopped) return;
+    stopped = true;
+    rec = null;
+    onEnd(err);
+  };
+  const run = () => {
+    if (stopped) return;
+    const r = new Ctor();
+    rec = r;
+    r.lang = 'da-DK';
+    r.continuous = true;
+    r.interimResults = true;
+    let session = '';
+    r.onresult = (e) => {
+      const finals: string[] = [];
+      const interims: string[] = [];
+      for (let i = 0; i < e.results.length; i++) (e.results[i].isFinal ? finals : interims).push(e.results[i][0].transcript);
+      session = joinResults(finals);
+      let interim = joinResults(interims);
+      if (session && interim.toLowerCase().startsWith(session.toLowerCase())) interim = interim.slice(session.length).trim();
+      failures = 0;
+      onUpdate([done, session].filter(Boolean).join(' '), interim);
+    };
+    r.onerror = (e) => {
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') finish('Mikrofonen er ikke tilladt.');
+      else if (e.error !== 'no-speech' && e.error !== 'aborted') failures++;
+    };
+    r.onend = () => {
+      done = [done, session].filter(Boolean).join(' ');
+      if (stopped) return;
+      if (failures >= 5) return finish('Talegenkendelsen svarer ikke. Er du online?');
+      setTimeout(run, 250);
+    };
+    try {
+      r.start();
+    } catch {
+      setTimeout(run, 500);
+    }
+  };
+  run();
+  return () => {
+    const r = rec;
+    finish();
+    r?.stop();
+  };
+}
+
+// ---------- Hold skærmen tændt og dagbogen åben ----------
+
+let keepOpen = false;
+
+/** Under en optagelse må dagbogen ikke låse sig selv. */
+export function setKeepUnlocked(v: boolean) {
+  keepOpen = v;
+}
+
+export function keepUnlocked() {
+  return keepOpen;
+}
+
+interface WakeLockLike {
+  release(): Promise<void>;
+}
+
+/** Holder skærmen tændt, indtil den returnerede funktion kaldes. */
+export async function keepScreenOn(): Promise<() => void> {
+  try {
+    const nav = navigator as Navigator & { wakeLock?: { request(type: 'screen'): Promise<WakeLockLike> } };
+    const lock = await nav.wakeLock?.request('screen');
+    return () => void lock?.release().catch(() => {});
+  } catch {
+    return () => {};
+  }
+}
+
 // ---------- Oplæsning ----------
 
 export const speechOutputAvailable = () => 'speechSynthesis' in window;

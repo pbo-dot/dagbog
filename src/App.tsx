@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { updateAppBadge, waiting } from './lib/device';
+import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
@@ -31,7 +31,7 @@ function useAutoLock() {
     // Uden aktivitet: lås efter valgt tid (mindst 5 min ved "straks")
     const arm = () => {
       clearTimeout(timer);
-      timer = setTimeout(lock, (minutes === 0 ? 5 : minutes) * 60_000);
+      timer = setTimeout(() => (keepUnlocked() ? arm() : lock()), (minutes === 0 ? 5 : minutes) * 60_000);
     };
     const onVis = () => {
       if (document.hidden) {
