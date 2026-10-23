@@ -6,7 +6,7 @@ import {
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Draft, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Conversation, type Draft, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -15,16 +15,17 @@ export interface Data {
   months: Record<string, MonthChapter>;
   people: Record<string, Person>;
   patterns: Record<string, Pattern>;
+  conversations: Record<string, Conversation>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,
@@ -109,9 +110,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const d = emptyData();
     // Fotos indlæses ikke her, men først når de skal vises
     for (const [k, sealed] of await recordAllExcept('photo:')) {
+      // Nøgler er "samling:id" eller bare "settings", "meta" og "draft" (uden kolon)
       const sep = k.indexOf(':');
-      const kind = k.slice(0, sep);
-      const id = k.slice(sep + 1);
+      const kind = sep < 0 ? k : k.slice(0, sep);
+      const id = sep < 0 ? '' : k.slice(sep + 1);
       try {
         const value = await openJSON<unknown>(key, sealed);
         if ((COLLECTIONS as string[]).includes(kind)) {
