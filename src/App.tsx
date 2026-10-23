@@ -98,6 +98,14 @@ function Unlocked() {
     if (hasSharedText()) go('samtale/ny');
   }, []);
 
+  // Nye optagelser fra Optager-appen hentes, når dagbogen kommer frem igen.
+  const { refreshInbox, inbox } = useStore();
+  useEffect(() => {
+    const on = () => !document.hidden && refreshInbox();
+    document.addEventListener('visibilitychange', on);
+    return () => document.removeEventListener('visibilitychange', on);
+  }, [refreshInbox]);
+
   // Opdatér prikker hvert minut (påmindelsestidspunkt kan passeres)
   useEffect(() => {
     const t = setInterval(() => tick((n) => n + 1), 60_000);
@@ -133,7 +141,7 @@ function Unlocked() {
     default: screen = <EntryScreen />;
   }
 
-  const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month };
+  const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month || inbox.some((i) => i.done) };
   const activeTab = tab === 'samtale' ? 'husk' : tab;
 
   return (

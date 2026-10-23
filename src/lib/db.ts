@@ -101,3 +101,9 @@ export async function recordKeysWithPrefix(prefix: string): Promise<string[]> {
   const keys = await wrap(s.getAllKeys(IDBKeyRange.bound(prefix, `${prefix}\uffff`)));
   return keys.map(String);
 }
+
+export async function vaultKeysWithPrefix(prefix: string): Promise<string[]> {
+  const s = await store('vault', 'readonly');
+  const keys = await wrap(s.getAllKeys(IDBKeyRange.bound(prefix, `${prefix}￿`)));
+  return keys.map(String);
+}

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111111" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="./icon-192.png" />
+    <title>Optager</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #111; color: #9ca3af; font: 15px system-ui, sans-serif; }
+      body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; user-select: none; -webkit-tap-highlight-color: transparent; }
+      #rec { width: min(60vw, 60vh); height: min(60vw, 60vh); border-radius: 50%; border: 0; background: #4b5563; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s, transform .1s; }
+      #rec:active { transform: scale(.97); }
+      #rec:disabled { opacity: .35; }
+      #rec svg { width: 38%; height: 38%; }
+      body.on #rec { background: #dc2626; animation: pulse 1.6s ease-in-out infinite; }
+      @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, .55); } 50% { box-shadow: 0 0 0 22px rgba(220, 38, 38, 0); } }
+      #time { min-height: 1.4em; font-variant-numeric: tabular-nums; letter-spacing: .05em; }
+      #msg { min-height: 1.4em; max-width: 80vw; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <button id="rec" aria-label="Start optagelse" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21" /></svg>
+    </button>
+    <div id="time"></div>
+    <div id="msg"></div>
+    <script type="module" src="/src/recorder.ts"></script>
+  </body>
+</html>

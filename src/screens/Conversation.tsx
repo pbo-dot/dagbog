@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
 import { diaryBlock, matchPeople, personNote, takeSharedText, withConversation } from '../lib/conversation';
-import { formatFull, formatShort, today } from '../lib/dates';
+import { formatFull, formatShort, toISO, today } from '../lib/dates';
 import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
+import { openInboxItem, takeInboxItem, type InboxItem } from '../lib/inbox';
 import { useStore } from '../lib/store';
 import type { Conversation } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, Toast, uid } from '../ui';
@@ -25,6 +26,51 @@ function PeopleChips({ value, onChange }: { value: string[]; onChange: (ids: str
   );
 }
 
+const minutes = (ms: number) => {
+  const m = Math.round(ms / 60_000);
+  return m < 1 ? 'under 1 min' : `${m} min`;
+};
+
+/** Er optageren stadig i gang med denne optagelse? */
+const stillRecording = (i: InboxItem) => !i.done && Date.now() - i.updatedAt < 30_000;
+
+/** Optagelser fra Optager-appen, der venter på et resumé. */
+function InboxList() {
+  const store = useStore();
+  const [confirm, setConfirm] = useState<string | null>(null);
+  if (!store.inbox.length) return null;
+  return (
+    <section className="stack-sm">
+      <h3>Nye optagelser</h3>
+      <div className="list">
+        {store.inbox.map((i) => (
+          <div key={i.id} className="list-item">
+            <button className="link" style={{ textAlign: 'left' }} disabled={stillRecording(i)}
+              onClick={() => { openInboxItem(i); go('samtale/ny'); }}>
+              <span className="tiny muted">
+                {new Date(i.startedAt).toLocaleString('da-DK', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                {' · '}{minutes(i.updatedAt - i.startedAt)}
+                {stillRecording(i) ? ' · optager stadig …' : !i.done ? ' · afbrudt' : ''}
+              </span>
+              <span className="small serif" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {i.text || 'Ingen tekst blev opfanget.'}
+              </span>
+            </button>
+            {confirm === i.id ? (
+              <div className="row">
+                <button className="btn danger small" onClick={() => store.removeInbox(i.id)}>Ja, slet optagelsen</button>
+                <button className="btn ghost small" onClick={() => setConfirm(null)}>Fortryd</button>
+              </div>
+            ) : (
+              <button className="btn ghost tiny" style={{ alignSelf: 'flex-start' }} onClick={() => setConfirm(i.id)}>Slet</button>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /** Liste over gemte samtaler. */
 export function ConversationsScreen() {
   const { conversations, people } = useStore().data;
@@ -38,6 +84,18 @@ export function ConversationsScreen() {
         Claude laver et resumé med aftaler og ting at huske, og det lægges i dagbogen.
       </p>
       <button className="btn primary" onClick={() => go('samtale/ny')}>Ny samtale</button>
+      <InboxList />
+      <details className="small">
+        <summary className="muted">Optager-appen (optag uden at åbne dagbogen)</summary>
+        <div className="stack-sm" style={{ marginTop: 8 }}>
+          <p className="small muted">
+            En lille app med kun en knap: grå når den ikke optager, rød når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
+          </p>
+          <p className="small muted">Installér den: tryk på knappen, og vælg i Chrome-menuen (⋮) "Installér app" eller "Føj til startskærm".</p>
+          <a className="btn" style={{ alignSelf: 'flex-start' }} href="./optag/" target="_blank" rel="noopener">Åbn Optager</a>
+        </div>
+      </details>
+      <h3>Gemte samtaler</h3>
       <div className="list">
         {list.length === 0 && <p className="small muted">Ingen samtaler endnu.</p>}
         {list.map((c) => (
@@ -67,6 +125,7 @@ export function NewConversationScreen() {
   const [draft, setDraft] = useState<Omit<Conversation, 'id' | 'createdAt'> | null>(null);
   const [toDiary, setToDiary] = useState(true);
   const [toPeople, setToPeople] = useState(true);
+  const [inboxId, setInboxId] = useState<string | null>(null);
   const canAI = aiReady(data);
   const [recording, setRecording] = useState(false);
   const [interim, setInterim] = useState('');
@@ -120,10 +179,16 @@ export function NewConversationScreen() {
 
   const clock = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`;
 
-  // Tekst delt fra en anden app (fx Pixel Optager)
+  // Tekst delt fra en anden app (fx Pixel Optager), eller en optagelse fra Optager-appen
   useEffect(() => {
     const t = takeSharedText();
     if (t) setTranscript(t);
+    const item = takeInboxItem();
+    if (item) {
+      setTranscript(item.text);
+      setDate(toISO(new Date(item.startedAt)));
+      setInboxId(item.id);
+    }
   }, []);
 
   const paste = async () => {
@@ -181,6 +246,8 @@ export function NewConversationScreen() {
           if (p) await store.put('people', pid, { ...p, notes: [{ id: uid(), date: c.date, text: personNote(c) }, ...p.notes], updatedAt: Date.now() });
         }
       }
+      // Optagelsen er nu en samtale og fjernes fra indbakken
+      if (inboxId) await store.removeInbox(inboxId);
       go(`samtale/${c.id}`);
     } catch {
       setError('Samtalen kunne ikke gemmes.');

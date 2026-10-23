@@ -148,7 +148,8 @@ function Search() {
 }
 
 export function MemoryScreen() {
-  const data = useStore().data;
+  const { data, inbox } = useStore();
+  const inboxCount = inbox.filter((i) => i.done).length;
   const empty = Object.keys(data.entries).length === 0;
   return (
     <div className="stack" style={{ gap: 24 }}>
@@ -160,7 +161,8 @@ export function MemoryScreen() {
           <strong>Samtaler</strong>
           <span className="tiny muted">{Object.keys(data.conversations).length || 'Ny'}</span>
         </div>
-        <span className="small muted">Resuméer af samtaler med aftaler og ting at huske</span>
+        <span className="small muted" style={{ display: 'block' }}>Resuméer af samtaler med aftaler og ting at huske</span>
+        {inboxCount > 0 && <span className="small" style={{ display: 'block', color: 'var(--accent)', marginTop: 4 }}>{inboxCount} {inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}</span>}
       </button>
       <section className="stack-sm">
         <h3>Tidslinje</h3>

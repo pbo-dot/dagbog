@@ -3,6 +3,7 @@ import {
   createDek, enrollBiometrics, openJSON, sealJSON, unwrapWithBiometrics, unwrapWithPin, wrapWithPin,
   type BioWrap, type PinWrap,
 } from './crypto';
+import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox';
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
@@ -66,6 +67,10 @@ interface StoreApi {
   removePhoto(id: string): Promise<void>;
   allPhotos(): Promise<Record<string, Photo>>;
   wipe(): Promise<void>;
+  /** Optagelser fra Optager-appen, der venter. */
+  inbox: InboxItem[];
+  refreshInbox(): Promise<void>;
+  removeInbox(id: string): Promise<void>;
 }
 
 const Ctx = createContext<StoreApi | null>(null);
@@ -95,6 +100,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [hasBio, setHasBio] = useState(false);
   const [pinKind, setPinKind] = useState<PinKind>({ kind: 'digits', length: 6 });
   const keyRef = useRef<CryptoKey | null>(null);
+  const inboxKeyRef = useRef<CryptoKey | null>(null);
+  const [inbox, setInbox] = useState<InboxItem[]>([]);
+
+  /** Sætter nøgleparret til Optager-appen op (første gang) og læser indbakken. */
+  const openInboxFor = useCallback(async (key: CryptoKey) => {
+    try {
+      const priv = await ensureInboxKeys(
+        async () => {
+          const sealed = await recordGet('inboxkey');
+          return sealed ? (await openJSON<{ pkcs8: string }>(key, sealed)).pkcs8 : undefined;
+        },
+        async (pkcs8) => recordPut('inboxkey', await sealJSON(key, { pkcs8 })),
+      );
+      inboxKeyRef.current = priv;
+      setInbox(await readInbox(priv));
+    } catch (e) {
+      console.error('Indbakken kunne ikke åbnes', e);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -128,7 +152,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     keyRef.current = key;
     setData(d);
     setStatus('unlocked');
-  }, []);
+    await openInboxFor(key);
+  }, [openInboxFor]);
 
   const write = useCallback(async (k: string, value: unknown) => {
     const key = keyRef.current;
@@ -162,6 +187,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       await requestPersistence();
       setData(d);
       setStatus('unlocked');
+      await openInboxFor(dek);
     },
 
     async unlockPin(pin) {
@@ -189,6 +215,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     lock() {
       keyRef.current = null;
+      inboxKeyRef.current = null;
+      setInbox([]);
       clearPhotoCache();
       setData(emptyData());
       setStatus('locked');
@@ -305,15 +333,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return out;
     },
 
+    inbox,
+
+    async refreshInbox() {
+      if (inboxKeyRef.current) setInbox(await readInbox(inboxKeyRef.current));
+    },
+
+    async removeInbox(id) {
+      await deleteInbox(id);
+      setInbox((list) => list.filter((x) => x.id !== id));
+    },
+
     async wipe() {
       await wipeEverything();
+      inboxKeyRef.current = null;
+      setInbox([]);
       clearPhotoCache();
       keyRef.current = null;
       setData(emptyData());
       setHasBio(false);
       setStatus('setup');
     },
-  }), [status, data, hasBio, pinKind, load, write]);
+  }), [status, data, hasBio, pinKind, load, write, inbox, openInboxFor]);
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>;
 }
