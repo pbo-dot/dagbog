@@ -89,10 +89,12 @@ export function ConversationsScreen() {
         <summary className="muted">DB-appen 😀 (optag uden at åbne dagbogen)</summary>
         <div className="stack-sm" style={{ marginTop: 8 }}>
           <p className="small muted">
-            En lille app ved navn "DB" med en smiley 😀 som eneste knap: grå kant når den ikke optager, rød når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
+            En lille app ved navn "DB" med en smiley 😀 som ikon. Skærmen er hvid med en lille prik i toppen: grå når den ikke optager, blå når den optager. Teksten låses, så kun Dagbog kan læse den, og den dukker op her under "Nye optagelser".
           </p>
-          <p className="small muted">Installér den: tryk på knappen, og vælg i Chrome-menuen (⋮) "Installér app" eller "Føj til startskærm".</p>
-          <a className="btn" style={{ alignSelf: 'flex-start' }} href="./optag/" target="_blank" rel="noopener">Åbn DB</a>
+          <p className="small muted">
+            Installér den: åbn <strong>pbo-dot.github.io/db</strong> i Chrome, og vælg ⋮ → "Installér app". Når DB åbnes, starter optagelsen med det samme; et tryk på skærmen stopper den.
+          </p>
+          <a className="btn" style={{ alignSelf: 'flex-start' }} href="https://pbo-dot.github.io/db/" target="_blank" rel="noopener">Åbn DB</a>
         </div>
       </details>
       <h3>Gemte samtaler</h3>
