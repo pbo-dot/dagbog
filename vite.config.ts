@@ -18,6 +18,12 @@ export default defineConfig({
         start_url: './',
         scope: './',
         display: 'standalone',
+        // "Del → Dagbog" fra andre apps (fx Pixel Optager) åbner en ny samtale
+        share_target: {
+          action: './',
+          method: 'GET',
+          params: { title: 'title', text: 'text', url: 'url' },
+        },
         background_color: '#f7f4ee',
         theme_color: '#f7f4ee',
         icons: [

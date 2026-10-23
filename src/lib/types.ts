@@ -71,6 +71,20 @@ export interface Person {
   updatedAt: number;
 }
 
+/** En samtale, fx tekst fra Pixel Optager, med Claudes resumé. */
+export interface Conversation {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  summary: string;
+  agreements: string[]; // aftaler
+  remember: string[]; // ting at huske eller gøre
+  people: string[]; // id'er på personer under Mennesker
+  transcript: string; // den indsatte tekst
+  byAI: boolean;
+  createdAt: number;
+}
+
 export interface Pattern {
   id: string;
   text: string;

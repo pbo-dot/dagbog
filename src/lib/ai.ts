@@ -2,7 +2,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
-import { formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
+import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
 import { moodLabel, type ChatTurn, type Entry, type Settings } from './types';
 
 export class AIError extends Error {}
@@ -209,6 +209,49 @@ export async function searchDiary(settings: Settings, query: string, entries: En
     });
     if (res.stop_reason === 'refusal' || !res.parsed_output) return [];
     return res.parsed_output.results;
+  } catch (e) {
+    explain(e);
+  }
+}
+
+// ---------------- Samtale ----------------
+
+const ConversationSchema = z.object({
+  title: z.string().describe('Kort titel på samtalen (2-6 ord), fx "Lægebesøg om knæet"'),
+  summary: z.string().describe('Resumé i ren tekst (2-5 sætninger): hvad samtalen handlede om, og hvad der blev sagt af betydning'),
+  agreements: z.array(z.string()).describe('Konkrete aftaler: hvem gør hvad og hvornår. Tom liste hvis ingen.'),
+  remember: z.array(z.string()).describe('Ting personen skal huske eller gøre, fx tider, navne, medicin, beskeder. Tom liste hvis ingen.'),
+  people: z.array(z.string()).describe('Navne på dem, personen talte med eller som blev nævnt. Kun navne, der står i teksten.'),
+});
+export type ConversationAI = z.infer<typeof ConversationSchema>;
+
+const MEMORY_HELPER = `Du hjælper en person med at huske sine samtaler. Personen har optaget en samtale, og du får teksten fra talegenkendelsen. Teksten kan have fejl, mangle tegnsætning og ikke angive, hvem der siger hvad.
+
+- Skriv på enkelt, klart dansk i du-form ("Du talte med …").
+- Hold dig strengt til det, der står. Find ikke på navne, tal, tider eller aftaler. Er noget uklart eller måske hørt forkert, så sig det ("det lød som …").
+- Det vigtigste er aftaler og ting at huske: tider, datoer, navne, medicin, hvem der gør hvad.
+- Kort og konkret. Ingen emojis.`;
+
+export async function summarizeConversation(settings: Settings, date: string, transcript: string, knownPeople: string[]): Promise<ConversationAI> {
+  const text = transcript.trim();
+  if (!text) throw new AIError('Der er ingen tekst at lave et resumé af.');
+  const prompt = `Samtalen er fra ${formatFull(date)}.${knownPeople.length ? `\nKendte personer i dagbogen (brug samme stavemåde, hvis de nævnes): ${knownPeople.join(', ')}.` : ''}
+
+TEKST FRA OPTAGELSEN:
+${text.length > 400_000 ? text.slice(0, 400_000) : text}
+
+Lav et resumé af samtalen.`;
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.analysisModel,
+      max_tokens: 16000,
+      system: MEMORY_HELPER,
+      output_config: { effort: 'medium', format: betaZodOutputFormat(ConversationSchema) },
+      messages: [{ role: 'user', content: prompt }],
+      ...fallbackFor(settings.ai.analysisModel),
+    });
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave et resumé af samtalen.');
+    return res.parsed_output;
   } catch (e) {
     explain(e);
   }

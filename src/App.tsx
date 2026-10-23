@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
+import { hasSharedText } from './lib/conversation';
+import { ConversationScreen, ConversationsScreen, NewConversationScreen } from './screens/Conversation';
 import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
 import { DayScreen, MemoryScreen, MonthScreen } from './screens/Memory';
@@ -91,6 +93,11 @@ function Unlocked() {
   useAutoLock();
   useAutoGenerate();
 
+  // Tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
+  useEffect(() => {
+    if (hasSharedText()) go('samtale/ny');
+  }, []);
+
   // Opdatér prikker hvert minut (påmindelsestidspunkt kan passeres)
   useEffect(() => {
     const t = setInterval(() => tick((n) => n + 1), 60_000);
@@ -117,11 +124,17 @@ function Unlocked() {
       break;
     case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
     case 'moenstre': screen = <PatternsScreen />; break;
+    case 'samtale':
+      if (a === 'ny') screen = <NewConversationScreen />;
+      else if (a) screen = <ConversationScreen id={a} />;
+      else screen = <ConversationsScreen />;
+      break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     default: screen = <EntryScreen />;
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month };
+  const activeTab = tab === 'samtale' ? 'husk' : tab;
 
   return (
     <>
@@ -138,7 +151,7 @@ function Unlocked() {
       <nav className="tabbar">
         <div className="inner">
           {TABS.map((t) => (
-            <button key={t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => go(t.id)} aria-current={tab === t.id ? 'page' : undefined}>
+            <button key={t.id} className={`tab ${activeTab === t.id ? 'on' : ''}`} onClick={() => go(t.id)} aria-current={activeTab === t.id ? 'page' : undefined}>
               {t.icon}
               <span>{t.label}</span>
               {dots[t.id] && <span className="dot" aria-label="Nyt" />}

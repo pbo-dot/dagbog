@@ -155,6 +155,13 @@ export function MemoryScreen() {
       <Header title="Husk" />
       {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
       <ThatDay />
+      <button className="card tappable" onClick={() => go('samtale')}>
+        <div className="row between">
+          <strong>Samtaler</strong>
+          <span className="tiny muted">{Object.keys(data.conversations).length || 'Ny'}</span>
+        </div>
+        <span className="small muted">Resuméer af samtaler med aftaler og ting at huske</span>
+      </button>
       <section className="stack-sm">
         <h3>Tidslinje</h3>
         <Timeline />
@@ -257,6 +264,23 @@ export function MonthScreen({ id }: { id: string }) {
   );
 }
 
+function DayConversations({ date }: { date: string }) {
+  const list = Object.values(useStore().data.conversations).filter((c) => c.date === date);
+  if (!list.length) return null;
+  return (
+    <section className="stack-sm">
+      <h3>Samtaler</h3>
+      <div className="list">
+        {list.map((c) => (
+          <button key={c.id} className="list-item" onClick={() => go(`samtale/${c.id}`)}>
+            <strong>{c.title}</strong>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function DayScreen({ date }: { date: string }) {
   const store = useStore();
   const e = store.data.entries[date];
@@ -283,6 +307,7 @@ export function DayScreen({ date }: { date: string }) {
       {e.question && <p className="small muted serif" style={{ fontStyle: 'italic' }}>{e.question}</p>}
       <p className="prose">{e.text}</p>
       <PhotoGallery ids={e.photos ?? []} />
+      <DayConversations date={date} />
       {good.length > 0 && (
         <section className="stack-sm">
           <h3>Tre gode ting</h3>
