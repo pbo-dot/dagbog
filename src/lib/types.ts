@@ -19,6 +19,7 @@ export interface Entry {
   tags: string[];
   good: string[]; // op til tre gode ting
   question?: string;
+  photos?: string[]; // id'er på krypterede fotos (hentes ved behov)
   createdAt: number;
   updatedAt: number;
 }
@@ -114,6 +115,19 @@ export interface Draft {
   mood?: MoodId | null;
   tags: string[];
   good: string[];
+  photos?: string[];
+}
+
+export const MAX_PHOTOS = 3;
+
+export interface Photo {
+  id: string;
+  date: string;
+  mime: string;
+  data: string; // base64
+  width: number;
+  height: number;
+  createdAt: number;
 }
 
 export interface Meta {

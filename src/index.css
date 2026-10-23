@@ -262,3 +262,20 @@ button.list-item:first-child { border-top: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media print { .tabbar, .save-bar { display: none; } }
+
+/* Fotos */
+.photo-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.photo-thumb { position: relative; width: 76px; height: 76px; border-radius: 10px; overflow: hidden; background: var(--surface-2); flex: none; }
+.photo-thumb img, .photo-thumb .photo-loading { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-thumb .remove { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(0,0,0,0.55); color: #fff; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; }
+.photo-add { width: 76px; height: 76px; border-radius: 10px; border: 1px dashed var(--line); background: transparent; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 0.72rem; flex: none; }
+.photo-add svg { width: 22px; height: 22px; }
+.photo-gallery { display: flex; flex-direction: column; gap: 10px; }
+.photo-large { width: 100%; border-radius: var(--radius); display: block; cursor: zoom-in; background: var(--surface-2); }
+.photo-large.photo-loading { aspect-ratio: 4 / 3; }
+.photo-loading { background: var(--surface-2); }
+.photo-viewer { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+.photo-viewer img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.photo-close { position: absolute; top: calc(env(safe-area-inset-top) + 12px); right: 12px; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; font-size: 26px; line-height: 1; }
+.memory-photo { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; display: block; }
+.memory-photo.photo-loading { height: 120px; border-radius: 10px; }

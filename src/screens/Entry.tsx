@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { addDays, formatLong, today, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
+import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
-import type { Entry, MoodId } from '../lib/types';
-import { go, Icon, MoodPicker, Toast } from '../ui';
+import { MAX_PHOTOS, type Entry, type MoodId } from '../lib/types';
+import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
 
 const QUESTIONS = [
   'Hvad fyldte mest i dag?',
@@ -60,6 +61,10 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   const [interim, setInterim] = useState('');
   const [micError, setMicError] = useState('');
   const [pickDate, setPickDate] = useState(false);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState('');
+  const fileRef = useRef<HTMLInputElement>(null);
   const stopRef = useRef<(() => void) | null>(null);
   const loadedFor = useRef<string | null>(null);
   const dirty = useRef(false);
@@ -75,6 +80,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
     const g = src?.good ?? [];
     setGood([g[0] ?? '', g[1] ?? '', g[2] ?? '']);
     setShowGood(g.some(Boolean));
+    setPhotos(src?.photos ?? []);
     dirty.current = false;
   }, [date, draft, existing]);
 
@@ -82,10 +88,10 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   useEffect(() => {
     if (!dirty.current) return;
     const t = setTimeout(() => {
-      store.saveDraft({ date, text, mood, tags, good }).catch(() => {});
+      store.saveDraft({ date, text, mood, tags, good, photos }).catch(() => {});
     }, 800);
     return () => clearTimeout(t);
-  }, [date, text, mood, tags, good]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [date, text, mood, tags, good, photos]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => () => stopRef.current?.(), []);
 
@@ -107,17 +113,60 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
       mood,
       tags,
       good: good.map((g) => g.trim()).filter(Boolean),
+      photos,
       question: existing?.question ?? questionFor(date),
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
     await store.put('entries', date, entry);
+    // Fotos fjernet fra en gemt dag slettes først nu
+    for (const pid of existing?.photos ?? []) {
+      if (!photos.includes(pid)) {
+        await store.removePhoto(pid);
+        forgetPhoto(pid);
+      }
+    }
     if (data.draft) await store.saveDraft(null);
     if (data.meta.skipped.includes(date)) {
       await store.saveMeta({ ...data.meta, skipped: data.meta.skipped.filter((d) => d !== date) });
     }
     dirty.current = false;
     setToast(existing ? 'Opdateret' : 'Gemt');
+  };
+
+  const addPhotos = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setPhotoError('');
+    setPhotoBusy(true);
+    const added: string[] = [];
+    try {
+      for (const file of Array.from(files).slice(0, MAX_PHOTOS - photos.length)) {
+        const id = uid();
+        const photo = { id, date, ...(await compressImage(file)), createdAt: Date.now() };
+        await store.putPhoto(photo);
+        cachePhoto(photo);
+        added.push(id);
+      }
+    } catch {
+      setPhotoError('Billedet kunne ikke indlæses.');
+    } finally {
+      if (added.length) {
+        dirty.current = true;
+        setPhotos((p) => [...p, ...added].slice(0, MAX_PHOTOS));
+      }
+      setPhotoBusy(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  };
+
+  const removePhoto = async (id: string) => {
+    dirty.current = true;
+    setPhotos((p) => p.filter((x) => x !== id));
+    // Ikke gemt endnu → slet med det samme. Ellers ved næste gem.
+    if (!existing?.photos?.includes(id)) {
+      await store.removePhoto(id);
+      forgetPhoto(id);
+    }
   };
 
   const skipToday = async () => {
@@ -203,6 +252,25 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="stack-sm">
+        <div className="photo-row">
+          {photos.map((id) => (
+            <div key={id} className="photo-thumb">
+              <PhotoImg id={id} alt="Foto" />
+              <button className="remove" onClick={() => removePhoto(id)} aria-label="Fjern foto">×</button>
+            </div>
+          ))}
+          {photos.length < MAX_PHOTOS && (
+            <button className="photo-add" onClick={() => fileRef.current?.click()} disabled={photoBusy} aria-label="Tilføj foto">
+              {photoBusy ? <span className="spinner" /> : Icon.camera}
+              <span>{photoBusy ? 'Gemmer …' : 'Tilføj foto'}</span>
+            </button>
+          )}
+          <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
+        </div>
+        {photoError && <p className="tiny error">{photoError}</p>}
       </div>
 
       <div className="stack-sm">

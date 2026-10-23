@@ -1,4 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { usePhotoUrl } from './lib/photos';
+import { useStore } from './lib/store';
 import { MOODS, type MoodId } from './lib/types';
 
 // ---------- Hash-router ----------
@@ -45,6 +47,7 @@ export const Icon = {
   face: P(<><path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2" /><path d="M9 9.5v1M15 9.5v1M12 9.5V13h-1M9.5 16a3.5 3.5 0 005 0" /></>),
   search: P(<><circle cx="11" cy="11" r="6.5" /><path d="M20 20l-4.2-4.2" /></>),
   plus: P(<path d="M12 5v14M5 12h14" />),
+  camera: P(<><path d="M4 8.5A1.5 1.5 0 015.5 7h2.2l1.5-2h5.6l1.5 2h2.2A1.5 1.5 0 0120 8.5v9a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5z" /><circle cx="12" cy="12.5" r="3.5" /></>),
   sparkle: P(<path d="M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z" />),
 };
 
@@ -133,4 +136,32 @@ export function DoubleConfirm({ label, first, second, onConfirm, className = 'bt
 
 export function uid(): string {
   return crypto.randomUUID();
+}
+
+// ---------- Fotos ----------
+
+export function PhotoImg({ id, className, onClick, alt = '' }: { id: string; className?: string; onClick?: () => void; alt?: string }) {
+  const { getPhoto } = useStore();
+  const url = usePhotoUrl(id, getPhoto);
+  if (!url) return <div className={`${className ?? ''} photo-loading`} />;
+  return <img src={url} className={className} alt={alt} onClick={onClick} loading="lazy" decoding="async" />;
+}
+
+/** Store billeder på en dag – tryk for fuld skærm. */
+export function PhotoGallery({ ids }: { ids: string[] }) {
+  const [open, setOpen] = useState<string | null>(null);
+  if (!ids.length) return null;
+  return (
+    <>
+      <div className="photo-gallery">
+        {ids.map((id) => <PhotoImg key={id} id={id} className="photo-large" onClick={() => setOpen(id)} alt="Foto fra dagen" />)}
+      </div>
+      {open && (
+        <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={() => setOpen(null)}>
+          <PhotoImg id={open} alt="Foto fra dagen" />
+          <button className="photo-close" aria-label="Luk">×</button>
+        </div>
+      )}
+    </>
+  );
 }

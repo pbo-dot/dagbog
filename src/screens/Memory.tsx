@@ -5,7 +5,7 @@ import { aiReady, generateMonth, monthEntries, monthThemes } from '../lib/genera
 import { excerpt, highlight, localSearch, tokenize } from '../lib/search';
 import { useStore } from '../lib/store';
 import type { Entry } from '../lib/types';
-import { DoubleConfirm, go, Header, Icon, MoodTag } from '../ui';
+import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -36,6 +36,7 @@ function ThatDay() {
       {cards.map((c) => (
         <button key={c.label} className="card tappable memory-card" onClick={() => go(`husk/dag/${c.entry.date}`)}>
           <span className="tiny muted">{c.label}{c.entry.date !== c.iso ? ' (cirka)' : ''}</span>
+          {c.entry.photos?.[0] && <PhotoImg id={c.entry.photos[0]} className="memory-photo" alt="" />}
           <span className="when">{formatFull(c.entry.date)}</span>
           <span className="serif small" style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{c.entry.text}</span>
           <span style={{ marginTop: 'auto' }}><MoodTag mood={c.entry.mood} /></span>
@@ -281,6 +282,7 @@ export function DayScreen({ date }: { date: string }) {
       </div>
       {e.question && <p className="small muted serif" style={{ fontStyle: 'italic' }}>{e.question}</p>}
       <p className="prose">{e.text}</p>
+      <PhotoGallery ids={e.photos ?? []} />
       {good.length > 0 && (
         <section className="stack-sm">
           <h3>Tre gode ting</h3>

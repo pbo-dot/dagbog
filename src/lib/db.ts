@@ -79,3 +79,25 @@ export async function requestPersistence(): Promise<void> {
     /* ikke afgørende */
   }
 }
+
+export async function recordGet(key: string): Promise<Sealed | undefined> {
+  return wrap((await store('records', 'readonly')).get(key)) as Promise<Sealed | undefined>;
+}
+
+/** Alle poster undtagen dem med et givent præfiks (fx fotos, der hentes ved behov). */
+export async function recordAllExcept(prefix: string): Promise<Array<[string, Sealed]>> {
+  const s = await store('records', 'readonly');
+  const ranges = [IDBKeyRange.upperBound(prefix, true), IDBKeyRange.lowerBound(`${prefix}\uffff`, true)];
+  const out: Array<[string, Sealed]> = [];
+  for (const r of ranges) {
+    const [keys, values] = await Promise.all([wrap(s.getAllKeys(r)), wrap(s.getAll(r))]);
+    keys.forEach((k, i) => out.push([String(k), values[i] as Sealed]));
+  }
+  return out;
+}
+
+export async function recordKeysWithPrefix(prefix: string): Promise<string[]> {
+  const s = await store('records', 'readonly');
+  const keys = await wrap(s.getAllKeys(IDBKeyRange.bound(prefix, `${prefix}\uffff`)));
+  return keys.map(String);
+}

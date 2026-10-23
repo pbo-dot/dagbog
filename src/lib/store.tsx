@@ -3,9 +3,10 @@ import {
   createDek, enrollBiometrics, openJSON, sealJSON, unwrapWithBiometrics, unwrapWithPin, wrapWithPin,
   type BioWrap, type PinWrap,
 } from './crypto';
-import { recordAll, recordDelete, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
+import { clearPhotoCache } from './photos';
+import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Draft, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Draft, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -58,7 +59,11 @@ interface StoreApi {
   saveSettings(s: Settings): Promise<void>;
   saveMeta(m: Meta): Promise<void>;
   saveDraft(d: Draft | null): Promise<void>;
-  replaceAll(d: Partial<Data>): Promise<void>;
+  replaceAll(d: Partial<Data>, photos?: Record<string, Photo>): Promise<void>;
+  putPhoto(p: Photo): Promise<void>;
+  getPhoto(id: string): Promise<Photo | undefined>;
+  removePhoto(id: string): Promise<void>;
+  allPhotos(): Promise<Record<string, Photo>>;
   wipe(): Promise<void>;
 }
 
@@ -102,7 +107,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const load = useCallback(async (key: CryptoKey) => {
     const d = emptyData();
-    for (const [k, sealed] of await recordAll()) {
+    // Fotos indlæses ikke her, men først når de skal vises
+    for (const [k, sealed] of await recordAllExcept('photo:')) {
       const sep = k.indexOf(':');
       const kind = k.slice(0, sep);
       const id = k.slice(sep + 1);
@@ -181,6 +187,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     lock() {
       keyRef.current = null;
+      clearPhotoCache();
       setData(emptyData());
       setStatus('locked');
     },
@@ -217,6 +224,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     async remove(c, id) {
+      if (c === 'entries') {
+        for (const pid of data.entries[id]?.photos ?? []) await recordDelete(`photo:${pid}`);
+      }
       await recordDelete(`${c}:${id}`);
       setData((d) => {
         const next = { ...d[c] };
@@ -241,7 +251,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setData((d) => ({ ...d, draft }));
     },
 
-    async replaceAll(incoming) {
+    async replaceAll(incoming, photos) {
+      for (const [id, p] of Object.entries(photos ?? {})) await write(`photo:${id}`, p);
       const next = { ...data };
       for (const c of COLLECTIONS) {
         const items = incoming[c] as Record<string, unknown> | undefined;
@@ -263,8 +274,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setData(next);
     },
 
+    async putPhoto(p) {
+      await write(`photo:${p.id}`, p);
+    },
+
+    async getPhoto(id) {
+      const key = keyRef.current;
+      const sealed = await recordGet(`photo:${id}`);
+      if (!key || !sealed) return undefined;
+      return openJSON<Photo>(key, sealed);
+    },
+
+    async removePhoto(id) {
+      await recordDelete(`photo:${id}`);
+    },
+
+    async allPhotos() {
+      const key = keyRef.current;
+      if (!key) throw new Error('Låst');
+      const out: Record<string, Photo> = {};
+      for (const k of await recordKeysWithPrefix('photo:')) {
+        const sealed = await recordGet(k);
+        if (sealed) {
+          const p = await openJSON<Photo>(key, sealed);
+          out[p.id] = p;
+        }
+      }
+      return out;
+    },
+
     async wipe() {
       await wipeEverything();
+      clearPhotoCache();
       keyRef.current = null;
       setData(emptyData());
       setHasBio(false);

@@ -229,16 +229,17 @@ export function SettingsScreen() {
           <button className="btn small" onClick={() => { setFrom('1900-01-01'); setTo(today()); }}>Hele dagbogen</button>
         </div>
         <div className="stack-sm">
-          <p className="tiny muted">Den fulde sikkerhedskopi (JSON) indeholder alt (dage, opsummeringer, mennesker og mønstre) og kan læses ind igen på en ny enhed. Den er <strong>ikke</strong> krypteret, så opbevar den et sikkert sted. API-nøglen kommer ikke med.</p>
+          <p className="tiny muted">Den fulde sikkerhedskopi (JSON) indeholder alt (dage, fotos, opsummeringer, mennesker og mønstre) og kan læses ind igen på en ny enhed. Den er <strong>ikke</strong> krypteret, så opbevar den et sikkert sted. API-nøglen kommer ikke med.</p>
           <div className="row wrap">
-            <button className="btn small" onClick={() => download(new Blob([toJSON(store.data)], { type: 'application/json' }), `dagbog-backup-${today()}.json`)}>Fuld sikkerhedskopi</button>
+            <button className="btn small" onClick={async () => download(new Blob([toJSON(store.data, await store.allPhotos())], { type: 'application/json' }), `dagbog-backup-${today()}.json`)}>Fuld sikkerhedskopi</button>
             <label className="btn small">
               Indlæs sikkerhedskopi
               <input type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
                 try {
-                  await store.replaceAll(parseBackup(await f.text()));
+                  const backup = parseBackup(await f.text());
+                  await store.replaceAll(backup.data, backup.photos);
                   setMsg('Sikkerhedskopien er indlæst.');
                 } catch (err) {
                   setMsg((err as Error).message);

@@ -1,6 +1,6 @@
 import { formatFull, formatMonth } from './dates';
 import type { Data } from './store';
-import { moodLabel, type Entry } from './types';
+import { moodLabel, type Entry, type Photo } from './types';
 
 export function entriesInRange(data: Data, from: string, to: string): Entry[] {
   return Object.values(data.entries)
@@ -42,14 +42,17 @@ export function toText(data: Data, from: string, to: string): string {
   return parts.join('\n');
 }
 
-export function toJSON(data: Data): string {
+export function toJSON(data: Data, photos: Record<string, Photo>): string {
   const { settings, ...rest } = data;
   // API-nøglen udelades af sikkerhedskopien
-  return JSON.stringify(
-    { app: 'dagbog', version: 1, exportedAt: new Date().toISOString(), ...rest, settings: { ...settings, ai: { ...settings.ai, apiKey: '' } } },
-    null,
-    2,
-  );
+  return JSON.stringify({
+    app: 'dagbog',
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    ...rest,
+    photos,
+    settings: { ...settings, ai: { ...settings.ai, apiKey: '' } },
+  });
 }
 
 export async function toPDF(data: Data, from: string, to: string): Promise<Blob> {
@@ -112,7 +115,7 @@ export function download(blob: Blob, filename: string) {
 }
 
 /** Validerer og normaliserer en importeret sikkerhedskopi. */
-export function parseBackup(json: string): Partial<Data> {
+export function parseBackup(json: string): { data: Partial<Data>; photos: Record<string, Photo> } {
   const d = JSON.parse(json);
   if (d?.app !== 'dagbog') throw new Error('Filen er ikke en sikkerhedskopi fra Dagbog.');
   const out: Partial<Data> = {};
@@ -121,5 +124,9 @@ export function parseBackup(json: string): Partial<Data> {
   }
   if (d.settings) out.settings = d.settings;
   if (d.meta) out.meta = d.meta;
-  return out;
+  const photos: Record<string, Photo> = {};
+  for (const [id, p] of Object.entries((d.photos ?? {}) as Record<string, Photo>)) {
+    if (p && typeof p.data === 'string' && p.id === id) photos[id] = p;
+  }
+  return { data: out, photos };
 }
