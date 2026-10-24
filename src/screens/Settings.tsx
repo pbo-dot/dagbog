@@ -139,6 +139,12 @@ export function SettingsScreen() {
       <Header back="mere" right={<button className="btn ghost" onClick={store.lock}>Lås nu</button>} />
       <h1>Indstillinger</h1>
 
+      <Section title="Skriv">
+        <Row label="Vis dagens spørgsmål" hint="Et lille spørgsmål over skrivefeltet, der skifter hver dag.">
+          <Switch label="Vis dagens spørgsmål" checked={s.showQuestion} onChange={(v) => update((x) => ({ ...x, showQuestion: v }))} />
+        </Row>
+      </Section>
+
       <Section title="Påmindelser">
         <Row label="Daglig påmindelse" hint="Viser en prik i appen og på app-ikonet, når dagen ikke er skrevet efter tidspunktet. En overset påmindelse gentages ikke.">
           <Switch label="Daglig påmindelse" checked={s.reminder.enabled} onChange={(v) => update((x) => ({ ...x, reminder: { ...x.reminder, enabled: v } }))} />

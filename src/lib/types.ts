@@ -173,6 +173,7 @@ export interface Settings {
   };
   summaryWeekday: number; // 0 = søndag
   autoLockMinutes: number; // 0 = straks
+  showQuestion: boolean; // dagens spørgsmål over skrivefeltet
   google: {
     clientId: string; // fra Google Cloud (ikke hemmeligt)
     email: string; // kontoen, der er forbundet ('' = ikke forbundet)
@@ -192,6 +193,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reminder: { enabled: true, time: '21:00', text: 'Hvad fyldte i dag?' },
   summaryWeekday: 0,
   autoLockMinutes: 5,
+  showQuestion: true,
   google: { clientId: '', email: '', calendars: [], lastSync: 0 },
 };
 

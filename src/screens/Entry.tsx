@@ -115,7 +115,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
       tags,
       good: good.map((g) => g.trim()).filter(Boolean),
       photos,
-      question: existing?.question ?? questionFor(date),
+      question: existing?.question ?? (data.settings.showQuestion ? questionFor(date) : undefined),
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
@@ -218,9 +218,13 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
     <div className="stack" style={{ gap: 22 }}>
       <div className="stack-sm">
         <div className="row between">
-          <button className="btn ghost" style={{ paddingLeft: 0 }} onClick={() => setPickDate((v) => !v)} aria-label="Skift dato">
-            <span className="small">{formatLong(date)} ▾</span>
-          </button>
+          <div className="row" style={{ gap: 4 }}>
+            <button className="day-arrow" onClick={() => go(`skriv/${addDays(date, -1)}`)} aria-label="Dagen før">{Icon.chevronLeft}</button>
+            <button className="btn ghost" style={{ padding: '6px 4px' }} onClick={() => setPickDate((v) => !v)} aria-label="Skift dato">
+              <span className="small">{formatLong(date)} ▾</span>
+            </button>
+            <button className="day-arrow" disabled={isToday} onClick={() => { const n = addDays(date, 1); go(n === today() ? 'skriv' : `skriv/${n}`); }} aria-label="Dagen efter">{Icon.chevronRight}</button>
+          </div>
           {isToday && !existing && (
             <button className="btn ghost small" onClick={skipToday}>Spring over</button>
           )}
@@ -240,7 +244,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           />
         )}
         {isToday && <RoutineCards />}
-        <p className="question">{existing?.question ?? questionFor(date)}</p>
+        {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
       </div>
 

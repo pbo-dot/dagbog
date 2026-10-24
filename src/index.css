@@ -298,3 +298,7 @@ button.list-item:first-child { border-top: 0; }
 .g-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: 1px; font-style: normal; }
 .cal-marks .g-dot { width: 5px; height: 5px; vertical-align: 0; }
 .cal-ico { font-style: normal; font-size: 0.68rem; line-height: 1; }
+
+/* Pile på Skriv-siden: en dag frem eller tilbage */
+.day-arrow { width: 32px; height: 32px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; padding: 7px; }
+.day-arrow:disabled { opacity: 0.3; }
