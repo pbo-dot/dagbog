@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type Person, type Settings } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Settings, type WeekSummary } from './types';
 
 export class AIError extends Error {}
 
@@ -283,7 +283,7 @@ const AskSchema = z.object({
 });
 export type AskAI = z.infer<typeof AskSchema>;
 
-const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres private dagbog, deres samtaler og deres noter om mennesker. Du får hele materialet nedenfor.
+const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres private dagbog, deres samtaler og deres noter om mennesker. Du får materialet nedenfor.
 
 - Svar kun ud fra materialet. Står der ikke noget om det, så sig det ærligt og kort, fx "Det har du ikke skrevet noget om."
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
@@ -291,9 +291,9 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.`;
 
-function conversationBlock(c: Conversation, people: Record<string, Person>): string {
+function conversationBlock(c: Conversation, people: Record<string, Person>, withTranscript = true): string {
   const names = c.people.map((id) => people[id]?.name).filter(Boolean);
-  const transcript = c.transcript.length > 3000 ? `${c.transcript.slice(0, 3000)} …` : c.transcript;
+  const transcript = !withTranscript ? '' : c.transcript.length > 3000 ? `${c.transcript.slice(0, 3000)} …` : c.transcript;
   return [
     `### Samtale ${c.date}: ${c.title}${names.length ? ` (med ${names.join(', ')})` : ''}`,
     c.summary,
@@ -303,24 +303,111 @@ function conversationBlock(c: Conversation, people: Record<string, Person>): str
   ].filter(Boolean).join('\n');
 }
 
-function personBlock(p: Person): string {
-  return [`### ${p.name}`, p.important ? `Vigtigt for dem lige nu: ${p.important}` : '', ...p.notes.map((n) => `${n.date}: ${n.text}`)]
+function personBlock(p: Person, keep: (date: string) => boolean = () => true): string {
+  const notes = p.notes.filter((n) => keep(n.date));
+  return [`### ${p.name}`, p.important ? `Vigtigt for dem lige nu: ${p.important}` : '', ...notes.map((n) => `${n.date}: ${n.text}`)]
     .filter(Boolean)
     .join('\n');
 }
 
-/** Materialet til "Spørg dagbogen": dage, samtaler og personer. Nyeste beholdes, hvis det er for langt. */
-export function askCorpus(entries: Entry[], conversations: Conversation[], people: Record<string, Person>): string {
-  const days = [...entries].sort((a, b) => a.date.localeCompare(b.date)).map((e) => entryBlock(e));
-  const talks = [...conversations].sort((a, b) => a.date.localeCompare(b.date)).map((c) => conversationBlock(c, people));
-  const persons = Object.values(people).map(personBlock);
-  let corpus = `## DAGBOG\n\n${days.join('\n\n')}`;
-  if (talks.length) corpus += `\n\n## SAMTALER\n\n${talks.join('\n\n')}`;
-  if (persons.length) corpus += `\n\n## MENNESKER\n\n${persons.join('\n\n')}`;
-  return corpus.length > 2_000_000 ? corpus.slice(corpus.length - 2_000_000) : corpus;
+function weekBlock(w: WeekSummary): string {
+  return `### Ugeopsummering ${formatWeek(w.id)} (${weekDays(w.id)[0]} – ${weekDays(w.id)[6]})\n${w.summary}${w.themes.length ? `\nTemaer: ${w.themes.join(', ')}` : ''}`;
 }
 
-export async function askDiary(settings: Settings, corpus: string, today: string, history: ChatTurn[], question: string): Promise<AskAI> {
+function monthBlock(m: MonthChapter): string {
+  return `### Månedskapitel ${formatMonth(m.id)}: ${m.title}\n${m.text}`;
+}
+
+/** Hvad "Spørg dagbogen" kan læse fra. */
+export interface AskData {
+  entries: Record<string, Entry>;
+  conversations: Record<string, Conversation>;
+  people: Record<string, Person>;
+  weeks: Record<string, WeekSummary>;
+  months: Record<string, MonthChapter>;
+}
+
+export interface AskScope {
+  corpus: string;
+  note: string; // til Claude: hvad materialet dækker
+  shown: string; // til brugeren, fx "januar 2026 · 23 dage"
+}
+
+/** Under denne størrelse sendes hele dagbogen uforkortet, når der ikke nævnes en periode. */
+const FULL_LIMIT = 200_000;
+/** Det seneste halve år sendes altid uforkortet. */
+const RECENT_DAYS = 183;
+
+/**
+ * Materialet til "Spørg dagbogen". Nævner spørgsmålet en periode, sendes kun den
+ * periode. Ellers sendes alt, så længe dagbogen er lille; er den stor, sendes
+ * det seneste halve år uforkortet og ældre måneder som månedskapitler og
+ * ugeopsummeringer (eller dagene, hvis måneden ikke har nogen).
+ */
+export function askScope(data: AskData, period: { from: string; to: string; label: string } | null, today: string): AskScope {
+  const entries = Object.values(data.entries).sort((a, b) => a.date.localeCompare(b.date));
+  const talks = Object.values(data.conversations).sort((a, b) => a.date.localeCompare(b.date));
+  const weeks = Object.values(data.weeks).sort((a, b) => a.id.localeCompare(b.id));
+  const months = Object.values(data.months).sort((a, b) => a.id.localeCompare(b.id));
+  const people = Object.values(data.people);
+  const build = (parts: [string, string[]][]) =>
+    parts.filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n\n${xs.join('\n\n')}`).join('\n\n');
+
+  if (period) {
+    const inside = (d: string) => d >= period.from && d <= period.to;
+    const days = entries.filter((e) => inside(e.date));
+    const corpus = build([
+      ['DAGBOG', days.map((e) => entryBlock(e))],
+      ['SAMTALER', talks.filter((c) => inside(c.date)).map((c) => conversationBlock(c, data.people))],
+      ['OPSUMMERINGER', [
+        ...months.filter((m) => m.id >= period.from.slice(0, 7) && m.id <= period.to.slice(0, 7)).map(monthBlock),
+        ...weeks.filter((w) => { const ds = weekDays(w.id); return ds[6] >= period.from && ds[0] <= period.to; }).map(weekBlock),
+      ]],
+      ['MENNESKER', people.map((p) => personBlock(p, inside))],
+    ]);
+    return {
+      corpus: corpus || '(Der er intet skrevet i denne periode.)',
+      note: `Materialet dækker kun ${period.label} (${period.from} til ${period.to}). Spørger personen om noget uden for perioden, så sig, at de kan spørge om den periode for sig.`,
+      shown: `${period.label} · ${days.length} ${days.length === 1 ? 'dag' : 'dage'}`,
+    };
+  }
+
+  const full = build([
+    ['DAGBOG', entries.map((e) => entryBlock(e))],
+    ['SAMTALER', talks.map((c) => conversationBlock(c, data.people))],
+    ['MENNESKER', people.map((p) => personBlock(p))],
+  ]);
+  if (full.length <= FULL_LIMIT) {
+    return { corpus: full, note: 'Materialet er hele dagbogen.', shown: `hele dagbogen · ${entries.length} dage` };
+  }
+
+  // Stor dagbog: det seneste halve år uforkortet, ældre måneder som opsummeringer.
+  const recentFrom = addDays(today, -RECENT_DAYS);
+  const recent = entries.filter((e) => e.date >= recentFrom);
+  const older: string[] = [];
+  const olderMonths = [...new Set(entries.filter((e) => e.date < recentFrom).map((e) => e.date.slice(0, 7)))];
+  for (const id of olderMonths) {
+    const chapter = data.months[id];
+    const ws = weeks.filter((w) => weekDays(w.id).some((d) => d.slice(0, 7) === id && d < recentFrom));
+    if (chapter) older.push(monthBlock(chapter));
+    else if (ws.length) older.push(...ws.map(weekBlock));
+    else older.push(...entries.filter((e) => e.date.slice(0, 7) === id && e.date < recentFrom).map((e) => entryBlock(e, 600)));
+  }
+  let corpus = build([
+    ['ÆLDRE PERIODER (opsummeret)', older],
+    ['DAGBOG (det seneste halve år)', recent.map((e) => entryBlock(e))],
+    ['SAMTALER', talks.map((c) => conversationBlock(c, data.people, c.date >= recentFrom))],
+    ['MENNESKER', people.map((p) => personBlock(p))],
+  ]);
+  if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
+  return {
+    corpus,
+    note: 'Det seneste halve år er med dag for dag. Ældre perioder er med som månedskapitler og ugeopsummeringer, så detaljer derfra kan mangle; foreslå i så fald at spørge om den periode (fx "i marts 2025"), så kommer dagene med.',
+    shown: `det seneste halve år + opsummeringer af ${olderMonths.length} ældre måneder`,
+  };
+}
+
+export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string): Promise<AskAI> {
   const messages: Anthropic.Beta.BetaMessageParam[] = [
     ...history.map((t) => ({ role: t.role, content: t.text })),
     { role: 'user', content: question },
@@ -331,8 +418,8 @@ export async function askDiary(settings: Settings, corpus: string, today: string
       max_tokens: 16000,
       output_config: { effort: 'medium', format: betaZodOutputFormat(AskSchema) },
       system: [
-        { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).` },
-        { type: 'text', text: corpus, cache_control: { type: 'ephemeral' } },
+        { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).\n${scope.note}` },
+        { type: 'text', text: scope.corpus, cache_control: { type: 'ephemeral' } },
       ],
       messages,
       ...fallbackFor(settings.ai.analysisModel),

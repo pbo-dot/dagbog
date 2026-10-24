@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
-import { AIError, askCorpus, askDiary, type AskAI } from '../lib/ai';
+import { useRef, useState } from 'react';
+import { AIError, askDiary, askScope, type AskAI } from '../lib/ai';
+import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
@@ -9,6 +10,8 @@ import { go, Header, Icon } from '../ui';
 interface Turn {
   question: string;
   answer: AskAI;
+  period: Period | null;
+  shown: string; // hvad der blev sendt med, fx "januar 2026 · 23 dage"
 }
 
 const IDEAS = [
@@ -33,10 +36,6 @@ export function AskScreen() {
   const [error, setError] = useState('');
   const bottom = useRef<HTMLDivElement>(null);
   const canAI = aiReady(data);
-  const corpus = useMemo(
-    () => askCorpus(Object.values(data.entries), Object.values(data.conversations), data.people),
-    [data.entries, data.conversations, data.people],
-  );
   const empty = !Object.keys(data.entries).length && !Object.keys(data.conversations).length;
 
   const ask = async (q: string) => {
@@ -49,8 +48,11 @@ export function AskScreen() {
         { role: 'user' as const, text: t.question },
         { role: 'assistant' as const, text: t.answer.answer },
       ]);
-      const answer = await askDiary(data.settings, corpus, today(), history, text);
-      const next = [...turns, { question: text, answer }];
+      // Nævner spørgsmålet ingen periode, gælder den forrige (fx "og hvem var jeg sammen med?").
+      const period = findPeriod(text, today()) ?? turns[turns.length - 1]?.period ?? null;
+      const scope = askScope(data, period, today());
+      const answer = await askDiary(data.settings, scope, today(), history, text);
+      const next = [...turns, { question: text, answer, period, shown: scope.shown }];
       remember(next);
       setTurns(next);
       setQuestion('');
@@ -76,7 +78,7 @@ export function AskScreen() {
       {canAI && empty && <p className="small muted">Der er ikke skrevet noget endnu, så der er intet at spørge om.</p>}
       {canAI && !turns.length && !empty && (
         <>
-          <p className="small muted">Spørg om alt, du har skrevet eller optaget. Claude svarer ud fra din dagbog, dine samtaler og dine noter om mennesker, og viser hvilke dage svaret bygger på.</p>
+          <p className="small muted">Spørg om alt, du har skrevet eller optaget. Claude svarer ud fra din dagbog, dine samtaler og dine noter om mennesker, og viser hvilke dage svaret bygger på. Nævner du en periode ("i januar", "sidste sommer", "i 2025"), læses kun den, så det går hurtigere og koster mindre.</p>
           <div className="chips">
             {IDEAS.map((q) => <button key={q} className="chip" onClick={() => ask(q)} disabled={busy}>{q}</button>)}
           </div>
@@ -87,6 +89,7 @@ export function AskScreen() {
         <section key={i} className="stack-sm">
           <p className="small" style={{ fontWeight: 600 }}>{t.question}</p>
           <p className="prose">{t.answer.answer}</p>
+          <p className="tiny muted">Læste: {t.shown}</p>
           {t.answer.sources.length > 0 && (
             <div className="list">
               {t.answer.sources.map((s, j) => (
