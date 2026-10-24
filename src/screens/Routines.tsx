@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { formatLong, formatShort, today } from '../lib/dates';
-import { everyText, routineStatus } from '../lib/routines';
+import { dueTomorrow, everyText, routineStatus } from '../lib/routines';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, uid } from '../ui';
@@ -19,14 +19,19 @@ const time = (at: number) => new Date(at).toLocaleTimeString('da-DK', { hour: '2
 export function RoutineCards() {
   const store = useStore();
   const t = today();
-  const cards = Object.values(store.data.routines)
-    .sort((a, b) => a.createdAt - b.createdAt)
-    .map((r) => ({ r, s: routineStatus(r, t) }))
-    .filter(({ s }) => s.kind !== 'none');
-  if (!cards.length) return null;
+  const all = Object.values(store.data.routines).sort((a, b) => a.createdAt - b.createdAt);
+  const cards = all.map((r) => ({ r, s: routineStatus(r, t) })).filter(({ s }) => s.kind !== 'none');
+  // Dagen før: en lille linje, så man kan forberede sig
+  const tomorrow = all.map((r) => ({ r, d: dueTomorrow(r, t) })).filter(({ d }) => d);
+  if (!cards.length && !tomorrow.length) return null;
   return (
     <div className="stack-sm">
       {cards.map(({ r, s }) => <RoutineCard key={r.id} r={r} s={s} />)}
+      {tomorrow.map(({ r, d }) => (
+        <p key={r.id} className="small muted" style={{ margin: 0 }}>
+          I morgen: {r.icon} {r.name}{d?.option ? ` · ${d.option}` : ''}
+        </p>
+      ))}
     </div>
   );
 }

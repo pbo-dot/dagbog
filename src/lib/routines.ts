@@ -59,6 +59,19 @@ export function routineStatus(r: Routine, today: string): RoutineStatus {
   return { kind: 'done', due, at: done.at, option: done.option, next: occurrence(r, k + 1), nextOption: suggestedOption(r, k + 1) };
 }
 
+/**
+ * Skal den tages i morgen? Kun for ting, der ikke er daglige (ellers ville
+ * linjen altid stå der), og kun når dagens gang ikke mangler.
+ */
+export function dueTomorrow(r: Routine, today: string): { option?: string } | null {
+  if (!r.monthly && r.everyDays <= 1) return null;
+  const tomorrow = addDays(today, 1);
+  const k = lastIndex(r, tomorrow);
+  if (k < 0 || occurrence(r, k) !== tomorrow) return null;
+  if (routineStatus(r, today).kind === 'due') return null;
+  return { option: suggestedOption(r, k) };
+}
+
 /** Kort tekst om hvor ofte, fx "hver 14. dag". */
 export function everyText(r: Pick<Routine, 'everyDays' | 'monthly'>): string {
   if (r.monthly) return 'hver måned';
