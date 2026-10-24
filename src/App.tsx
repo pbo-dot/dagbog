@@ -10,6 +10,7 @@ import { ConversationScreen, ConversationsScreen, NewConversationScreen } from '
 import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
 import { DayScreen, MemoryScreen, MonthScreen } from './screens/Memory';
+import { MoreScreen } from './screens/More';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
 import { WeekScreen } from './screens/Week';
@@ -19,8 +20,8 @@ const TABS = [
   { id: 'skriv', label: 'Skriv', icon: Icon.pen },
   { id: 'uge', label: 'Uge', icon: Icon.week },
   { id: 'husk', label: 'Husk', icon: Icon.memory },
-  { id: 'mennesker', label: 'Mennesker', icon: Icon.people },
-  { id: 'moenstre', label: 'Mønstre', icon: Icon.patterns },
+  { id: 'kalender', label: 'Kalender', icon: Icon.calendar },
+  { id: 'mere', label: 'Mere', icon: Icon.more },
 ];
 
 /** Låser efter valgt tid uden aktivitet, og når appen har været skjult. */
@@ -143,17 +144,19 @@ function Unlocked() {
       else if (a) screen = <ConversationScreen id={a} />;
       else screen = <ConversationsScreen />;
       break;
+    case 'mere': screen = <MoreScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     default: screen = <EntryScreen />;
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month || inbox.some((i) => i.done) };
-  const activeTab = tab === 'samtale' || tab === 'spoerg' || tab === 'faste' || tab === 'kalender' ? 'husk' : tab;
+  const activeTab = ['samtale', 'spoerg', 'faste'].includes(tab) ? 'husk'
+    : ['mennesker', 'moenstre', 'indstillinger'].includes(tab) ? 'mere' : tab;
 
   return (
     <>
       <main className="app">
-        {!a && tab !== 'indstillinger' && (
+        {!a && tab !== 'indstillinger' && tab !== 'mere' && (
           <div className="row" style={{ justifyContent: 'flex-end', margin: '-10px -10px 0 0' }}>
             <button className="btn ghost" onClick={() => go('indstillinger')} aria-label="Indstillinger">
               <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{Icon.gear}</span>

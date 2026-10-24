@@ -74,7 +74,7 @@ export function SettingsScreen() {
 
   return (
     <div className="stack" style={{ gap: 24 }}>
-      <Header back="skriv" right={<button className="btn ghost" onClick={store.lock}>Lås nu</button>} />
+      <Header back="mere" right={<button className="btn ghost" onClick={store.lock}>Lås nu</button>} />
       <h1>Indstillinger</h1>
 
       <Section title="Påmindelser">

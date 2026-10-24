@@ -21,7 +21,8 @@ export function PeopleScreen() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header title="Mennesker" />
+      <Header back="mere" />
+      <h1>Mennesker</h1>
       <p className="small muted">Små noter om dem, der betyder noget, så du husker, hvad der sidst var vigtigt for dem.</p>
       <form className="row" onSubmit={(e) => { e.preventDefault(); add(); }}>
         <input type="text" className="grow" value={name} onChange={(e) => setName(e.target.value)} placeholder="Navn" />
@@ -124,7 +125,8 @@ export function PatternsScreen() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header title="Mønsterbog" />
+      <Header back="mere" />
+      <h1>Mønsterbog</h1>
       <p className="small muted">Tanker og mønstre, der går igen. Fx "Jeg bliver altid lettet, når jeg går en tur."</p>
       <form className="stack-sm" onSubmit={(e) => {
         e.preventDefault();

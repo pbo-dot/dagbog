@@ -53,8 +53,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
 
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <Header back="husk" right={<button className="btn ghost small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
-      <h1>Kalender</h1>
+      <Header title="Kalender" right={<button className="btn ghost small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
 
       <section className="stack-sm">
         <h3>De næste 7 dage</h3>
