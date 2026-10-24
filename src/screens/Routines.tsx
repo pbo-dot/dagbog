@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { formatLong, formatShort, today } from '../lib/dates';
+import { agenda, at } from '../lib/agenda';
+import { addDays, formatLong, formatShort, today } from '../lib/dates';
 import { dueTomorrow, everyText, routineStatus } from '../lib/routines';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
@@ -23,10 +24,22 @@ export function RoutineCards() {
   const cards = all.map((r) => ({ r, s: routineStatus(r, t) })).filter(({ s }) => s.kind !== 'none');
   // Dagen før: en lille linje, så man kan forberede sig
   const tomorrow = all.map((r) => ({ r, d: dueTomorrow(r, t) })).filter(({ d }) => d);
-  if (!cards.length && !tomorrow.length) return null;
+  // Aftaler (egne og fra samtaler) i dag og i morgen
+  const plans = agenda(store.data, t, addDays(t, 1)).filter((i) => i.kind !== 'routine');
+  if (!cards.length && !tomorrow.length && !plans.length) return null;
   return (
     <div className="stack-sm">
+      {plans.filter((i) => i.date === t).map((i, n) => (
+        <p key={`t${n}`} className="small" style={{ margin: 0 }}>
+          <strong>I dag:</strong> {i.icon} {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
+        </p>
+      ))}
       {cards.map(({ r, s }) => <RoutineCard key={r.id} r={r} s={s} />)}
+      {plans.filter((i) => i.date !== t).map((i, n) => (
+        <p key={`m${n}`} className="small muted" style={{ margin: 0 }}>
+          I morgen: {i.icon} {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
+        </p>
+      ))}
       {tomorrow.map(({ r, d }) => (
         <p key={r.id} className="small muted" style={{ margin: 0 }}>
           I morgen: {r.icon} {r.name}{d?.option ? ` · ${d.option}` : ''}

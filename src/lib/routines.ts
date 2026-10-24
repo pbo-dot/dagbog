@@ -30,12 +30,17 @@ export function nextAfter(r: Routine, date: string): string {
   return occurrence(r, lastIndex(r, date) + 1);
 }
 
-/** Hvad der foreslås denne gang: det næste i rækken efter det sidst brugte. */
+/**
+ * Hvad der foreslås den k'te gang: rækken fortsætter fra det sidst brugte
+ * (også flere gange frem, fx i kalenderen). Uden historik: i rækkefølge fra start.
+ */
 export function suggestedOption(r: Routine, k: number): string | undefined {
-  if (!r.options.length) return undefined;
-  const lastUsed = r.log.find((l) => l.option && r.options.includes(l.option))?.option;
-  if (lastUsed) return r.options[(r.options.indexOf(lastUsed) + 1) % r.options.length];
-  return r.options[((k % r.options.length) + r.options.length) % r.options.length];
+  const n = r.options.length;
+  if (!n) return undefined;
+  const mod = (x: number) => ((x % n) + n) % n;
+  const last = r.log.find((l) => l.option && r.options.includes(l.option));
+  if (last) return r.options[mod(r.options.indexOf(last.option!) + k - lastIndex(r, last.due))];
+  return r.options[mod(k)];
 }
 
 export type RoutineStatus =

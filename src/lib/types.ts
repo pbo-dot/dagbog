@@ -71,6 +71,16 @@ export interface Person {
   updatedAt: number;
 }
 
+/** En aftale, man selv har skrevet ind i dagbogens kalender. */
+export interface Appointment {
+  id: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  time: string; // HH:MM eller tom (hele dagen)
+  place: string;
+  createdAt: number;
+}
+
 /** Markering af, at en fast ting er taget/gjort. */
 export interface RoutineLog {
   due: string; // den planlagte dag, markeringen gælder (YYYY-MM-DD)

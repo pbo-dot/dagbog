@@ -285,3 +285,14 @@ button.list-item:first-child { border-top: 0; }
 .card.routine.due { border-left: 4px solid var(--accent); }
 .card.routine.late { border-left: 4px solid var(--danger); }
 .card.routine.done { background: var(--accent-soft); border-color: var(--accent); }
+
+/* Kalender */
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-head { text-align: center; font-size: 0.72rem; color: var(--muted); padding: 4px 0; text-transform: uppercase; }
+.cal-day { aspect-ratio: 1 / 1.05; border: 1px solid transparent; border-radius: 10px; background: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 4px 0 2px; font-size: 0.92rem; color: var(--text); min-width: 0; }
+.cal-day.other { color: var(--muted); opacity: 0.5; }
+.cal-day.today { border-color: var(--accent); font-weight: 700; }
+.cal-day.sel { background: var(--accent-soft); }
+.cal-marks { display: flex; gap: 1px; align-items: center; min-height: 14px; margin-top: 2px; }
+.cal-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.cal-ico { font-style: normal; font-size: 0.68rem; line-height: 1; }

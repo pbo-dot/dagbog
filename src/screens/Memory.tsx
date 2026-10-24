@@ -155,6 +155,13 @@ export function MemoryScreen() {
     <div className="stack" style={{ gap: 24 }}>
       <Header title="Husk" />
       {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
+      <button className="card tappable" onClick={() => go('kalender')}>
+        <div className="row" style={{ gap: 8 }}>
+          <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.week}</span>
+          <strong>Kalender</strong>
+        </div>
+        <span className="small muted" style={{ display: 'block' }}>Dine aftaler, faste ting og aftaler fra samtaler</span>
+      </button>
       {aiReady(data) && (
         <button className="card tappable" onClick={() => go('spoerg')}>
           <div className="row" style={{ gap: 8 }}>
