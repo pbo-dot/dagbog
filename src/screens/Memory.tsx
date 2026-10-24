@@ -165,6 +165,13 @@ export function MemoryScreen() {
         </button>
       )}
       <ThatDay />
+      <button className="card tappable" onClick={() => go('faste')}>
+        <div className="row between">
+          <strong>Faste ting</strong>
+          <span className="tiny muted">{Object.keys(data.routines).length || 'Ny'}</span>
+        </div>
+        <span className="small muted" style={{ display: 'block' }}>Medicin, indsprøjtninger og andet på en fast plan</span>
+      </button>
       <button className="card tappable" onClick={() => go('samtale')}>
         <div className="row between">
           <strong>Samtaler</strong>

@@ -5,6 +5,7 @@ import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, type Entry, type MoodId } from '../lib/types';
 import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
+import { RoutineCards } from './Routines';
 
 const QUESTIONS = [
   'Hvad fyldte mest i dag?',
@@ -206,6 +207,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   if (skipped) {
     return (
       <div className="stack" style={{ paddingTop: '20vh', alignItems: 'center', textAlign: 'center' }}>
+        <div style={{ width: '100%', textAlign: 'left' }}><RoutineCards /></div>
         <p className="question">Fint. Vi ses i morgen.</p>
         <button className="link small" onClick={unskip}>Skriv alligevel</button>
       </div>
@@ -237,6 +239,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
             }}
           />
         )}
+        {isToday && <RoutineCards />}
         <p className="question">{existing?.question ?? questionFor(date)}</p>
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
       </div>

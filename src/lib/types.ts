@@ -71,6 +71,26 @@ export interface Person {
   updatedAt: number;
 }
 
+/** Markering af, at en fast ting er taget/gjort. */
+export interface RoutineLog {
+  due: string; // den planlagte dag, markeringen gælder (YYYY-MM-DD)
+  at: number; // hvornår der blev trykket "Taget"
+  option?: string; // fx "højre ben"
+}
+
+/** En fast ting på en fast plan, fx en indsprøjtning hver 14. dag. */
+export interface Routine {
+  id: string;
+  name: string;
+  icon: string; // emoji
+  everyDays: number; // 1 = hver dag, 7 = hver uge, 14 = hver 14. dag (bruges når monthly er false)
+  monthly: boolean; // hver måned på samme dato som første gang
+  start: string; // første gang (YYYY-MM-DD)
+  options: string[]; // skift mellem, fx ["højre ben", "venstre ben"]
+  log: RoutineLog[]; // nyeste først
+  createdAt: number;
+}
+
 /** En aftale med tidspunkt fra en samtale, som kan lægges i kalenderen. */
 export interface CalendarEvent {
   title: string;

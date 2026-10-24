@@ -1,0 +1,68 @@
+// Faste ting på en fast plan: hvornår de skal tages, om de er taget, og hvad næste gang er.
+import { addDays, fromISO, toISO } from './dates';
+import type { Routine } from './types';
+
+/** Den k'te gang (0 = første gang). */
+export function occurrence(r: Routine, k: number): string {
+  if (!r.monthly) return addDays(r.start, k * Math.max(1, r.everyDays));
+  const s = fromISO(r.start);
+  const day = s.getDate();
+  const d = new Date(s.getFullYear(), s.getMonth() + k, 1, 12);
+  // Fx den 31.: brug sidste dag i måneder, der er kortere
+  d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
+  return toISO(d);
+}
+
+/** Nummeret på den seneste gang, der ligger på eller før `date` (-1 hvis ingen endnu). */
+export function lastIndex(r: Routine, date: string): number {
+  if (date < r.start) return -1;
+  if (!r.monthly) {
+    const days = Math.round((fromISO(date).getTime() - fromISO(r.start).getTime()) / 86_400_000);
+    return Math.floor(days / Math.max(1, r.everyDays));
+  }
+  let k = 0;
+  while (occurrence(r, k + 1) <= date) k++;
+  return k;
+}
+
+/** Næste planlagte dag efter `date`. */
+export function nextAfter(r: Routine, date: string): string {
+  return occurrence(r, lastIndex(r, date) + 1);
+}
+
+/** Hvad der foreslås denne gang: det næste i rækken efter det sidst brugte. */
+export function suggestedOption(r: Routine, k: number): string | undefined {
+  if (!r.options.length) return undefined;
+  const lastUsed = r.log.find((l) => l.option && r.options.includes(l.option))?.option;
+  if (lastUsed) return r.options[(r.options.indexOf(lastUsed) + 1) % r.options.length];
+  return r.options[((k % r.options.length) + r.options.length) % r.options.length];
+}
+
+export type RoutineStatus =
+  | { kind: 'due'; due: string; late: boolean; option?: string }
+  | { kind: 'done'; due: string; at: number; option?: string; next: string; nextOption?: string }
+  | { kind: 'none' };
+
+/**
+ * Status i dag: "due" hvis den seneste planlagte gang (i dag eller tidligere)
+ * ikke er markeret, "done" hvis den er markeret i dag eller planlagt i dag.
+ * Ældre glemte gange vises ikke, kun den seneste.
+ */
+export function routineStatus(r: Routine, today: string): RoutineStatus {
+  const k = lastIndex(r, today);
+  if (k < 0) return { kind: 'none' };
+  const due = occurrence(r, k);
+  const done = r.log.find((l) => l.due === due);
+  if (!done) return { kind: 'due', due, late: due < today, option: suggestedOption(r, k) };
+  const doneToday = due === today || toISO(new Date(done.at)) === today;
+  if (!doneToday) return { kind: 'none' };
+  return { kind: 'done', due, at: done.at, option: done.option, next: occurrence(r, k + 1), nextOption: suggestedOption(r, k + 1) };
+}
+
+/** Kort tekst om hvor ofte, fx "hver 14. dag". */
+export function everyText(r: Pick<Routine, 'everyDays' | 'monthly'>): string {
+  if (r.monthly) return 'hver måned';
+  if (r.everyDays === 1) return 'hver dag';
+  if (r.everyDays === 7) return 'hver uge';
+  return `hver ${r.everyDays}. dag`;
+}

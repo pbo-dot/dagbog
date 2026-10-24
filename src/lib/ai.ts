@@ -3,7 +3,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Settings, type WeekSummary } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Routine, type Settings, type WeekSummary } from './types';
+import { everyText } from './routines';
 
 export class AIError extends Error {}
 
@@ -289,6 +290,7 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
+- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.`;
 
 function conversationBlock(c: Conversation, people: Record<string, Person>, withTranscript = true): string {
@@ -310,6 +312,15 @@ function personBlock(p: Person, keep: (date: string) => boolean = () => true): s
     .join('\n');
 }
 
+function routineBlock(r: Routine, keep: (date: string) => boolean = () => true): string {
+  const log = r.log.filter((l) => keep(l.due)).map((l) => {
+    const d = new Date(l.at);
+    const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `- taget ${day} kl. ${d.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' })}${l.option ? ` (${l.option})` : ''}${l.due !== day ? `, planlagt ${l.due}` : ''}`;
+  });
+  return [`### ${r.name}: ${everyText(r)} fra ${r.start}${r.options.length ? `, skiftevis ${r.options.join(' / ')}` : ''}`, ...log].join('\n');
+}
+
 function weekBlock(w: WeekSummary): string {
   return `### Ugeopsummering ${formatWeek(w.id)} (${weekDays(w.id)[0]} – ${weekDays(w.id)[6]})\n${w.summary}${w.themes.length ? `\nTemaer: ${w.themes.join(', ')}` : ''}`;
 }
@@ -325,6 +336,7 @@ export interface AskData {
   people: Record<string, Person>;
   weeks: Record<string, WeekSummary>;
   months: Record<string, MonthChapter>;
+  routines: Record<string, Routine>;
 }
 
 export interface AskScope {
@@ -364,6 +376,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
         ...weeks.filter((w) => { const ds = weekDays(w.id); return ds[6] >= period.from && ds[0] <= period.to; }).map(weekBlock),
       ]],
       ['MENNESKER', people.map((p) => personBlock(p, inside))],
+      ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r, inside))],
     ]);
     return {
       corpus: corpus || '(Der er intet skrevet i denne periode.)',
@@ -376,6 +389,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['DAGBOG', entries.map((e) => entryBlock(e))],
     ['SAMTALER', talks.map((c) => conversationBlock(c, data.people))],
     ['MENNESKER', people.map((p) => personBlock(p))],
+    ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
   ]);
   if (full.length <= FULL_LIMIT) {
     return { corpus: full, note: 'Materialet er hele dagbogen.', shown: `hele dagbogen · ${entries.length} dage` };
@@ -398,6 +412,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['DAGBOG (det seneste halve år)', recent.map((e) => entryBlock(e))],
     ['SAMTALER', talks.map((c) => conversationBlock(c, data.people, c.date >= recentFrom))],
     ['MENNESKER', people.map((p) => personBlock(p))],
+    ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
   ]);
   if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
   return {

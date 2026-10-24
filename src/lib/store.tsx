@@ -7,7 +7,7 @@ import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Conversation, type Draft, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Conversation, type Draft, type Routine, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -17,16 +17,17 @@ export interface Data {
   people: Record<string, Person>;
   patterns: Record<string, Pattern>;
   conversations: Record<string, Conversation>;
+  routines: Record<string, Routine>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,

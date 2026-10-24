@@ -4,6 +4,7 @@ import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
 import { AskScreen } from './screens/Ask';
+import { RoutineScreen, RoutinesScreen } from './screens/Routines';
 import { ConversationScreen, ConversationsScreen, NewConversationScreen } from './screens/Conversation';
 import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
@@ -134,6 +135,7 @@ function Unlocked() {
     case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
     case 'moenstre': screen = <PatternsScreen />; break;
     case 'spoerg': screen = <AskScreen />; break;
+    case 'faste': screen = a ? <RoutineScreen key={a} id={a} /> : <RoutinesScreen />; break;
     case 'samtale':
       if (a === 'ny') screen = <NewConversationScreen />;
       else if (a) screen = <ConversationScreen id={a} />;
@@ -144,7 +146,7 @@ function Unlocked() {
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month || inbox.some((i) => i.done) };
-  const activeTab = tab === 'samtale' || tab === 'spoerg' ? 'husk' : tab;
+  const activeTab = tab === 'samtale' || tab === 'spoerg' || tab === 'faste' ? 'husk' : tab;
 
   return (
     <>
