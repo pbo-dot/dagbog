@@ -134,8 +134,10 @@ export function RoutineScreen({ id }: { id: string }) {
   return (
     <div className="stack" style={{ gap: 18 }}>
       <Header back="faste" />
-      <input type="text" className="serif" style={{ fontSize: '1.4rem', border: 'none', background: 'transparent', padding: 0 }}
-        value={r.name} placeholder="Navn, fx Indsprøjtning" onChange={(e) => update({ name: e.target.value })} aria-label="Navn" />
+      <label className="field">Navn
+        <input type="text" value={r.name} placeholder="Fx Indsprøjtning" autoFocus={isNew}
+          onChange={(e) => update({ name: e.target.value })} aria-label="Navn" />
+      </label>
 
       <div className="chips" aria-label="Ikon">
         {ICONS.map((i) => <button key={i} className={`chip ${r.icon === i ? 'on' : ''}`} onClick={() => update({ icon: i })}>{i}</button>)}
@@ -179,7 +181,10 @@ export function RoutineScreen({ id }: { id: string }) {
       </section>
 
       {isNew ? (
-        <button className="btn primary" disabled={!r.name.trim()} onClick={async () => { await store.put('routines', r.id, { ...r, name: r.name.trim() }); go('faste'); }}>Gem</button>
+        <>
+          <button className="btn primary" disabled={!r.name.trim()} onClick={async () => { await store.put('routines', r.id, { ...r, name: r.name.trim() }); go('faste'); }}>Gem</button>
+          {!r.name.trim() && <p className="tiny muted" style={{ marginTop: -8 }}>Skriv et navn øverst for at kunne gemme.</p>}
+        </>
       ) : (
         <>
           <section className="stack-sm">
