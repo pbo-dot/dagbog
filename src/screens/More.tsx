@@ -21,13 +21,11 @@ function Row({ icon, title, text, onClick, href }: { icon: ReactNode; title: str
 /** Fanen "Mere": det, der bruges sjældnere, samlet ét sted. */
 export function MoreScreen() {
   const store = useStore();
-  const people = Object.keys(store.data.people).length;
   const patterns = Object.keys(store.data.patterns).length;
   return (
     <div className="stack" style={{ gap: 20 }}>
       <Header title="Mere" />
       <div className="card list" style={{ padding: '2px 16px' }}>
-        <Row icon={Icon.people} title="Mennesker" text={people ? `${people} ${people === 1 ? 'person' : 'personer'}` : 'Noter om dem, der betyder noget'} onClick={() => go('mennesker')} />
         <Row icon={Icon.patterns} title="Mønstre" text={patterns ? `${patterns} ${patterns === 1 ? 'mønster' : 'mønstre'}` : 'Tanker og mønstre, der går igen'} onClick={() => go('moenstre')} />
         <Row icon={Icon.mic} title="DB – optager-appen" text="Optag samtaler, der kommer ind under Samtaler" href="https://pbo-dot.github.io/db/" />
         <Row icon={Icon.gear} title="Indstillinger" text="Låsning, AI, påmindelser og sikkerhedskopi" onClick={() => go('indstillinger')} />

@@ -3,6 +3,7 @@ import { AIError, searchDiary, type AIHit } from '../lib/ai';
 import { addDays, addMonths, formatFull, formatLong, formatMonth, formatShort, monthId, today } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries, monthThemes } from '../lib/generate';
 import { excerpt, highlight, localSearch, tokenize } from '../lib/search';
+import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
 import type { Entry } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
@@ -151,10 +152,21 @@ export function MemoryScreen() {
   const { data, inbox } = useStore();
   const inboxCount = inbox.filter((i) => i.done).length;
   const empty = Object.keys(data.entries).length === 0;
+  const weekDot = waiting(data).week;
   return (
     <div className="stack" style={{ gap: 24 }}>
       <Header title="Husk" />
       {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
+      <button className="card tappable" onClick={() => go('uge')}>
+        <div className="row between">
+          <div className="row" style={{ gap: 8 }}>
+            <span style={{ width: 20, height: 20, display: 'inline-flex', color: 'var(--accent)' }}>{Icon.week}</span>
+            <strong>Ugen</strong>
+          </div>
+          {weekDot && <span className="dot" style={{ position: 'static' }} aria-label="Ny ugeopsummering" />}
+        </div>
+        <span className="small muted" style={{ display: 'block' }}>Ugeopsummering og tre ord</span>
+      </button>
       {aiReady(data) && (
         <button className="card tappable" onClick={() => go('spoerg')}>
           <div className="row" style={{ gap: 8 }}>
@@ -171,6 +183,13 @@ export function MemoryScreen() {
           <span className="tiny muted">{Object.keys(data.routines).length || 'Ny'}</span>
         </div>
         <span className="small muted" style={{ display: 'block' }}>Medicin, indsprøjtninger og andet på en fast plan</span>
+      </button>
+      <button className="card tappable" onClick={() => go('noter')}>
+        <div className="row between">
+          <strong>Noter</strong>
+          <span className="tiny muted">{Object.keys(data.notes).length || 'Ny'}</span>
+        </div>
+        <span className="small muted" style={{ display: 'block' }}>Faste oplysninger, lister og gode råd</span>
       </button>
       <button className="card tappable" onClick={() => go('samtale')}>
         <div className="row between">

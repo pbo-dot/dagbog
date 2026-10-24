@@ -12,6 +12,7 @@ import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
 import { DayScreen, MemoryScreen, MonthScreen } from './screens/Memory';
 import { MoreScreen } from './screens/More';
+import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
 import { WeekScreen } from './screens/Week';
@@ -19,9 +20,9 @@ import { go, Icon, useRoute } from './ui';
 
 const TABS = [
   { id: 'skriv', label: 'Skriv', icon: Icon.pen },
-  { id: 'uge', label: 'Uge', icon: Icon.week },
   { id: 'husk', label: 'Husk', icon: Icon.memory },
   { id: 'kalender', label: 'Kalender', icon: Icon.calendar },
+  { id: 'mennesker', label: 'Mennesker', icon: Icon.people },
   { id: 'mere', label: 'Mere', icon: Icon.more },
 ];
 
@@ -147,13 +148,14 @@ function Unlocked() {
       else screen = <ConversationsScreen />;
       break;
     case 'mere': screen = <MoreScreen />; break;
+    case 'noter': screen = a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     default: screen = <EntryScreen />;
   }
 
-  const dots: Record<string, boolean> = { skriv: w.today, uge: w.week, husk: w.month || inbox.some((i) => i.done) };
-  const activeTab = ['samtale', 'spoerg', 'faste'].includes(tab) ? 'husk'
-    : ['mennesker', 'moenstre', 'indstillinger'].includes(tab) ? 'mere' : tab;
+  const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
+  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter'].includes(tab) ? 'husk'
+    : ['moenstre', 'indstillinger'].includes(tab) ? 'mere' : tab;
 
   return (
     <>

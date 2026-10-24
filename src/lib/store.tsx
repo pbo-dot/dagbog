@@ -7,7 +7,7 @@ import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type GoogleMonth, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type GoogleMonth, type Meta, type Note, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -20,16 +20,17 @@ export interface Data {
   routines: Record<string, Routine>;
   appointments: Record<string, Appointment>;
   google: Record<string, GoogleMonth>;
+  notes: Record<string, Note>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google' | 'notes';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {}, notes: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,
@@ -64,7 +65,8 @@ interface StoreApi {
   saveSettings(s: Settings): Promise<void>;
   saveMeta(m: Meta): Promise<void>;
   saveDraft(d: Draft | null): Promise<void>;
-  replaceAll(d: Partial<Data>, photos?: Record<string, Photo>): Promise<void>;
+  /** Læser en sikkerhedskopi ind. Med `merge` lægges dage og personer oven i det, der er, uden at overskrive. */
+  replaceAll(d: Partial<Data>, photos?: Record<string, Photo>, merge?: boolean): Promise<void>;
   putPhoto(p: Photo): Promise<void>;
   getPhoto(id: string): Promise<Photo | undefined>;
   removePhoto(id: string): Promise<void>;
@@ -96,6 +98,41 @@ function settingsWithDefaults(s: Partial<Settings>): Settings {
     reminder: { ...DEFAULT_SETTINGS.reminder, ...s.reminder },
     google: { ...DEFAULT_SETTINGS.google, ...s.google },
   };
+}
+
+/** Dage fra en import: findes dagen i forvejen, sættes den nye tekst ind under den gamle. */
+export function mergeEntries(have: Record<string, Entry>, incoming: Record<string, Entry>): Record<string, Entry> {
+  const out: Record<string, Entry> = {};
+  for (const [date, e] of Object.entries(incoming)) {
+    const old = have[date];
+    if (!old) out[date] = e;
+    else if (!old.text.includes(e.text.trim())) {
+      out[date] = { ...old, text: `${old.text.trimEnd()}\n\n${e.text.trim()}`, tags: [...new Set([...old.tags, ...e.tags])], updatedAt: Date.now() };
+    }
+  }
+  return out;
+}
+
+/** Personer fra en import: findes navnet i forvejen, udfyldes kun det, der mangler, og noterne lægges til. */
+export function mergePeople(have: Record<string, Person>, incoming: Record<string, Person>): Record<string, Person> {
+  const byName = new Map(Object.values(have).map((p) => [p.name.trim().toLowerCase(), p]));
+  const out: Record<string, Person> = {};
+  for (const p of Object.values(incoming)) {
+    const old = byName.get(p.name.trim().toLowerCase());
+    if (!old) { out[p.id] = p; continue; }
+    const notes = [...old.notes, ...p.notes.filter((n) => !old.notes.some((o) => o.text === n.text))];
+    out[old.id] = {
+      ...old,
+      important: old.important || p.important,
+      relation: old.relation || p.relation,
+      group: old.group ?? p.group,
+      birthday: old.birthday || p.birthday,
+      family: old.family || p.family,
+      notes,
+      updatedAt: Date.now(),
+    };
+  }
+  return out;
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
@@ -285,9 +322,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setData((d) => ({ ...d, draft }));
     },
 
-    async replaceAll(incoming, photos) {
+    async replaceAll(incoming, photos, merge = false) {
       for (const [id, p] of Object.entries(photos ?? {})) await write(`photo:${id}`, p);
       const next = { ...data };
+      if (merge) {
+        incoming = { ...incoming };
+        if (incoming.entries) incoming.entries = mergeEntries(data.entries, incoming.entries);
+        if (incoming.people) incoming.people = mergePeople(data.people, incoming.people);
+      }
       for (const c of COLLECTIONS) {
         const items = incoming[c] as Record<string, unknown> | undefined;
         if (!items) continue;

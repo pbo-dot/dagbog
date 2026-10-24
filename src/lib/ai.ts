@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Routine, type Settings, type WeekSummary } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type Routine, type Settings, type WeekSummary } from './types';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
 
@@ -291,7 +291,7 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
-- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google").
+- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.`;
 
 function conversationBlock(c: Conversation, people: Record<string, Person>, withTranscript = true): string {
@@ -309,7 +309,8 @@ function conversationBlock(c: Conversation, people: Record<string, Person>, with
 
 function personBlock(p: Person, keep: (date: string) => boolean = () => true): string {
   const notes = p.notes.filter((n) => keep(n.date));
-  return [`### ${p.name}`, p.important ? `Vigtigt for dem lige nu: ${p.important}` : '', ...notes.map((n) => `${n.date}: ${n.text}`)]
+  const head = [p.relation, p.birthday ? `født ${p.birthday.replace(/^--/, '')}` : ''].filter(Boolean).join(', ');
+  return [`### ${p.name}${head ? ` (${head})` : ''}`, p.family ?? '', p.important ? `Vigtigt for dem lige nu: ${p.important}` : '', ...notes.map((n) => `${n.date}: ${n.text}`)]
     .filter(Boolean)
     .join('\n');
 }
@@ -340,6 +341,7 @@ export interface AskData {
   months: Record<string, MonthChapter>;
   routines: Record<string, Routine>;
   appointments: Record<string, Appointment>;
+  notes?: Record<string, Note>;
   google?: Record<string, GoogleMonth>;
   settings?: Pick<Settings, 'google'>;
 }
@@ -352,6 +354,11 @@ function calendarLines(data: AskData, inside: (d: string) => boolean = () => tru
     line: `- ${e.date}${e.end !== e.date ? ` til ${e.end}` : ''}${e.time ? ` kl. ${e.time}` : ''}: ${e.title}${e.place ? ` (${e.place})` : ''} [Google]`,
   }));
   return [...own, ...g].sort((a, b) => a.date.localeCompare(b.date)).map((x) => x.line);
+}
+
+/** Faste noter uden dato (regler, lister, gode råd). */
+function noteBlocks(data: AskData): string[] {
+  return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => `### ${n.title}\n${n.text}`);
 }
 
 function appointmentLine(a: Appointment): string {
@@ -397,6 +404,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
       ['MENNESKER', people.map((p) => personBlock(p, inside))],
       ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r, inside))],
       ['AFTALER I KALENDEREN', calendarLines(data, inside)],
+      ['NOTER', noteBlocks(data)],
     ]);
     return {
       corpus: corpus || '(Der er intet skrevet i denne periode.)',
@@ -411,6 +419,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
+    ['NOTER', noteBlocks(data)],
   ]);
   if (full.length <= FULL_LIMIT) {
     return { corpus: full, note: 'Materialet er hele dagbogen.', shown: `hele dagbogen · ${entries.length} dage` };
@@ -435,6 +444,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
+    ['NOTER', noteBlocks(data)],
   ]);
   if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
   return {

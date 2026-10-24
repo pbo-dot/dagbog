@@ -309,8 +309,8 @@ export function SettingsScreen() {
                 if (!f) return;
                 try {
                   const backup = parseBackup(await f.text());
-                  await store.replaceAll(backup.data, backup.photos);
-                  setMsg('Sikkerhedskopien er indlæst.');
+                  await store.replaceAll(backup.data, backup.photos, backup.merge);
+                  setMsg(backup.merge ? 'Dine gamle noter er lagt ind.' : 'Sikkerhedskopien er indlæst.');
                 } catch (err) {
                   setMsg((err as Error).message);
                 }

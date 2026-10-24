@@ -340,3 +340,20 @@ button.list-item:first-child { border-top: 0; }
 .agenda-bar { width: 4px; align-self: stretch; border-radius: 2px; flex: none; margin: 4px 0; }
 .fab { position: fixed; right: max(16px, calc(50% - 304px)); bottom: calc(var(--tabbar) + env(safe-area-inset-bottom) + 16px); z-index: 6; min-height: 56px; padding: 0 22px 0 18px; border-radius: 18px; border: none; background: var(--accent); color: var(--accent-text); font-weight: 700; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18); transition: transform 0.12s ease; }
 .fab:active { transform: scale(0.95); }
+
+/* Mennesker */
+.avatar { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; }
+.avatar.big { width: 84px; height: 84px; font-size: 1.8rem; }
+.person-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 0; border: none; background: none; text-align: left; min-height: 60px; }
+.person-row + .person-row { border-top: 1px solid var(--line); }
+.person-hero { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.card.birthday { display: flex; align-items: center; gap: 12px; background: var(--accent-soft); box-shadow: none; }
+.card.birthday .avatar { background: var(--surface); }
+
+/* Noter */
+.card.note-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+.note-ico { width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--accent-soft); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.note-body { font-family: var(--serif); font-size: 1.05rem; line-height: 1.6; }
+.note-body h3 { font-family: var(--sans); }
+.check-line { display: flex; align-items: center; gap: 12px; min-height: 44px; font-family: var(--sans); font-size: 1rem; }
+.check-line input { width: 22px; height: 22px; accent-color: var(--accent); flex: none; }

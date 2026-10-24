@@ -115,11 +115,11 @@ export function download(blob: Blob, filename: string) {
 }
 
 /** Validerer og normaliserer en importeret sikkerhedskopi. */
-export function parseBackup(json: string): { data: Partial<Data>; photos: Record<string, Photo> } {
+export function parseBackup(json: string): { data: Partial<Data>; photos: Record<string, Photo>; merge: boolean } {
   const d = JSON.parse(json);
   if (d?.app !== 'dagbog') throw new Error('Filen er ikke en sikkerhedskopi fra Dagbog.');
   const out: Partial<Data> = {};
-  for (const k of ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google'] as const) {
+  for (const k of ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes'] as const) {
     if (d[k] && typeof d[k] === 'object') (out as Record<string, unknown>)[k] = d[k];
   }
   if (d.settings) out.settings = d.settings;
@@ -128,5 +128,6 @@ export function parseBackup(json: string): { data: Partial<Data>; photos: Record
   for (const [id, p] of Object.entries((d.photos ?? {}) as Record<string, Photo>)) {
     if (p && typeof p.data === 'string' && p.id === id) photos[id] = p;
   }
-  return { data: out, photos };
+  // Import af gamle noter: lægges oven i det, der er (tilfoej: true)
+  return { data: out, photos, merge: d.tilfoej === true };
 }

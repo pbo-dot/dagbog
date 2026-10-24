@@ -5,7 +5,7 @@ import { speak, speechOutputAvailable, stopSpeaking } from '../lib/device';
 import { aiReady, generateWeek } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { WeekSummary } from '../lib/types';
-import { go, Icon, MoodTag, uid } from '../ui';
+import { go, Header, Icon, MoodTag, uid } from '../ui';
 
 export function CrisisHelp() {
   return (
@@ -104,6 +104,7 @@ export function WeekScreen({ id: routeId }: { id?: string }) {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
+      <Header back="husk" />
       <div className="row between">
         <button className="icon-btn" onClick={() => go(`uge/${prev}`)} aria-label="Forrige uge"><span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.chevronLeft}</span></button>
         <div className="center">

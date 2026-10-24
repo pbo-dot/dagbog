@@ -63,11 +63,33 @@ export interface PersonNote {
   text: string;
 }
 
+export type PersonGroup = 'naermeste' | 'familie' | 'netvaerk';
+
+export const PERSON_GROUPS: { id: PersonGroup; label: string }[] = [
+  { id: 'naermeste', label: 'Nærmeste' },
+  { id: 'familie', label: 'Familie' },
+  { id: 'netvaerk', label: 'Netværk' },
+];
+
 export interface Person {
   id: string;
   name: string;
   important: string; // hvad er vigtigt for dem lige nu
   notes: PersonNote[];
+  updatedAt: number;
+  relation?: string; // fx "Datter", "Mor", "Ven"
+  group?: PersonGroup;
+  birthday?: string; // YYYY-MM-DD, eller --MM-DD når året ikke kendes
+  family?: string; // fx "Gift med Kamma. Børn: Per og Dorte."
+}
+
+/** En fast oplysning uden dato, fx trading-regler eller en pakkeliste. */
+export interface Note {
+  id: string;
+  title: string;
+  icon: string; // emoji
+  text: string; // linjer med "- [ ]" eller "- [x]" er afkrydsning
+  createdAt: number;
   updatedAt: number;
 }
 
