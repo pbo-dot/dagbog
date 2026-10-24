@@ -119,7 +119,7 @@ export function parseBackup(json: string): { data: Partial<Data>; photos: Record
   const d = JSON.parse(json);
   if (d?.app !== 'dagbog') throw new Error('Filen er ikke en sikkerhedskopi fra Dagbog.');
   const out: Partial<Data> = {};
-  for (const k of ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments'] as const) {
+  for (const k of ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google'] as const) {
     if (d[k] && typeof d[k] === 'object') (out as Record<string, unknown>)[k] = d[k];
   }
   if (d.settings) out.settings = d.settings;

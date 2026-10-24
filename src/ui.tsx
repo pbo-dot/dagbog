@@ -102,6 +102,11 @@ export function Toast({ text, onDone }: { text: string; onDone: () => void }) {
   return <div className="toast" role="status">{text}</div>;
 }
 
+/** Ikonet for et punkt i kalenderen: emoji, eller en farvet prik for Google-aftaler. */
+export function AgendaIcon({ item }: { item: { kind: string; icon: string; color?: string } }) {
+  return item.kind === 'google' ? <i className="g-dot" style={{ background: item.color || '#1a73e8' }} aria-label="Google Kalender" /> : <>{item.icon}</>;
+}
+
 export function Header({ title, back: backTo, right }: { title?: ReactNode; back?: string; right?: ReactNode }) {
   return (
     <div className="header">

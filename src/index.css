@@ -295,4 +295,6 @@ button.list-item:first-child { border-top: 0; }
 .cal-day.sel { background: var(--accent-soft); }
 .cal-marks { display: flex; gap: 1px; align-items: center; min-height: 14px; margin-top: 2px; }
 .cal-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.g-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: 1px; font-style: normal; }
+.cal-marks .g-dot { width: 5px; height: 5px; vertical-align: 0; }
 .cal-ico { font-style: normal; font-size: 0.68rem; line-height: 1; }

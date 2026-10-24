@@ -7,7 +7,7 @@ import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type GoogleMonth, type Meta, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -19,16 +19,17 @@ export interface Data {
   conversations: Record<string, Conversation>;
   routines: Record<string, Routine>;
   appointments: Record<string, Appointment>;
+  google: Record<string, GoogleMonth>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,
@@ -93,6 +94,7 @@ function settingsWithDefaults(s: Partial<Settings>): Settings {
     ...s,
     ai: { ...DEFAULT_SETTINGS.ai, ...s.ai },
     reminder: { ...DEFAULT_SETTINGS.reminder, ...s.reminder },
+    google: { ...DEFAULT_SETTINGS.google, ...s.google },
   };
 }
 

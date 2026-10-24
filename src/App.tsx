@@ -3,6 +3,7 @@ import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
+import { useGoogleAutoSync } from './lib/googleSync';
 import { AskScreen } from './screens/Ask';
 import { CalendarScreen } from './screens/Calendar';
 import { RoutineScreen, RoutinesScreen } from './screens/Routines';
@@ -96,6 +97,7 @@ function Unlocked() {
   const [, tick] = useState(0);
   useAutoLock();
   useAutoGenerate();
+  useGoogleAutoSync();
 
   // Tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
   useEffect(() => {

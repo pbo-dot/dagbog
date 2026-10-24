@@ -125,6 +125,31 @@ export interface Conversation {
   createdAt: number;
 }
 
+/** En aftale hentet fra Google Kalender (kun læsning). */
+export interface GoogleEvent {
+  id: string;
+  cal: string; // kalenderens id
+  title: string;
+  date: string; // første dag (YYYY-MM-DD)
+  end: string; // sidste dag (med), samme som date for aftaler på én dag
+  time: string; // HH:MM, eller tom for hele dagen
+  place: string;
+}
+
+/** Google-aftaler for én måned (nøgle YYYY-MM), efter startdato. */
+export interface GoogleMonth {
+  id: string;
+  events: GoogleEvent[];
+  syncedAt: number;
+}
+
+export interface GoogleCalendarInfo {
+  id: string;
+  name: string;
+  color: string;
+  on: boolean; // vises i dagbogen
+}
+
 export interface Pattern {
   id: string;
   text: string;
@@ -148,6 +173,12 @@ export interface Settings {
   };
   summaryWeekday: number; // 0 = søndag
   autoLockMinutes: number; // 0 = straks
+  google: {
+    clientId: string; // fra Google Cloud (ikke hemmeligt)
+    email: string; // kontoen, der er forbundet ('' = ikke forbundet)
+    calendars: GoogleCalendarInfo[];
+    lastSync: number;
+  };
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -161,6 +192,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reminder: { enabled: true, time: '21:00', text: 'Hvad fyldte i dag?' },
   summaryWeekday: 0,
   autoLockMinutes: 5,
+  google: { clientId: '', email: '', calendars: [], lastSync: 0 },
 };
 
 export interface Draft {

@@ -4,7 +4,7 @@ import { addDays, formatLong, formatShort, today } from '../lib/dates';
 import { dueTomorrow, everyText, routineStatus } from '../lib/routines';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
-import { DoubleConfirm, go, Header, Icon, uid } from '../ui';
+import { AgendaIcon, DoubleConfirm, go, Header, Icon, uid } from '../ui';
 
 const ICONS = ['💉', '💊', '🩹', '🧴', '💧', '⭐'];
 const EVERY: { label: string; days: number; monthly: boolean }[] = [
@@ -31,13 +31,13 @@ export function RoutineCards() {
     <div className="stack-sm">
       {plans.filter((i) => i.date === t).map((i, n) => (
         <p key={`t${n}`} className="small" style={{ margin: 0 }}>
-          <strong>I dag:</strong> {i.icon} {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
+          <strong>I dag:</strong> <AgendaIcon item={i} /> {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
         </p>
       ))}
       {cards.map(({ r, s }) => <RoutineCard key={r.id} r={r} s={s} />)}
       {plans.filter((i) => i.date !== t).map((i, n) => (
         <p key={`m${n}`} className="small muted" style={{ margin: 0 }}>
-          I morgen: {i.icon} {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
+          I morgen: <AgendaIcon item={i} /> {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
         </p>
       ))}
       {tomorrow.map(({ r, d }) => (

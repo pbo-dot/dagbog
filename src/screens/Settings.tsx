@@ -5,7 +5,9 @@ import { addMonths, today, WEEKDAYS } from '../lib/dates';
 import { badgeSupported, reminderICS } from '../lib/device';
 import { download, parseBackup, toJSON, toPDF, toText } from '../lib/export';
 import { useStore } from '../lib/store';
-import type { Settings } from '../lib/types';
+import { clientIdOf, currentToken, forget, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
+import { syncGoogle, useGoogleState } from '../lib/googleSync';
+import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
 import { DoubleConfirm, Header, Switch } from '../ui';
 import { PinChooser } from './Lock';
 
@@ -47,6 +49,66 @@ const MODELS = [
   { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5' },
   { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5 (hurtigst, billigst)' },
 ];
+
+/** Forbind Google Kalender, vælg kalendere, hent nu eller afbryd. */
+function GoogleSection() {
+  const store = useStore();
+  const s = store.data.settings;
+  const g = s.google;
+  const { busy, error } = useGoogleState();
+  const clientId = clientIdOf(g);
+  const connected = !!g.email || !!currentToken();
+  const saveGoogle = (patch: Partial<Settings['google']>) => store.saveSettings({ ...s, google: { ...g, ...patch } });
+
+  return (
+    <Section title="Google Kalender">
+      {!connected ? (
+        <>
+          <p className="small">Dagbogen kan hente dine aftaler fra Google Kalender og vise dem i Kalender-fanen og bruge dem i "Spørg dagbogen". Den kan kun læse, ikke ændre.</p>
+          {!GOOGLE_CLIENT_ID && (
+            <>
+              <label className="field">Klient-id fra Google Cloud
+                <input type="text" value={g.clientId} placeholder="….apps.googleusercontent.com" autoComplete="off"
+                  onChange={(e) => saveGoogle({ clientId: e.target.value.trim() })} />
+              </label>
+              <p className="tiny muted">Omdirigerings-URI i Google Cloud: {redirectUri()}</p>
+            </>
+          )}
+          <button className="btn primary" style={{ alignSelf: 'flex-start' }} disabled={!clientId} onClick={() => signIn(clientId)}>Forbind med Google</button>
+          <p className="tiny muted">Du sendes til Google og tilbage igen. Bagefter skal dagbogen låses op igen.</p>
+        </>
+      ) : (
+        <>
+          <p className="small">{g.email ? <>Forbundet som <strong>{g.email}</strong></> : 'Forbundet'}</p>
+          {g.calendars.length > 0 && (
+            <div className="stack-sm">
+              <span className="tiny muted">Vis disse kalendere</span>
+              {g.calendars.map((c) => (
+                <label key={c.id} className="row" style={{ gap: 10 }}>
+                  <input type="checkbox" checked={c.on}
+                    onChange={(e) => saveGoogle({ calendars: g.calendars.map((x) => (x.id === c.id ? { ...x, on: e.target.checked } : x)) })} />
+                  <i className="g-dot" style={{ background: c.color }} />
+                  <span className="small">{c.name}</span>
+                </label>
+              ))}
+            </div>
+          )}
+          <p className="tiny muted">{g.lastSync ? `Sidst hentet ${new Date(g.lastSync).toLocaleString('da-DK', { dateStyle: 'short', timeStyle: 'short' })}. ` : ''}Henter det seneste år og 6 måneder frem. Aftalerne gemmes krypteret som resten af dagbogen.</p>
+          {error && <p className="error small">{error}</p>}
+          <div className="row">
+            <button className="btn small" disabled={busy} onClick={() => syncGoogle(store, { login: true })}>{busy ? <><span className="spinner" /> Henter …</> : 'Hent nu'}</button>
+            <button className="btn ghost small" onClick={async () => {
+              if (!confirm('Afbryd forbindelsen og fjern Google-aftalerne fra dagbogen?')) return;
+              await forget();
+              for (const id of Object.keys(store.data.google)) await store.remove('google', id);
+              await store.saveSettings({ ...s, google: { ...DEFAULT_SETTINGS.google, clientId: g.clientId } });
+            }}>Afbryd</button>
+          </div>
+        </>
+      )}
+    </Section>
+  );
+}
 
 export function SettingsScreen() {
   const store = useStore();
@@ -153,6 +215,8 @@ export function SettingsScreen() {
           </>
         )}
       </Section>
+
+      <GoogleSection />
 
       <Section title="Låsning">
         <label className="field">Lås automatisk efter

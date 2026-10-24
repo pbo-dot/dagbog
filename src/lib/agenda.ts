@@ -1,23 +1,40 @@
 // Kalenderen: egne aftaler, faste ting og aftaler fra samtaler samlet pr. dag.
-import { addDays } from './dates';
+import { addDays, monthId } from './dates';
 import { lastIndex, occurrence, suggestedOption } from './routines';
-import type { Appointment, Conversation, Routine } from './types';
+import type { Appointment, Conversation, GoogleEvent, GoogleMonth, Routine, Settings } from './types';
 
 export interface AgendaItem {
   date: string;
   time: string; // HH:MM eller tom
   title: string;
   icon: string;
-  kind: 'appointment' | 'routine' | 'event';
+  kind: 'appointment' | 'routine' | 'event' | 'google';
   detail?: string; // fx "højre ben" eller sted
   done?: boolean; // faste ting: taget
-  ref: string; // id på aftale, fast ting eller samtale
+  ref: string; // id på aftale, fast ting, samtale eller Google-kalender
+  color?: string; // Google-kalenderens farve
 }
 
 export interface AgendaData {
   appointments: Record<string, Appointment>;
   routines: Record<string, Routine>;
   conversations: Record<string, Conversation>;
+  google?: Record<string, GoogleMonth>;
+  settings?: Pick<Settings, 'google'>;
+}
+
+/** Google-aftaler fra de valgte kalendere, der rører perioden. */
+export function googleEvents(data: AgendaData, from: string, to: string): GoogleEvent[] {
+  const on = new Map((data.settings?.google.calendars ?? []).filter((c) => c.on).map((c) => [c.id, c]));
+  const out: GoogleEvent[] = [];
+  for (const m of Object.values(data.google ?? {})) {
+    // Aftaler over flere dage ligger under startmåneden
+    if (m.id > monthId(to)) continue;
+    for (const e of m.events) {
+      if (on.has(e.cal) && e.date <= to && e.end >= from) out.push(e);
+    }
+  }
+  return out;
 }
 
 /** Alle punkter fra `from` til `to` (begge med), sorteret efter dato og tid. */
@@ -29,6 +46,14 @@ export function agenda(data: AgendaData, from: string, to: string): AgendaItem[]
   for (const c of Object.values(data.conversations)) {
     for (const ev of c.events ?? []) {
       if (ev.date >= from && ev.date <= to) out.push({ date: ev.date, time: ev.time, title: ev.title, icon: '💬', kind: 'event', detail: ev.place || undefined, ref: c.id });
+    }
+  }
+  const colors = new Map((data.settings?.google.calendars ?? []).map((c) => [c.id, c.color]));
+  for (const e of googleEvents(data, from, to)) {
+    // Aftaler over flere dage står på hver dag (højst 60)
+    let d = e.date < from ? from : e.date;
+    for (let n = 0; d <= e.end && d <= to && n < 60; n++, d = addDays(d, 1)) {
+      out.push({ date: d, time: d === e.date ? e.time : '', title: e.title, icon: '', kind: 'google', detail: e.place || undefined, ref: e.cal, color: colors.get(e.cal) });
     }
   }
   for (const r of Object.values(data.routines)) {

@@ -4,18 +4,50 @@ import { calendarLink } from '../lib/conversation';
 import { addDays, addMonths, formatFull, formatMonth, fromISO, monthId, today, weekStart } from '../lib/dates';
 import { useStore } from '../lib/store';
 import type { Appointment } from '../lib/types';
-import { go, Header, uid } from '../ui';
+import { currentToken } from '../lib/google';
+import { syncGoogle, useGoogleState } from '../lib/googleSync';
+import { AgendaIcon, go, Header, uid } from '../ui';
 
 const DAYS = ['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'];
 
 function ItemLine({ item }: { item: AgendaItem }) {
   return (
     <span className="small">
-      {item.icon} <strong>{item.title}</strong>
+      <AgendaIcon item={item} /> <strong>{item.title}</strong>
       {item.time ? ` ${at(item.time)}` : ''}
       {item.detail ? ` · ${item.detail}` : ''}
       {item.kind === 'routine' && item.done ? ' · ✓ taget' : ''}
     </span>
+  );
+}
+
+function ago(ms: number): string {
+  const min = Math.round((Date.now() - ms) / 60_000);
+  if (min < 1) return 'lige nu';
+  if (min < 60) return `for ${min} min. siden`;
+  const h = Math.round(min / 60);
+  if (h < 24) return `for ${h} ${h === 1 ? 'time' : 'timer'} siden`;
+  const d = Math.round(h / 24);
+  return `for ${d} ${d === 1 ? 'dag' : 'dage'} siden`;
+}
+
+/** Status for Google Kalender med knappen Opdatér. */
+function GoogleLine() {
+  const store = useStore();
+  const g = store.data.settings.google;
+  const { busy, error } = useGoogleState();
+  if (!g.email && !currentToken()) {
+    return <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go('indstillinger')}>Hent aftaler fra Google Kalender …</button>;
+  }
+  return (
+    <div className="row between" style={{ gap: 8 }}>
+      <span className="tiny muted">
+        <i className="g-dot" style={{ background: '#1a73e8' }} /> = Google Kalender
+        {busy ? ' · henter …' : g.lastSync ? ` · hentet ${ago(g.lastSync)}` : ' · ikke hentet endnu'}
+        {error && <span className="error" style={{ display: 'block' }}>{error}</span>}
+      </span>
+      <button className="btn ghost small" disabled={busy} onClick={() => syncGoogle(store, { login: true })}>{busy ? <span className="spinner" /> : 'Opdatér'}</button>
+    </div>
   );
 }
 
@@ -37,6 +69,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
   const items = agenda(data, gridStart, gridEnd);
   const byDay = new Map<string, AgendaItem[]>();
   for (const i of items) byDay.set(i.date, [...(byDay.get(i.date) ?? []), i]);
+  const calName = (id: string) => data.settings.google.calendars.find((c) => c.id === id)?.name ?? '';
   const talksOn = (d: string) => Object.values(data.conversations).filter((c) => c.date === d);
 
   const nextWeek = agenda(data, t, addDays(t, 7));
@@ -86,13 +119,14 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
                 <span>{fromISO(d).getDate()}</span>
                 <span className="cal-marks">
                   {written && <i className="cal-dot" />}
-                  {its.slice(0, 2).map((i, n) => <i key={n} className="cal-ico">{i.icon}</i>)}
+                  {its.slice(0, 2).map((i, n) => <i key={n} className="cal-ico"><AgendaIcon item={i} /></i>)}
                 </span>
               </button>
             );
           })}
         </div>
         <p className="tiny muted">● = skrevet i dagbogen</p>
+        <GoogleLine />
       </section>
 
       <section className="stack-sm">
@@ -108,6 +142,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
                 <button className="btn ghost small" onClick={() => store.remove('appointments', i.ref)}>Slet</button>
               </div>
             )}
+            {i.kind === 'google' && <span className="tiny muted">Fra Google Kalender{calName(i.ref) ? ` (${calName(i.ref)})` : ''}</span>}
             {i.kind === 'event' && <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go(`samtale/${i.ref}`)}>Fra en samtale</button>}
             {i.kind === 'routine' && <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go(`faste/${i.ref}`)}>Faste ting</button>}
           </div>
