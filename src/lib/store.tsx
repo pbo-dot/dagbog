@@ -105,9 +105,11 @@ export function mergeEntries(have: Record<string, Entry>, incoming: Record<strin
   const out: Record<string, Entry> = {};
   for (const [date, e] of Object.entries(incoming)) {
     const old = have[date];
-    if (!old) out[date] = e;
-    else if (!old.text.includes(e.text.trim())) {
-      out[date] = { ...old, text: `${old.text.trimEnd()}\n\n${e.text.trim()}`, tags: [...new Set([...old.tags, ...e.tags])], updatedAt: Date.now() };
+    if (!old) { out[date] = e; continue; }
+    // Kun afsnit, der ikke allerede står der, så samme import kan læses ind igen uden dubletter
+    const fresh = e.text.split(/\n\s*\n/).map((x) => x.trim()).filter((x) => x && !old.text.includes(x));
+    if (fresh.length) {
+      out[date] = { ...old, text: `${old.text.trimEnd()}\n\n${fresh.join('\n\n')}`, tags: [...new Set([...old.tags, ...e.tags])], updatedAt: Date.now() };
     }
   }
   return out;
@@ -329,6 +331,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         incoming = { ...incoming };
         if (incoming.entries) incoming.entries = mergeEntries(data.entries, incoming.entries);
         if (incoming.people) incoming.people = mergePeople(data.people, incoming.people);
+        // Noter med samme titel erstattes i stedet for at blive kopieret
+        if (incoming.notes) {
+          const byTitle = new Map(Object.values(data.notes).map((n) => [n.title, n.id]));
+          incoming.notes = Object.fromEntries(Object.values(incoming.notes).map((n) => {
+            const id = byTitle.get(n.title) ?? n.id;
+            return [id, { ...n, id }];
+          }));
+        }
       }
       for (const c of COLLECTIONS) {
         const items = incoming[c] as Record<string, unknown> | undefined;
