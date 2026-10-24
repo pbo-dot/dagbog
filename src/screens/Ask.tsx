@@ -78,7 +78,7 @@ export function AskScreen() {
       {canAI && empty && <p className="small muted">Der er ikke skrevet noget endnu, så der er intet at spørge om.</p>}
       {canAI && !turns.length && !empty && (
         <>
-          <p className="small muted">Spørg om alt, du har skrevet eller optaget. Claude svarer ud fra din dagbog, dine samtaler og dine noter om mennesker, og viser hvilke dage svaret bygger på. Nævner du en periode ("i januar", "sidste sommer", "i 2025"), læses kun den, så det går hurtigere og koster mindre.</p>
+          <p className="small muted">Spørg om alt, du har skrevet eller optaget. Nævn gerne en periode, fx "i januar".</p>
           <div className="chips">
             {IDEAS.map((q) => <button key={q} className="chip" onClick={() => ask(q)} disabled={busy}>{q}</button>)}
           </div>

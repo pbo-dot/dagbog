@@ -158,20 +158,13 @@ function Unlocked() {
   return (
     <>
       <main className="app">
-        {!a && tab !== 'indstillinger' && tab !== 'mere' && (
-          <div className="row" style={{ justifyContent: 'flex-end', margin: '-10px -10px 0 0' }}>
-            <button className="btn ghost" onClick={() => go('indstillinger')} aria-label="Indstillinger">
-              <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{Icon.gear}</span>
-            </button>
-          </div>
-        )}
-        {screen}
+        <div className="screen" key={route.join('/')}>{screen}</div>
       </main>
       <nav className="tabbar">
         <div className="inner">
           {TABS.map((t) => (
             <button key={t.id} className={`tab ${activeTab === t.id ? 'on' : ''}`} onClick={() => go(t.id)} aria-current={activeTab === t.id ? 'page' : undefined}>
-              {t.icon}
+              <span className="pill">{t.icon}</span>
               <span>{t.label}</span>
               {dots[t.id] && <span className="dot" aria-label="Nyt" />}
             </button>

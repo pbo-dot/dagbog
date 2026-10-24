@@ -6,7 +6,7 @@ import { useStore } from '../lib/store';
 import type { Appointment } from '../lib/types';
 import { currentToken } from '../lib/google';
 import { syncGoogle, useGoogleState } from '../lib/googleSync';
-import { AgendaIcon, go, Header, uid } from '../ui';
+import { AgendaIcon, go, Header, Icon, uid } from '../ui';
 
 const DAYS = ['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'];
 
@@ -86,28 +86,36 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
 
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <Header title="Kalender" right={<button className="btn ghost small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
+      <Header title="Kalender" right={<button className="btn small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
 
       <section className="stack-sm">
         <h3>De næste 7 dage</h3>
         {nextWeek.length === 0 && <p className="small muted">Intet planlagt.</p>}
-        <div className="list">
-          {nextWeek.map((i, n) => (
-            <button key={n} className="list-item" onClick={() => { setSelected(i.date); setMonth(monthId(i.date)); }}>
-              <span className="tiny muted">{i.date === t ? 'I dag' : i.date === addDays(t, 1) ? 'I morgen' : formatFull(i.date)}</span>
-              <ItemLine item={i} />
-            </button>
-          ))}
-        </div>
+        {nextWeek.length > 0 && (
+          <div className="card agenda">
+            {nextWeek.map((i, n) => (
+              <button key={n} className="agenda-row" onClick={() => { setSelected(i.date); setMonth(monthId(i.date)); }}>
+                <span className="agenda-date">
+                  {(n === 0 || nextWeek[n - 1].date !== i.date) && <><b>{fromISO(i.date).getDate()}</b><span>{i.date === t ? 'i dag' : DAYS[(fromISO(i.date).getDay() + 6) % 7]}</span></>}
+                </span>
+                <span className="agenda-bar" style={{ background: i.kind === 'google' ? i.color || '#1a73e8' : 'var(--accent)' }} />
+                <span className="grow">
+                  <strong style={{ display: 'block' }}>{i.kind !== 'google' && i.icon ? `${i.icon} ` : ''}{i.title}</strong>
+                  <span className="small muted">{[i.time ? i.time.replace(':', '.') : '', i.detail ?? '', i.kind === 'routine' && i.done ? '✓ taget' : ''].filter(Boolean).join(' · ')}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="stack-sm">
         <div className="row between">
-          <button className="btn ghost" onClick={() => setMonth(monthId(addMonths(first, -1)))} aria-label="Forrige måned">‹</button>
-          <strong className="serif" style={{ fontSize: '1.15rem' }}>{formatMonth(month)}</strong>
-          <button className="btn ghost" onClick={() => setMonth(monthId(addMonths(first, 1)))} aria-label="Næste måned">›</button>
+          <button className="day-arrow" onClick={() => setMonth(monthId(addMonths(first, -1)))} aria-label="Forrige måned">{Icon.chevronLeft}</button>
+          <strong className="serif" style={{ fontSize: '1.25rem' }}>{formatMonth(month)}</strong>
+          <button className="day-arrow" onClick={() => setMonth(monthId(addMonths(first, 1)))} aria-label="Næste måned">{Icon.chevronRight}</button>
         </div>
-        <div className="cal">
+        <div className="cal" key={month}>
           {DAYS.map((d) => <span key={d} className="cal-head">{d}</span>)}
           {cells.map((d) => {
             const its = byDay.get(d) ?? [];
@@ -155,7 +163,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
         ) : selected <= t ? (
           <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => go(selected === t ? 'skriv' : `skriv/${selected}`)}>Skriv om dagen</button>
         ) : null}
-        {!adding && <button className="btn" style={{ alignSelf: 'flex-start' }} onClick={() => setAdding(newAppointment(selected))}>+ Ny aftale</button>}
+        {!adding && <button className="fab" onClick={() => setAdding(newAppointment(selected))}><span style={{ width: 22, height: 22, display: 'inline-flex' }}>{Icon.plus}</span>Aftale</button>}
       </section>
 
       {adding && (

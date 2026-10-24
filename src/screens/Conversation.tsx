@@ -80,8 +80,7 @@ export function ConversationsScreen() {
       <Header back="husk" />
       <h1>Samtaler</h1>
       <p className="small muted">
-        Tryk "Ny samtale" og "Optag samtale", eller optag med Pixel Optager og del teksten til Dagbog (Del → Dagbog).
-        Claude laver et resumé med aftaler og ting at huske, og det lægges i dagbogen.
+        Optag en samtale, eller del en optagelse til Dagbog. Claude laver et resumé med aftaler og ting at huske.
       </p>
       <button className="btn primary" onClick={() => go('samtale/ny')}>Ny samtale</button>
       <InboxList />
@@ -353,7 +352,7 @@ export function NewConversationScreen() {
       <Header back="samtale" />
       <h1>Ny samtale</h1>
       <p className="small muted">
-        Tryk <strong>Optag</strong>, og læg telefonen mellem jer. Eller sæt tekst ind fra fx Pixel Optager (kopiér teksten, eller gem den som tekstfil og tryk "Hent tekstfil"). Teksten sendes først til Claude, når du trykker "Lav resumé".
+        Tryk <strong>Optag</strong>, og læg telefonen mellem jer, eller sæt tekst ind fra en anden app.
       </p>
       <label className="field">Dato
         <input type="date" value={date} max={today()} onChange={(e) => e.target.value && setDate(e.target.value)} />
@@ -387,7 +386,7 @@ export function NewConversationScreen() {
         <h3>Hvem var med? (valgfrit)</h3>
         <PeopleChips value={peopleIds} onChange={setPeopleIds} />
       </div>
-      {!canAI && <p className="small muted">AI er slået fra eller mangler en API-nøgle (Indstillinger). Du kan stadig gemme teksten med dit eget resumé.</p>}
+      {!canAI && <p className="small muted">Resumé kræver en API-nøgle (Indstillinger). Du kan stadig gemme teksten.</p>}
       {error && <p className="error">{error}</p>}
       <div className="row wrap">
         {canAI && (

@@ -57,10 +57,12 @@ function RoutineCard({ r, s }: { r: Routine; s: ReturnType<typeof routineStatus>
   if (s.kind === 'done') {
     return (
       <div className="card routine done">
-        <strong>✓ {r.name} taget</strong>
-        <span className="tiny muted">I dag kl. {time(s.at).replace(':', '.')}{s.option ? ` · ${s.option}` : ''}</span>
-        <span className="tiny muted">Næste: {formatShort(s.next)}{s.nextOption ? ` · ${s.nextOption}` : ''}</span>
-        <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => save({ ...r, log: r.log.filter((l) => l.due !== s.due) })}>Fortryd</button>
+        <span className="routine-ico">✓</span>
+        <div className="grow">
+          <strong>{r.name} taget</strong>
+          <span className="small muted" style={{ display: 'block' }}>Kl. {time(s.at).replace(':', '.')}{s.option ? ` · ${s.option}` : ''} · næste {formatShort(s.next)}{s.nextOption ? `, ${s.nextOption}` : ''}</span>
+        </div>
+        <button className="btn ghost small" onClick={() => save({ ...r, log: r.log.filter((l) => l.due !== s.due) })}>Fortryd</button>
       </div>
     );
   }
@@ -68,18 +70,17 @@ function RoutineCard({ r, s }: { r: Routine; s: ReturnType<typeof routineStatus>
   const option = choice ?? s.option;
   const others = r.options.filter((o) => o !== option);
   return (
-    <div className={`card routine ${s.late ? 'late' : 'due'}`}>
-      <div className="row between" style={{ alignItems: 'center' }}>
-        <div className="stack-sm" style={{ gap: 2 }}>
-          <strong>{r.icon} {r.name}</strong>
-          <span className={`tiny ${s.late ? 'error' : 'muted'}`} style={{ minHeight: 0 }}>
-            {s.late ? `Mangler siden ${formatLong(s.due).split(' ')[0].toLowerCase()}` : 'I dag'}{option ? ` · ${option}` : ''}
-          </span>
-        </div>
-        <button className="btn primary" onClick={() => save({ ...r, log: [{ due: s.due, at: Date.now(), option }, ...r.log] })}>✓ Taget</button>
+    <div className={`card routine ${s.late ? 'late' : 'due'}`} style={{ flexWrap: 'wrap' }}>
+      <span className="routine-ico">{r.icon}</span>
+      <div className="grow">
+        <strong>{r.name}</strong>
+        <span className={`small ${s.late ? 'error' : 'muted'}`} style={{ display: 'block', minHeight: 0 }}>
+          {s.late ? `Mangler siden ${formatLong(s.due).split(' ')[0].toLowerCase()}` : 'I dag'}{option ? ` · ${option}` : ''}
+        </span>
       </div>
+      <button className="btn primary" onClick={() => save({ ...r, log: [{ due: s.due, at: Date.now(), option }, ...r.log] })}>Taget</button>
       {others.length > 0 && (
-        <div className="row wrap" style={{ gap: 6, marginTop: 6 }}>
+        <div className="row wrap" style={{ gap: 6, width: '100%', paddingLeft: 56 }}>
           <span className="tiny muted">Andet?</span>
           {others.map((o) => <button key={o} className="chip small" onClick={() => setChoice(o)}>{o}</button>)}
         </div>
@@ -97,7 +98,7 @@ export function RoutinesScreen() {
     <div className="stack" style={{ gap: 20 }}>
       <Header back="husk" />
       <h1>Faste ting</h1>
-      <p className="small muted">Ting der skal tages eller gøres på en fast plan, fx medicin, en indsprøjtning eller et plaster. På dagen står de øverst på Skriv-siden med en knap "✓ Taget".</p>
+      <p className="small muted">Medicin og andet på en fast plan. På dagen står de øverst på Skriv-siden.</p>
       <button className="btn primary" onClick={() => go('faste/ny')}>Ny fast ting</button>
       <div className="list">
         {list.length === 0 && <p className="small muted">Ingen faste ting endnu.</p>}

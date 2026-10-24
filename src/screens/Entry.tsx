@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { addDays, formatLong, today, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
-import { MAX_PHOTOS, type Entry, type MoodId } from '../lib/types';
+import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
 import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
 import { RoutineCards } from './Routines';
 
@@ -21,6 +21,14 @@ const QUESTIONS = [
 function questionFor(date: string) {
   const n = Math.floor(new Date(date).getTime() / 86400000);
   return QUESTIONS[((n % QUESTIONS.length) + QUESTIONS.length) % QUESTIONS.length];
+}
+
+type Extra = 'humor' | 'tags' | 'gode' | 'samtale';
+
+/** "God morgen", "God dag" eller "God aften" efter klokken. */
+function greeting(): string {
+  const h = new Date().getHours();
+  return h < 5 ? 'God nat' : h < 10 ? 'God morgen' : h < 18 ? 'God dag' : 'God aften';
 }
 
 function AutoGrow(props: { value: string; onChange: (v: string) => void; placeholder: string }) {
@@ -56,7 +64,8 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   const [mood, setMood] = useState<MoodId | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [good, setGood] = useState<string[]>(['', '', '']);
-  const [showGood, setShowGood] = useState(false);
+  const [open, setOpen] = useState<Set<Extra>>(new Set());
+  const toggle = (k: Extra) => setOpen((o) => { const n = new Set(o); if (n.has(k)) n.delete(k); else n.add(k); return n; });
   const [toast, setToast] = useState('');
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState('');
@@ -80,7 +89,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
     setTags(src?.tags ?? []);
     const g = src?.good ?? [];
     setGood([g[0] ?? '', g[1] ?? '', g[2] ?? '']);
-    setShowGood(g.some(Boolean));
+    setOpen(new Set<Extra>([...(src?.mood ? ['humor' as const] : []), ...(src?.tags?.length ? ['tags' as const] : []), ...(g.some(Boolean) ? ['gode' as const] : [])]));
     setPhotos(src?.photos ?? []);
     dirty.current = false;
   }, [date, draft, existing]);
@@ -214,23 +223,23 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
     );
   }
 
+  const chip = (key: Extra, icon: ReactNode, label: string, onClick?: () => void) => (
+    <button key={key} className={`chip extra ${open.has(key) ? 'on' : ''}`} aria-expanded={onClick ? undefined : open.has(key)}
+      onClick={onClick ?? (() => toggle(key))}>
+      <span className="extra-ico">{icon}</span>{label}
+    </button>
+  );
+  const moodName = MOODS.find((m) => m.id === mood)?.label;
+
   return (
-    <div className="stack" style={{ gap: 22 }}>
-      <div className="stack-sm">
-        <div className="row between">
-          <div className="row" style={{ gap: 4 }}>
-            <button className="day-arrow" onClick={() => go(`skriv/${addDays(date, -1)}`)} aria-label="Dagen før">{Icon.chevronLeft}</button>
-            <button className="btn ghost" style={{ padding: '6px 4px' }} onClick={() => setPickDate((v) => !v)} aria-label="Skift dato">
-              <span className="small">{formatLong(date)} ▾</span>
-            </button>
-            <button className="day-arrow" disabled={isToday} onClick={() => { const n = addDays(date, 1); go(n === today() ? 'skriv' : `skriv/${n}`); }} aria-label="Dagen efter">{Icon.chevronRight}</button>
-          </div>
-          {isToday && !existing && (
-            <button className="btn ghost small" onClick={skipToday}>Spring over</button>
-          )}
-          {!isToday && (
-            <button className="btn ghost small" onClick={() => go('skriv')}>I dag</button>
-          )}
+    <div className="stack" style={{ gap: 20 }}>
+      <div className="stack-sm" style={{ gap: 12 }}>
+        <div className="day-nav">
+          <button className="day-arrow" onClick={() => go(`skriv/${addDays(date, -1)}`)} aria-label="Dagen før">{Icon.chevronLeft}</button>
+          <button className="day-label" onClick={() => setPickDate((v) => !v)} aria-label="Skift dato">
+            {formatLong(date)} <span aria-hidden="true">▾</span>
+          </button>
+          <button className="day-arrow" disabled={isToday} onClick={() => { const n = addDays(date, 1); go(n === today() ? 'skriv' : `skriv/${n}`); }} aria-label="Dagen efter">{Icon.chevronRight}</button>
         </div>
         {pickDate && (
           <input
@@ -243,6 +252,11 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
             }}
           />
         )}
+        <div className="row between" style={{ alignItems: 'center' }}>
+          <h1>{isToday ? greeting() : existing ? 'Din dag' : 'Skriv om dagen'}</h1>
+          {isToday && !existing && <button className="btn small" onClick={skipToday}>Spring over</button>}
+          {!isToday && <button className="btn small" onClick={() => go('skriv')}>I dag</button>}
+        </div>
         {isToday && <RoutineCards />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
@@ -254,14 +268,14 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         <div className="row between" style={{ marginTop: 4 }}>
           <span className="tiny error">{micError}</span>
           {speechInputAvailable() && (
-            <button className={`icon-btn ${listening ? 'on' : ''}`} onClick={toggleMic} aria-label={listening ? 'Stop optagelse' : 'Indtal'}>
+            <button className={`icon-btn mic ${listening ? 'on' : ''}`} onClick={toggleMic} aria-label={listening ? 'Stop optagelse' : 'Indtal'}>
               <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{listening ? Icon.stop : Icon.mic}</span>
             </button>
           )}
         </div>
       </div>
 
-      <div className="stack-sm">
+      {photos.length > 0 && (
         <div className="photo-row">
           {photos.map((id) => (
             <div key={id} className="photo-thumb">
@@ -269,57 +283,62 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
               <button className="remove" onClick={() => removePhoto(id)} aria-label="Fjern foto">×</button>
             </div>
           ))}
-          {photos.length < MAX_PHOTOS && (
-            <button className="photo-add" onClick={() => fileRef.current?.click()} disabled={photoBusy} aria-label="Tilføj foto">
-              {photoBusy ? <span className="spinner" /> : Icon.camera}
-              <span>{photoBusy ? 'Gemmer …' : 'Tilføj foto'}</span>
-            </button>
-          )}
-          <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
         </div>
-        {photoError && <p className="tiny error">{photoError}</p>}
-        <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => go('samtale/ny')}>+ Samtale (optag en samtale og få et resumé)</button>
+      )}
+      {photoError && <p className="tiny error">{photoError}</p>}
+      <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
+
+      <div className="chips">
+        {photos.length < MAX_PHOTOS && (
+          <button className="chip extra" onClick={() => fileRef.current?.click()} disabled={photoBusy}>
+            <span className="extra-ico">{photoBusy ? <span className="spinner" /> : Icon.camera}</span>{photoBusy ? 'Gemmer …' : 'Foto'}
+          </button>
+        )}
+        {chip('humor', Icon.smile, moodName ?? 'Humør')}
+        {chip('tags', Icon.tag, tags.length ? tags.join(', ') : 'Tags')}
+        {chip('gode', Icon.heart, 'Gode ting')}
+        {chip('samtale', Icon.chat, 'Samtale', () => go('samtale/ny'))}
       </div>
 
-      <div className="stack-sm">
-        <h3>Humør</h3>
-        <MoodPicker value={mood} onChange={edit(setMood)} />
-      </div>
+      {open.has('humor') && (
+        <div className="stack-sm">
+          <h3>Humør</h3>
+          <MoodPicker value={mood} onChange={edit(setMood)} />
+        </div>
+      )}
 
-      <div className="stack-sm">
-        <h3>Tags</h3>
-        <div className="chips">
-          {data.settings.tags.map((t) => (
-            <button
-              key={t}
-              className={`chip ${tags.includes(t) ? 'on' : ''}`}
-              aria-pressed={tags.includes(t)}
-              onClick={() => edit(setTags)(tags.includes(t) ? tags.filter((x) => x !== t) : [...tags, t])}
-            >
-              {t}
-            </button>
+      {open.has('tags') && (
+        <div className="stack-sm">
+          <h3>Tags</h3>
+          <div className="chips">
+            {data.settings.tags.map((t) => (
+              <button
+                key={t}
+                className={`chip ${tags.includes(t) ? 'on' : ''}`}
+                aria-pressed={tags.includes(t)}
+                onClick={() => edit(setTags)(tags.includes(t) ? tags.filter((x) => x !== t) : [...tags, t])}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {open.has('gode') && (
+        <div className="stack-sm">
+          <h3>Tre gode ting</h3>
+          {good.map((g, i) => (
+            <input
+              key={i}
+              type="text"
+              value={g}
+              placeholder={`${i + 1}.`}
+              onChange={(e) => edit(setGood)(good.map((x, j) => (j === i ? e.target.value : x)))}
+            />
           ))}
         </div>
-      </div>
-
-      <div className="stack-sm">
-        {!showGood ? (
-          <button className="link" style={{ alignSelf: 'flex-start' }} onClick={() => setShowGood(true)}>+ Tre gode ting</button>
-        ) : (
-          <>
-            <h3>Tre gode ting</h3>
-            {good.map((g, i) => (
-              <input
-                key={i}
-                type="text"
-                value={g}
-                placeholder={`${i + 1}.`}
-                onChange={(e) => edit(setGood)(good.map((x, j) => (j === i ? e.target.value : x)))}
-              />
-            ))}
-          </>
-        )}
-      </div>
+      )}
 
       <div style={{ height: 72 }} aria-hidden="true" />
       <div className="save-bar">

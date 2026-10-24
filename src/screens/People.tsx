@@ -23,7 +23,7 @@ export function PeopleScreen() {
     <div className="stack" style={{ gap: 20 }}>
       <Header back="mere" />
       <h1>Mennesker</h1>
-      <p className="small muted">Små noter om dem, der betyder noget, så du husker, hvad der sidst var vigtigt for dem.</p>
+      <p className="small muted">Noter om dem, der betyder noget for dig.</p>
       <form className="row" onSubmit={(e) => { e.preventDefault(); add(); }}>
         <input type="text" className="grow" value={name} onChange={(e) => setName(e.target.value)} placeholder="Navn" />
         <button className="icon-btn" aria-label="Tilføj" disabled={!name.trim()}><span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.plus}</span></button>

@@ -26,7 +26,7 @@ export function MoreScreen() {
   return (
     <div className="stack" style={{ gap: 20 }}>
       <Header title="Mere" />
-      <div className="list">
+      <div className="card list" style={{ padding: '2px 16px' }}>
         <Row icon={Icon.people} title="Mennesker" text={people ? `${people} ${people === 1 ? 'person' : 'personer'}` : 'Noter om dem, der betyder noget'} onClick={() => go('mennesker')} />
         <Row icon={Icon.patterns} title="Mønstre" text={patterns ? `${patterns} ${patterns === 1 ? 'mønster' : 'mønstre'}` : 'Tanker og mønstre, der går igen'} onClick={() => go('moenstre')} />
         <Row icon={Icon.mic} title="DB – optager-appen" text="Optag samtaler, der kommer ind under Samtaler" href="https://pbo-dot.github.io/db/" />
