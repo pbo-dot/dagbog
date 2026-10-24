@@ -24,7 +24,7 @@ interface Hint {
 }
 
 /** Dagbogens klient-id fra Google Cloud (ikke hemmeligt). Kan også sættes i Indstillinger. */
-export const GOOGLE_CLIENT_ID = '';
+export const GOOGLE_CLIENT_ID = '548527737265-kunne8tl24f4shdq3s84eki43qmpt3uq.apps.googleusercontent.com';
 
 export function clientIdOf(g: { clientId: string }): string {
   return g.clientId || GOOGLE_CLIENT_ID;
