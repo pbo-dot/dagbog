@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
-import { calendarLink, diaryBlock, matchPeople, personNote, takeSharedText, withConversation } from '../lib/conversation';
+import { calendarLink, diaryBlock, matchPeople, personNote, takeSharedAudio, takeSharedText, withConversation } from '../lib/conversation';
 import { formatFull, formatShort, toISO, today } from '../lib/dates';
 import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
@@ -133,6 +133,7 @@ export function NewConversationScreen() {
   const [interim, setInterim] = useState('');
   const [startedAt, setStartedAt] = useState(0);
   const [elapsed, setElapsed] = useState(0);
+  const [audio, setAudio] = useState<{ url: string; name: string } | null>(null);
   const stopRef = useRef<(() => void) | null>(null);
   const releaseRef = useRef<(() => void) | null>(null);
 
@@ -191,6 +192,16 @@ export function NewConversationScreen() {
       setDate(toISO(new Date(item.startedAt)));
       setInboxId(item.id);
     }
+    // Lydfil delt fra fx Optager: kan afspilles her, men gemmes ikke
+    let url = '';
+    takeSharedAudio().then((a) => {
+      if (!a) return;
+      url = URL.createObjectURL(a.blob);
+      setAudio({ url, name: a.name });
+      const d = toISO(new Date(a.modified));
+      if (d <= today()) setDate(d);
+    });
+    return () => { if (url) URL.revokeObjectURL(url); };
   }, []);
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -347,6 +358,13 @@ export function NewConversationScreen() {
       <label className="field">Dato
         <input type="date" value={date} max={today()} onChange={(e) => e.target.value && setDate(e.target.value)} />
       </label>
+      {audio && (
+        <div className="card stack-sm">
+          <strong className="small">🎙 Lydfil modtaget: {audio.name}</strong>
+          <audio controls src={audio.url} style={{ width: '100%' }} />
+          <p className="tiny muted">Dagbogen kan endnu ikke selv lave lyd om til tekst. Lyden gemmes ikke i dagbogen.</p>
+        </div>
+      )}
       {speechInputAvailable() && (
         <div className="stack-sm">
           <button className={`btn ${recording ? 'danger' : 'primary'} block`} onClick={record}>

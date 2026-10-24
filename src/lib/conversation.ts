@@ -48,9 +48,15 @@ export function personNote(c: Conversation): string {
 
 /** Tekst delt til appen (fx fra Pixel Optager), læst fra adressen ved start. */
 let shared: string | null = null;
+let sharedAudio = false;
 
 export function readSharedText(): void {
   const q = new URLSearchParams(location.search);
+  if (q.get('lyd')) {
+    sharedAudio = true;
+    history.replaceState(null, '', location.pathname + location.hash);
+    return;
+  }
   const text = [q.get('title'), q.get('text'), q.get('url')].filter(Boolean).join('\n\n').trim();
   if (!text) return;
   shared = text;
@@ -59,7 +65,32 @@ export function readSharedText(): void {
 }
 
 export function hasSharedText(): boolean {
-  return shared !== null;
+  return shared !== null || sharedAudio;
+}
+
+export interface SharedAudio {
+  blob: Blob;
+  name: string;
+  modified: number;
+}
+
+/** En lydfil delt fra en anden app (fx Optager). Hentes én gang og slettes fra cachen. */
+export async function takeSharedAudio(): Promise<SharedAudio | null> {
+  if (!sharedAudio) return null;
+  sharedAudio = false;
+  try {
+    const cache = await caches.open('dagbog-delt-lyd');
+    const res = await cache.match('lyd');
+    if (!res) return null;
+    await cache.delete('lyd');
+    return {
+      blob: await res.blob(),
+      name: decodeURIComponent(res.headers.get('X-Name') ?? 'optagelse'),
+      modified: Number(res.headers.get('X-Modified')) || Date.now(),
+    };
+  } catch {
+    return null;
+  }
 }
 
 export function takeSharedText(): string | null {

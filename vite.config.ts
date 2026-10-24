@@ -18,11 +18,18 @@ export default defineConfig({
         start_url: './',
         scope: './',
         display: 'standalone',
-        // "Del → Dagbog" fra andre apps (fx Pixel Optager) åbner en ny samtale
+        // "Del → Dagbog" fra andre apps (fx Pixel Optager) åbner en ny samtale:
+        // tekst eller en lydfil. Modtages af public/share-sw.js.
         share_target: {
-          action: './',
-          method: 'GET',
-          params: { title: 'title', text: 'text', url: 'url' },
+          action: './del',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: {
+            title: 'title',
+            text: 'text',
+            url: 'url',
+            files: [{ name: 'audio', accept: ['audio/*', '.m4a', '.mp3', '.wav', '.ogg', '.opus', '.aac', '.amr', '.3gp', '.webm', '.flac'] }],
+          },
         },
         background_color: '#f7f4ee',
         theme_color: '#f7f4ee',
@@ -35,6 +42,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png}'],
         navigateFallback: 'index.html',
+        importScripts: ['share-sw.js'],
       },
     }),
   ],
