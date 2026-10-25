@@ -10,7 +10,7 @@ import { RoutineScreen, RoutinesScreen } from './screens/Routines';
 import { ConversationScreen, ConversationsScreen, NewConversationScreen } from './screens/Conversation';
 import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
-import { DayScreen, MemoryScreen, MonthScreen } from './screens/Memory';
+import { DayScreen, MemoryScreen, MonthScreen, OverviewScreen } from './screens/Memory';
 import { MoreScreen } from './screens/More';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
@@ -134,6 +134,7 @@ function Unlocked() {
     case 'uge': screen = <WeekScreen key={a ?? 'now'} id={a} />; break;
     case 'husk':
       if (a === 'maaned' && b) screen = <MonthScreen id={b} />;
+      else if (a === 'overblik') screen = <OverviewScreen year={b} />;
       else if (a === 'dag' && b) screen = <DayScreen date={b} />;
       else screen = <MemoryScreen />;
       break;

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AIError, searchDiary, type AIHit } from '../lib/ai';
-import { addDays, addMonths, formatFull, formatLong, formatMonth, formatShort, monthId, today } from '../lib/dates';
-import { aiReady, generateMonth, monthEntries, monthThemes } from '../lib/generate';
+import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, today, WEEKDAYS } from '../lib/dates';
+import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
-import type { Entry } from '../lib/types';
+import { MOODS, type Entry } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
@@ -43,36 +43,6 @@ function ThatDay() {
           <span style={{ marginTop: 'auto' }}><MoodTag mood={c.entry.mood} /></span>
         </button>
       ))}
-    </div>
-  );
-}
-
-function Timeline() {
-  const data = useStore().data;
-  const [all, setAll] = useState(false);
-  const months = useMemo(() => {
-    const ids = new Set(Object.keys(data.entries).map(monthId));
-    return [...ids].sort().reverse();
-  }, [data.entries]);
-  if (!months.length) return <p className="muted small">Når du har skrevet lidt, dukker dine måneder op her.</p>;
-  const shown = all ? months : months.slice(0, 6);
-  return (
-    <div className="list">
-      {shown.map((m) => {
-        const n = monthEntries(data, m).length;
-        return (
-          <button key={m} className="list-item" onClick={() => go(`husk/maaned/${m}`)}>
-            <div className="row between">
-              <strong className="serif" style={{ fontSize: '1.1rem' }}>{formatMonth(m)}</strong>
-              <span className="tiny muted">{n} {n === 1 ? 'dag' : 'dage'} skrevet</span>
-            </div>
-            <div className="chips" style={{ gap: 6 }}>
-              {monthThemes(data, m).map((t) => <span key={t} className="label-chip">{t}</span>)}
-            </div>
-          </button>
-        );
-      })}
-      {months.length > 6 && !all && <button className="list-item link small" onClick={() => setAll(true)}>Vis alle {months.length} måneder</button>}
     </div>
   );
 }
@@ -153,10 +123,23 @@ export function MemoryScreen() {
   const inboxCount = inbox.filter((i) => i.done).length;
   const empty = Object.keys(data.entries).length === 0;
   const weekDot = waiting(data).week;
+  const written = Object.keys(data.entries).sort();
+  const years = written.length ? [...new Set([written[0].slice(0, 4), written[written.length - 1].slice(0, 4)])].join('–') : '';
   return (
     <div className="stack" style={{ gap: 24 }}>
       <Header title="Husk" />
       {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
+      {!empty && (
+        <button className="card tappable overview-card" onClick={() => go('husk/overblik')}>
+          <span className="note-ico" style={{ background: 'var(--surface)' }}>
+            <span style={{ width: 22, height: 22, display: 'inline-flex', color: 'var(--accent)' }}>{Icon.grid}</span>
+          </span>
+          <span className="grow">
+            <strong style={{ display: 'block' }}>Overblik</strong>
+            <span className="small muted">{written.length} {written.length === 1 ? 'dag' : 'dage'} skrevet · {years}</span>
+          </span>
+        </button>
+      )}
       <button className="card tappable" onClick={() => go('uge')}>
         <div className="row between">
           <div className="row" style={{ gap: 8 }}>
@@ -200,10 +183,6 @@ export function MemoryScreen() {
         {inboxCount > 0 && <span className="small" style={{ display: 'block', color: 'var(--accent)', marginTop: 4 }}>{inboxCount} {inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}</span>}
       </button>
       <section className="stack-sm">
-        <h3>Tidslinje</h3>
-        <Timeline />
-      </section>
-      <section className="stack-sm">
         <h3>Søg</h3>
         <Search />
       </section>
@@ -241,8 +220,25 @@ export function MonthScreen({ id }: { id: string }) {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header back="husk" />
+      <Header back={`husk/overblik/${id.slice(0, 4)}`} />
       <h1>{formatMonth(id)}</h1>
+
+      <section className="stack-sm">
+        <h3>{days.length} {days.length === 1 ? 'dag' : 'dage'} skrevet</h3>
+        {days.length > 0 && (
+          <div className="card agenda">
+            {days.map((e) => (
+              <button key={e.date} className="agenda-row" onClick={() => go(`husk/dag/${e.date}`)}>
+                <span className="agenda-date"><b>{fromISO(e.date).getDate()}</b><span>{WEEKDAYS[fromISO(e.date).getDay()].slice(0, 3)}</span></span>
+                <span className="agenda-bar" style={{ background: e.mood ? `var(--mood-${e.mood})` : 'var(--accent)' }} />
+                <span className="grow" style={{ minWidth: 0 }}>
+                  <span className="small serif" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{e.text}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
 
       <section className="card stack-sm">
         <div className="row between">
@@ -286,17 +282,6 @@ export function MonthScreen({ id }: { id: string }) {
         )}
       </section>
 
-      <section className="stack-sm">
-        <h3>{days.length} {days.length === 1 ? 'dag' : 'dage'}</h3>
-        <div className="list">
-          {days.map((e) => (
-            <button key={e.date} className="list-item" onClick={() => go(`husk/dag/${e.date}`)}>
-              <div className="row between"><span className="small">{formatLong(e.date)}</span><MoodTag mood={e.mood} /></div>
-              <span className="small muted serif" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{e.text}</span>
-            </button>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
@@ -358,6 +343,62 @@ export function DayScreen({ date }: { date: string }) {
           second="Er du helt sikker? Det kan ikke fortrydes."
           onConfirm={async () => { await store.remove('entries', date); go(`husk/maaned/${monthId(date)}`); }}
         />
+      </div>
+    </div>
+  );
+}
+
+const SHORT_MONTHS = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+
+/** Et helt år: en række pr. måned og en prik pr. dag (farvet efter humør, når der er skrevet). */
+export function OverviewScreen({ year: routeYear }: { year?: string }) {
+  const { data } = useStore();
+  const dates = Object.keys(data.entries).sort();
+  const thisYear = today().slice(0, 4);
+  const first = dates[0]?.slice(0, 4) ?? thisYear;
+  const year = routeYear && /^\d{4}$/.test(routeYear) ? routeYear : thisYear;
+  const inYear = dates.filter((d) => d.startsWith(year));
+  const perMonth = SHORT_MONTHS.map((_, i) => inYear.filter((d) => d.slice(5, 7) === String(i + 1).padStart(2, '0')).length);
+  const best = Math.max(...perMonth);
+  const talks = Object.values(data.conversations).filter((c) => c.date.startsWith(year)).length;
+  const t = today();
+
+  return (
+    <div className="stack" style={{ gap: 18 }}>
+      <Header back="husk" />
+      <h1>Overblik</h1>
+      <div className="row between">
+        <button className="day-arrow" disabled={year <= first} onClick={() => go(`husk/overblik/${Number(year) - 1}`)} aria-label="Året før">{Icon.chevronLeft}</button>
+        <strong className="serif" style={{ fontSize: '1.4rem' }}>{year}</strong>
+        <button className="day-arrow" disabled={year >= thisYear} onClick={() => go(`husk/overblik/${Number(year) + 1}`)} aria-label="Året efter">{Icon.chevronRight}</button>
+      </div>
+      <div className="stat-row">
+        <div className="card"><b>{inYear.length}</b><span className="small muted">{inYear.length === 1 ? 'dag' : 'dage'} skrevet</span></div>
+        <div className="card"><b>{talks}</b><span className="small muted">{talks === 1 ? 'samtale' : 'samtaler'}</span></div>
+        <div className="card"><b>{best ? SHORT_MONTHS[perMonth.indexOf(best)] : '–'}</b><span className="small muted">flest dage</span></div>
+      </div>
+      <div className="card year-grid">
+        {SHORT_MONTHS.map((m, i) => {
+          const id = `${year}-${String(i + 1).padStart(2, '0')}`;
+          const days = new Date(Number(year), i + 1, 0).getDate();
+          return (
+            <button key={m} className="month-line" onClick={() => go(`husk/maaned/${id}`)} aria-label={`${formatMonth(id)}: ${perMonth[i]} dage skrevet`}>
+              <span className="mn">{m}</span>
+              <span className="month-dots">
+                {Array.from({ length: days }, (_, d) => {
+                  const iso = `${id}-${String(d + 1).padStart(2, '0')}`;
+                  const e = data.entries[iso];
+                  return <i key={d} className={iso > t ? 'future' : ''} style={e ? { background: e.mood ? `var(--mood-${e.mood})` : 'var(--accent)' } : undefined} />;
+                })}
+              </span>
+              <span className="cnt">{perMonth[i] || ''}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="row wrap tiny muted" style={{ gap: 12 }}>
+        <span><i className="legend-dot" style={{ background: 'var(--accent)' }} />skrevet</span>
+        {MOODS.map((m) => <span key={m.id}><i className="legend-dot" style={{ background: `var(--mood-${m.id})` }} />{m.label.toLowerCase()}</span>)}
       </div>
     </div>
   );

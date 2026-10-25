@@ -50,6 +50,7 @@ export const Icon = {
   search: P(<><circle cx="11" cy="11" r="6.5" /><path d="M20 20l-4.2-4.2" /></>),
   plus: P(<path d="M12 5v14M5 12h14" />),
   camera: P(<><path d="M4 8.5A1.5 1.5 0 015.5 7h2.2l1.5-2h5.6l1.5 2h2.2A1.5 1.5 0 0120 8.5v9a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 17.5z" /><circle cx="12" cy="12.5" r="3.5" /></>),
+  grid: P(<><rect x="4" y="4" width="6.5" height="6.5" rx="1.5" /><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5" /><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5" /><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5" /></>),
   smile: P(<><circle cx="12" cy="12" r="8.5" /><path d="M8.5 14.2a4.2 4.2 0 007 0M9.2 9.8h.01M14.8 9.8h.01" /></>),
   tag: P(<><path d="M3.5 12.2V4.5a1 1 0 011-1h7.7l8.3 8.3a1 1 0 010 1.4l-7.1 7.1a1 1 0 01-1.4 0z" /><circle cx="8" cy="8" r="1.3" /></>),
   heart: P(<path d="M12 19.5s-7.5-4.4-7.5-10A4.3 4.3 0 0112 7a4.3 4.3 0 017.5 2.5c0 5.6-7.5 10-7.5 10z" />),
