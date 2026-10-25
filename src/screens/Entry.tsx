@@ -31,13 +31,30 @@ function greeting(): string {
   return h < 5 ? 'God nat' : h < 10 ? 'God morgen' : h < 18 ? 'God dag' : 'God aften';
 }
 
+/**
+ * Skriver man i bunden af en lang tekst, rulles siden, så linjen kan ses over
+ * tastaturet og Gem-knappen (som ligger fast i bunden).
+ */
+function keepCaretVisible(el: HTMLTextAreaElement) {
+  if (document.activeElement !== el || el.selectionEnd < el.value.length - 1) return;
+  const vv = window.visualViewport;
+  const bottom = (vv ? vv.offsetTop + vv.height : window.innerHeight) - 96;
+  const r = el.getBoundingClientRect();
+  if (r.bottom > bottom) window.scrollBy(0, r.bottom - bottom);
+}
+
 function AutoGrow(props: { value: string; onChange: (v: string) => void; placeholder: string }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Når feltet kort sættes til "auto", bliver siden kortere, og browseren hopper op.
+    // Derfor huskes rullepositionen og sættes tilbage.
+    const y = window.scrollY;
     el.style.height = 'auto';
     el.style.height = `${el.scrollHeight}px`;
+    window.scrollTo(0, y);
+    keepCaretVisible(el);
   }, [props.value]);
   return (
     <textarea

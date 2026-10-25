@@ -60,6 +60,8 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+/* Fast Gem-knap og faner i bunden: browseren skal rulle markøren fri af dem */
+html { scroll-padding-bottom: calc(var(--tabbar) + 96px); }
 body {
   background: var(--bg);
   color: var(--text);
