@@ -84,3 +84,28 @@ export function everyText(r: Pick<Routine, 'everyDays' | 'monthly'>): string {
   if (r.everyDays === 7) return 'hver uge';
   return `hver ${r.everyDays}. dag`;
 }
+
+/** Den planlagte dag, der ligger tættest på `date` (en gang taget lidt før eller efter tiden). */
+export function nearestDue(r: Routine, date: string): string {
+  const k = lastIndex(r, date);
+  if (k < 0) return occurrence(r, 0);
+  const before = occurrence(r, k);
+  const after = occurrence(r, k + 1);
+  const dist = (d: string) => Math.abs(fromISO(d).getTime() - fromISO(date).getTime());
+  return dist(after) < dist(before) ? after : before;
+}
+
+/**
+ * Markér som taget på en bestemt dag og tid (fx glemt at trykke i søndags).
+ * Ligger dagen før "Første gang", flyttes starten dertil, så planen regnes derfra.
+ */
+export function markTaken(r: Routine, date: string, time: string, option?: string): Routine {
+  const start = date < r.start ? date : r.start;
+  const moved = { ...r, start };
+  const due = nearestDue(moved, date);
+  const [h, m] = (time || '12:00').split(':').map(Number);
+  const d = fromISO(date);
+  d.setHours(h, m, 0, 0);
+  const log = [{ due, at: d.getTime(), option }, ...r.log.filter((l) => l.due !== due)].sort((a, b) => b.at - a.at);
+  return { ...moved, log };
+}

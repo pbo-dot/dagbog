@@ -145,7 +145,7 @@ function Unlocked() {
     case 'moenstre': screen = <PatternsScreen />; break;
     case 'spoerg': screen = <AskScreen />; break;
     case 'kalender': screen = <CalendarScreen month={a} />; break;
-    case 'faste': screen = a ? <RoutineScreen key={a} id={a} /> : <RoutinesScreen />; break;
+    case 'faste': screen = a ? <RoutineScreen key={a} id={a} earlier={b === 'tidligere'} /> : <RoutinesScreen />; break;
     case 'samtale':
       if (a === 'ny') screen = <NewConversationScreen />;
       else if (a) screen = <ConversationScreen id={a} />;

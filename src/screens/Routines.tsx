@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { agenda, at } from '../lib/agenda';
 import { addDays, formatLong, formatShort, today } from '../lib/dates';
-import { dueTomorrow, everyText, routineStatus } from '../lib/routines';
+import { dueTomorrow, everyText, markTaken, routineStatus } from '../lib/routines';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
 import { AgendaIcon, DoubleConfirm, go, Header, Icon, uid } from '../ui';
@@ -79,6 +79,7 @@ function RoutineCard({ r, s }: { r: Routine; s: ReturnType<typeof routineStatus>
         </span>
       </div>
       <button className="btn primary" onClick={() => save({ ...r, log: [{ due: s.due, at: Date.now(), option }, ...r.log] })}>Taget</button>
+      {s.late && <button className="btn ghost small" onClick={() => go(`faste/${r.id}/tidligere`)}>Taget en anden dag</button>}
       {others.length > 0 && (
         <div className="row wrap" style={{ gap: 6, width: '100%', paddingLeft: 56 }}>
           <span className="tiny muted">Andet?</span>
@@ -126,8 +127,40 @@ const toDay = (at: number) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
+/** "Taget en anden dag": vælg dag og klokkeslæt bagud i tiden. */
+function TakenEarlier({ r, open, onSave }: { r: Routine; open?: boolean; onSave: (next: Routine) => void }) {
+  const [show, setShow] = useState(!!open);
+  const [date, setDate] = useState(() => addDays(today(), -1));
+  const [clock, setClock] = useState('12:00');
+  const [option, setOption] = useState<string | undefined>(r.options[0]);
+  if (!show) return <button className="btn block" onClick={() => setShow(true)}>Taget en anden dag</button>;
+  return (
+    <div className="card stack-sm">
+      <strong>Taget en anden dag</strong>
+      <div className="row">
+        <label className="field grow">Dag
+          <input type="date" value={date} max={today()} onChange={(e) => e.target.value && setDate(e.target.value)} />
+        </label>
+        <label className="field">Klokken
+          <input type="time" value={clock} onChange={(e) => setClock(e.target.value)} />
+        </label>
+      </div>
+      {r.options.length > 0 && (
+        <div className="chips">
+          {r.options.map((o) => <button key={o} className={`chip ${option === o ? 'on' : ''}`} onClick={() => setOption(o)}>{o}</button>)}
+        </div>
+      )}
+      {date < r.start && <p className="tiny muted">"Første gang" flyttes til {formatShort(date)}, så planen regnes derfra.</p>}
+      <div className="row">
+        <button className="btn primary" onClick={() => { onSave(markTaken(r, date, clock, option)); setShow(false); }}>Gem</button>
+        <button className="btn ghost" onClick={() => setShow(false)}>Fortryd</button>
+      </div>
+    </div>
+  );
+}
+
 /** Opret eller ret en fast ting, og se historikken. */
-export function RoutineScreen({ id }: { id: string }) {
+export function RoutineScreen({ id, earlier }: { id: string; earlier?: boolean }) {
   const store = useStore();
   const existing = id === 'ny' ? undefined : store.data.routines[id];
   const [r, setR] = useState<Routine>(() => existing ?? {
@@ -208,6 +241,7 @@ export function RoutineScreen({ id }: { id: string }) {
         <>
           <section className="stack-sm">
             <h3>Historik</h3>
+            <TakenEarlier r={r} open={earlier} onSave={(next) => update(next)} />
             {r.log.length === 0 && <p className="small muted">Ikke taget endnu.</p>}
             <div className="list">
               {r.log.map((l) => (
