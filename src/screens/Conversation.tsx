@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
-import { calendarLink, diaryBlock, matchPeople, personNote, takeSharedAudio, takeSharedText, withConversation } from '../lib/conversation';
+import { diaryBlock, matchPeople, personNote, takeSharedAudio, takeSharedText, withConversation } from '../lib/conversation';
 import { formatFull, formatShort, toISO, today } from '../lib/dates';
 import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { openInboxItem, takeInboxItem, type InboxItem } from '../lib/inbox';
 import { useStore } from '../lib/store';
-import type { CalendarEvent, Conversation } from '../lib/types';
+import type { Appointment, CalendarEvent, Conversation } from '../lib/types';
+import { pushAppointments } from '../lib/googleSync';
 import { DoubleConfirm, go, Header, Icon, Toast, uid } from '../ui';
 
 const lines = (s: string) => s.split('\n').map((l) => l.replace(/^[-–•*]\s*/, '').trim()).filter(Boolean);
@@ -443,14 +444,22 @@ export function ConversationScreen({ id }: { id: string }) {
                   {formatFull(ev.date)}{ev.time ? ` kl. ${ev.time.replace(':', '.')}` : ' (hele dagen)'}{ev.place ? ` · ${ev.place}` : ''}
                 </span>
                 <span className="serif">{ev.title}</span>
-                <a className="btn small" style={{ alignSelf: 'flex-start' }} href={calendarLink(ev, `Fra samtalen "${c.title}".`)}
-                  {...(/Android/i.test(navigator.userAgent) ? {} : { target: '_blank', rel: 'noopener' })}>
-                  Tilføj til kalender
-                </a>
+                {Object.values(store.data.appointments).some((a) => a.fromTalk === c.id && a.date === ev.date && a.title === ev.title) ? (
+                  <span className="small" style={{ color: 'var(--accent)', fontWeight: 600 }}>✓ I kalenderen</span>
+                ) : (
+                  <button className="btn small" style={{ alignSelf: 'flex-start' }} onClick={async () => {
+                    const g = store.data.settings.google;
+                    const a: Appointment = {
+                      id: uid(), title: ev.title, date: ev.date, time: ev.time, place: ev.place, minutes: ev.durationMinutes || 60,
+                      createdAt: Date.now(), changedAt: Date.now(), toGoogle: !!g.email && g.push, fromTalk: c.id,
+                    };
+                    await store.put('appointments', a.id, a);
+                    pushAppointments(store, [a]);
+                  }}>Læg i kalender</button>
+                )}
               </div>
             ))}
           </div>
-          <p className="tiny muted">Kalenderen åbner med aftalen udfyldt. Den gemmes først, når du trykker Gem der.</p>
         </section>
       )}
       {c.byAI && <p className="tiny muted">Resuméet er lavet af Claude ud fra teksten fra optagelsen. Det kan indeholde fejl; tjek teksten, hvis noget er vigtigt.</p>}

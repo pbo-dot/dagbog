@@ -9,6 +9,8 @@ import type { GoogleCalendarInfo, GoogleEvent } from './types';
 
 const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/drive.file';
 const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+/** Lov til at skrive aftaler. Bedes der om én gang; derefter følger den med ved hvert login (include_granted_scopes). */
+export const WRITE_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
 const API = 'https://www.googleapis.com/calendar/v3';
 const TOKEN = 'dagbog-gtoken';
 const STATE = 'dagbog-gstate';
@@ -39,12 +41,12 @@ export function redirectUri(): string {
   return location.origin + location.pathname.replace(/index\.html$/, '');
 }
 
-export function authUrl(clientId: string, state: string, opts: { hint?: string; silent?: boolean } = {}): string {
+export function authUrl(clientId: string, state: string, opts: { hint?: string; silent?: boolean; write?: boolean } = {}): string {
   const q = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri(),
     response_type: 'token',
-    scope: SCOPE,
+    scope: opts.write ? `${SCOPE} ${WRITE_SCOPE}` : SCOPE,
     include_granted_scopes: 'true',
     state,
   });
@@ -62,7 +64,7 @@ function session(): Storage | null {
 }
 
 /** Går til Google for at logge ind. Den nuværende side huskes og vises igen bagefter. */
-export function signIn(clientId: string, opts: { hint?: string; silent?: boolean; back?: string } = {}) {
+export function signIn(clientId: string, opts: { hint?: string; silent?: boolean; back?: string; write?: boolean } = {}) {
   const nonce = crypto.randomUUID();
   session()?.setItem(STATE, nonce);
   session()?.removeItem(ERROR);
@@ -101,14 +103,23 @@ export function currentToken(): string | null {
   }
 }
 
-/** Gyldig adgangsnøgle, der også må gemme på Drev, eller null. */
-export function driveToken(): string | null {
+function tokenWith(scope: string): string | null {
   try {
     const v = JSON.parse(session()?.getItem(TOKEN) ?? 'null') as { token: string; exp: number; scope?: string } | null;
-    return v && v.exp > Date.now() + 60_000 && (v.scope ?? '').includes(DRIVE_SCOPE) ? v.token : null;
+    return v && v.exp > Date.now() + 60_000 && (v.scope ?? '').split(' ').includes(scope) ? v.token : null;
   } catch {
     return null;
   }
+}
+
+/** Gyldig adgangsnøgle, der også må gemme på Drev, eller null. */
+export function driveToken(): string | null {
+  return tokenWith(DRIVE_SCOPE);
+}
+
+/** Gyldig adgangsnøgle, der også må skrive aftaler, eller null. */
+export function writeToken(): string | null {
+  return tokenWith(WRITE_SCOPE);
 }
 
 export function dropToken() {
@@ -231,6 +242,7 @@ export function mergeCalendars(old: GoogleCalendarInfo[], fresh: ApiCalendar[]):
       name: c.summaryOverride || c.summary || c.id,
       color: c.backgroundColor || '#1a73e8',
       on: before ? before.on : !!c.primary || c.accessRole === 'owner',
+      writable: c.accessRole === 'owner' || c.accessRole === 'writer',
     };
   });
 }

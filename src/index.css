@@ -384,3 +384,9 @@ button.list-item:first-child { border-top: 0; }
 .backup-status.bad .badge { background: var(--danger); color: #fff; }
 .kv { display: flex; justify-content: space-between; gap: 12px; }
 .kv b { font-weight: 600; text-align: right; }
+
+/* Aftaler til Google Kalender */
+.g-push { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--accent-soft); }
+.g-badge { align-self: flex-start; font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; background: color-mix(in srgb, #1a73e8 14%, var(--surface)); color: #1a56c4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .g-badge { color: #a8c7fa; } }
+:root[data-theme="dark"] .g-badge { color: #a8c7fa; }

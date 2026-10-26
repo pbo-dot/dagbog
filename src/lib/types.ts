@@ -101,6 +101,11 @@ export interface Appointment {
   time: string; // HH:MM eller tom (hele dagen)
   place: string;
   createdAt: number;
+  changedAt?: number; // sidst rettet (til Google)
+  toGoogle?: boolean; // skal også ligge i Google Kalender
+  google?: { cal: string; id: string; at: number }; // aftalen i Google, og hvornår den sidst blev sendt
+  fromTalk?: string; // samtalen, aftalen kom fra
+  minutes?: number; // varighed i Google (standard 60)
 }
 
 /** Markering af, at en fast ting er taget/gjort. */
@@ -170,6 +175,7 @@ export interface GoogleCalendarInfo {
   name: string;
   color: string;
   on: boolean; // vises i dagbogen
+  writable?: boolean; // ens egen kalender, som Dagbog kan skrive i
 }
 
 export interface Pattern {
@@ -201,6 +207,9 @@ export interface Settings {
     email: string; // kontoen, der er forbundet ('' = ikke forbundet)
     calendars: GoogleCalendarInfo[];
     lastSync: number;
+    push: boolean; // nye aftaler fra Dagbog lægges også i Google
+    pushCal: string; // kalenderen, de lægges i ('' = hovedkalenderen)
+    pendingDeletes: Array<{ cal: string; id: string }>; // slettet i Dagbog, mangler at blive slettet i Google
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag
@@ -221,7 +230,7 @@ export const DEFAULT_SETTINGS: Settings = {
   summaryWeekday: 0,
   autoLockMinutes: 5,
   showQuestion: true,
-  google: { clientId: '', email: '', calendars: [], lastSync: 0 },
+  google: { clientId: '', email: '', calendars: [], lastSync: 0, push: true, pushCal: '', pendingDeletes: [] },
   backup: { auto: true, folderId: '', last: 0 },
 };
 

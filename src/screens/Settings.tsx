@@ -6,8 +6,8 @@ import { badgeSupported, reminderICS } from '../lib/device';
 import { download, parseBackup, toJSON, toPDF, toText } from '../lib/export';
 import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
-import { clientIdOf, currentToken, driveToken, forget, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
-import { syncGoogle, useGoogleState } from '../lib/googleSync';
+import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
+import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
 import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
 import { DoubleConfirm, Header, Switch } from '../ui';
 import { PinChooser } from './Lock';
@@ -94,6 +94,25 @@ function GoogleSection() {
               ))}
             </div>
           )}
+          <div className="stack-sm">
+            <div className="setting"><strong>Nye aftaler til Google</strong>
+              <Switch checked={g.push} onChange={(push) => saveGoogle({ push })} label="Nye aftaler fra Dagbog lægges i Google Kalender" />
+            </div>
+            {g.push && g.calendars.some((c) => c.writable) && (
+              <label className="setting"><span>Kalender</span>
+                <select value={pushCalendar(g)} onChange={(e) => saveGoogle({ pushCal: e.target.value })}>
+                  {g.calendars.filter((c) => c.writable).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </label>
+            )}
+            {g.push && !writeToken() && (
+              <div className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
+                <strong>Første gang</strong>
+                <span className="small">Google spørger, om Dagbog må skrive i kalenderen.</span>
+                <button className="btn primary block" onClick={() => signIn(clientId, { hint: g.email || undefined, write: true, back: '#/indstillinger' })}>Giv lov hos Google</button>
+              </div>
+            )}
+          </div>
           <p className="tiny muted">{g.lastSync ? `Sidst hentet ${new Date(g.lastSync).toLocaleString('da-DK', { dateStyle: 'short', timeStyle: 'short' })}. ` : ''}Henter det seneste år og 6 måneder frem. Aftalerne gemmes krypteret som resten af dagbogen.</p>
           {error && <p className="error small">{error}</p>}
           <div className="row">

@@ -5,8 +5,9 @@ import { addDays, addMonths, formatFull, formatMonth, fromISO, monthId, today, w
 import { useStore } from '../lib/store';
 import type { Appointment } from '../lib/types';
 import { currentToken } from '../lib/google';
-import { syncGoogle, useGoogleState } from '../lib/googleSync';
-import { AgendaIcon, go, Header, Icon, uid } from '../ui';
+import { needsPush } from '../lib/gcalWrite';
+import { pushAppointments, pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
+import { AgendaIcon, go, Header, Icon, Switch, uid } from '../ui';
 
 const DAYS = ['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'];
 
@@ -75,10 +76,17 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
   const nextWeek = agenda(data, t, addDays(t, 7));
   const dayItems = agenda(data, selected, selected);
 
-  const newAppointment = (date: string): Appointment => ({ id: uid(), title: '', date, time: '', place: '', createdAt: Date.now() });
+  const g = data.settings.google;
+  const connected = !!g.email;
+  const newAppointment = (date: string): Appointment => ({ id: uid(), title: '', date, time: '', place: '', createdAt: Date.now(), toGoogle: connected && g.push });
   const saveAppointment = async () => {
     if (!adding || !adding.title.trim()) return;
-    await store.put('appointments', adding.id, { ...adding, title: adding.title.trim(), place: adding.place.trim() });
+    const saved: Appointment = { ...adding, title: adding.title.trim(), place: adding.place.trim(), changedAt: Date.now() };
+    // Skal den ikke længere ligge i Google, slettes den dér
+    const removed = !saved.toGoogle && saved.google ? { cal: saved.google.cal, id: saved.google.id, ref: saved.id } : undefined;
+    if (removed) delete saved.google;
+    await store.put('appointments', saved.id, saved);
+    pushAppointments(store, [saved], removed);
     setSelected(adding.date);
     setMonth(monthId(adding.date));
     setAdding(null);
@@ -142,14 +150,26 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
         {dayItems.map((i, n) => (
           <div key={n} className="card stack-sm" style={{ padding: '10px 12px' }}>
             <ItemLine item={i} />
-            {i.kind === 'appointment' && (
-              <div className="row wrap" style={{ gap: 6 }}>
-                <a className="btn small" href={calendarLink({ title: i.title, date: i.date, time: i.time, durationMinutes: 60, place: i.detail ?? '' }, 'Fra dagbogen.')}
-                  {...(/Android/i.test(navigator.userAgent) ? {} : { target: '_blank', rel: 'noopener' })}>Læg i Google Kalender</a>
-                <button className="btn ghost small" onClick={() => setAdding({ ...data.appointments[i.ref] })}>Ret</button>
-                <button className="btn ghost small" onClick={() => store.remove('appointments', i.ref)}>Slet</button>
-              </div>
-            )}
+            {i.kind === 'appointment' && (() => {
+              const a = data.appointments[i.ref];
+              return (
+                <>
+                  {a.google && !needsPush(a) ? <span className="g-badge">✓ I Google</span>
+                    : a.toGoogle ? <span className="tiny muted">Sendes til Google, når der er forbindelse</span> : null}
+                  <div className="row wrap" style={{ gap: 6 }}>
+                    {!connected && (
+                      <a className="btn small" href={calendarLink({ title: i.title, date: i.date, time: i.time, durationMinutes: 60, place: i.detail ?? '' }, 'Fra dagbogen.')}
+                        {...(/Android/i.test(navigator.userAgent) ? {} : { target: '_blank', rel: 'noopener' })}>Læg i Google Kalender</a>
+                    )}
+                    <button className="btn ghost small" onClick={() => setAdding({ ...a })}>Ret</button>
+                    <button className="btn ghost small" onClick={async () => {
+                      await store.remove('appointments', a.id);
+                      if (a.google) pushAppointments(store, [], { cal: a.google.cal, id: a.google.id, ref: a.id });
+                    }}>Slet</button>
+                  </div>
+                </>
+              );
+            })()}
             {i.kind === 'google' && <span className="tiny muted">Fra Google Kalender{calName(i.ref) ? ` (${calName(i.ref)})` : ''}</span>}
             {i.kind === 'event' && <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go(`samtale/${i.ref}`)}>Fra en samtale</button>}
             {i.kind === 'routine' && <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go(`faste/${i.ref}`)}>Faste ting</button>}
@@ -183,6 +203,15 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
           <label className="field">Sted (valgfrit)
             <input type="text" value={adding.place} onChange={(e) => setAdding({ ...adding, place: e.target.value })} />
           </label>
+          {connected && (
+            <div className="g-push">
+              <span className="grow">
+                <strong style={{ display: 'block' }}>Også i Google Kalender</strong>
+                <span className="small muted">{g.calendars.find((c) => c.id === (adding.google?.cal ?? pushCalendar(g)))?.name ?? g.email}</span>
+              </span>
+              <Switch checked={!!adding.toGoogle} onChange={(v) => setAdding({ ...adding, toGoogle: v })} label="Også i Google Kalender" />
+            </div>
+          )}
           <div className="row">
             <button className="btn primary" disabled={!adding.title.trim()} onClick={saveAppointment}>Gem</button>
             <button className="btn ghost" onClick={() => setAdding(null)}>Fortryd</button>

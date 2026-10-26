@@ -1,7 +1,9 @@
 // Henter Google-aftaler ind i dagbogen og holder styr på, om det kører.
 import { useEffect, useSyncExternalStore } from 'react';
 import { today } from './dates';
-import { clientIdOf, currentToken, fetchGoogle, GoogleError, lastError, mergeCalendars, saveHint, signIn, STALE_MS } from './google';
+import { deleteEvent, needsPush, pushAppointment } from './gcalWrite';
+import { clientIdOf, currentToken, fetchGoogle, GoogleError, lastError, mergeCalendars, saveHint, signIn, STALE_MS, writeToken } from './google';
+import type { Appointment } from './types';
 import { useStore } from './store';
 
 type Store = ReturnType<typeof useStore>;
@@ -60,6 +62,52 @@ export async function syncGoogle(store: Store, opts: { login?: boolean } = {}): 
   }
 }
 
+/** Kalenderen, nye aftaler lægges i. */
+export function pushCalendar(g: Store['data']['settings']['google']): string {
+  return g.pushCal || g.email || 'primary';
+}
+
+let pushing = false;
+
+/**
+ * Sender aftaler til Google: dem, der er nye eller rettet, og sletninger, der venter.
+ * `changed` er aftaler, der lige er gemt (endnu ikke i store.data), `removed` en aftale, der lige er
+ * slettet i Dagbog eller ikke længere skal ligge i Google.
+ */
+export async function pushAppointments(store: Store, changed: Appointment[] = [], removed?: { cal: string; id: string; ref: string }): Promise<void> {
+  const g = store.data.settings.google;
+  const deletes = [...g.pendingDeletes, ...(removed ? [{ cal: removed.cal, id: removed.id }] : [])];
+  const all = { ...store.data.appointments, ...Object.fromEntries(changed.map((a) => [a.id, a])) };
+  if (removed && !changed.some((a) => a.id === removed.ref)) delete all[removed.ref];
+  const todo = Object.values(all).filter(needsPush);
+  if (!deletes.length && !todo.length) return;
+  const token = writeToken();
+  if (!token || pushing) {
+    // Huskes til næste gang, der er forbindelse
+    if (removed) await store.saveSettings({ ...store.data.settings, google: { ...g, pendingDeletes: deletes } });
+    return;
+  }
+  pushing = true;
+  let left = deletes;
+  try {
+    for (const d of deletes) {
+      await deleteEvent(token, d.cal, d.id);
+      left = left.filter((x) => x !== d);
+    }
+    for (const a of todo) {
+      const where = await pushAppointment(token, a, pushCalendar(g));
+      await store.put('appointments', a.id, { ...a, google: { ...where, at: Date.now() } });
+    }
+  } catch (e) {
+    set({ error: e instanceof GoogleError ? e.message : 'Kunne ikke sende til Google.' });
+  } finally {
+    pushing = false;
+    if (left.length !== g.pendingDeletes.length || removed) {
+      await store.saveSettings({ ...store.data.settings, google: { ...store.data.settings.google, pendingDeletes: left } });
+    }
+  }
+}
+
 /** Henter automatisk efter login og når appen kommer frem, hvis aftalerne er gamle. */
 export function useGoogleAutoSync() {
   const store = useStore();
@@ -69,6 +117,7 @@ export function useGoogleAutoSync() {
     if (err && !state.error) set({ error: err === 'access_denied' ? 'Du sagde nej til Google.' : 'Tryk Opdatér for at hente fra Google.' });
     const run = () => {
       if (!document.hidden && clientIdOf(g) && currentToken() && Date.now() - g.lastSync > STALE_MS) syncGoogle(store);
+      if (!document.hidden && writeToken()) pushAppointments(store);
     };
     run();
     document.addEventListener('visibilitychange', run);

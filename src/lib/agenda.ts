@@ -40,16 +40,20 @@ export function googleEvents(data: AgendaData, from: string, to: string): Google
 /** Alle punkter fra `from` til `to` (begge med), sorteret efter dato og tid. */
 export function agenda(data: AgendaData, from: string, to: string): AgendaItem[] {
   const out: AgendaItem[] = [];
+  // Aftaler fra Dagbog, der også ligger i Google, vises kun én gang
+  const inGoogle = new Set(Object.values(data.appointments).map((a) => a.google?.id).filter(Boolean));
+  const taken = new Set(Object.values(data.appointments).filter((a) => a.fromTalk).map((a) => `${a.fromTalk}|${a.date}|${a.title}`));
   for (const a of Object.values(data.appointments)) {
     if (a.date >= from && a.date <= to) out.push({ date: a.date, time: a.time, title: a.title, icon: '🗓', kind: 'appointment', detail: a.place || undefined, ref: a.id });
   }
   for (const c of Object.values(data.conversations)) {
     for (const ev of c.events ?? []) {
-      if (ev.date >= from && ev.date <= to) out.push({ date: ev.date, time: ev.time, title: ev.title, icon: '💬', kind: 'event', detail: ev.place || undefined, ref: c.id });
+      if (ev.date >= from && ev.date <= to && !taken.has(`${c.id}|${ev.date}|${ev.title}`)) out.push({ date: ev.date, time: ev.time, title: ev.title, icon: '💬', kind: 'event', detail: ev.place || undefined, ref: c.id });
     }
   }
   const colors = new Map((data.settings?.google.calendars ?? []).map((c) => [c.id, c.color]));
   for (const e of googleEvents(data, from, to)) {
+    if (inGoogle.has(e.id)) continue;
     // Aftaler over flere dage står på hver dag (højst 60)
     let d = e.date < from ? from : e.date;
     for (let n = 0; d <= e.end && d <= to && n < 60; n++, d = addDays(d, 1)) {
