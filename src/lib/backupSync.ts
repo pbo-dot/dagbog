@@ -1,7 +1,6 @@
 // Gemmer den låste kopi på Google Drev: når man trykker, og af sig selv hver dag.
 import { useEffect, useSyncExternalStore } from 'react';
 import { backupName } from './backup';
-import { today } from './dates';
 import { saveToDrive } from './drive';
 import { clientIdOf, driveToken, GoogleError, signIn } from './google';
 import { useStore } from './store';
@@ -27,24 +26,26 @@ export function useBackupState(): State {
   return useSyncExternalStore((l) => (listeners.add(l), () => listeners.delete(l)), () => state);
 }
 
-/** Gemmer en kopi nu. Mangler der adgang til Drev, går den til Google først (med `login`). */
-export async function backupNow(store: Store, opts: { login?: boolean } = {}): Promise<void> {
-  if (state.busy) return;
+/** Gemmer en kopi nu. Mangler der adgang til Drev, går den til Google først (med `login`). Giver true, når kopien er gemt. */
+export async function backupNow(store: Store, opts: { login?: boolean } = {}): Promise<boolean> {
+  if (state.busy) return false;
   const token = driveToken();
   if (!token) {
     const g = store.data.settings.google;
     if (opts.login) signIn(clientIdOf(g), { hint: g.email || undefined, back: '#/kopi' });
-    return;
+    return false;
   }
   set({ busy: true, error: '' });
   try {
     const file = await store.backup();
     const s = store.data.settings;
-    const folderId = await saveToDrive(token, s.backup.folderId, backupName(today()), JSON.stringify(file));
+    const folderId = await saveToDrive(token, s.backup.folderId, backupName(), JSON.stringify(file));
     await store.saveSettings({ ...s, backup: { ...s.backup, folderId, last: Date.now() } });
     set({ busy: false });
+    return true;
   } catch (e) {
     set({ busy: false, error: e instanceof GoogleError ? e.message : 'Kopien kunne ikke gemmes.' });
+    return false;
   }
 }
 

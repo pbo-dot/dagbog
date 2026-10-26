@@ -5,7 +5,8 @@ import { addMonths, today, WEEKDAYS } from '../lib/dates';
 import { badgeSupported, reminderICS } from '../lib/device';
 import { download, parseBackup, toJSON, toPDF, toText } from '../lib/export';
 import { useStore } from '../lib/store';
-import { clientIdOf, currentToken, forget, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
+import { backupNow } from '../lib/backupSync';
+import { clientIdOf, currentToken, driveToken, forget, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { syncGoogle, useGoogleState } from '../lib/googleSync';
 import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
 import { DoubleConfirm, Header, Switch } from '../ui';
@@ -120,6 +121,7 @@ export function SettingsScreen() {
   const [changingPin, setChangingPin] = useState<'old' | 'new' | null>(null);
   const [oldPin, setOldPin] = useState('');
   const [msg, setMsg] = useState('');
+  const [wipeMsg, setWipeMsg] = useState('');
   const [bioMsg, setBioMsg] = useState('');
   const [from, setFrom] = useState(addMonths(today(), -12));
   const [to, setTo] = useState(today());
@@ -338,8 +340,17 @@ export function SettingsScreen() {
 
       <Section title="Sletning">
         <p className="tiny muted">Enkelte dage slettes fra dagens side under Husk.</p>
-        <DoubleConfirm label="Slet hele dagbogen" first="Vil du slette hele dagbogen på denne enhed? Overvej at tage en sikkerhedskopi først."
-          second="Sidste chance: alt slettes for altid og kan ikke gendannes." onConfirm={store.wipe} />
+        <DoubleConfirm label="Slet hele dagbogen" first="Vil du slette hele dagbogen på denne telefon? Der gemmes en kopi på Drev først."
+          second="Sidste chance: alt på telefonen slettes." onConfirm={async () => {
+            // Gem altid en frisk kopi først, så den nyeste kan hentes igen
+            if (driveToken()) {
+              if (!(await backupNow(store))) return setWipeMsg('Kopien kunne ikke gemmes, så intet er slettet.');
+            } else if (Object.keys(store.data.entries).length || store.data.draft) {
+              return setWipeMsg('Gem først en kopi under Mere › Sikkerhedskopi. Intet er slettet.');
+            }
+            await store.wipe();
+          }} />
+        {wipeMsg && <p className="small" role="alert">{wipeMsg}</p>}
       </Section>
     </div>
   );

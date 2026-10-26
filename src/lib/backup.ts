@@ -25,8 +25,10 @@ interface Inner {
 const VAULT_KEYS = ['inboxPub'];
 const VAULT_PREFIXES = ['inbox:'];
 
-export function backupName(date: string): string {
-  return `dagbog-kopi-${date}.json`;
+/** Fx "dagbog-kopi-2026-10-26-0957.json" (dato og klokkeslæt, så intet overskrives). */
+export function backupName(now = new Date()): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `dagbog-kopi-${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}-${p(now.getHours())}${p(now.getMinutes())}.json`;
 }
 
 export async function makeBackup(dek: CryptoKey): Promise<BackupFile> {

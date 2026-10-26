@@ -6,8 +6,10 @@ const API = 'https://www.googleapis.com/drive/v3';
 const UPLOAD = 'https://www.googleapis.com/upload/drive/v3';
 const FOLDER = 'Dagbog-kopi';
 const FOLDER_TYPE = 'application/vnd.google-apps.folder';
-/** Så mange kopier gemmes (én pr. dag). */
+/** Kopier gemmes fra så mange dage … */
 export const KEEP = 14;
+/** … og højst så mange pr. dag (de nyeste). */
+const PER_DAY = 3;
 
 export interface DriveFile {
   id: string;
@@ -51,15 +53,12 @@ export async function ensureFolder(token: string, known: string): Promise<string
   return ((await r.json()) as { id: string }).id;
 }
 
-/** Lægger filen op. Findes en fil med samme navn i mappen, erstattes den. */
+/** Lægger en ny fil op. Gamle kopier overskrives aldrig. */
 async function upload(token: string, folderId: string, name: string, body: string): Promise<void> {
-  const [old] = await list(token, `'${folderId}' in parents and name = '${name}' and trashed = false`, 1);
-  const meta = old ? { name } : { name, parents: [folderId], mimeType: 'application/json' };
-  const url = old ? `${UPLOAD}/files/${old.id}` : `${UPLOAD}/files`;
-  const method = old ? 'PATCH' : 'POST';
+  const meta = { name, parents: [folderId], mimeType: 'application/json' };
   // Genoptagelig upload: virker også for store kopier med mange fotos
-  const start = await call(token, `${url}?uploadType=resumable`, {
-    method,
+  const start = await call(token, `${UPLOAD}/files?uploadType=resumable`, {
+    method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': 'application/json' },
     body: JSON.stringify(meta),
   });
@@ -70,17 +69,30 @@ async function upload(token: string, folderId: string, name: string, body: strin
   }
   // Kan browseren ikke se adressen til upload, sendes det hele i ét stykke
   const b = `dagbog${crypto.randomUUID().replace(/-/g, '')}`;
-  await call(token, `${url}?uploadType=multipart`, {
-    method,
+  await call(token, `${UPLOAD}/files?uploadType=multipart`, {
+    method: 'POST',
     headers: { 'Content-Type': `multipart/related; boundary=${b}` },
     body: `--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--`,
   });
 }
 
-/** Sletter de ældste kopier, så der højst er KEEP. */
+/** Kopier, der skal slettes: alt ud over de nyeste PER_DAY pr. dag og de nyeste KEEP dage. Listen er nyeste først. */
+export function toPrune(files: DriveFile[]): DriveFile[] {
+  const perDay = new Map<string, number>();
+  const out: DriveFile[] = [];
+  for (const f of files) {
+    const day = f.name.slice('dagbog-kopi-'.length, 'dagbog-kopi-'.length + 10);
+    const n = perDay.get(day) ?? 0;
+    if (n === 0 && perDay.size >= KEEP) out.push(f);
+    else if (n >= PER_DAY) out.push(f);
+    else perDay.set(day, n + 1);
+  }
+  return out;
+}
+
 async function prune(token: string, folderId: string): Promise<void> {
   const files = (await list(token, `'${folderId}' in parents and trashed = false`)).filter((f) => f.name.startsWith('dagbog-kopi-'));
-  for (const f of files.slice(KEEP)) await call(token, `${API}/files/${f.id}`, { method: 'DELETE' });
+  for (const f of toPrune(files)) await call(token, `${API}/files/${f.id}`, { method: 'DELETE' });
 }
 
 export async function saveToDrive(token: string, folderId: string, name: string, body: string): Promise<string> {
@@ -92,7 +104,7 @@ export async function saveToDrive(token: string, folderId: string, name: string,
 
 /** De kopier, dagbogen kan se på Drev, nyeste først. */
 export async function listBackups(token: string): Promise<DriveFile[]> {
-  return (await list(token, `name contains 'dagbog-kopi-' and trashed = false`, 30)).filter((f) => f.name.endsWith('.json'));
+  return (await list(token, `name contains 'dagbog-kopi-' and trashed = false`, 60)).filter((f) => f.name.endsWith('.json'));
 }
 
 export async function downloadBackup(token: string, id: string): Promise<string> {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { backupName, parseBackupFile, type BackupFile } from '../lib/backup';
 import { backupNow, useBackupState } from '../lib/backupSync';
-import { today } from '../lib/dates';
 import { downloadBackup, KEEP, listBackups, type DriveFile } from '../lib/drive';
 import { download } from '../lib/export';
 import { clientIdOf, driveToken, GoogleError, lastError, signIn } from '../lib/google';
@@ -59,7 +58,7 @@ export function BackupScreen() {
         <div className="kv small"><span className="muted">Gemmer</span><b>de seneste {KEEP} dage</b></div>
       </div>
       <button className="btn primary block" disabled={busy} onClick={() => backupNow(store, { login: true })}>Gem kopi nu</button>
-      <button className="btn block" onClick={async () => download(new Blob([JSON.stringify(await store.backup())], { type: 'application/json' }), backupName(today()))}>
+      <button className="btn block" onClick={async () => download(new Blob([JSON.stringify(await store.backup())], { type: 'application/json' }), backupName())}>
         Gem kopi på telefonen
       </button>
       <button className="btn ghost block" onClick={() => go('kopi/hent')}>Hent kopi fra Drev</button>
@@ -183,7 +182,7 @@ function UnlockBackup({ found, files, onPick, onCancel, replacing, loading }: {
         {files && files.length > 1 && (
           <select aria-label="Vælg en anden kopi" value={found.meta?.id} disabled={loading || busy}
             onChange={(e) => { const f = files.find((x) => x.id === e.target.value); if (f) onPick(f); }}>
-            {files.map((f) => <option key={f.id} value={f.id}>{whenText(Date.parse(f.modifiedTime))}</option>)}
+            {files.map((f) => <option key={f.id} value={f.id}>{whenText(Date.parse(f.modifiedTime))}{f.size ? ` · ${Math.max(1, Math.round(Number(f.size) / 1024))} kB` : ''}</option>)}
           </select>
         )}
       </div>
