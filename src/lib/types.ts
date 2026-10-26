@@ -202,6 +202,11 @@ export interface Settings {
     calendars: GoogleCalendarInfo[];
     lastSync: number;
   };
+  backup: {
+    auto: boolean; // gem kopi på Google Drev hver dag
+    folderId: string; // mappen "Dagbog-kopi" på Drev
+    last: number; // seneste kopi (ms)
+  };
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -217,6 +222,7 @@ export const DEFAULT_SETTINGS: Settings = {
   autoLockMinutes: 5,
   showQuestion: true,
   google: { clientId: '', email: '', calendars: [], lastSync: 0 },
+  backup: { auto: true, folderId: '', last: 0 },
 };
 
 export interface Draft {

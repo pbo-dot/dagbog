@@ -5,6 +5,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 // base './' gør at appen virker fra en undermappe, fx GitHub Pages /dagbog/
 export default defineConfig({
   base: './',
+  // Versionen vises under Mere: dato og klokkeslæt for udgivelsen (dansk tid)
+  define: {
+    __BUILD__: JSON.stringify(new Date().toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })),
+  },
   plugins: [
     react(),
     VitePWA({

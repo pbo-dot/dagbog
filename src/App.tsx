@@ -4,6 +4,8 @@ import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
 import { useGoogleAutoSync } from './lib/googleSync';
+import { useAutoBackup } from './lib/backupSync';
+import { BackupScreen, RestoreFlow } from './screens/Backup';
 import { AskScreen } from './screens/Ask';
 import { CalendarScreen } from './screens/Calendar';
 import { RoutineScreen, RoutinesScreen } from './screens/Routines';
@@ -99,6 +101,7 @@ function Unlocked() {
   useAutoLock();
   useAutoGenerate();
   useGoogleAutoSync();
+  useAutoBackup();
 
   // Tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
   useEffect(() => {
@@ -151,12 +154,17 @@ function Unlocked() {
     case 'mere': screen = <MoreScreen />; break;
     case 'noter': screen = a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
+    case 'kopi':
+      screen = a === 'hent'
+        ? <div className="stack" style={{ alignItems: 'center' }}><RestoreFlow back="#/kopi/hent" replacing onCancel={() => go('kopi')} /></div>
+        : <BackupScreen />;
+      break;
     default: screen = <EntryScreen />;
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter'].includes(tab) ? 'husk'
-    : ['moenstre', 'indstillinger'].includes(tab) ? 'mere' : tab;
+    : ['moenstre', 'indstillinger', 'kopi'].includes(tab) ? 'mere' : tab;
 
   return (
     <>

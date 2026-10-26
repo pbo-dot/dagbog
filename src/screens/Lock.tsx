@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore, type PinKind } from '../lib/store';
 import { Icon } from '../ui';
+import { RestoreFlow } from './Backup';
 
-function Keypad({ onDigit, onDelete, extra }: { onDigit: (d: string) => void; onDelete: () => void; extra?: React.ReactNode }) {
+export function Keypad({ onDigit, onDelete, extra }: { onDigit: (d: string) => void; onDelete: () => void; extra?: React.ReactNode }) {
   return (
     <div className="keypad">
       {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
@@ -15,7 +16,7 @@ function Keypad({ onDigit, onDelete, extra }: { onDigit: (d: string) => void; on
   );
 }
 
-function Dots({ n, total }: { n: number; total: number }) {
+export function Dots({ n, total }: { n: number; total: number }) {
   return (
     <div className="pin-dots" aria-hidden="true">
       {Array.from({ length: total }, (_, i) => <span key={i} className={i < n ? 'full' : ''} />)}
@@ -161,18 +162,28 @@ export function PinChooser({ onChosen, title }: { onChosen: (pin: string, kind: 
 
 export function SetupScreen() {
   const { setup } = useStore();
-  const [step, setStep] = useState<'intro' | 'pin'>('intro');
+  // Tilbage fra Google-login under "Hent kopi"
+  const [step, setStep] = useState<'intro' | 'pin' | 'restore'>(() => (location.hash === '#/hent' ? 'restore' : 'intro'));
+
+  if (step === 'restore') {
+    return (
+      <div className="lock">
+        <RestoreFlow back="#/hent" onCancel={() => { history.replaceState(null, '', location.pathname); setStep('intro'); }} />
+      </div>
+    );
+  }
 
   if (step === 'intro') {
     return (
       <div className="lock">
-        <h1>Dagbog</h1>
-        <div className="stack" style={{ maxWidth: 360, textAlign: 'left' }}>
-          <p className="serif" style={{ fontSize: '1.15rem' }}>Et roligt sted at skrive om din dag.</p>
-          <p className="small muted">
-            Alt, du skriver, gemmes krypteret på denne enhed. Der er ingen konto og ingen server. Koden, du vælger nu, er nøglen til dagbogen. Glemmer du den, kan dagbogen ikke åbnes igen, så tag en sikkerhedskopi (eksport) en gang imellem.
-          </p>
-          <button className="btn primary block" onClick={() => setStep('pin')}>Kom i gang</button>
+        <div style={{ width: 48, height: 48, color: 'var(--accent)' }}>{Icon.pen}</div>
+        <div className="stack-sm">
+          <h1 className="serif">Velkommen til Dagbog</h1>
+          <p className="muted">Er det første gang, eller har du en kopi?</p>
+        </div>
+        <div className="stack-sm" style={{ width: '100%', maxWidth: 360 }}>
+          <button className="btn primary block" onClick={() => setStep('restore')}>Hent min kopi fra Drev</button>
+          <button className="btn block" onClick={() => setStep('pin')}>Start en ny dagbog</button>
         </div>
       </div>
     );
@@ -181,7 +192,8 @@ export function SetupScreen() {
   return (
     <div className="lock">
       <PinChooser title="Vælg en kode" onChosen={(pin, kind) => setup(pin, kind)} />
-      <p className="tiny muted" style={{ maxWidth: 320 }}>Face ID kan slås til bagefter under Indstillinger.</p>
+      <p className="tiny muted" style={{ maxWidth: 320 }}>Koden er nøglen til dagbogen. Glemmer du den, kan dagbogen ikke åbnes.</p>
+      <button className="btn ghost" onClick={() => setStep('intro')}>Tilbage</button>
     </div>
   );
 }

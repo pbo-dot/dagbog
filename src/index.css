@@ -373,3 +373,14 @@ button.list-item:first-child { border-top: 0; }
 .month-dots i { height: 9px; border-radius: 3px; background: var(--line); }
 .month-dots i.future { opacity: 0.35; }
 .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* Sikkerhedskopi */
+.backup-status { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 22px; background: var(--accent-soft); }
+.backup-status .badge { flex: none; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: var(--accent-text); }
+.backup-status .badge svg { width: 22px; height: 22px; }
+.backup-status.off { background: var(--surface-2); }
+.backup-status.off .badge { background: var(--surface); color: var(--muted); }
+.backup-status.bad { background: color-mix(in srgb, var(--danger) 12%, var(--surface)); }
+.backup-status.bad .badge { background: var(--danger); color: #fff; }
+.kv { display: flex; justify-content: space-between; gap: 12px; }
+.kv b { font-weight: 600; text-align: right; }

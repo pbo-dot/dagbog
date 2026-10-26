@@ -3,6 +3,7 @@ import {
   createDek, enrollBiometrics, openJSON, sealJSON, unwrapWithBiometrics, unwrapWithPin, wrapWithPin,
   type BioWrap, type PinWrap,
 } from './crypto';
+import { makeBackup, openBackup, writeBackup, type BackupFile } from './backup';
 import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox';
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
@@ -72,6 +73,10 @@ interface StoreApi {
   removePhoto(id: string): Promise<void>;
   allPhotos(): Promise<Record<string, Photo>>;
   wipe(): Promise<void>;
+  /** Låst kopi af hele dagbogen (kræver, at den er låst op). */
+  backup(): Promise<BackupFile>;
+  /** Erstatter alt med en kopi og låser op. Kaster "Forkert kode". */
+  restore(file: BackupFile, pin: string): Promise<void>;
   /** Optagelser fra Optager-appen, der venter. */
   inbox: InboxItem[];
   refreshInbox(): Promise<void>;
@@ -97,6 +102,7 @@ function settingsWithDefaults(s: Partial<Settings>): Settings {
     ai: { ...DEFAULT_SETTINGS.ai, ...s.ai },
     reminder: { ...DEFAULT_SETTINGS.reminder, ...s.reminder },
     google: { ...DEFAULT_SETTINGS.google, ...s.google },
+    backup: { ...DEFAULT_SETTINGS.backup, ...s.backup },
   };
 }
 
@@ -398,6 +404,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     async removeInbox(id) {
       await deleteInbox(id);
       setInbox((list) => list.filter((x) => x.id !== id));
+    },
+
+    async backup() {
+      const key = keyRef.current;
+      if (!key) throw new Error('Låst');
+      return makeBackup(key);
+    },
+
+    async restore(file, pin) {
+      const { dek, inner } = await openBackup(file, pin);
+      await writeBackup(file, inner);
+      clearPhotoCache();
+      setPinKind(file.pinKind);
+      setHasBio(false);
+      await requestPersistence();
+      await load(dek);
     },
 
     async wipe() {

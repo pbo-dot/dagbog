@@ -1,4 +1,5 @@
-// Google Kalender: dagbogen henter selv aftalerne (kun læsning).
+// Google: dagbogen henter selv aftalerne (kun læsning) og gemmer sin låste
+// kopi på Drev (drive.file: kun filer, dagbogen selv har lavet).
 // Login sker ved at gå til Google og tilbage (ingen popup og ingen fremmede
 // scripts). Google sender en adgangsnøgle tilbage i adressen, som gælder en
 // time og kun gemmes i fanen (sessionStorage), aldrig sammen med dagbogen.
@@ -6,7 +7,8 @@ import { addDays, addMonths, monthId, toISO } from './dates';
 import { vaultDelete, vaultGet, vaultSet } from './db';
 import type { GoogleCalendarInfo, GoogleEvent } from './types';
 
-const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
+const SCOPE = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/drive.file';
+const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 const API = 'https://www.googleapis.com/calendar/v3';
 const TOKEN = 'dagbog-gtoken';
 const STATE = 'dagbog-gstate';
@@ -60,11 +62,11 @@ function session(): Storage | null {
 }
 
 /** Går til Google for at logge ind. Den nuværende side huskes og vises igen bagefter. */
-export function signIn(clientId: string, opts: { hint?: string; silent?: boolean } = {}) {
+export function signIn(clientId: string, opts: { hint?: string; silent?: boolean; back?: string } = {}) {
   const nonce = crypto.randomUUID();
   session()?.setItem(STATE, nonce);
   session()?.removeItem(ERROR);
-  location.assign(authUrl(clientId, `${nonce}|${location.hash || '#/kalender'}`, opts));
+  location.assign(authUrl(clientId, `${nonce}|${opts.back ?? (location.hash || '#/kalender')}`, opts));
 }
 
 /**
@@ -81,7 +83,7 @@ export function takeTokenFromUrl(): boolean {
   s?.removeItem(STATE);
   if (ok && p.get('access_token')) {
     const exp = Date.now() + (Number(p.get('expires_in')) || 3600) * 1000;
-    s?.setItem(TOKEN, JSON.stringify({ token: p.get('access_token'), exp }));
+    s?.setItem(TOKEN, JSON.stringify({ token: p.get('access_token'), exp, scope: p.get('scope') ?? '' }));
   } else if (ok && p.get('error')) {
     s?.setItem(ERROR, p.get('error')!);
   }
@@ -94,6 +96,16 @@ export function currentToken(): string | null {
   try {
     const v = JSON.parse(session()?.getItem(TOKEN) ?? 'null') as { token: string; exp: number } | null;
     return v && v.exp > Date.now() + 60_000 ? v.token : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Gyldig adgangsnøgle, der også må gemme på Drev, eller null. */
+export function driveToken(): string | null {
+  try {
+    const v = JSON.parse(session()?.getItem(TOKEN) ?? 'null') as { token: string; exp: number; scope?: string } | null;
+    return v && v.exp > Date.now() + 60_000 && (v.scope ?? '').includes(DRIVE_SCOPE) ? v.token : null;
   } catch {
     return null;
   }
