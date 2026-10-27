@@ -106,6 +106,7 @@ export interface Appointment {
   google?: { cal: string; id: string; at: number }; // aftalen i Google, og hvornår den sidst blev sendt
   fromTalk?: string; // samtalen, aftalen kom fra
   minutes?: number; // varighed i Google (standard 60)
+  note?: string; // ekstra oplysninger, fx "Camilla kommer"
 }
 
 /** Markering af, at en fast ting er taget/gjort. */

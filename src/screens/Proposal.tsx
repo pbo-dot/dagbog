@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { Proposal } from '../lib/ai';
 import { formatFull } from '../lib/dates';
-import { findPerson, problem, saveProposal, undoProposal, whereSaved, type Saved } from '../lib/proposals';
+import { baseKind, findPerson, lineDiff, problem, saveProposal, target, undoProposal, whereSaved, type Saved } from '../lib/proposals';
 import { everyText } from '../lib/routines';
 import { useStore } from '../lib/store';
+import type { Appointment, Note, Routine } from '../lib/types';
 import { go } from '../ui';
 
 type Status = { saved: Saved } | 'nej' | 'fortrudt' | null;
@@ -11,7 +12,13 @@ type Status = { saved: Saved } | 'nej' | 'fortrudt' | null;
 // Huskes, mens dagbogen er åben, så et forslag ikke kan gemmes to gange efter at have kigget væk.
 const statuses = new WeakMap<Proposal, Status>();
 
-const KIND: Record<Proposal['kind'], string> = { note: 'Ny note', appointment: 'Ny aftale', routine: 'Ny fast ting', personNote: 'Note om' };
+const KIND: Record<Proposal['kind'], string> = {
+  note: 'Ny note', appointment: 'Ny aftale', routine: 'Ny fast ting', personNote: 'Note om',
+  editNote: 'Ret note', editAppointment: 'Ret aftale', editRoutine: 'Ret fast ting',
+};
+
+const when = (date: string, time: string) => `${/^\d{4}-\d{2}-\d{2}$/.test(date) ? formatFull(date) : '?'}${time ? ` kl. ${time.replace(':', '.')}` : ''}`;
+const often = (everyDays: number, monthly: boolean) => everyText({ everyDays: Math.max(1, Math.round(everyDays) || 1), monthly });
 
 /** Et forslag fra Claude: Gem, Ret eller Nej tak. Intet gemmes før Gem. */
 export function ProposalCard({ proposal }: { proposal: Proposal }) {
@@ -26,6 +33,9 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
     setStatusState(s);
   };
   const g = store.data.settings.google;
+  const base = baseKind(p.kind);
+  const isEdit = p.kind.startsWith('edit');
+  const old = target(p, store.data);
   const person = p.kind === 'personNote' ? findPerson(store.data.people, p.title) : undefined;
   const title = p.kind === 'personNote' ? person?.name ?? p.title : p.title;
   const label = p.kind === 'personNote' ? `${KIND.personNote} ${title}` : KIND[p.kind];
@@ -34,12 +44,13 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
   if (status === 'fortrudt') return <p className="tiny muted">Fortrudt: {title}</p>;
   if (status) {
     const where = whereSaved(status.saved);
+    const google = 'google' in status.saved && status.saved.google;
     return (
       <div className="stack-sm">
         <div className="proposal-ok" role="status">
           <span className="badge">✓</span>
-          <span><strong>{title}</strong> er gemt under {where.label}
-            {status.saved.kind === 'appointment' && status.saved.google && <span className="small muted" style={{ display: 'block' }}>og i Google Kalender</span>}
+          <span><strong>{title}</strong> er {isEdit ? 'rettet' : `gemt under ${where.label}`}
+            {google && <span className="small muted" style={{ display: 'block' }}>og i Google Kalender</span>}
           </span>
         </div>
         <div className="row">
@@ -52,7 +63,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
 
   const set = (patch: Partial<Proposal>) => setP({ ...p, ...patch });
   const save = async () => {
-    const why = problem(p, store.data.people);
+    const why = problem(p, store.data);
     if (why) return setError(why);
     setBusy(true);
     try {
@@ -68,44 +79,48 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
       <span className="proposal-kind">{label}</span>
       {editing ? (
         <>
-          {p.kind !== 'personNote' && (
-            <label className="field">{p.kind === 'note' ? 'Titel' : p.kind === 'routine' ? 'Navn' : 'Hvad'}
+          {base !== 'personNote' && (
+            <label className="field">{base === 'note' ? 'Titel' : base === 'routine' ? 'Navn' : 'Hvad'}
               <input type="text" value={p.title} onChange={(e) => set({ title: e.target.value })} />
             </label>
           )}
-          {p.kind === 'appointment' && (
+          {base === 'appointment' && (
             <>
               <div className="row">
                 <label className="field grow">Dato<input type="date" value={p.date} onChange={(e) => e.target.value && set({ date: e.target.value })} /></label>
                 <label className="field">Klokken<input type="time" value={p.time} onChange={(e) => set({ time: e.target.value })} /></label>
               </div>
               <label className="field">Sted<input type="text" value={p.place} onChange={(e) => set({ place: e.target.value })} /></label>
+              <label className="field">Note<input type="text" value={p.note} onChange={(e) => set({ note: e.target.value })} /></label>
             </>
           )}
-          {p.kind === 'routine' && (
+          {base === 'routine' && (
             <label className="field">Første gang<input type="date" value={p.date} onChange={(e) => e.target.value && set({ date: e.target.value })} /></label>
           )}
-          {(p.kind === 'note' || p.kind === 'personNote') && (
-            <label className="field">{p.kind === 'note' ? 'Tekst' : 'Noten'}
-              <textarea rows={p.kind === 'note' ? 10 : 3} value={p.text} onChange={(e) => set({ text: e.target.value })} />
+          {(base === 'note' || base === 'personNote') && (
+            <label className="field">{base === 'note' ? 'Tekst' : 'Noten'}
+              <textarea rows={base === 'note' ? 10 : 3} value={p.text} onChange={(e) => set({ text: e.target.value })} />
             </label>
           )}
         </>
+      ) : isEdit && old ? (
+        <EditPreview p={p} old={old} google={!!(old as Appointment).google} />
       ) : (
         <>
-          {p.kind !== 'personNote' && <strong className="proposal-title">{p.kind === 'appointment' ? '🗓' : p.icon} {p.title}</strong>}
-          {p.kind === 'note' && <NotePreview text={p.text} />}
-          {p.kind === 'personNote' && <p className="serif">"{p.text}"</p>}
-          {p.kind === 'appointment' && (
+          {base !== 'personNote' && <strong className="proposal-title">{base === 'appointment' ? '🗓' : p.icon} {p.title}</strong>}
+          {base === 'note' && <NotePreview text={p.text} />}
+          {base === 'personNote' && <p className="serif">"{p.text}"</p>}
+          {base === 'appointment' && (
             <>
-              <div className="kv small"><span className="muted">Hvornår</span><b>{/^\d{4}-\d{2}-\d{2}$/.test(p.date) ? formatFull(p.date) : '?'}{p.time ? ` kl. ${p.time.replace(':', '.')}` : ''}</b></div>
+              <div className="kv small"><span className="muted">Hvornår</span><b>{when(p.date, p.time)}</b></div>
               {p.place && <div className="kv small"><span className="muted">Hvor</span><b>{p.place}</b></div>}
+              {p.note && <div className="kv small"><span className="muted">Note</span><b>{p.note}</b></div>}
               {g.email && g.push && <span className="g-badge">Også i Google Kalender</span>}
             </>
           )}
-          {p.kind === 'routine' && (
+          {base === 'routine' && (
             <>
-              <div className="kv small"><span className="muted">Hvor ofte</span><b>{everyText({ everyDays: Math.max(1, Math.round(p.everyDays) || 1), monthly: p.monthly })}</b></div>
+              <div className="kv small"><span className="muted">Hvor ofte</span><b>{often(p.everyDays, p.monthly)}</b></div>
               {p.date && <div className="kv small"><span className="muted">Første gang</span><b>{formatFull(p.date)}</b></div>}
               {p.options.length > 0 && <div className="kv small"><span className="muted">Skift mellem</span><b>{p.options.join(', ')}</b></div>}
             </>
@@ -119,6 +134,67 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
         <button className="btn ghost small" disabled={busy} onClick={() => setStatus('nej')}>Nej tak</button>
       </div>
     </div>
+  );
+}
+
+/** Én ændring: det gamle overstreget, det nye fremhævet. Uændret vises bare. */
+function Change({ label, before, after }: { label: string; before: string; after: string }) {
+  if (before === after) return after ? <div className="kv small"><span className="muted">{label}</span><b>{after}</b></div> : null;
+  return (
+    <div className="stack-sm" style={{ gap: 4 }}>
+      <span className="proposal-field">{label}</span>
+      {before && <span className="diff old">{before}</span>}
+      {after && <span className="diff new">{after}</span>}
+    </div>
+  );
+}
+
+function EditPreview({ p, old, google }: { p: Proposal; old: Note | Appointment | Routine; google: boolean }) {
+  let body: ReactNode = null;
+  if (p.kind === 'editAppointment') {
+    const a = old as Appointment;
+    body = (
+      <>
+        {a.title !== p.title.trim() && <Change label="Hvad" before={a.title} after={p.title.trim()} />}
+        <Change label="Hvornår" before={when(a.date, a.time)} after={when(p.date, p.time)} />
+        <Change label="Hvor" before={a.place} after={p.place.trim()} />
+        <Change label="Note" before={a.note ?? ''} after={p.note.trim()} />
+        {google && <span className="g-badge">Rettes også i Google Kalender</span>}
+      </>
+    );
+  } else if (p.kind === 'editRoutine') {
+    const r = old as Routine;
+    body = (
+      <>
+        <Change label="Navn" before={r.name} after={p.title.trim()} />
+        <Change label="Hvor ofte" before={often(r.everyDays, r.monthly)} after={often(p.everyDays, p.monthly)} />
+        <Change label="Første gang" before={formatFull(r.start)} after={p.date ? formatFull(p.date) : formatFull(r.start)} />
+        <Change label="Skift mellem" before={r.options.join(', ')} after={p.options.join(', ')} />
+      </>
+    );
+  } else {
+    const n = old as Note;
+    const pretty = (l: string) => l.replace(/^- \[ \] /, '☐ ').replace(/^- \[x\] /i, '☑ ').replace(/^#+ /, '');
+    body = (
+      <>
+        {n.title !== p.title.trim() && <Change label="Titel" before={n.title} after={p.title.trim()} />}
+        <div className="stack-sm" style={{ gap: 2 }}>
+          {lineDiff(n.text, p.text).map((l, i) => (
+            <span key={i} className={l.kind === 'same' ? 'small' : `diff ${l.kind === 'added' ? 'new' : 'old'}`}>
+              {l.kind === 'added' ? '+ ' : l.kind === 'removed' ? '− ' : ''}{pretty(l.text)}
+            </span>
+          ))}
+        </div>
+      </>
+    );
+  }
+  const name = p.kind === 'editRoutine' ? (old as Routine).name : (old as Note | Appointment).title;
+  const icon = p.kind === 'editAppointment' ? '🗓' : (old as Note | Routine).icon;
+  return (
+    <>
+      <strong className="proposal-title">{icon} {name}</strong>
+      {body}
+    </>
   );
 }
 

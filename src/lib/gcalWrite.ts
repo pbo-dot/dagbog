@@ -22,10 +22,10 @@ export function plusMinutes(date: string, time: string, minutes: number): string
 }
 
 /** Aftalen, som Google vil have den. Uden klokkeslæt bliver den en heldagsaftale. */
-export function toApiEvent(a: Pick<Appointment, 'title' | 'date' | 'time' | 'place'>, minutes = 60) {
+export function toApiEvent(a: Pick<Appointment, 'title' | 'date' | 'time' | 'place' | 'note'>, minutes = 60) {
   const start: ApiTime = a.time ? { dateTime: `${a.date}T${a.time}:00`, timeZone: ZONE } : { date: a.date };
   const end: ApiTime = a.time ? { dateTime: plusMinutes(a.date, a.time, minutes), timeZone: ZONE } : { date: addDays(a.date, 1) };
-  return { summary: a.title, location: a.place || undefined, description: 'Fra Dagbog', start, end };
+  return { summary: a.title, location: a.place || undefined, description: a.note ? `${a.note}\n\nFra Dagbog` : 'Fra Dagbog', start, end };
 }
 
 async function call(token: string, url: string, init: RequestInit = {}): Promise<Response> {

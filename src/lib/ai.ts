@@ -284,18 +284,20 @@ const AskSchema = z.object({
   ).describe('De vigtigste dage, svaret bygger på, højst 8, ældste først. Tom liste hvis dagbogen ikke siger noget om det.'),
   proposals: z.array(
     z.object({
-      kind: z.enum(['note', 'appointment', 'routine', 'personNote']).describe('note = ny note under Noter; appointment = ny aftale i kalenderen; routine = ny fast ting (fx medicin); personNote = ny note om en person under Mennesker'),
+      kind: z.enum(['note', 'appointment', 'routine', 'personNote', 'editNote', 'editAppointment', 'editRoutine']).describe('note = ny note under Noter; appointment = ny aftale i kalenderen; routine = ny fast ting (fx medicin); personNote = ny note om en person under Mennesker; editNote/editAppointment/editRoutine = ret en eksisterende note, aftale eller fast ting med [id: …]'),
+      target: z.string().describe('Ved edit…: id\'et fra [id: …] på det, der rettes. Ellers tom'),
       title: z.string().describe('note: notens titel. appointment: hvad aftalen er. routine: navnet. personNote: personens navn præcis som under MENNESKER'),
       icon: z.string().describe('Én passende emoji til note eller fast ting, ellers tom'),
       text: z.string().describe('note: hele teksten (afkrydsningslister skrives "- [ ] punkt", overskrifter "# Overskrift"). personNote: selve noten. Ellers tom'),
       date: z.string().describe('appointment: datoen YYYY-MM-DD. routine: første gang YYYY-MM-DD. Ellers tom'),
       time: z.string().describe('appointment: klokkeslæt HH:MM, eller tom for hele dagen. Ellers tom'),
       place: z.string().describe('appointment: stedet, ellers tom'),
+      note: z.string().describe('appointment: ekstra oplysninger til aftalen (fx "Camilla kommer, mobil …"), ellers tom'),
       everyDays: z.number().describe('routine: dage mellem hver gang (1 = hver dag, 7, 14 …). 0 hvis månedlig eller ikke en fast ting'),
       monthly: z.boolean().describe('routine: true hvis hver måned på samme dato'),
       options: z.array(z.string()).describe('routine: ting der skiftes mellem, fx ["højre ben", "venstre ben"]. Ellers tom liste'),
     }),
-  ).describe('Kun når personen beder om at oprette, lave, skrive eller gemme noget: forslag til nye ting. Ellers tom liste.'),
+  ).describe('Kun når personen beder om at oprette, rette eller tilføje noget: forslag. Ved edit… gælder felterne for appointment/note/routine, og de skal være den fulde nye udgave (også det, der ikke ændres). Ellers tom liste.'),
 });
 export type AskAI = z.infer<typeof AskSchema>;
 export type Proposal = AskAI['proposals'][number];
@@ -309,13 +311,16 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.
 
-Personen kan også bede dig om at oprette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …" eller "jeg skal tage vitaminer hver dag". Så laver du forslag under proposals:
-- Kun nye ting: noter, aftaler, faste ting og noter om mennesker. Du kan aldrig ændre eller slette noget, der findes.
+Personen kan også bede dig om at oprette eller rette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …", "jeg skal tage vitaminer hver dag", "tilføj til aftalen at Camilla kommer" eller "sæt solcreme på pakkelisten". Så laver du forslag under proposals:
+- Nye ting: noter, aftaler, faste ting og noter om mennesker.
+- Rettelser: kun noter, aftaler og faste ting, der har [id: …] i materialet (dem har personen selv lavet i Dagbog). Brug editNote, editAppointment eller editRoutine med target = id'et, og giv den fulde nye udgave af alle felter. Ved en note: hele den nye tekst med det gamle bevaret, medmindre personen beder om at fjerne noget. Ekstra oplysninger til en aftale skrives i note.
+- Aftaler mærket [Google] har intet id og kan ikke rettes her; sig, at de skal rettes i Google Kalender. Dagbogsdage kan heller ikke rettes. Du kan aldrig slette noget.
+- Beder personen om at tilføje noget til noget, der findes, så ret det i stedet for at lave noget nyt.
 - Intet gemmes, før personen trykker Gem. Skriv derfor kort i answer, hvad du foreslår (fx "Her er et forslag til en pakkeliste."), uden at gentage hele indholdet.
 - Byg på materialet, når det giver mening (fx en tidligere pakkeliste), men find ikke på detaljer om personens liv.
 - Regn datoer ud fra dagens dato: "torsdag" er den næste torsdag, "i morgen" er dagen efter i dag.
 - En note om en person kræver, at personen findes under MENNESKER; brug navnet præcis som der. Findes personen ikke, så sig det i answer og lav intet forslag.
-- Beder personen ikke om at oprette noget, er proposals en tom liste.`;
+- Beder personen ikke om at oprette eller rette noget, er proposals en tom liste.`;
 
 function conversationBlock(c: Conversation, people: Record<string, Person>, withTranscript = true): string {
   const names = c.people.map((id) => people[id]?.name).filter(Boolean);
@@ -344,7 +349,7 @@ function routineBlock(r: Routine, keep: (date: string) => boolean = () => true):
     const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     return `- taget ${day} kl. ${d.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' })}${l.option ? ` (${l.option})` : ''}${l.due !== day ? `, planlagt ${l.due}` : ''}`;
   });
-  return [`### ${r.name}: ${everyText(r)} fra ${r.start}${r.options.length ? `, skiftevis ${r.options.join(' / ')}` : ''}`, ...log].join('\n');
+  return [`### ${r.name}: ${everyText(r)} fra ${r.start}${r.options.length ? `, skiftevis ${r.options.join(' / ')}` : ''} [id: ${r.id}]`, ...log].join('\n');
 }
 
 function weekBlock(w: WeekSummary): string {
@@ -381,11 +386,11 @@ function calendarLines(data: AskData, inside: (d: string) => boolean = () => tru
 
 /** Faste noter uden dato (regler, lister, gode råd). */
 function noteBlocks(data: AskData): string[] {
-  return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => `### ${n.title}\n${n.text}`);
+  return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => `### ${n.title} [id: ${n.id}]\n${n.text}`);
 }
 
 function appointmentLine(a: Appointment): string {
-  return `- ${a.date}${a.time ? ` kl. ${a.time}` : ''}: ${a.title}${a.place ? ` (${a.place})` : ''}`;
+  return `- ${a.date}${a.time ? ` kl. ${a.time}` : ''}: ${a.title}${a.place ? ` (${a.place})` : ''}${a.note ? ` – note: ${a.note}` : ''} [id: ${a.id}]`;
 }
 
 export interface AskScope {

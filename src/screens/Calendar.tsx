@@ -81,7 +81,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
   const newAppointment = (date: string): Appointment => ({ id: uid(), title: '', date, time: '', place: '', createdAt: Date.now(), toGoogle: connected && g.push });
   const saveAppointment = async () => {
     if (!adding || !adding.title.trim()) return;
-    const saved: Appointment = { ...adding, title: adding.title.trim(), place: adding.place.trim(), changedAt: Date.now() };
+    const saved: Appointment = { ...adding, title: adding.title.trim(), place: adding.place.trim(), note: adding.note?.trim() || undefined, changedAt: Date.now() };
     // Skal den ikke længere ligge i Google, slettes den dér
     const removed = !saved.toGoogle && saved.google ? { cal: saved.google.cal, id: saved.google.id, ref: saved.id } : undefined;
     if (removed) delete saved.google;
@@ -154,6 +154,7 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
               const a = data.appointments[i.ref];
               return (
                 <>
+                  {a.note && <span className="small">{a.note}</span>}
                   {a.google && !needsPush(a) ? <span className="g-badge">✓ I Google</span>
                     : a.toGoogle ? <span className="tiny muted">Sendes til Google, når der er forbindelse</span> : null}
                   <div className="row wrap" style={{ gap: 6 }}>
@@ -202,6 +203,9 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
           </div>
           <label className="field">Sted (valgfrit)
             <input type="text" value={adding.place} onChange={(e) => setAdding({ ...adding, place: e.target.value })} />
+          </label>
+          <label className="field">Note (valgfrit)
+            <input type="text" value={adding.note ?? ''} placeholder="Fx Camilla kommer" onChange={(e) => setAdding({ ...adding, note: e.target.value })} />
           </label>
           {connected && (
             <div className="g-push">
