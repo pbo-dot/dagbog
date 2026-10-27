@@ -415,3 +415,17 @@ button.list-item:first-child { border-top: 0; }
 }
 @media (prefers-reduced-motion: no-preference) { .update-banner { animation: rise 0.25s ease-out; } }
 @keyframes rise { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* Dagens overblik på Skriv-siden */
+.today { background: var(--surface); border-radius: 22px; padding: 12px 16px 6px; display: flex; flex-direction: column; }
+.today-head { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); padding-bottom: 2px; }
+.today-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; min-height: 52px; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; width: 100%; color: inherit; font: inherit; }
+.today-row:last-child { border-bottom: 0; }
+.today-ico { flex: none; width: 36px; height: 36px; border-radius: 12px; background: var(--accent-soft); display: inline-flex; align-items: center; justify-content: center; font-size: 1.05rem; }
+.today-ico.bday { background: color-mix(in srgb, #f4a261 25%, var(--surface)); }
+.today-time { font-size: 0.9rem; color: var(--muted); white-space: nowrap; }
+.today-done { border: 0; background: none; color: var(--accent); font-weight: 700; font: inherit; font-size: 0.9rem; min-height: 44px; padding: 0 4px; cursor: pointer; }
+.today-later { border: 0; background: none; text-align: left; color: var(--accent); font: inherit; font-size: 0.88rem; font-weight: 600; padding: 8px 0; min-height: 40px; cursor: pointer; }
+.today-compact { display: flex; flex-wrap: wrap; gap: 8px; }
+.today-pill { border: 0; background: var(--surface); border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 0.88rem; color: inherit; min-height: 40px; display: inline-flex; align-items: center; gap: 6px; }
+.today-pill .ok { color: var(--accent); }

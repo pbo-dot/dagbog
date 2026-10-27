@@ -51,6 +51,13 @@ const IDEAS = [
   'Hvad har jeg skrevet, at jeg skal gøre, men ikke har gjort?',
 ];
 
+// Et spørgsmål, der skal stilles, når Spørg dagbogen åbnes (fx "Gaveidéer" fra Skriv-siden)
+let pending: string | null = null;
+export function askSoon(question: string) {
+  pending = question;
+  go('spoerg');
+}
+
 // Samtalen huskes, mens dagbogen er åben, så man kan kigge på en dag og komme tilbage.
 let saved: Turn[] = [];
 const remember = (t: Turn[]) => {
@@ -122,6 +129,13 @@ export function AskScreen() {
       setBusy(false);
     }
   };
+
+  useEffect(() => {
+    if (!pending) return;
+    const q = pending;
+    pending = null;
+    ask(q);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const reset = () => {
     remember([]);

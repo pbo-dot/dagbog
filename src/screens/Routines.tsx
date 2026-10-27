@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { agenda, at } from '../lib/agenda';
 import { addDays, formatLong, formatShort, today } from '../lib/dates';
 import { dueTomorrow, everyText, markTaken, routineStatus } from '../lib/routines';
+import { upcomingBirthdays } from '../lib/people';
+import { askSoon } from './Ask';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
 import { AgendaIcon, DoubleConfirm, go, Header, Icon, uid } from '../ui';
@@ -16,77 +18,94 @@ const EVERY: { label: string; days: number; monthly: boolean }[] = [
 
 const time = (at: number) => new Date(at).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
 
-/** Kort øverst på Skriv-siden: faste ting, der skal tages i dag (eller er glemt), og dem der lige er taget. */
+/** Dagens overblik øverst på Skriv-siden: aftaler, faste ting og fødselsdage i dag, og hvad der kommer. */
 export function RoutineCards() {
   const store = useStore();
+  const { data } = store;
   const t = today();
-  const all = Object.values(store.data.routines).sort((a, b) => a.createdAt - b.createdAt);
-  const cards = all.map((r) => ({ r, s: routineStatus(r, t) })).filter(({ s }) => s.kind !== 'none');
-  // Dagen før: en lille linje, så man kan forberede sig
-  const tomorrow = all.map((r) => ({ r, d: dueTomorrow(r, t) })).filter(({ d }) => d);
-  // Aftaler (egne og fra samtaler) i dag og i morgen
-  const plans = agenda(store.data, t, addDays(t, 1)).filter((i) => i.kind !== 'routine');
-  if (!cards.length && !tomorrow.length && !plans.length) return null;
-  return (
-    <div className="stack-sm">
-      {plans.filter((i) => i.date === t).map((i, n) => (
-        <p key={`t${n}`} className="small" style={{ margin: 0 }}>
-          <strong>I dag:</strong> <AgendaIcon item={i} /> {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
-        </p>
-      ))}
-      {cards.map(({ r, s }) => <RoutineCard key={r.id} r={r} s={s} />)}
-      {plans.filter((i) => i.date !== t).map((i, n) => (
-        <p key={`m${n}`} className="small muted" style={{ margin: 0 }}>
-          I morgen: <AgendaIcon item={i} /> {i.title}{i.time ? ` ${at(i.time)}` : ''}{i.detail ? ` · ${i.detail}` : ''}
-        </p>
-      ))}
-      {tomorrow.map(({ r, d }) => (
-        <p key={r.id} className="small muted" style={{ margin: 0 }}>
-          I morgen: {r.icon} {r.name}{d?.option ? ` · ${d.option}` : ''}
-        </p>
-      ))}
-    </div>
-  );
-}
+  const routines = Object.values(data.routines).sort((a, b) => a.createdAt - b.createdAt);
+  const due = routines.map((r) => ({ r, s: routineStatus(r, t) })).filter(({ s }) => s.kind !== 'none');
+  const plans = agenda(data, t, t).filter((i) => i.kind !== 'routine');
+  const people = Object.values(data.people);
+  const birthdays = upcomingBirthdays(people, t, 14);
+  // I dag og den kommende uge (med gaveidéer); senere fødselsdage som en linje nederst
+  const todayBdays = birthdays.filter((b) => b.next.days <= 7);
+  const soonBday = birthdays.find((b) => b.next.days > 7);
+  const tomorrowPlan = agenda(data, addDays(t, 1), addDays(t, 1)).find((i) => i.kind !== 'routine');
+  const tomorrowRoutine = routines.map((r) => ({ r, d: dueTomorrow(r, t) })).find(({ d }) => d);
+  const save = (r: Routine) => store.put('routines', r.id, r);
+  const later = [
+    tomorrowPlan && { key: 'p', text: `I morgen: ${tomorrowPlan.title}${tomorrowPlan.time ? ` ${at(tomorrowPlan.time)}` : ''}`, go: 'kalender' },
+    tomorrowRoutine && { key: 'r', text: `I morgen: ${tomorrowRoutine.r.icon} ${tomorrowRoutine.r.name}${tomorrowRoutine.d?.option ? ` · ${tomorrowRoutine.d.option}` : ''}`, go: `faste/${tomorrowRoutine.r.id}` },
+    soonBday && {
+      key: 'b',
+      text: `Om ${soonBday.next.days} ${soonBday.next.days === 1 ? 'dag' : 'dage'}: ${soonBday.person.name.split(' ')[0]} ${soonBday.next.age ? `fylder ${soonBday.next.age}` : 'har fødselsdag'}`,
+      go: `mennesker/${soonBday.person.id}`,
+    },
+  ].filter(Boolean) as Array<{ key: string; text: string; go: string }>;
 
-function RoutineCard({ r, s }: { r: Routine; s: ReturnType<typeof routineStatus> }) {
-  const store = useStore();
-  const [choice, setChoice] = useState<string | undefined>(undefined);
-  const save = (next: Routine) => store.put('routines', r.id, next);
+  if (!due.length && !plans.length && !todayBdays.length && !later.length) return null;
 
-  if (s.kind === 'done') {
+  // Stille dag: kun faste ting, der er klaret, og intet andet i dag
+  if (!plans.length && !todayBdays.length && due.every(({ s }) => s.kind === 'done')) {
     return (
-      <div className="card routine done">
-        <span className="routine-ico">✓</span>
-        <div className="grow">
-          <strong>{r.name} taget</strong>
-          <span className="small muted" style={{ display: 'block' }}>Kl. {time(s.at).replace(':', '.')}{s.option ? ` · ${s.option}` : ''} · næste {formatShort(s.next)}{s.nextOption ? `, ${s.nextOption}` : ''}</span>
-        </div>
-        <button className="btn ghost small" onClick={() => save({ ...r, log: r.log.filter((l) => l.due !== s.due) })}>Fortryd</button>
+      <div className="today-compact">
+        {due.map(({ r }) => <span key={r.id} className="today-pill">{r.icon} {r.name} <b className="ok">✓</b></span>)}
+        {later.slice(0, 1).map((l) => <button key={l.key} className="today-pill" onClick={() => go(l.go)}>{l.text}</button>)}
+        {!later.length && <span className="today-pill muted">Intet andet i dag</span>}
       </div>
     );
   }
-  if (s.kind !== 'due') return null;
-  const option = choice ?? s.option;
-  const others = r.options.filter((o) => o !== option);
+
   return (
-    <div className={`card routine ${s.late ? 'late' : 'due'}`} style={{ flexWrap: 'wrap' }}>
-      <span className="routine-ico">{r.icon}</span>
-      <div className="grow">
-        <strong>{r.name}</strong>
-        <span className={`small ${s.late ? 'error' : 'muted'}`} style={{ display: 'block', minHeight: 0 }}>
-          {s.late ? `Mangler siden ${formatLong(s.due).split(' ')[0].toLowerCase()}` : 'I dag'}{option ? ` · ${option}` : ''}
-        </span>
-      </div>
-      <button className="btn primary" onClick={() => save({ ...r, log: [{ due: s.due, at: Date.now(), option }, ...r.log] })}>Taget</button>
-      {s.late && <button className="btn ghost small" onClick={() => go(`faste/${r.id}/tidligere`)}>Taget en anden dag</button>}
-      {others.length > 0 && (
-        <div className="row wrap" style={{ gap: 6, width: '100%', paddingLeft: 56 }}>
-          <span className="tiny muted">Andet?</span>
-          {others.map((o) => <button key={o} className="chip small" onClick={() => setChoice(o)}>{o}</button>)}
+    <section className="today" aria-label="I dag">
+      <div className="today-head"><span>I dag</span></div>
+      {todayBdays.map(({ person, next }) => {
+        const first = person.name.split(' ')[0];
+        return (
+          <div key={person.id} className="today-row">
+            <span className="today-ico bday">🎂</span>
+            <span className="grow">
+              <strong>{next.days === 0 ? '' : next.days === 1 ? 'I morgen: ' : `Om ${next.days} dage: `}{first} {next.age ? `fylder ${next.age}` : 'har fødselsdag'}</strong>
+              {person.relation && <span className="small muted" style={{ display: 'block' }}>{person.relation}</span>}
+            </span>
+            <button className="btn small" onClick={() => askSoon(`Giv mig 5 gaveidéer til ${person.name}${person.relation ? ` (${person.relation})` : ''}${next.age ? `, der fylder ${next.age}` : ''}. Brug det, jeg har skrevet om ${first}.`)}>Gaveidéer</button>
+          </div>
+        );
+      })}
+      {plans.map((i, n) => (
+        <button key={`p${n}`} className="today-row" onClick={() => go('kalender')}>
+          <span className="today-ico"><AgendaIcon item={i} /></span>
+          <span className="grow">
+            <strong>{i.title}</strong>
+            {i.detail && <span className="small muted" style={{ display: 'block' }}>{i.detail}</span>}
+          </span>
+          {i.time && <span className="today-time">{i.time.replace(':', '.')}</span>}
+        </button>
+      ))}
+      {due.map(({ r, s }) => (
+        <div key={r.id} className="today-row">
+          <span className="today-ico">{r.icon}</span>
+          <span className="grow">
+            <strong>{r.name}</strong>
+            {s.kind === 'due' && (s.late || s.option) && (
+              <span className={`small ${s.late ? 'error' : 'muted'}`} style={{ display: 'block', minHeight: 0 }}>
+                {s.late ? `Mangler siden ${formatLong(s.due).split(' ')[0].toLowerCase()}` : ''}{s.late && s.option ? ' · ' : ''}{s.option ?? ''}
+              </span>
+            )}
+          </span>
+          {s.kind === 'due' ? (
+            <>
+              {s.late && <button className="btn ghost small" onClick={() => go(`faste/${r.id}/tidligere`)}>Anden dag</button>}
+              <button className="btn primary small" onClick={() => save({ ...r, log: [{ due: s.due, at: Date.now(), option: s.option }, ...r.log] })}>Taget</button>
+            </>
+          ) : s.kind === 'done' ? (
+            <button className="today-done" onClick={() => save({ ...r, log: r.log.filter((l) => l.due !== s.due) })} aria-label={`Fortryd ${r.name}`}>✓ {time(s.at).replace(':', '.')}</button>
+          ) : null}
         </div>
-      )}
-    </div>
+      ))}
+      {later.map((l) => <button key={l.key} className="today-later" onClick={() => go(l.go)}>{l.text} ›</button>)}
+    </section>
   );
 }
 
