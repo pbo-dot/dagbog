@@ -7,8 +7,8 @@ import { useStore } from './store';
 
 type Store = ReturnType<typeof useStore>;
 
-/** Automatisk kopi højst så ofte. */
-const EVERY_MS = 20 * 60 * 60_000;
+/** Er den seneste kopi fra en tidligere dag? */
+const olderThanToday = (ms: number) => new Date(ms).toDateString() !== new Date().toDateString();
 
 interface State {
   busy: boolean;
@@ -49,7 +49,7 @@ export async function backupNow(store: Store, opts: { login?: boolean } = {}): P
   }
 }
 
-/** Gemmer af sig selv, når dagbogen er låst op, og den seneste kopi er ældre end et døgn. */
+/** Gemmer af sig selv første gang, dagbogen er låst op hver dag. */
 export function useAutoBackup() {
   const store = useStore();
   const b = store.data.settings.backup;
@@ -57,7 +57,7 @@ export function useAutoBackup() {
     let timer: ReturnType<typeof setTimeout>;
     const run = () => {
       clearTimeout(timer);
-      if (!document.hidden && b.auto && driveToken() && Date.now() - b.last > EVERY_MS) {
+      if (!document.hidden && b.auto && driveToken() && olderThanToday(b.last)) {
         // Lidt senere, så det ikke forsinker åbningen
         timer = setTimeout(() => backupNow(store), 4000);
       }
