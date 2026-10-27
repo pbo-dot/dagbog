@@ -42,19 +42,6 @@ export function toText(data: Data, from: string, to: string): string {
   return parts.join('\n');
 }
 
-export function toJSON(data: Data, photos: Record<string, Photo>): string {
-  const { settings, ...rest } = data;
-  // API-nøglen udelades af sikkerhedskopien
-  return JSON.stringify({
-    app: 'dagbog',
-    version: 2,
-    exportedAt: new Date().toISOString(),
-    ...rest,
-    photos,
-    settings: { ...settings, ai: { ...settings.ai, apiKey: '' } },
-  });
-}
-
 export async function toPDF(data: Data, from: string, to: string): Promise<Blob> {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });

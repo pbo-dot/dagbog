@@ -3,7 +3,7 @@ import { AIError, testKey } from '../lib/ai';
 import { biometricsAvailable } from '../lib/crypto';
 import { addMonths, today, WEEKDAYS } from '../lib/dates';
 import { badgeSupported, reminderICS } from '../lib/device';
-import { download, parseBackup, toJSON, toPDF, toText } from '../lib/export';
+import { download, parseBackup, toPDF, toText } from '../lib/export';
 import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
@@ -309,7 +309,7 @@ export function SettingsScreen() {
         <p className="tiny muted">Fjerner du et tag, bliver det stadig på de dage, hvor det allerede er brugt.</p>
       </Section>
 
-      <Section title="Eksport og sikkerhedskopi">
+      <Section title="Eksport og indlæsning">
         <div className="row">
           <label className="field grow">Fra<input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
           <label className="field grow">Til<input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
@@ -320,9 +320,8 @@ export function SettingsScreen() {
           <button className="btn small" onClick={() => { setFrom('1900-01-01'); setTo(today()); }}>Hele dagbogen</button>
         </div>
         <div className="stack-sm">
-          <p className="tiny muted">Den fulde sikkerhedskopi (JSON) indeholder alt (dage, fotos, opsummeringer, mennesker og mønstre) og kan læses ind igen på en ny enhed. Den er <strong>ikke</strong> krypteret, så opbevar den et sikkert sted. API-nøglen kommer ikke med.</p>
+          <p className="tiny muted">Sikkerhedskopien ligger under Mere › Sikkerhedskopi. Her kan du indlæse en fil, fx gamle noter.</p>
           <div className="row wrap">
-            <button className="btn small" onClick={async () => download(new Blob([toJSON(store.data, await store.allPhotos())], { type: 'application/json' }), `dagbog-backup-${today()}.json`)}>Fuld sikkerhedskopi</button>
             <label className="btn small">
               Indlæs sikkerhedskopi
               <input type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={async (e) => {
