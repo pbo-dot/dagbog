@@ -17,8 +17,8 @@ const STATE = 'dagbog-gstate';
 const ERROR = 'dagbog-gerror';
 /** Henter automatisk igen, når aftalerne er ældre end dette (og der er en gyldig nøgle). */
 export const STALE_MS = 15 * 60_000;
-/** Automatisk login ved åbning højst så ofte. */
-const AUTO_EVERY_MS = 3 * 60 * 60_000;
+/** Automatisk login højst så ofte (adgangen gælder en time). */
+const AUTO_EVERY_MS = 45 * 60_000;
 
 /** Uden for kryptering, så login kan ske, før dagbogen låses op. */
 interface Hint {

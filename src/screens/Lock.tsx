@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore, type PinKind } from '../lib/store';
+import { autoSignIn } from '../lib/google';
 import { Icon } from '../ui';
 import { RestoreFlow } from './Backup';
 
@@ -54,6 +55,13 @@ export function LockScreen() {
       else if ((e as Error).name !== 'NotAllowedError') setError(m);
     }
   }, [unlockBio]);
+
+  // Ny Google-adgang, når appen kommer frem på låseskærmen (så aftaler og kopi kan sendes)
+  useEffect(() => {
+    const renew = () => { if (!document.hidden) autoSignIn().catch(() => undefined); };
+    document.addEventListener('visibilitychange', renew);
+    return () => document.removeEventListener('visibilitychange', renew);
+  }, []);
 
   // Forsøg Face ID automatisk ved åbning
   useEffect(() => {
