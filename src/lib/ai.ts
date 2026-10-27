@@ -70,6 +70,7 @@ const WeekSchema = z.object({
   themes: z.array(z.string()).describe('2-4 hovedtemaer som korte udtryk'),
   feelings: z.array(z.string()).describe('Følelser, der gik igen'),
   patterns: z.array(z.string()).describe('Højst to iagttagelser om mønstre – gerne på tværs af ugerne. Tom liste hvis intet er tydeligt.'),
+  looseEnds: z.array(z.string()).describe('Løse ender: ting personen har skrevet, at de vil eller skal gøre (i denne uge eller de foregående), og som der ikke står, at de har gjort. Kort og konkret, fx "Skifte tændrør i græsslåmaskinen hos forældrene". Højst 5. Tom liste hvis ingen.'),
   reflection: z.string().describe('Ét åbent refleksionsspørgsmål'),
   nextWeekQuestion: z.string().describe('Ét spørgsmål til næste uge, fx "Hvad vil du give plads til?"'),
   crisis: z.boolean().describe('true hvis der er tegn på krise'),
@@ -107,7 +108,7 @@ Lav ugens opsummering.`;
     });
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave en opsummering af denne uge.');
     const out = res.parsed_output;
-    return { ...out, threeWords: out.threeWords.slice(0, 3), patterns: out.patterns.slice(0, 2) };
+    return { ...out, threeWords: out.threeWords.slice(0, 3), patterns: out.patterns.slice(0, 2), looseEnds: out.looseEnds.slice(0, 5) };
   } catch (e) {
     explain(e);
   }

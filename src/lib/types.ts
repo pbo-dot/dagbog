@@ -37,6 +37,7 @@ export interface WeekSummary {
   themes: string[];
   feelings: string[];
   patterns: string[];
+  looseEnds?: string[]; // ting man har skrevet, at man vil gøre, men ikke har gjort
   reflection: string;
   nextWeekQuestion: string;
   crisis: boolean;
