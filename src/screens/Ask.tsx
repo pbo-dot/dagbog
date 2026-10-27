@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AIError, askDiary, askScope, webLookup, type AskAI, type AskMode, type WebFindings } from '../lib/ai';
 import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
+import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { ChatTurn } from '../lib/types';
@@ -70,6 +71,24 @@ export function AskScreen() {
     try { localStorage.setItem('dagbog-ask-mode', m); } catch { /* ikke afgørende */ }
   };
   const bottom = useRef<HTMLDivElement>(null);
+  // Tal i stedet for at skrive, fx i bilen
+  const [listening, setListening] = useState(false);
+  const stopMic = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopMic.current?.(), []);
+  const toggleMic = () => {
+    if (listening) return stopMic.current?.();
+    setError('');
+    setListening(true);
+    const base = question && !/\s$/.test(question) ? `${question} ` : question;
+    stopMic.current = startDictation(
+      (final, interim) => setQuestion(base + [final, interim].filter(Boolean).join(' ')),
+      (err) => {
+        setListening(false);
+        stopMic.current = null;
+        if (err) setError(err);
+      },
+    );
+  };
   const canAI = aiReady(data);
 
   const ask = async (q: string) => {
@@ -166,9 +185,16 @@ export function AskScreen() {
           <textarea rows={2} value={question} onChange={(e) => setQuestion(e.target.value)}
             placeholder={turns.length ? 'Spørg videre …' : 'Spørg eller bed om noget …'} aria-label="Spørgsmål" />
           {error && <p className="error">{error}</p>}
-          <button className="btn primary" style={{ alignSelf: 'flex-start' }} disabled={busy || !question.trim()}>
-            {busy ? <><span className="spinner" /> {phase || 'Claude tænker …'}</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
-          </button>
+          <div className="row" style={{ alignItems: 'center' }}>
+            <button className="btn primary" disabled={busy || !question.trim()} onClick={() => stopMic.current?.()}>
+              {busy ? <><span className="spinner" /> {phase || 'Claude tænker …'}</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
+            </button>
+            {speechInputAvailable() && !busy && (
+              <button type="button" className={`icon-btn mic ${listening ? 'on' : ''}`} onClick={toggleMic} aria-label={listening ? 'Stop' : 'Indtal spørgsmålet'}>
+                <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{listening ? Icon.stop : Icon.mic}</span>
+              </button>
+            )}
+          </div>
         </form>
       )}
       <div ref={bottom} />
