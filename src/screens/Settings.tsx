@@ -320,10 +320,10 @@ export function SettingsScreen() {
           <button className="btn small" onClick={() => { setFrom('1900-01-01'); setTo(today()); }}>Hele dagbogen</button>
         </div>
         <div className="stack-sm">
-          <p className="tiny muted">Sikkerhedskopien ligger under Mere › Sikkerhedskopi. Her kan du indlæse en fil, fx gamle noter.</p>
+          <p className="tiny muted">Kopier ligger under Mere › Sikkerhedskopi.</p>
           <div className="row wrap">
             <label className="btn small">
-              Indlæs sikkerhedskopi
+              Indlæs fil
               <input type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
