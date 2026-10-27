@@ -6,6 +6,7 @@ import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { ChatTurn } from '../lib/types';
 import { go, Header, Icon } from '../ui';
+import { ProposalCard } from './Proposal';
 
 interface Turn {
   question: string;
@@ -19,6 +20,7 @@ const IDEAS = [
   'Hvornår var jeg sidst hos lægen, og hvad blev der sagt?',
   'Hvilke aftaler har jeg de næste uger?',
   'Hvad har gjort mig glad det sidste halve år?',
+  'Lav en pakkeliste til Fanø',
 ];
 
 // Samtalen huskes, mens dagbogen er åben, så man kan kigge på en dag og komme tilbage.
@@ -36,7 +38,6 @@ export function AskScreen() {
   const [error, setError] = useState('');
   const bottom = useRef<HTMLDivElement>(null);
   const canAI = aiReady(data);
-  const empty = !Object.keys(data.entries).length && !Object.keys(data.conversations).length;
 
   const ask = async (q: string) => {
     const text = q.trim();
@@ -75,10 +76,9 @@ export function AskScreen() {
       <Header back="husk" right={turns.length ? <button className="btn ghost small" onClick={reset}>Nyt spørgsmål</button> : undefined} />
       <h1>Spørg dagbogen</h1>
       {!canAI && <p className="small muted">Kræver AI og en API-nøgle under Indstillinger.</p>}
-      {canAI && empty && <p className="small muted">Der er ikke skrevet noget endnu, så der er intet at spørge om.</p>}
-      {canAI && !turns.length && !empty && (
+      {canAI && !turns.length && (
         <>
-          <p className="small muted">Spørg om alt, du har skrevet eller optaget. Nævn gerne en periode, fx "i januar".</p>
+          <p className="small muted">Spørg om alt, du har skrevet, eller bed om en note, en aftale eller en fast ting.</p>
           <div className="chips">
             {IDEAS.map((q) => <button key={q} className="chip" onClick={() => ask(q)} disabled={busy}>{q}</button>)}
           </div>
@@ -89,6 +89,7 @@ export function AskScreen() {
         <section key={i} className="stack-sm">
           <p className="small" style={{ fontWeight: 600 }}>{t.question}</p>
           <p className="prose">{t.answer.answer}</p>
+          {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
           <p className="tiny muted">Læste: {t.shown}</p>
           {t.answer.sources.length > 0 && (
             <div className="list">
@@ -104,13 +105,13 @@ export function AskScreen() {
       ))}
       {turns.length > 0 && <p className="tiny muted">Svarene er lavet af Claude ud fra det, du har skrevet. Tjek dagene, hvis noget er vigtigt.</p>}
 
-      {canAI && !empty && (
+      {canAI && (
         <form className="stack-sm" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
           <textarea rows={2} value={question} onChange={(e) => setQuestion(e.target.value)}
-            placeholder={turns.length ? 'Spørg videre …' : 'Fx: Hvad lavede jeg i januar 2026?'} aria-label="Spørgsmål" />
+            placeholder={turns.length ? 'Spørg videre …' : 'Spørg eller bed om noget …'} aria-label="Spørgsmål" />
           {error && <p className="error">{error}</p>}
           <button className="btn primary" style={{ alignSelf: 'flex-start' }} disabled={busy || !question.trim()}>
-            {busy ? <><span className="spinner" /> Claude læser din dagbog …</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
+            {busy ? <><span className="spinner" /> Claude tænker …</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
           </button>
         </form>
       )}

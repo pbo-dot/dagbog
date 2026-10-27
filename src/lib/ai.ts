@@ -282,8 +282,23 @@ const AskSchema = z.object({
       note: z.string().describe('Meget kort om hvad der står den dag (højst 10 ord)'),
     }),
   ).describe('De vigtigste dage, svaret bygger på, højst 8, ældste først. Tom liste hvis dagbogen ikke siger noget om det.'),
+  proposals: z.array(
+    z.object({
+      kind: z.enum(['note', 'appointment', 'routine', 'personNote']).describe('note = ny note under Noter; appointment = ny aftale i kalenderen; routine = ny fast ting (fx medicin); personNote = ny note om en person under Mennesker'),
+      title: z.string().describe('note: notens titel. appointment: hvad aftalen er. routine: navnet. personNote: personens navn præcis som under MENNESKER'),
+      icon: z.string().describe('Én passende emoji til note eller fast ting, ellers tom'),
+      text: z.string().describe('note: hele teksten (afkrydsningslister skrives "- [ ] punkt", overskrifter "# Overskrift"). personNote: selve noten. Ellers tom'),
+      date: z.string().describe('appointment: datoen YYYY-MM-DD. routine: første gang YYYY-MM-DD. Ellers tom'),
+      time: z.string().describe('appointment: klokkeslæt HH:MM, eller tom for hele dagen. Ellers tom'),
+      place: z.string().describe('appointment: stedet, ellers tom'),
+      everyDays: z.number().describe('routine: dage mellem hver gang (1 = hver dag, 7, 14 …). 0 hvis månedlig eller ikke en fast ting'),
+      monthly: z.boolean().describe('routine: true hvis hver måned på samme dato'),
+      options: z.array(z.string()).describe('routine: ting der skiftes mellem, fx ["højre ben", "venstre ben"]. Ellers tom liste'),
+    }),
+  ).describe('Kun når personen beder om at oprette, lave, skrive eller gemme noget: forslag til nye ting. Ellers tom liste.'),
 });
 export type AskAI = z.infer<typeof AskSchema>;
+export type Proposal = AskAI['proposals'][number];
 
 const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres private dagbog, deres samtaler og deres noter om mennesker. Du får materialet nedenfor.
 
@@ -292,7 +307,15 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
 - Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd.
-- Svar i du-form, enkelt og varmt, uden at finde på noget.`;
+- Svar i du-form, enkelt og varmt, uden at finde på noget.
+
+Personen kan også bede dig om at oprette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …" eller "jeg skal tage vitaminer hver dag". Så laver du forslag under proposals:
+- Kun nye ting: noter, aftaler, faste ting og noter om mennesker. Du kan aldrig ændre eller slette noget, der findes.
+- Intet gemmes, før personen trykker Gem. Skriv derfor kort i answer, hvad du foreslår (fx "Her er et forslag til en pakkeliste."), uden at gentage hele indholdet.
+- Byg på materialet, når det giver mening (fx en tidligere pakkeliste), men find ikke på detaljer om personens liv.
+- Regn datoer ud fra dagens dato: "torsdag" er den næste torsdag, "i morgen" er dagen efter i dag.
+- En note om en person kræver, at personen findes under MENNESKER; brug navnet præcis som der. Findes personen ikke, så sig det i answer og lav intet forslag.
+- Beder personen ikke om at oprette noget, er proposals en tom liste.`;
 
 function conversationBlock(c: Conversation, people: Record<string, Person>, withTranscript = true): string {
   const names = c.people.map((id) => people[id]?.name).filter(Boolean);
@@ -466,7 +489,7 @@ export async function askDiary(settings: Settings, scope: AskScope, today: strin
       output_config: { effort: 'medium', format: betaZodOutputFormat(AskSchema) },
       system: [
         { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).\n${scope.note}` },
-        { type: 'text', text: scope.corpus, cache_control: { type: 'ephemeral' } },
+        { type: 'text', text: scope.corpus || '(Der er ikke skrevet noget endnu.)', cache_control: { type: 'ephemeral' } },
       ],
       messages,
       ...fallbackFor(settings.ai.analysisModel),

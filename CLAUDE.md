@@ -10,7 +10,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 
 - React + TypeScript + Vite, `vite-plugin-pwa`. Ingen server: alt gemmes krypteret i IndexedDB på telefonen (AES-GCM).
 - `src/screens/` skærme, `src/lib/` logik (lager, kryptering, AI, kalender, Google), `src/ui.tsx` fælles komponenter og ikoner, `src/index.css` al styling.
-- Claude API kaldes direkte fra telefonen med ejerens egen nøgle. Google Kalender hentes med ejerens eget klient-id. Aftaler oprettet i Dagbog sendes til Google (`gcalWrite.ts`, scope `calendar.events`); aftaler fra Google røres aldrig.
+- Claude API kaldes direkte fra telefonen med ejerens egen nøgle. "Spørg dagbogen" kan foreslå nye noter, aftaler, faste ting og noter om mennesker (`proposals.ts`, `Proposal.tsx`); intet gemmes før Gem. Google Kalender hentes med ejerens eget klient-id. Aftaler oprettet i Dagbog sendes til Google (`gcalWrite.ts`, scope `calendar.events`); aftaler fra Google røres aldrig.
 - Sikkerhedskopi (`src/lib/backup.ts`, `drive.ts`, `backupSync.ts`): hele databasen pakkes og krypteres med dagbogens nøgle og gemmes dagligt i mappen "Dagbog-kopi" på ejerens Google Drev (scope `drive.file`, de seneste 14). Ved ny start kan kopien hentes og åbnes med koden.
 - `public/share-sw.js` modtager "Del → Dagbog" (tekst og lydfiler).
 - Søsterappen DB (optager) ligger i repoet pbo-dot/db.
