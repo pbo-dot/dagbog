@@ -21,6 +21,9 @@ const IDEAS = [
   'Hvilke aftaler har jeg de næste uger?',
   'Hvad har gjort mig glad det sidste halve år?',
   'Lav en pakkeliste til Fanø',
+  'Lav en pakkeliste til sommerhuset ud fra Fanø-listen og det, jeg plejer at glemme',
+  'Hvad skal jeg huske før besøget hos mine forældre?',
+  'Hvad har jeg skrevet, at jeg skal gøre, men ikke har gjort?',
 ];
 
 // Samtalen huskes, mens dagbogen er åben, så man kan kigge på en dag og komme tilbage.
