@@ -23,6 +23,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 ## Arbejdsform med ejeren
 
 - **Nye, ukendte funktioner:** Skriv ikke fra bunden først. Undersøg kendte løsninger (open source-projekter på GitHub, velholdte biblioteker og officiel dokumentation), sammenlign kort 2–3 fremgangsmåder i forslaget til ejeren, og vælg den mest gennemprøvede. Brug kun kode med åben licens, og hold appen let.
+- **Forslag undervejs:** Kom løbende med korte forslag til forbedringer, når du ser noget, der gentager sig, kan gå galt eller kan gøres nemmere for ejeren. Giv en anbefaling og en rækkefølge. Forslag bygges først, når ejeren har sagt ja (fejlrettelser dog med det samme).
 - Skriv på dansk, kort og i almindeligt sprog. Ejeren er ikke programmør.
 - Nye funktioner drøftes og godkendes (gerne med et visuelt forslag), før de bygges. Fejlrettelser må laves med det samme.
 - Sig til med link, når en ændring er ude. Vær ærlig om, hvad der er testet, og hvad kun kan testes på telefonen.
