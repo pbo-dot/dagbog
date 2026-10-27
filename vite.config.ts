@@ -36,6 +36,12 @@ export default defineConfig({
             files: [{ name: 'audio', accept: ['audio/*', '.m4a', '.mp3', '.wav', '.ogg', '.opus', '.aac', '.amr', '.3gp', '.webm', '.flac'] }],
           },
         },
+        // Hold fingeren på ikonet: genveje direkte til Skriv, Spørg og Ny aftale
+        shortcuts: [
+          { name: 'Skriv', short_name: 'Skriv', url: './#/skriv', icons: [{ src: 'icon-192.png', sizes: '192x192' }] },
+          { name: 'Spørg dagbogen', short_name: 'Spørg', url: './#/spoerg', icons: [{ src: 'icon-192.png', sizes: '192x192' }] },
+          { name: 'Ny aftale', short_name: 'Ny aftale', url: './#/kalender/ny', icons: [{ src: 'icon-192.png', sizes: '192x192' }] },
+        ],
         background_color: '#f7f4ee',
         theme_color: '#f7f4ee',
         icons: [

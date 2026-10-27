@@ -53,13 +53,18 @@ function GoogleLine() {
 }
 
 /** Kalender: måned med prikker, valgt dag med detaljer, og de næste 7 dage. */
-export function CalendarScreen({ month: routeMonth }: { month?: string }) {
+export function CalendarScreen({ month: routeMonth, startAdding }: { month?: string; startAdding?: boolean }) {
   const store = useStore();
   const { data } = store;
   const t = today();
   const [month, setMonth] = useState(routeMonth ?? monthId(t));
   const [selected, setSelected] = useState(t);
-  const [adding, setAdding] = useState<Appointment | null>(null);
+  // Genvejen "Ny aftale" på ikonet åbner formularen med det samme
+  const [adding, setAdding] = useState<Appointment | null>(() => {
+    if (!startAdding) return null;
+    const gg = data.settings.google;
+    return { id: uid(), title: '', date: t, time: '', place: '', createdAt: Date.now(), toGoogle: !!gg.email && gg.push };
+  });
 
   const first = `${month}-01`;
   const gridStart = weekStart(first);
