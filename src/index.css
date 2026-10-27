@@ -405,3 +405,13 @@ button.list-item:first-child { border-top: 0; }
 .web-src { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; background: var(--surface); color: inherit; text-decoration: none; font-size: 0.9rem; min-height: 44px; }
 .web-src .ico { flex: none; width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: var(--surface-2); font-size: 0.85rem; }
 .seg-chips { flex-wrap: wrap; }
+
+/* Ny version klar */
+.update-banner {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar) + 12px + env(safe-area-inset-bottom, 0px)); z-index: 50;
+  display: flex; align-items: center; gap: 12px; width: min(420px, calc(100% - 32px));
+  padding: 8px 8px 8px 18px; border-radius: 999px; background: var(--text); color: var(--bg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); font-weight: 600;
+}
+@media (prefers-reduced-motion: no-preference) { .update-banner { animation: rise 0.25s ease-out; } }
+@keyframes rise { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }

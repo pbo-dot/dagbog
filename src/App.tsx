@@ -19,6 +19,7 @@ import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
 import { WeekScreen } from './screens/Week';
 import { go, Icon, useRoute } from './ui';
+import { UpdateBanner } from './UpdateBanner';
 
 const TABS = [
   { id: 'skriv', label: 'Skriv', icon: Icon.pen },
@@ -198,6 +199,7 @@ export default function App() {
   return (
     <StoreProvider>
       <Root />
+      <UpdateBanner />
     </StoreProvider>
   );
 }
