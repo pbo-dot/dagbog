@@ -26,16 +26,51 @@ export const speechInputAvailable = () => !!SpeechCtor();
  *  ofte hver ny version af sætningen som et nyt resultat ("Dette", "Dette er",
  *  "Dette er en" …), så et resultat der starter med det forrige erstatter det. */
 export function joinResults(parts: string[]): string {
-  const out: string[] = [];
-  for (const raw of parts) {
-    const t = raw.trim();
-    if (!t) continue;
-    const prev = out[out.length - 1];
-    if (prev !== undefined && t.toLowerCase().startsWith(prev.toLowerCase())) out[out.length - 1] = t;
-    else if (prev !== undefined && prev.toLowerCase().startsWith(t.toLowerCase())) continue;
-    else out.push(t);
+  let out = '';
+  for (const raw of parts) out = mergeSpeech(out, raw);
+  return out;
+}
+
+const words = (s: string) => s.trim().split(/\s+/).filter(Boolean);
+const norm = (w: string) => w.toLowerCase().replace(/[.,!?;:"'()]/g, '');
+
+/** Hvor mange ord fra `a` der går igen i `b` i samme rækkefølge (længste fælles delfølge). */
+function common(a: string[], b: string[]): number {
+  const dp = Array.from({ length: a.length + 1 }, () => new Array<number>(b.length + 1).fill(0));
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      dp[i][j] = norm(a[i - 1]) === norm(b[j - 1]) ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
   }
-  return out.join(' ');
+  return dp[a.length][b.length];
+}
+
+/**
+ * Sætter ny tekst fra talegenkendelsen i forlængelse af den gamle uden gentagelser.
+ * Android sender ofte hele teksten igen, lidt rettet ("jeg ude at" → "jeg er ude og"),
+ * eller gentager slutningen af det forrige stykke. Så erstattes eller flettes teksten.
+ */
+export function mergeSpeech(prev: string, next: string): string {
+  const A = words(prev);
+  const B = words(next);
+  if (!B.length) return prev.trim();
+  if (!A.length) return B.join(' ');
+  const p = prev.trim().toLowerCase(), n = next.trim().toLowerCase();
+  if (n.startsWith(p)) return next.trim();
+  if (p.startsWith(n)) return prev.trim();
+  // Den nye tekst er en (rettet) udgave af hele den gamle plus mere: erstat
+  const head = B.slice(0, A.length + 2);
+  if (A.length >= 2 && common(A, head) >= Math.ceil(A.length * 0.7)) return B.join(' ');
+  // Den nye tekst står allerede i den gamle
+  if (B.length >= 2 && common(B, A.slice(-(B.length + 2))) >= Math.ceil(B.length * 0.8)) return A.join(' ');
+  // Slutningen af den gamle gentages i starten af den nye: flet
+  for (let k = Math.min(A.length, B.length); k >= 3; k--) {
+    const tail = A.slice(-k);
+    let same = 0;
+    for (let i = 0; i < k; i++) if (norm(tail[i]) === norm(B[i])) same++;
+    if (same >= k - Math.floor(k / 4)) return [...A, ...B.slice(k)].join(' ');
+  }
+  return [...A, ...B].join(' ');
 }
 
 /** onUpdate får hele sessionens endelige tekst + den foreløbige del. */
@@ -108,14 +143,14 @@ export function startLongDictation(
       let interim = joinResults(interims);
       if (session && interim.toLowerCase().startsWith(session.toLowerCase())) interim = interim.slice(session.length).trim();
       failures = 0;
-      onUpdate([done, session].filter(Boolean).join(' '), interim);
+      onUpdate(mergeSpeech(done, session), interim);
     };
     r.onerror = (e) => {
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') finish('Mikrofonen er ikke tilladt.');
       else if (e.error !== 'no-speech' && e.error !== 'aborted') failures++;
     };
     r.onend = () => {
-      done = [done, session].filter(Boolean).join(' ');
+      done = mergeSpeech(done, session);
       if (stopped) return;
       if (failures >= 5) return finish('Talegenkendelsen svarer ikke. Er du online?');
       setTimeout(run, 250);
