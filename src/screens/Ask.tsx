@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AIError, askDiary, askScope, type AskAI } from '../lib/ai';
+import { AIError, askDiary, askScope, webLookup, type AskAI, type AskMode, type WebFindings } from '../lib/ai';
 import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
 import { aiReady } from '../lib/generate';
@@ -13,6 +13,30 @@ interface Turn {
   answer: AskAI;
   period: Period | null;
   shown: string; // hvad der blev sendt med, fx "januar 2026 · 23 dage"
+  web?: WebFindings | null; // det, der blev slået op på nettet
+}
+
+const MODES: Array<{ id: AskMode; label: string; hint: string }> = [
+  { id: 'diary', label: '📔 Dagbogen', hint: 'Kun det, du har skrevet. Grundig.' },
+  { id: 'web', label: '🌐 + Nettet', hint: 'Slår også op på nettet, fx vejr og åbningstider. Koster lidt mere.' },
+  { id: 'fast', label: '⚡ Hurtig', hint: 'Korte spørgsmål. Hurtigere og billigere.' },
+];
+
+const host = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+};
+
+function savedMode(): AskMode {
+  try {
+    const m = localStorage.getItem('dagbog-ask-mode');
+    return m === 'web' || m === 'fast' ? m : 'diary';
+  } catch {
+    return 'diary';
+  }
 }
 
 const IDEAS = [
@@ -39,6 +63,12 @@ export function AskScreen() {
   const [question, setQuestion] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [mode, setModeState] = useState<AskMode>(savedMode);
+  const [phase, setPhase] = useState('');
+  const setMode = (m: AskMode) => {
+    setModeState(m);
+    try { localStorage.setItem('dagbog-ask-mode', m); } catch { /* ikke afgørende */ }
+  };
   const bottom = useRef<HTMLDivElement>(null);
   const canAI = aiReady(data);
 
@@ -55,8 +85,14 @@ export function AskScreen() {
       // Nævner spørgsmålet ingen periode, gælder den forrige (fx "og hvem var jeg sammen med?").
       const period = findPeriod(text, today()) ?? turns[turns.length - 1]?.period ?? null;
       const scope = askScope(data, period, today());
-      const answer = await askDiary(data.settings, scope, today(), history, text);
-      const next = [...turns, { question: text, answer, period, shown: scope.shown }];
+      let web: WebFindings | null = null;
+      if (mode === 'web') {
+        setPhase('Claude søger på nettet …');
+        web = await webLookup(data.settings, today(), history, text);
+      }
+      setPhase(mode === 'fast' ? 'Claude svarer …' : 'Claude læser din dagbog …');
+      const answer = await askDiary(data.settings, scope, today(), history, text, mode, web);
+      const next = [...turns, { question: text, answer, period, shown: scope.shown, web }];
       remember(next);
       setTurns(next);
       setQuestion('');
@@ -94,6 +130,17 @@ export function AskScreen() {
           <p className="prose">{t.answer.answer}</p>
           {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
           <p className="tiny muted">Læste: {t.shown}</p>
+          {t.web && t.web.links.length > 0 && (
+            <div className="stack-sm" style={{ gap: 6 }}>
+              <span className="proposal-field">Fra nettet</span>
+              {t.web.links.map((l) => (
+                <a key={l.url} className="web-src" href={l.url} target="_blank" rel="noopener noreferrer">
+                  <span className="ico">🌐</span>
+                  <span className="grow"><strong>{host(l.url)}</strong> · {l.title}</span>
+                </a>
+              ))}
+            </div>
+          )}
           {t.answer.sources.length > 0 && (
             <div className="list">
               {t.answer.sources.map((s, j) => (
@@ -110,11 +157,17 @@ export function AskScreen() {
 
       {canAI && (
         <form className="stack-sm" onSubmit={(e) => { e.preventDefault(); ask(question); }}>
+          <div className="seg-chips" role="group" aria-label="Hvordan skal Claude svare?">
+            {MODES.map((m) => (
+              <button key={m.id} type="button" className={`chip ${mode === m.id ? 'on' : ''}`} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>{m.label}</button>
+            ))}
+          </div>
+          <p className="tiny muted" style={{ margin: 0 }}>{MODES.find((m) => m.id === mode)?.hint}</p>
           <textarea rows={2} value={question} onChange={(e) => setQuestion(e.target.value)}
             placeholder={turns.length ? 'Spørg videre …' : 'Spørg eller bed om noget …'} aria-label="Spørgsmål" />
           {error && <p className="error">{error}</p>}
           <button className="btn primary" style={{ alignSelf: 'flex-start' }} disabled={busy || !question.trim()}>
-            {busy ? <><span className="spinner" /> Claude tænker …</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
+            {busy ? <><span className="spinner" /> {phase || 'Claude tænker …'}</> : <><span style={{ width: 18, height: 18, display: 'inline-flex', verticalAlign: 'middle', marginRight: 6 }}>{Icon.sparkle}</span>Spørg</>}
           </button>
         </form>
       )}

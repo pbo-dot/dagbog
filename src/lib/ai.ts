@@ -482,22 +482,75 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
   };
 }
 
-export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string): Promise<AskAI> {
-  const messages: Anthropic.Beta.BetaMessageParam[] = [
-    ...history.map((t) => ({ role: t.role, content: t.text })),
+/** Hvordan Claude svarer i "Spørg dagbogen". */
+export type AskMode = 'diary' | 'web' | 'fast';
+
+export interface WebFindings {
+  notes: string;
+  links: Array<{ url: string; title: string }>;
+}
+
+const WEB = `Du hjælper en person, der skriver dagbog, med at slå ting op på nettet. Du ser ikke dagbogen.
+- Søg kun, hvis spørgsmålet kræver aktuel viden udefra (vejr, åbningstider, priser, højvande, nyheder, fakta om steder og ting). Ellers svar præcis: INGEN
+- Søg med neutrale søgeord. Medtag aldrig navne på personer eller private oplysninger i søgningen.
+- Skriv kort på dansk, hvad du fandt, med datoer og tal. Højst 10 linjer.`;
+
+/** Slår op på nettet uden at sende dagbogen med. Giver null, når der ikke er brug for nettet. */
+export async function webLookup(settings: Settings, today: string, history: ChatTurn[], question: string): Promise<WebFindings | null> {
+  // Websøgning kræver Opus eller Sonnet
+  const model = /opus|sonnet|fable/.test(settings.ai.analysisModel) ? settings.ai.analysisModel : 'claude-opus-5-5';
+  const messages: Anthropic.MessageParam[] = [
+    ...history.filter((t) => t.role === 'user').slice(-3).map((t) => ({ role: 'user' as const, content: t.text })),
     { role: 'user', content: question },
   ];
+  const links = new Map<string, string>();
+  let notes = '';
+  try {
+    // Lange søgninger kan holde pause (pause_turn); så fortsættes, højst tre gange
+    for (let round = 0; round < 3; round++) {
+      const res = await client(settings).messages.create({
+        model,
+        max_tokens: 4000,
+        output_config: { effort: 'low' },
+        system: `${WEB}
+I dag er det ${formatFull(today)} (${today}). Personen bor i Danmark.`,
+        tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4, user_location: { type: 'approximate', country: 'DK', timezone: 'Europe/Copenhagen' } }],
+        messages,
+      });
+      for (const b of res.content) {
+        if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) {
+          for (const r of b.content) if (r.type === 'web_search_result') links.set(r.url, r.title);
+        } else if (b.type === 'text') notes += b.text;
+      }
+      if (res.stop_reason !== 'pause_turn') break;
+      messages.push({ role: 'assistant', content: res.content });
+    }
+  } catch (e) {
+    explain(e);
+  }
+  notes = notes.trim();
+  if (!notes || /^INGEN\b/.test(notes)) return null;
+  return { notes, links: [...links].slice(0, 6).map(([url, title]) => ({ url, title })) };
+}
+
+export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string, mode: AskMode = 'diary', web?: WebFindings | null): Promise<AskAI> {
+  const asked = web ? `${question}\n\n[Slået op på nettet lige nu – brug det, hvor det er relevant]\n${web.notes}` : question;
+  const messages: Anthropic.Beta.BetaMessageParam[] = [
+    ...history.map((t) => ({ role: t.role, content: t.text })),
+    { role: 'user', content: asked },
+  ];
+  const model = mode === 'fast' ? settings.ai.searchModel : settings.ai.analysisModel;
   try {
     const res = await client(settings).beta.messages.parse({
-      model: settings.ai.analysisModel,
+      model,
       max_tokens: 16000,
-      output_config: { effort: 'medium', format: betaZodOutputFormat(AskSchema) },
+      output_config: { effort: mode === 'fast' ? 'low' : 'medium', format: betaZodOutputFormat(AskSchema) },
       system: [
         { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).\n${scope.note}` },
         { type: 'text', text: scope.corpus || '(Der er ikke skrevet noget endnu.)', cache_control: { type: 'ephemeral' } },
       ],
       messages,
-      ...fallbackFor(settings.ai.analysisModel),
+      ...fallbackFor(model),
     });
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke svare på dette.');
     return { ...res.parsed_output, sources: res.parsed_output.sources.slice(0, 8) };
