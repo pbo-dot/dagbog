@@ -67,14 +67,25 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
   const gridEnd = addDays(weekStart(last), 6);
   const cells: string[] = [];
   for (let d = gridStart; d <= gridEnd; d = addDays(d, 1)) cells.push(d);
-  const items = agenda(data, gridStart, gridEnd);
+  const [showDaily, setShowDaily] = useState(() => {
+    try { return localStorage.getItem('dagbog-cal-daily') === '1'; } catch { return false; }
+  });
+  const toggleDaily = (v: boolean) => {
+    setShowDaily(v);
+    try { localStorage.setItem('dagbog-cal-daily', v ? '1' : '0'); } catch { /* ikke afgørende */ }
+  };
+  // Faste ting hver dag fylder for meget i kalenderen; de står på Skriv-siden
+  const isDaily = (i: AgendaItem) => i.kind === 'routine' && !data.routines[i.ref]?.monthly && (data.routines[i.ref]?.everyDays ?? 0) <= 1;
+  const hasDaily = Object.values(data.routines).some((r) => !r.monthly && r.everyDays <= 1);
+  const shown = (list: AgendaItem[]) => (showDaily ? list : list.filter((i) => !isDaily(i)));
+  const items = shown(agenda(data, gridStart, gridEnd));
   const byDay = new Map<string, AgendaItem[]>();
   for (const i of items) byDay.set(i.date, [...(byDay.get(i.date) ?? []), i]);
   const calName = (id: string) => data.settings.google.calendars.find((c) => c.id === id)?.name ?? '';
   const talksOn = (d: string) => Object.values(data.conversations).filter((c) => c.date === d);
 
-  const nextWeek = agenda(data, t, addDays(t, 7));
-  const dayItems = agenda(data, selected, selected);
+  const nextWeek = shown(agenda(data, t, addDays(t, 7)));
+  const dayItems = shown(agenda(data, selected, selected));
 
   const g = data.settings.google;
   const connected = !!g.email;
@@ -95,6 +106,13 @@ export function CalendarScreen({ month: routeMonth }: { month?: string }) {
   return (
     <div className="stack" style={{ gap: 18 }}>
       <Header title="Kalender" right={<button className="btn small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
+
+      {hasDaily && (
+        <div className="seg-chips" role="group" aria-label="Vis faste ting hver dag">
+          <button className={`chip ${!showDaily ? 'on' : ''}`} aria-pressed={!showDaily} onClick={() => toggleDaily(false)}>Uden daglige</button>
+          <button className={`chip ${showDaily ? 'on' : ''}`} aria-pressed={showDaily} onClick={() => toggleDaily(true)}>Med daglige</button>
+        </div>
+      )}
 
       <section className="stack-sm">
         <h3>De næste 7 dage</h3>

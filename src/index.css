@@ -401,3 +401,4 @@ button.list-item:first-child { border-top: 0; }
 .diff { display: block; border-radius: 12px; padding: 6px 10px; font-size: 0.92rem; }
 .diff.new { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
 .diff.old { background: color-mix(in srgb, var(--danger) 12%, var(--surface)); text-decoration: line-through; color: var(--muted); }
+.seg-chips { display: flex; gap: 8px; margin-top: -6px; }
