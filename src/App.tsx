@@ -182,7 +182,7 @@ function Unlocked() {
     case 'mere': screen = <MoreScreen />; break;
     case 'huskeliste': screen = a ? <TodoEditScreen key={a} id={a === 'ny' ? undefined : a} /> : <TodosScreen />; break;
     case 'noter': screen = a === 'keep' ? <KeepImportScreen /> : a ? <NoteScreen key={`${a}/${b ?? ''}`} id={a} mode={b} /> : <NotesScreen />; break;
-    case 'indstillinger': screen = <SettingsScreen />; break;
+    case 'indstillinger': screen = <SettingsScreen key={a ?? ''} page={a} />; break;
     case 'forbrug': screen = <UsageScreen />; break;
     case 'kopi':
       screen = a === 'hent'

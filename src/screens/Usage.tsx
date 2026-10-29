@@ -48,7 +48,7 @@ export function UsageScreen() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header back="indstillinger" />
+      <Header back="indstillinger/ai" />
       <div className="stack-sm" style={{ gap: 2 }}>
         <h1>Forbrug</h1>
         <span className="small muted">{monthName(id)[0].toUpperCase() + monthName(id).slice(1)} · {month?.count ?? 0} svar</span>

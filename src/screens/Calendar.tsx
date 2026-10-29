@@ -38,7 +38,7 @@ function GoogleLine() {
   const g = store.data.settings.google;
   const { busy, error } = useGoogleState();
   if (!g.email && !currentToken()) {
-    return <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go('indstillinger')}>Hent aftaler fra Google Kalender …</button>;
+    return <button className="link tiny" style={{ alignSelf: 'flex-start' }} onClick={() => go('indstillinger/google')}>Hent aftaler fra Google Kalender …</button>;
   }
   return (
     <div className="row between" style={{ gap: 8 }}>

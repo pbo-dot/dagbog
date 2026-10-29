@@ -10,7 +10,7 @@ import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
 import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
-import { DoubleConfirm, Header, Switch } from '../ui';
+import { DoubleConfirm, go, Header, Icon, Switch } from '../ui';
 import { PinChooser } from './Lock';
 
 export type Theme = 'system' | 'light' | 'dark';
@@ -110,7 +110,7 @@ function GoogleSection() {
               <div className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
                 <strong>Første gang</strong>
                 <span className="small">Google spørger, om Dagbog må skrive i kalenderen.</span>
-                <button className="btn primary block" onClick={() => signIn(clientId, { hint: g.email || undefined, write: true, back: '#/indstillinger' })}>Giv lov hos Google</button>
+                <button className="btn primary block" onClick={() => signIn(clientId, { hint: g.email || undefined, write: true, back: '#/indstillinger/google' })}>Giv lov hos Google</button>
               </div>
             )}
           </div>
@@ -131,7 +131,16 @@ function GoogleSection() {
   );
 }
 
-export function SettingsScreen() {
+const PAGES: Array<{ id: string; title: string; text: string }> = [
+  { id: 'skriv', title: 'Skrivning og udseende', text: 'Dagens spørgsmål, tags, lys og mørk' },
+  { id: 'paamindelser', title: 'Påmindelser', text: 'Daglig påmindelse og ugeopsummering' },
+  { id: 'ai', title: 'AI', text: 'Claude, API-nøgle, modeller og forbrug' },
+  { id: 'google', title: 'Google Kalender', text: 'Hent og send aftaler' },
+  { id: 'sikkerhed', title: 'Låsning og sikkerhed', text: 'Kode, Face ID og sletning' },
+  { id: 'data', title: 'Eksport og indlæsning', text: 'Tekstfil og indlæs fil' },
+];
+
+export function SettingsScreen({ page }: { page?: string }) {
   const store = useStore();
   const s = store.data.settings;
   const [theme, setTheme] = useState<Theme>(getTheme);
@@ -155,18 +164,33 @@ export function SettingsScreen() {
   };
 
   const appUrl = location.href.split('#')[0];
+  const current = PAGES.find((x) => x.id === page);
+  const on = (id: string) => current?.id === id;
 
   return (
     <div className="stack" style={{ gap: 24 }}>
-      <Header back="mere" right={<button className="btn ghost" onClick={store.lock}>Lås nu</button>} />
-      <h1>Indstillinger</h1>
+      <Header back={current ? 'indstillinger' : 'mere'} right={current ? undefined : <button className="btn ghost" onClick={store.lock}>Lås nu</button>} />
+      <h1>{current?.title ?? 'Indstillinger'}</h1>
+      {!current && (
+        <div className="card list" style={{ padding: '2px 16px' }}>
+          {PAGES.map((x) => (
+            <button key={x.id} className="list-item hub-row" onClick={() => go(`indstillinger/${x.id}`)}>
+              <span className="grow"><strong style={{ display: 'block' }}>{x.title}</strong><span className="small muted">{x.text}</span></span>
+              <span style={{ width: 18, height: 18, display: 'inline-flex', flex: 'none' }} className="muted">{Icon.chevronRight}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
+      {on('skriv') && (<>
       <Section title="Skriv">
         <Row label="Vis dagens spørgsmål" hint="Et lille spørgsmål over skrivefeltet, der skifter hver dag.">
           <Switch label="Vis dagens spørgsmål" checked={s.showQuestion} onChange={(v) => update((x) => ({ ...x, showQuestion: v }))} />
         </Row>
       </Section>
+      </>)}
 
+      {on('paamindelser') && (<>
       <Section title="Påmindelser">
         <Row label="Daglig påmindelse" hint="Viser en prik i appen og på app-ikonet, når dagen ikke er skrevet efter tidspunktet. En overset påmindelse gentages ikke.">
           <Switch label="Daglig påmindelse" checked={s.reminder.enabled} onChange={(v) => update((x) => ({ ...x, reminder: { ...x.reminder, enabled: v } }))} />
@@ -193,7 +217,7 @@ export function SettingsScreen() {
         )}
         <div className="stack-sm">
           <p className="tiny muted">
-            En webapp uden server kan ikke vække telefonen på et bestemt tidspunkt. Vil du have en påmindelse, der altid kommer, kan du lægge en gentagen begivenhed i din kalender.
+            Vil du have en påmindelse, der altid kommer, så læg den i din kalender.
           </p>
           <div className="row wrap">
             <button className="btn small" onClick={() => download(new Blob([reminderICS({ time: s.reminder.time, text: s.reminder.text, url: appUrl })], { type: 'text/calendar' }), 'dagbog-paamindelse.ics')}>
@@ -205,14 +229,17 @@ export function SettingsScreen() {
           </div>
         </div>
       </Section>
+      </>)}
 
+      {on('ai') && (<>
       <Section title="AI-analyse">
-        <Row label="AI-analyse" hint="Bruges til ugeopsummering, månedskapitler, 'Gå dybere' og søgning med naturligt sprog.">
+        <Row label="AI-analyse" hint="Claude bruges til Spørg, ugen, måneden og samtaler.">
           <Switch label="AI-analyse" checked={s.ai.enabled} onChange={(v) => update((x) => ({ ...x, ai: { ...x.ai, enabled: v } }))} />
         </Row>
-        <div className="notice tiny">
-          <strong>Sådan behandles teksten:</strong> Når AI er slået til, sendes teksten fra de relevante dage (og humør og tags) krypteret over HTTPS direkte fra denne enhed til Anthropics Claude API. Det sker kun, når en opsummering, et kapitel eller en AI-søgning laves. Ingen anden server er involveret. Anthropic bruger som udgangspunkt ikke API-data til at træne modeller og opbevarer dem kun i en begrænset periode. Se Anthropics privatlivspolitik. Slår du AI fra, forlader intet enheden.
-        </div>
+        <details className="notice tiny">
+          <summary><strong>Sådan behandles teksten</strong></summary>
+          <p style={{ margin: '8px 0 0' }}>Når AI er slået til, sendes teksten fra de relevante dage (og humør og tags) krypteret over HTTPS direkte fra denne enhed til Anthropics Claude API. Det sker kun, når en opsummering, et kapitel eller en AI-søgning laves. Ingen anden server er involveret. Anthropic bruger som udgangspunkt ikke API-data til at træne modeller og opbevarer dem kun i en begrænset periode. Se Anthropics privatlivspolitik. Slår du AI fra, forlader intet enheden.</p>
+        </details>
         {s.ai.enabled && (
           <>
             <label className="field">Anthropic API-nøgle
@@ -244,9 +271,13 @@ export function SettingsScreen() {
           </>
         )}
       </Section>
+      </>)}
 
+      {on('google') && (<>
       <GoogleSection />
+      </>)}
 
+      {on('sikkerhed') && (<>
       <Section title="Låsning">
         <label className="field">Lås automatisk efter
           <select value={s.autoLockMinutes} onChange={(e) => update((x) => ({ ...x, autoLockMinutes: Number(e.target.value) }))}>
@@ -288,7 +319,9 @@ export function SettingsScreen() {
         )}
         {msg && <p className="small muted">{msg}</p>}
       </Section>
+      </>)}
 
+      {on('skriv') && (<>
       <Section title="Tags">
         <div className="chips">
           {s.tags.map((t) => (
@@ -310,7 +343,9 @@ export function SettingsScreen() {
         </form>
         <p className="tiny muted">Fjerner du et tag, bliver det stadig på de dage, hvor det allerede er brugt.</p>
       </Section>
+      </>)}
 
+      {on('data') && (<>
       <Section title="Eksport og indlæsning">
         <div className="row">
           <label className="field grow">Fra<input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
@@ -341,7 +376,9 @@ export function SettingsScreen() {
           </div>
         </div>
       </Section>
+      </>)}
 
+      {on('skriv') && (<>
       <Section title="Udseende og sprog">
         <div className="chips">
           {(['system', 'light', 'dark'] as Theme[]).map((t) => (
@@ -352,11 +389,13 @@ export function SettingsScreen() {
         </div>
         <p className="small muted">Sprog: dansk</p>
       </Section>
+      </>)}
 
-      <Section title="Har du det svært?">
+      {!current && <Section title="Har du det svært?">
         <p className="small">Appen er ikke terapi. Har du brug for at tale med nogen: <a href="tel:70201201">Livslinien 70 201 201</a>, lægevagten <a href="tel:1813">1813</a>, eller <a href="tel:112">112</a> ved akut fare.</p>
-      </Section>
+      </Section>}
 
+      {on('sikkerhed') && (<>
       <Section title="Sletning">
         <p className="tiny muted">Enkelte dage slettes fra dagens side under Husk.</p>
         <DoubleConfirm label="Slet hele dagbogen" first="Vil du slette hele dagbogen på denne telefon? Der gemmes en kopi på Drev først."
@@ -371,6 +410,7 @@ export function SettingsScreen() {
           }} />
         {wipeMsg && <p className="small" role="alert">{wipeMsg}</p>}
       </Section>
+      </>)}
     </div>
   );
 }
