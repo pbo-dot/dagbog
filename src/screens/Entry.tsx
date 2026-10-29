@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { addDays, formatLong, today, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
+import { aiReady } from '../lib/generate';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
@@ -275,6 +276,12 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           {isToday && !existing && <button className="btn small" onClick={skipToday}>Spring over</button>}
           {!isToday && <button className="btn small" onClick={() => go('skriv')}>I dag</button>}
         </div>
+        {isToday && aiReady(data) && speechInputAvailable() && (
+          <button className="talk-start" onClick={() => go('tal')}>
+            <span className="talk-start-ico" aria-hidden="true">{Icon.mic}</span>
+            <span><strong>{existing ? 'Fortæl mere om din dag' : 'Fortæl om din dag'}</strong><span>Claude lytter og spørger ind</span></span>
+          </button>
+        )}
         {isToday && <RoutineCards />}
         {isToday && <TodoCard />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}

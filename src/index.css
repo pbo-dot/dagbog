@@ -570,3 +570,21 @@ label.btn { cursor: pointer; }
 .tidy-foot { position: sticky; bottom: calc(76px + env(safe-area-inset-bottom)); padding-top: 18px; background: linear-gradient(transparent, var(--bg) 40%); z-index: 2; }
 .tidy-check { width: 64px; height: 64px; margin: 24px auto 0; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
 .tidy-check svg { width: 34px; height: 34px; }
+
+/* Tal med dagbogen */
+.talk-start { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; border: 0; border-radius: 28px; padding: 16px 18px; background: var(--accent); color: var(--accent-text); font: inherit; cursor: pointer; transition: transform 0.15s; }
+.talk-start:active { transform: scale(0.98); }
+.talk-start strong { display: block; font-size: 1.1rem; }
+.talk-start span span { font-size: 0.85rem; opacity: 0.85; }
+.talk-start-ico { width: 52px; height: 52px; flex: none; border-radius: 50%; background: color-mix(in srgb, var(--accent-text) 18%, transparent); display: flex; align-items: center; justify-content: center; }
+.talk-start-ico svg { width: 26px; height: 26px; }
+.talk-bubble { max-width: 86%; margin: 0; padding: 12px 16px; border-radius: 22px; line-height: 1.4; }
+.talk-bubble.claude { background: var(--surface); font-family: var(--serif, Georgia, serif); font-size: 1.08rem; border-bottom-left-radius: 8px; }
+.talk-bubble.me { background: var(--accent-soft); margin-left: auto; border-bottom-right-radius: 8px; }
+.talk-bubble.live { font-style: italic; color: var(--muted); }
+.talk-dock { position: fixed; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 16px 12px; max-width: 640px; margin: 0 auto; background: linear-gradient(transparent, var(--bg) 28%); }
+.talk-mic { width: 76px; height: 76px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: box-shadow 0.3s, transform 0.15s; }
+.talk-mic.on { box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent) 20%, transparent), 0 0 0 20px color-mix(in srgb, var(--accent) 9%, transparent); }
+.talk-mic:disabled { opacity: 0.5; }
+.talk-entry { font-family: var(--serif, Georgia, serif); font-size: 1.05rem; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .talk-mic, .talk-start { transition: none; } }

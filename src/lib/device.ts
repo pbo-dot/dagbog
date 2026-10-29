@@ -201,7 +201,8 @@ export async function keepScreenOn(): Promise<() => void> {
 
 export const speechOutputAvailable = () => 'speechSynthesis' in window;
 
-export function speak(text: string, onEnd: () => void) {
+/** Læser teksten højt. onEnd kaldes én gang, når den er færdig (ikke hvis den stoppes). Giver en stop-funktion. */
+export function speak(text: string, onEnd: () => void): () => void {
   const synth = window.speechSynthesis;
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
@@ -209,9 +210,19 @@ export function speak(text: string, onEnd: () => void) {
   const voice = synth.getVoices().find((v) => v.lang.toLowerCase().startsWith('da'));
   if (voice) u.voice = voice;
   u.rate = 0.95;
-  u.onend = onEnd;
-  u.onerror = onEnd;
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    onEnd();
+  };
+  u.onend = finish;
+  u.onerror = finish;
   synth.speak(u);
+  return () => {
+    done = true;
+    synth.cancel();
+  };
 }
 
 export function stopSpeaking() {
@@ -296,3 +307,4 @@ export function reminderICS(opts: { time: string; text: string; url: string; wee
     '',
   ].join('\r\n');
 }
+

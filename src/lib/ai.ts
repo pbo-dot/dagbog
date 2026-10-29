@@ -730,3 +730,76 @@ export async function tidyNotes(
   }
   return { results, usd, checked };
 }
+
+// ---------------- Tal med dagbogen ----------------
+
+export interface TalkLine { who: 'claude' | 'me'; text: string }
+
+/** Kort baggrund til aftensamtalen: dagens aftaler, de seneste dage og navne. */
+export function talkContext(data: AskData, today: string): string {
+  const recent = Object.values(data.entries).filter((e) => e.date < today && e.date >= addDays(today, -3))
+    .sort((a, b) => a.date.localeCompare(b.date)).map((e) => entryBlock(e, 600));
+  const parts: [string, string[]][] = [
+    ['DAGENS AFTALER', calendarLines(data, (d) => d === today)],
+    ['ALLEREDE SKREVET I DAG', data.entries[today] ? [data.entries[today].text] : []],
+    ['DE SENESTE DAGE', recent],
+    ['MENNESKER (navne)', Object.values(data.people).map((p) => `- ${p.name}${p.relation ? ` (${p.relation})` : ''}`)],
+  ];
+  return parts.filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n${xs.join('\n')}`).join('\n\n') || '(Intet at vise.)';
+}
+
+const TALK = `Personen fortæller om sin dag med stemmen, og du stiller spørgsmål tilbage, som en ven, der lytter godt.
+- Stil ét kort, åbent spørgsmål ad gangen (højst to korte sætninger). Det læses højt.
+- Spørg ind til det, personen selv nævner, især følelser og det, der fyldte. Brug gerne dagens aftaler, hvis personen ikke selv nævner dem.
+- Ingen råd, ingen vurderinger og ingen opsummeringer undervejs. Ingen emojis.
+- Talegenkendelsen kan have fejl; gæt det mest sandsynlige og spørg ikke ind til stavning.
+- Har personen fortalt nok, eller vil personen stoppe, så svar præcis: SLUT`;
+
+const convo = (lines: TalkLine[]): Anthropic.MessageParam[] => [
+  { role: 'user', content: '(Personen har trykket "Fortæl om din dag".)' },
+  ...lines.map((l) => ({ role: l.who === 'claude' ? 'assistant' as const : 'user' as const, content: l.text })),
+];
+
+/** Næste spørgsmål i aftensamtalen, eller null når samtalen er slut. */
+export async function talkNext(settings: Settings, context: string, lines: TalkLine[], today: string): Promise<string | null> {
+  try {
+    const res = await client(settings).messages.create({
+      model: settings.ai.askModel,
+      max_tokens: 300,
+      system: `${FRIEND}\n\n${TALK}\n\nI dag er det ${formatFull(today)}.\n\n${context}`,
+      messages: convo(lines),
+    });
+    track('talk', res);
+    const text = res.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+    return !text || /^SLUT\b/.test(text) ? null : text;
+  } catch (e) {
+    explain(e);
+  }
+}
+
+const TalkDraftSchema = z.object({
+  text: z.string().describe('Dagen skrevet i jeg-form med personens egne ord, ryddet lidt op (tegnsætning, gentagelser, fejl fra talegenkendelsen). Tilføj intet, personen ikke har sagt. Nævn ikke spørgsmålene eller samtalen. Korte afsnit.'),
+  mood: z.enum(['', 'traet', 'rolig', 'glad', 'presset', 'tom']).describe('Det humør, der passer bedst ud fra det sagte, eller tom streng hvis uklart'),
+  tags: z.array(z.string()).describe('0-3 tags, kun fra listen over tags'),
+  todos: z.array(z.string()).describe('Konkrete ting personen selv siger, de vil eller skal gøre, som korte huskepunkter (fx "Ring til hjemmeplejen"). Tom liste hvis ingen.'),
+});
+export type TalkDraft = z.infer<typeof TalkDraftSchema>;
+
+/** Skriver dagen ud fra samtalen. */
+export async function talkDraft(settings: Settings, lines: TalkLine[], tags: string[], today: string): Promise<TalkDraft> {
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.askModel,
+      max_tokens: 4000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(TalkDraftSchema) },
+      system: `Du skriver en dagbogsside for en person ud fra en samtale, hvor personen fortalte om sin dag med stemmen. Skriv på dansk. I dag er det ${formatFull(today)}.\n\nTAGS: ${tags.join(', ')}`,
+      messages: [{ role: 'user', content: lines.map((l) => `${l.who === 'claude' ? 'Spørgsmål' : 'Personen'}: ${l.text}`).join('\n\n') }],
+    });
+    track('talk', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke skrive dagen.');
+    const out = res.parsed_output;
+    return { ...out, tags: out.tags.filter((t) => tags.includes(t)).slice(0, 3) };
+  } catch (e) {
+    explain(e);
+  }
+}

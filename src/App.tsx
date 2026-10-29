@@ -19,6 +19,7 @@ import { DayScreen, MemoryScreen, MonthScreen, OverviewScreen } from './screens/
 import { MoreScreen } from './screens/More';
 import { KeepImportScreen } from './screens/Keep';
 import { TidyScreen } from './screens/Tidy';
+import { TalkScreen } from './screens/Talk';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
@@ -163,6 +164,7 @@ function Unlocked() {
   let screen;
   switch (tab) {
     case 'skriv': screen = <EntryScreen key={a ?? 'today'} date={a} />; break;
+    case 'tal': screen = <TalkScreen />; break;
     case 'uge': screen = <WeekScreen key={a ?? 'now'} id={a} />; break;
     case 'husk':
       if (a === 'maaned' && b) screen = <MonthScreen id={b} />;
@@ -196,7 +198,8 @@ function Unlocked() {
   const dots: Record<string, boolean> = { skriv: w.today || w.due > 0, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
     : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
-    : ['indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere' : tab;
+    : ['indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere'
+    : tab === 'tal' ? 'skriv' : tab;
 
   return (
     <>
