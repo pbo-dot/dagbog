@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AIError, askDiary, askScope, webLookup, type AskAnswer, type AskMode, type WebFindings } from '../lib/ai';
+import { AIError, askDiary, askScope, focusScope, webLookup, type AskAnswer, type AskMode, type WebFindings } from '../lib/ai';
 import { krText, modelName, overLimitText } from '../lib/usage';
 import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
@@ -16,6 +16,7 @@ interface Turn {
   period: Period | null;
   shown: string; // hvad der blev sendt med, fx "januar 2026 · 23 dage"
   web?: WebFindings | null; // det, der blev slået op på nettet
+  focused?: boolean; // kun det, der passede til ordene, blev sendt med
 }
 
 const MODES: Array<{ id: AskMode; label: string; hint: string }> = [
@@ -99,19 +100,24 @@ export function AskScreen() {
   };
   const canAI = aiReady(data);
 
-  const ask = async (q: string) => {
+  const ask = async (q: string, full = false) => {
     const text = q.trim();
     if (!text || busy) return;
+    // "Søg i hele dagbogen" stiller det sidste spørgsmål igen med alt materialet
+    const before = full ? turns.slice(0, -1) : turns;
     setBusy(true);
     setError('');
     try {
-      const history: ChatTurn[] = turns.flatMap((t) => [
+      const history: ChatTurn[] = before.flatMap((t) => [
         { role: 'user' as const, text: t.question },
         { role: 'assistant' as const, text: t.answer.answer },
       ]);
       // Nævner spørgsmålet ingen periode, gælder den forrige (fx "og hvem var jeg sammen med?").
-      const period = findPeriod(text, today()) ?? turns[turns.length - 1]?.period ?? null;
-      const scope = askScope(data, period, today());
+      const last = before[before.length - 1];
+      const period = findPeriod(text, today()) ?? last?.period ?? null;
+      // Et opslag ("telefonnummeret til hjemmeplejen") sender kun det, der passer til ordene.
+      const focus = period || full ? null : focusScope(data, last?.focused ? `${last.question} ${text}` : text, today());
+      const scope = focus ?? askScope(data, period, today());
       let web: WebFindings | null = null;
       if (mode === 'web') {
         setPhase('Claude søger på nettet …');
@@ -119,7 +125,7 @@ export function AskScreen() {
       }
       setPhase(mode === 'fast' ? 'Claude svarer …' : 'Claude læser din dagbog …');
       const answer = await askDiary(data.settings, scope, today(), history, text, mode, web);
-      const next = [...turns, { question: text, answer, period, shown: scope.shown, web }];
+      const next = [...before, { question: text, answer, period, shown: scope.shown, web, focused: !!focus }];
       remember(next);
       setTurns(next);
       setQuestion('');
@@ -167,6 +173,9 @@ export function AskScreen() {
           <p className="prose">{t.answer.answer}</p>
           {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
           <p className="tiny muted">Læste: {t.shown}{data.settings.ai.showCost && t.answer.cost ? ` · ≈ ${krText(t.answer.cost.usd)} · ${modelName(t.answer.cost.model)}` : ''}</p>
+          {t.focused && i === turns.length - 1 && (
+            <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} disabled={busy} onClick={() => ask(t.question, true)}>Søg i hele dagbogen</button>
+          )}
           {t.web && t.web.links.length > 0 && (
             <div className="stack-sm" style={{ gap: 6 }}>
               <span className="proposal-field">Fra nettet</span>

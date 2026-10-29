@@ -78,3 +78,36 @@ export function highlight(text: string, terms: string[]): { t: string; hit: bool
   const re = new RegExp(`(${esc.join('|')})`, 'giu');
   return text.split(re).filter(Boolean).map((t) => ({ t, hit: lowerTerms.has(t.toLowerCase()) }));
 }
+
+/** Passer et søgeord til et ord i teksten? Tåler bøjning (mor/mors, kode/koden) og sammensatte ord (pleje/hjemmepleje). */
+function wordMatch(term: string, word: string): boolean {
+  const stem = term.length > 4 ? term.slice(0, -1) : term;
+  if (word.startsWith(stem)) return true;
+  if (stem.length >= 4 && word.includes(stem)) return true;
+  return word.length >= 3 && term.startsWith(word) && term.length - word.length <= 2;
+}
+
+/** Hvor mange af søgeordene findes i teksten? */
+export function termHits(terms: string[], text: string): number {
+  if (!terms.length) return 0;
+  const words = new Set(tokenize(text));
+  let n = 0;
+  for (const t of terms) {
+    for (const w of words) if (wordMatch(t, w)) { n++; break; }
+  }
+  return n;
+}
+
+/**
+ * Det bedste først: flest søgeord, og ord i titlen tæller ekstra. Kræver mindst ét
+ * meningsfuldt ord, så et helt spørgsmål ("telefonnummer til min mors hjemmepleje")
+ * også finder noten "Hjemmepleje".
+ */
+export function rankByTerms<T>(items: T[], terms: string[], title: (x: T) => string, body: (x: T) => string): T[] {
+  if (!terms.length) return [];
+  return items
+    .map((x) => ({ x, s: termHits(terms, title(x)) * 1.5 + termHits(terms, `${title(x)}\n${body(x)}`) }))
+    .filter((r) => r.s > 0)
+    .sort((a, b) => b.s - a.s)
+    .map((r) => r.x);
+}

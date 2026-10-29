@@ -7,6 +7,7 @@ import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChap
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
 import { track } from './usage';
+import { localSearch, rankByTerms, termHits, tokenize } from './search';
 
 export class AIError extends Error {}
 
@@ -503,6 +504,48 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     corpus,
     note: 'Det seneste halve år er med dag for dag. Ældre perioder er med som månedskapitler og ugeopsummeringer, så detaljer derfra kan mangle; foreslå i så fald at spørge om den periode (fx "i marts 2025"), så kommer dagene med.',
     shown: `det seneste halve år + opsummeringer af ${olderMonths.length} ældre måneder`,
+  };
+}
+
+/**
+ * Smalt materiale til opslag ("telefonnummeret til hjemmeplejen"): kun de noter,
+ * mennesker, samtaler, aftaler og dage, der passer til ordene, plus huskeliste og
+ * faste ting. Koster få øre i stedet for at sende det seneste halve år.
+ * Bruges kun, når et ord rammer en note eller et menneske ret præcist (højst 5
+ * steder); brede spørgsmål ("hvad har gjort mig glad?") får det fulde materiale.
+ */
+export function focusScope(data: AskData, words: string, today: string): AskScope | null {
+  const terms = tokenize(words);
+  if (!terms.length) return null;
+  const notes = Object.values(data.notes ?? {});
+  const people = Object.values(data.people);
+  const noteText = (n: Note) => `${n.title}\n${n.text}\n${(n.labels ?? []).join(' ')}`;
+  const personText = (p: Person) => `${p.name}\n${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`;
+  const sharp = terms.filter((t) => {
+    const n = notes.filter((x) => termHits([t], noteText(x))).length + people.filter((x) => termHits([t], personText(x))).length;
+    return n > 0 && n <= 5;
+  });
+  if (!sharp.length) return null;
+  const hitNotes = rankByTerms(notes, sharp, (n) => n.title, noteText).slice(0, 8);
+  const hitPeople = rankByTerms(people, sharp, (p) => p.name, personText).slice(0, 5);
+  const talks = rankByTerms(Object.values(data.conversations), sharp, (c) => c.title, (c) => `${c.summary}\n${c.remember.join('\n')}\n${c.transcript}`).slice(0, 5);
+  const days = localSearch(words, Object.values(data.entries)).slice(0, 15).map((h) => h.entry).sort((a, b) => a.date.localeCompare(b.date));
+  const cal = calendarLines(data, (d) => d >= addDays(today, -365)).filter((l) => termHits(terms, l)).slice(-30);
+  const pick = new Set(hitNotes.map((n) => n.id));
+  const corpus = [
+    ['NOTER', noteBlocks({ ...data, notes: Object.fromEntries(Object.entries(data.notes ?? {}).filter(([id]) => pick.has(id))) })],
+    ['MENNESKER', hitPeople.map((p) => personBlock(p))],
+    ['SAMTALER', talks.map((c, i) => conversationBlock(c, data.people, i < 2))],
+    ['DAGBOG (dage med ordene)', days.map((e) => entryBlock(e))],
+    ['AFTALER I KALENDEREN', cal],
+    ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
+    ['HUSKELISTE', todoLines(data)],
+  ].filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n\n${(xs as string[]).join('\n\n')}`).join('\n\n');
+  const count = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : '');
+  return {
+    corpus,
+    note: 'Materialet er kun de noter, mennesker, samtaler og dage, der passer til ordene i spørgsmålet (plus huskeliste og faste ting). Står svaret ikke her, så sig det kort og foreslå at trykke "Søg i hele dagbogen". Gæt ikke.',
+    shown: [count(hitNotes.length, 'note', 'noter'), count(hitPeople.length, 'menneske', 'mennesker'), count(talks.length, 'samtale', 'samtaler'), count(days.length, 'dag', 'dage')].filter(Boolean).join(', '),
   };
 }
 

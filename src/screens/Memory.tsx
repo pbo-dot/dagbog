@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AIError } from '../lib/ai';
 import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
-import { excerpt, highlight, localSearch, tokenize } from '../lib/search';
+import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
 import { MOODS, type Entry } from '../lib/types';
@@ -57,10 +57,9 @@ function Search() {
   const local = useMemo(() => localSearch(q, entries), [q, entries]);
   const canAI = aiReady(data);
   const terms = tokenize(q);
-  const has = (text: string) => terms.length > 0 && terms.every((t) => text.toLowerCase().includes(t));
-  const notes = terms.length ? Object.values(data.notes).filter((n) => has(`${n.title}\n${n.text}\n${(n.labels ?? []).join(' ')}`)).slice(0, 5) : [];
-  const people = terms.length ? Object.values(data.people).filter((p) => has(`${p.name}\n${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`)).slice(0, 5) : [];
-  const todos = terms.length ? Object.values(data.todos).filter((t) => !t.doneAt && has(t.text)).slice(0, 5) : [];
+  const notes = useMemo(() => rankByTerms(Object.values(data.notes), terms, (n) => n.title, (n) => `${n.text}\n${(n.labels ?? []).join(' ')}`).slice(0, 5), [data.notes, q]); // eslint-disable-line react-hooks/exhaustive-deps
+  const people = useMemo(() => rankByTerms(Object.values(data.people), terms, (p) => p.name, (p) => `${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`).slice(0, 5), [data.people, q]); // eslint-disable-line react-hooks/exhaustive-deps
+  const todos = rankByTerms(Object.values(data.todos).filter((t) => !t.doneAt), terms, (t) => t.text, () => '').slice(0, 5);
   const days = allDays ? local : local.slice(0, 5);
   const nothing = q.trim() && !local.length && !notes.length && !people.length && !todos.length;
 
