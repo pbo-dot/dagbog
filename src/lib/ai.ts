@@ -603,13 +603,13 @@ I dag er det ${formatFull(today)} (${today}). Personen bor i Danmark.`,
   return { notes, links: [...links].slice(0, 6).map(([url, title]) => ({ url, title })), usd };
 }
 
-export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string, mode: AskMode = 'diary', web?: WebFindings | null): Promise<AskAnswer> {
+export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string, mode: AskMode = 'diary', web?: WebFindings | null, chosen?: string): Promise<AskAnswer> {
   const asked = web ? `${question}\n\n[Slået op på nettet lige nu – brug det, hvor det er relevant]\n${web.notes}` : question;
   const messages: Anthropic.Beta.BetaMessageParam[] = [
     ...history.map((t) => ({ role: t.role, content: t.text })),
     { role: 'user', content: asked },
   ];
-  const model = mode === 'fast' ? settings.ai.searchModel : settings.ai.askModel;
+  const model = chosen ?? (mode === 'fast' ? settings.ai.searchModel : settings.ai.askModel);
   try {
     const res = await client(settings).beta.messages.parse({
       model,
@@ -675,6 +675,9 @@ export function tidyEstimate(notes: Note[]): number {
   const chars = notes.reduce((a, n) => a + tidyBlock(n).length, 0);
   return (chars / 3.2) * 2e-6 + notes.length * 45 * 10e-6;
 }
+
+/** Til "Svar grundigere" i Spørg. */
+export const DEEP_MODEL = 'claude-opus-5-5';
 
 export const TIDY_MODEL = 'claude-sonnet-5-5';
 const TIDY_BATCH = 40;

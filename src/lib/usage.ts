@@ -55,6 +55,7 @@ export const kr = (usd: number) => usd * DKK_PER_USD;
 /** "41 kr", "0,85 kr" */
 export function krText(usd: number): string {
   const v = kr(usd);
+  if (v > 0 && v < 0.005) return 'under 1 øre';
   return `${v.toLocaleString('da-DK', { maximumFractionDigits: v < 10 ? 2 : 0, minimumFractionDigits: v < 10 && v > 0 ? 2 : 0 })} kr`;
 }
 

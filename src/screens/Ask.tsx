@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AIError, askDiary, askScope, focusScope, webLookup, type AskAnswer, type AskMode, type WebFindings } from '../lib/ai';
+import { AIError, askDiary, askScope, DEEP_MODEL, focusScope, webLookup, type AskAnswer, type AskMode, type WebFindings } from '../lib/ai';
 import { krText, modelName, overLimitText } from '../lib/usage';
 import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
@@ -17,6 +17,8 @@ interface Turn {
   shown: string; // hvad der blev sendt med, fx "januar 2026 · 23 dage"
   web?: WebFindings | null; // det, der blev slået op på nettet
   focused?: boolean; // kun det, der passede til ordene, blev sendt med
+  full?: boolean; // "Søg i hele dagbogen"
+  deep?: boolean; // "Svar grundigere" (Opus)
 }
 
 const MODES: Array<{ id: AskMode; label: string; hint: string }> = [
@@ -100,11 +102,13 @@ export function AskScreen() {
   };
   const canAI = aiReady(data);
 
-  const ask = async (q: string, full = false) => {
+  const ask = async (q: string, again?: { full?: boolean; deep?: boolean }) => {
     const text = q.trim();
     if (!text || busy) return;
-    // "Søg i hele dagbogen" stiller det sidste spørgsmål igen med alt materialet
-    const before = full ? turns.slice(0, -1) : turns;
+    // "Søg i hele dagbogen" og "Svar grundigere" stiller det sidste spørgsmål igen
+    const before = again ? turns.slice(0, -1) : turns;
+    const full = !!again?.full;
+    const deep = !!again?.deep;
     setBusy(true);
     setError('');
     try {
@@ -124,8 +128,10 @@ export function AskScreen() {
         web = await webLookup(data.settings, today(), history, text);
       }
       setPhase(mode === 'fast' ? 'Claude svarer …' : 'Claude læser din dagbog …');
-      const answer = await askDiary(data.settings, scope, today(), history, text, mode, web);
-      const next = [...before, { question: text, answer, period, shown: scope.shown, web, focused: !!focus }];
+      // Opslag i få noter klares af den billige model; "Svar grundigere" bruger Opus.
+      const model = deep ? DEEP_MODEL : focus && mode === 'diary' ? data.settings.ai.searchModel : undefined;
+      const answer = await askDiary(data.settings, scope, today(), history, text, mode, web, model);
+      const next = [...before, { question: text, answer, period, shown: scope.shown, web, focused: !!focus, full, deep }];
       remember(next);
       setTurns(next);
       setQuestion('');
@@ -173,8 +179,11 @@ export function AskScreen() {
           <p className="prose">{t.answer.answer}</p>
           {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
           <p className="tiny muted">Læste: {t.shown}{data.settings.ai.showCost && t.answer.cost ? ` · ≈ ${krText(t.answer.cost.usd)} · ${modelName(t.answer.cost.model)}` : ''}</p>
-          {t.focused && i === turns.length - 1 && (
-            <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} disabled={busy} onClick={() => ask(t.question, true)}>Søg i hele dagbogen</button>
+          {i === turns.length - 1 && (t.focused || !t.deep) && (
+            <div className="row wrap" style={{ gap: 4 }}>
+              {t.focused && <button className="btn ghost small" disabled={busy} onClick={() => ask(t.question, { full: true })}>Søg i hele dagbogen</button>}
+              {!t.deep && <button className="btn ghost small" disabled={busy} onClick={() => ask(t.question, { full: t.full, deep: true })}>Svar grundigere</button>}
+            </div>
           )}
           {t.web && t.web.links.length > 0 && (
             <div className="stack-sm" style={{ gap: 6 }}>
