@@ -395,7 +395,11 @@ function calendarLines(data: AskData, inside: (d: string) => boolean = () => tru
 
 /** Faste noter uden dato (regler, lister, gode råd). */
 function noteBlocks(data: AskData): string[] {
-  return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => `### ${n.title} [id: ${n.id}]\n${n.text}`);
+  return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => [
+    `### ${n.title} [id: ${n.id}]${n.labels?.length ? ` (etiketter: ${n.labels.join(', ')})` : ''}`,
+    n.text,
+    ...(n.links ?? []).map((l) => `Link: ${l.title} – ${l.url}`),
+  ].filter(Boolean).join('\n'));
 }
 
 function appointmentLine(a: Appointment): string {

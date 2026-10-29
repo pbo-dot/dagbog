@@ -92,6 +92,10 @@ export interface Note {
   text: string; // linjer med "- [ ]" eller "- [x]" er afkrydsning
   createdAt: number;
   updatedAt: number;
+  labels?: string[]; // etiketter, fx fra Google Keep
+  photos?: string[]; // id'er på krypterede billeder
+  links?: Array<{ url: string; title: string }>;
+  keep?: { id: string; edited: number }; // hentet fra Google Keep (til at undgå dubletter)
 }
 
 /** Et huskepunkt: noget, der skal gøres, men ikke på et bestemt tidspunkt. */

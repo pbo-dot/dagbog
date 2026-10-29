@@ -476,3 +476,17 @@ button.list-item:first-child { border-top: 0; }
 .usage-link { color: var(--accent); font-weight: 600; font-size: 0.92rem; margin-top: 4px; }
 .usage-days { display: flex; align-items: flex-end; gap: 4px; height: 90px; margin-bottom: 6px; }
 .usage-days i { flex: 1; background: var(--accent); opacity: 0.8; border-radius: 4px 4px 0 0; }
+
+/* Etiketter (fx fra Google Keep) */
+.label-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin: 0 -4px; padding-left: 4px; }
+.label-chips .chip { flex: none; }
+.label-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.label { font-size: 0.72rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 9px; }
+.keep-stats { display: flex; gap: 8px; }
+.keep-stats span { flex: 1; background: var(--surface); border-radius: 18px; padding: 12px 8px; text-align: center; font-size: 0.82rem; color: var(--muted); }
+.keep-stats b { display: block; font-size: 1.4rem; color: var(--text); }
+.keep-row { display: flex; align-items: center; gap: 12px; min-height: 52px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.keep-row:last-child { border-bottom: 0; }
+.keep-row input { width: 22px; height: 22px; accent-color: var(--accent); flex: none; }
+.keep-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; line-height: 1.45; }
+label.btn { cursor: pointer; }

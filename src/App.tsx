@@ -17,6 +17,7 @@ import { EntryScreen } from './screens/Entry';
 import { LockScreen, SetupScreen } from './screens/Lock';
 import { DayScreen, MemoryScreen, MonthScreen, OverviewScreen } from './screens/Memory';
 import { MoreScreen } from './screens/More';
+import { KeepImportScreen } from './screens/Keep';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
@@ -180,7 +181,7 @@ function Unlocked() {
       break;
     case 'mere': screen = <MoreScreen />; break;
     case 'huskeliste': screen = a ? <TodoEditScreen key={a} id={a === 'ny' ? undefined : a} /> : <TodosScreen />; break;
-    case 'noter': screen = a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
+    case 'noter': screen = a === 'keep' ? <KeepImportScreen /> : a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     case 'forbrug': screen = <UsageScreen />; break;
     case 'kopi':

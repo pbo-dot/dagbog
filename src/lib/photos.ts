@@ -5,7 +5,7 @@ import type { Photo } from './types';
 const MAX_SIDE = 1600;
 const QUALITY = 0.82;
 
-export async function compressImage(file: File): Promise<Pick<Photo, 'mime' | 'data' | 'width' | 'height'>> {
+export async function compressImage(file: Blob): Promise<Pick<Photo, 'mime' | 'data' | 'width' | 'height'>> {
   // imageOrientation sørger for at telefonbilleder vender rigtigt (EXIF)
   const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
   const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
