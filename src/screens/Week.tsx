@@ -6,7 +6,7 @@ import { aiReady, generateWeek } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { WeekSummary } from '../lib/types';
 import { go, Header, Icon, MoodTag, uid } from '../ui';
-import { askSoon } from './Ask';
+import { AddTodoButton } from './Todos';
 
 export function CrisisHelp() {
   return (
@@ -204,11 +204,12 @@ export function WeekScreen({ id: routeId }: { id?: string }) {
             <section className="stack-sm">
               <h3>Løse ender</h3>
               <div className="card stack-sm">
-                {week.looseEnds!.map((l, i) => <p key={i} className="small" style={{ margin: 0 }}>☐ {l}</p>)}
-                <button className="btn small" style={{ alignSelf: 'flex-start' }}
-                  onClick={() => askSoon(`Lav en note "Løse ender" som afkrydsningsliste med: ${week.looseEnds!.join('; ')}`)}>
-                  Lav en huskeliste
-                </button>
+                {week.looseEnds!.map((l, i) => (
+                  <div key={i} className="todo-pick-row">
+                    <span className="grow small">{l}</span>
+                    <AddTodoButton text={l} from="fra ugens løse ender" />
+                  </div>
+                ))}
               </div>
             </section>
           )}

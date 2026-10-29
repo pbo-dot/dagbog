@@ -240,3 +240,19 @@ export function TodoEditScreen({ id }: { id?: string }) {
     </div>
   );
 }
+
+/** "+ Huskeliste" ved et punkt fra en samtale eller ugens løse ender. Viser ✓, når det er der. */
+export function AddTodoButton({ text, from }: { text: string; from: string }) {
+  const store = useStore();
+  const clean = text.trim();
+  const there = Object.values(store.data.todos).find((t) => t.text.trim().toLowerCase() === clean.toLowerCase());
+  if (there) {
+    return <button className="btn ghost small add-todo" onClick={() => go('huskeliste')}>{there.doneAt ? '✓ Klaret' : '✓ På huskelisten'}</button>;
+  }
+  return (
+    <button className="btn small add-todo" onClick={() => {
+      const todo: Todo = { id: uid(), text: clean, from, createdAt: Date.now() };
+      store.put('todos', todo.id, todo);
+    }} aria-label={`Læg på huskelisten: ${clean}`}>+ Huskeliste</button>
+  );
+}

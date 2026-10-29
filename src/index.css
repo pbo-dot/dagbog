@@ -533,3 +533,9 @@ label.btn { cursor: pointer; }
 .swatches { display: flex; gap: 10px; flex-wrap: wrap; padding: 4px 2px; }
 .swatch { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); background: var(--bg); cursor: pointer; }
 .swatch.on { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* "+ Huskeliste" ved punkter fra samtaler og løse ender */
+.todo-pick { padding: 2px 16px; }
+.todo-pick-row { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.todo-pick-row:last-child { border-bottom: 0; }
+.add-todo { flex: none; white-space: nowrap; }

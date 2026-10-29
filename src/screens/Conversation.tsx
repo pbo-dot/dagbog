@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AIError, summarizeConversation } from '../lib/ai';
 import { diaryBlock, matchPeople, personNote, takeSharedAudio, takeSharedText, withConversation } from '../lib/conversation';
 import { formatFull, formatShort, toISO, today } from '../lib/dates';
+import { AddTodoButton } from './Todos';
 import { keepScreenOn, setKeepUnlocked, speechInputAvailable, startLongDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { openInboxItem, takeInboxItem, type InboxItem } from '../lib/inbox';
@@ -431,7 +432,14 @@ export function ConversationScreen({ id }: { id: string }) {
       {c.remember.length > 0 && (
         <section className="stack-sm">
           <h3>Husk</h3>
-          <ul className="serif" style={{ margin: 0, paddingLeft: 20 }}>{c.remember.map((a, i) => <li key={i}>{a}</li>)}</ul>
+          <div className="card todo-pick">
+            {c.remember.map((a, i) => (
+              <div key={i} className="todo-pick-row">
+                <span className="grow serif">{a}</span>
+                <AddTodoButton text={a} from={`fra samtalen ${formatShort(c.date).replace(/ \d{4}$/, '')}`} />
+              </div>
+            ))}
+          </div>
         </section>
       )}
       {(c.events ?? []).length > 0 && (

@@ -3,7 +3,7 @@ import type { Proposal } from './ai';
 import { today } from './dates';
 import { pushAppointments } from './googleSync';
 import type { Data, useStore } from './store';
-import type { Appointment, Note, Person, Routine } from './types';
+import type { Appointment, Note, Person, Routine, Todo } from './types';
 
 type Store = ReturnType<typeof useStore>;
 
@@ -13,12 +13,13 @@ export type Saved =
   | { kind: 'routine'; id: string }
   | { kind: 'appointment'; id: string; google: boolean }
   | { kind: 'personNote'; personId: string; noteId: string }
+  | { kind: 'todo'; id: string }
   | { kind: 'editNote'; prev: Note }
   | { kind: 'editRoutine'; prev: Routine }
   | { kind: 'editAppointment'; prev: Appointment; google: boolean };
 
 /** Rettelser bruger de samme felter som nye ting af samme slags. */
-export type Base = 'note' | 'appointment' | 'routine' | 'personNote';
+export type Base = 'note' | 'appointment' | 'routine' | 'personNote' | 'todo';
 export function baseKind(k: Proposal['kind']): Base {
   return k === 'editNote' ? 'note' : k === 'editAppointment' ? 'appointment' : k === 'editRoutine' ? 'routine' : k;
 }
@@ -91,6 +92,11 @@ export async function saveProposal(store: Store, p: Proposal): Promise<Saved> {
     pushAppointments(store, [a]);
     return { kind: 'appointment', id: a.id, google: !!a.toGoogle };
   }
+  if (p.kind === 'todo') {
+    const t: Todo = { id: id(), text: p.title.trim(), due: isDate(p.date) ? p.date : undefined, from: 'fra Spørg dagbogen', createdAt: now };
+    await store.put('todos', t.id, t);
+    return { kind: 'todo', id: t.id };
+  }
   if (p.kind === 'routine') {
     const r: Routine = { id: id(), icon: p.icon || '💊', ...routineFields(p, today()), log: [], createdAt: now };
     await store.put('routines', r.id, r);
@@ -107,6 +113,7 @@ export async function saveProposal(store: Store, p: Proposal): Promise<Saved> {
 export async function undoProposal(store: Store, s: Saved): Promise<void> {
   if (s.kind === 'note') return store.remove('notes', s.id);
   if (s.kind === 'routine') return store.remove('routines', s.id);
+  if (s.kind === 'todo') return store.remove('todos', s.id);
   if (s.kind === 'editNote') return store.put('notes', s.prev.id, { ...s.prev, updatedAt: Date.now() });
   if (s.kind === 'editRoutine') return store.put('routines', s.prev.id, s.prev);
   if (s.kind === 'editAppointment') {
@@ -132,6 +139,7 @@ export function whereSaved(s: Saved): { label: string; path: string } {
   if (s.kind === 'note') return { label: 'Noter', path: `noter/${s.id}` };
   if (s.kind === 'editNote') return { label: 'Noter', path: `noter/${s.prev.id}` };
   if (s.kind === 'routine') return { label: 'Faste ting', path: `faste/${s.id}` };
+  if (s.kind === 'todo') return { label: 'Huskeliste', path: 'huskeliste' };
   if (s.kind === 'editRoutine') return { label: 'Faste ting', path: `faste/${s.prev.id}` };
   if (s.kind === 'appointment' || s.kind === 'editAppointment') return { label: 'Kalender', path: 'kalender' };
   return { label: 'Mennesker', path: `mennesker/${s.personId}` };

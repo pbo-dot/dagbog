@@ -13,7 +13,7 @@ type Status = { saved: Saved } | 'nej' | 'fortrudt' | null;
 const statuses = new WeakMap<Proposal, Status>();
 
 const KIND: Record<Proposal['kind'], string> = {
-  note: 'Ny note', appointment: 'Ny aftale', routine: 'Ny fast ting', personNote: 'Note om',
+  note: 'Ny note', todo: 'Nyt huskepunkt', appointment: 'Ny aftale', routine: 'Ny fast ting', personNote: 'Note om',
   editNote: 'Ret note', editAppointment: 'Ret aftale', editRoutine: 'Ret fast ting',
 };
 
@@ -49,7 +49,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
       <div className="stack-sm">
         <div className="proposal-ok" role="status">
           <span className="badge">✓</span>
-          <span><strong>{title}</strong> er {isEdit ? 'rettet' : `gemt under ${where.label}`}
+          <span><strong>{title}</strong> er {isEdit ? 'rettet' : status.saved.kind === 'todo' ? 'lagt på huskelisten' : `gemt under ${where.label}`}
             {google && <span className="small muted" style={{ display: 'block' }}>og i Google Kalender</span>}
           </span>
         </div>
@@ -80,7 +80,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
       {editing ? (
         <>
           {base !== 'personNote' && (
-            <label className="field">{base === 'note' ? 'Titel' : base === 'routine' ? 'Navn' : 'Hvad'}
+            <label className="field">{base === 'note' ? 'Titel' : base === 'routine' ? 'Navn' : base === 'todo' ? 'Huskepunkt' : 'Hvad'}
               <input type="text" value={p.title} onChange={(e) => set({ title: e.target.value })} />
             </label>
           )}
@@ -93,6 +93,9 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
               <label className="field">Sted<input type="text" value={p.place} onChange={(e) => set({ place: e.target.value })} /></label>
               <label className="field">Note<input type="text" value={p.note} onChange={(e) => set({ note: e.target.value })} /></label>
             </>
+          )}
+          {base === 'todo' && (
+            <label className="field">Frist (valgfri)<input type="date" value={p.date} onChange={(e) => set({ date: e.target.value })} /></label>
           )}
           {base === 'routine' && (
             <label className="field">Første gang<input type="date" value={p.date} onChange={(e) => e.target.value && set({ date: e.target.value })} /></label>
@@ -107,7 +110,8 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
         <EditPreview p={p} old={old} google={!!(old as Appointment).google} />
       ) : (
         <>
-          {base !== 'personNote' && <strong className="proposal-title">{base === 'appointment' ? '🗓' : p.icon} {p.title}</strong>}
+          {base !== 'personNote' && <strong className="proposal-title">{base === 'appointment' ? '🗓' : base === 'todo' ? '☐' : p.icon} {p.title}</strong>}
+          {base === 'todo' && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && <div className="kv small"><span className="muted">Frist</span><b>{formatFull(p.date)}</b></div>}
           {base === 'note' && <NotePreview text={p.text} />}
           {base === 'personNote' && <p className="serif">"{p.text}"</p>}
           {base === 'appointment' && (

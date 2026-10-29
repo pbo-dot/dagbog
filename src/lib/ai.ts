@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type Routine, type Settings, type WeekSummary } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type Routine, type Settings, type Todo, type WeekSummary } from './types';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
 import { track } from './usage';
@@ -291,12 +291,12 @@ const AskSchema = z.object({
   ).describe('De vigtigste dage, svaret bygger på, højst 8, ældste først. Tom liste hvis dagbogen ikke siger noget om det.'),
   proposals: z.array(
     z.object({
-      kind: z.enum(['note', 'appointment', 'routine', 'personNote', 'editNote', 'editAppointment', 'editRoutine']).describe('note = ny note under Noter; appointment = ny aftale i kalenderen; routine = ny fast ting (fx medicin); personNote = ny note om en person under Mennesker; editNote/editAppointment/editRoutine = ret en eksisterende note, aftale eller fast ting med [id: …]'),
+      kind: z.enum(['note', 'appointment', 'routine', 'personNote', 'todo', 'editNote', 'editAppointment', 'editRoutine']).describe('note = ny note under Noter; todo = nyt huskepunkt på huskelisten (noget, der skal gøres, men ikke på et bestemt tidspunkt); appointment = ny aftale i kalenderen; routine = ny fast ting (fx medicin); personNote = ny note om en person under Mennesker; editNote/editAppointment/editRoutine = ret en eksisterende note, aftale eller fast ting med [id: …]'),
       target: z.string().describe('Ved edit…: id\'et fra [id: …] på det, der rettes. Ellers tom'),
-      title: z.string().describe('note: notens titel. appointment: hvad aftalen er. routine: navnet. personNote: personens navn præcis som under MENNESKER'),
+      title: z.string().describe('note: notens titel. todo: hvad der skal gøres, kort (fx "Ring til forsikringen"). appointment: hvad aftalen er. routine: navnet. personNote: personens navn præcis som under MENNESKER'),
       icon: z.string().describe('Én passende emoji til note eller fast ting, ellers tom'),
       text: z.string().describe('note: hele teksten (afkrydsningslister skrives "- [ ] punkt", overskrifter "# Overskrift"). personNote: selve noten. Ellers tom'),
-      date: z.string().describe('appointment: datoen YYYY-MM-DD. routine: første gang YYYY-MM-DD. Ellers tom'),
+      date: z.string().describe('appointment: datoen YYYY-MM-DD. routine: første gang YYYY-MM-DD. todo: fristen YYYY-MM-DD, eller tom hvis ingen frist. Ellers tom'),
       time: z.string().describe('appointment: klokkeslæt HH:MM, eller tom for hele dagen. Ellers tom'),
       place: z.string().describe('appointment: stedet, ellers tom'),
       note: z.string().describe('appointment: ekstra oplysninger til aftalen (fx "Camilla kommer, mobil …"), ellers tom'),
@@ -317,11 +317,12 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
-- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd.
+- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd. Under HUSKELISTE står ting, personen skal huske at gøre.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.
 
 Personen kan også bede dig om at oprette eller rette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …", "jeg skal tage vitaminer hver dag", "tilføj til aftalen at Camilla kommer" eller "sæt solcreme på pakkelisten". Så laver du forslag under proposals:
-- Nye ting: noter, aftaler, faste ting og noter om mennesker.
+- Nye ting: noter, aftaler, faste ting, huskepunkter og noter om mennesker.
+- Huskepunkter (todo) er ting, der skal gøres, men ikke på et bestemt klokkeslæt, fx "husk at forny pas" eller "jeg skal ringe til forsikringen inden fredag". Med et klokkeslæt eller en fast tid er det en aftale. Står punktet allerede under HUSKELISTE, så lav det ikke igen. Ét forslag pr. punkt.
 - Rettelser: kun noter, aftaler og faste ting, der har [id: …] i materialet (dem har personen selv lavet i Dagbog). Brug editNote, editAppointment eller editRoutine med target = id'et, og giv den fulde nye udgave af alle felter. Ved en note: hele den nye tekst med det gamle bevaret, medmindre personen beder om at fjerne noget. Ekstra oplysninger til en aftale skrives i note.
 - Aftaler mærket [Google] har intet id og kan ikke rettes her; sig, at de skal rettes i Google Kalender. Dagbogsdage kan heller ikke rettes. Du kan aldrig slette noget.
 - Beder personen om at tilføje noget til noget, der findes, så ret det i stedet for at lave noget nyt.
@@ -379,6 +380,7 @@ export interface AskData {
   routines: Record<string, Routine>;
   appointments: Record<string, Appointment>;
   notes?: Record<string, Note>;
+  todos?: Record<string, Todo>;
   google?: Record<string, GoogleMonth>;
   settings?: Pick<Settings, 'google'>;
 }
@@ -391,6 +393,12 @@ function calendarLines(data: AskData, inside: (d: string) => boolean = () => tru
     line: `- ${e.date}${e.end !== e.date ? ` til ${e.end}` : ''}${e.time ? ` kl. ${e.time}` : ''}: ${e.title}${e.place ? ` (${e.place})` : ''} [Google]`,
   }));
   return [...own, ...g].sort((a, b) => a.date.localeCompare(b.date)).map((x) => x.line);
+}
+
+/** Åbne huskepunkter. */
+function todoLines(data: AskData): string[] {
+  return Object.values(data.todos ?? {}).filter((t) => !t.doneAt).sort((a, b) => a.createdAt - b.createdAt).map((t) =>
+    `- ${t.text}${t.due ? ` (frist ${t.due})` : ''}${t.someday ? ' (lagt væk til engang)' : t.showFrom ? ` (udsat til ${t.showFrom})` : ''}`);
 }
 
 /** Faste noter uden dato (regler, lister, gode råd). */
@@ -446,6 +454,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
       ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r, inside))],
       ['AFTALER I KALENDEREN', calendarLines(data, inside)],
       ['NOTER', noteBlocks(data)],
+      ['HUSKELISTE', todoLines(data)],
     ]);
     return {
       corpus: corpus || '(Der er intet skrevet i denne periode.)',
@@ -461,6 +470,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
     ['NOTER', noteBlocks(data)],
+    ['HUSKELISTE', todoLines(data)],
   ]);
   if (full.length <= FULL_LIMIT) {
     return { corpus: full, note: 'Materialet er hele dagbogen.', shown: `hele dagbogen · ${entries.length} dage` };
@@ -486,6 +496,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
     ['NOTER', noteBlocks(data)],
+    ['HUSKELISTE', todoLines(data)],
   ]);
   if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
   return {
