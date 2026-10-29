@@ -174,12 +174,12 @@ export function MemoryScreen() {
         </div>
         <span className="small muted" style={{ display: 'block' }}>Medicin, indsprøjtninger og andet på en fast plan</span>
       </button>
-      <button className="card tappable" onClick={() => go('noter')}>
+      <button className="card tappable" onClick={() => go('mennesker')}>
         <div className="row between">
-          <strong>Noter</strong>
-          <span className="tiny muted">{Object.keys(data.notes).length || 'Ny'}</span>
+          <strong>Mennesker</strong>
+          <span className="tiny muted">{Object.keys(data.people).length || 'Ny'}</span>
         </div>
-        <span className="small muted" style={{ display: 'block' }}>Faste oplysninger, lister og gode råd</span>
+        <span className="small muted" style={{ display: 'block' }}>Familie, venner og hvad der er vigtigt for dem</span>
       </button>
       <button className="card tappable" onClick={() => go('samtale')}>
         <div className="row between">

@@ -37,7 +37,8 @@ export function PeopleScreen() {
 
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <Header title="Mennesker" />
+      <Header back="husk" />
+      <h1>Mennesker</h1>
       {soon && (
         <button className="card tappable birthday" onClick={() => go(`mennesker/${soon.person.id}`)}>
           <span className="avatar">🎂</span>

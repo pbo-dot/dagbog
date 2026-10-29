@@ -96,6 +96,8 @@ export interface Note {
   photos?: string[]; // id'er på krypterede billeder
   links?: Array<{ url: string; title: string }>;
   keep?: { id: string; edited: number }; // hentet fra Google Keep (til at undgå dubletter)
+  color?: string; // farve som i Keep: gul, groen, blaa, roed, lilla
+  pinned?: boolean; // fastgjort øverst
 }
 
 /** Et huskepunkt: noget, der skal gøres, men ikke på et bestemt tidspunkt. */

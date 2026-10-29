@@ -490,3 +490,46 @@ button.list-item:first-child { border-top: 0; }
 .keep-row input { width: 22px; height: 22px; accent-color: var(--accent); flex: none; }
 .keep-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; line-height: 1.45; }
 label.btn { cursor: pointer; }
+
+/* Noter som kort (inspireret af Google Keep) */
+:root { --nc-gul: #f6ebc0; --nc-groen: #d9ebdc; --nc-blaa: #d8e4f1; --nc-roed: #f4dbd2; --nc-lilla: #e6dcef; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --nc-gul: #4a4026; --nc-groen: #273d2e; --nc-blaa: #26354a; --nc-roed: #4a2c27; --nc-lilla: #3a2f47; }
+}
+:root[data-theme='dark'] { --nc-gul: #4a4026; --nc-groen: #273d2e; --nc-blaa: #26354a; --nc-roed: #4a2c27; --nc-lilla: #3a2f47; }
+.nc-gul { background: var(--nc-gul) !important; }
+.nc-groen { background: var(--nc-groen) !important; }
+.nc-blaa { background: var(--nc-blaa) !important; }
+.nc-roed { background: var(--nc-roed) !important; }
+.nc-lilla { background: var(--nc-lilla) !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.note-grid { columns: 2; column-gap: 10px; }
+.note-card {
+  break-inside: avoid; display: flex; flex-direction: column; gap: 4px; width: 100%; margin: 0 0 10px;
+  border: 0; border-radius: 20px; background: var(--surface); color: inherit; font: inherit; text-align: left;
+  padding: 12px 14px; cursor: pointer; overflow: hidden; transition: transform 0.12s ease;
+}
+.note-card:active { transform: scale(0.97); }
+.note-card-img { display: block; width: calc(100% + 28px); margin: -12px -14px 6px; height: 110px; object-fit: cover; }
+.note-card-title { font-size: 0.98rem; line-height: 1.25; }
+.note-card-text { font-size: 0.85rem; line-height: 1.4; color: var(--muted); white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.note-card-checks { display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; }
+.note-card-checks .done { text-decoration: line-through; color: var(--muted); }
+.note-card-bar { display: block; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); margin-top: 6px; overflow: hidden; }
+.note-card-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.note-card .label-row { margin-top: 4px; }
+.quick-note { display: flex; align-items: center; gap: 6px; background: var(--surface); border-radius: 999px; padding: 4px 6px 4px 4px; }
+.quick-note-text { border: 0; background: none; text-align: left; font: inherit; color: var(--muted); min-height: 44px; padding: 0 14px; cursor: pointer; }
+.quick-ico { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--text); font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.note-filter { align-self: flex-start; max-width: 100%; }
+.note-filter select { appearance: none; -webkit-appearance: none; min-height: 40px; font-size: 0.9rem; padding: 6px 30px 6px 14px; max-width: 100%; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: right 15px center, right 10px center; background-size: 5px 5px; background-repeat: no-repeat; }
+.note-edit { display: flex; flex-direction: column; gap: 6px; background: var(--surface); border-radius: 22px; padding: 14px; }
+.note-edit input, .note-edit textarea { border: 0; background: transparent; box-shadow: none; padding: 4px 2px; }
+.note-edit-title { font-size: 1.25rem; font-weight: 700; }
+.note-tools { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border-radius: 22px; padding: 10px 12px; }
+.tool-row { display: flex; justify-content: space-around; }
+.tool { width: 48px; height: 48px; border-radius: 16px; border: 0; background: none; font-size: 1.25rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: inherit; }
+.tool.on { background: var(--accent-soft); }
+.swatches { display: flex; gap: 10px; flex-wrap: wrap; padding: 4px 2px; }
+.swatch { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); background: var(--bg); cursor: pointer; }
+.swatch.on { outline: 3px solid var(--accent); outline-offset: 2px; }

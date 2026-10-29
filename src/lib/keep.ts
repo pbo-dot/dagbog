@@ -15,6 +15,7 @@ interface KeepJson {
   isTrashed?: boolean;
   isArchived?: boolean;
   isPinned?: boolean;
+  color?: string;
   createdTimestampUsec?: number;
   userEditedTimestampUsec?: number;
 }
@@ -28,6 +29,7 @@ export interface KeepNote {
   images: string[]; // stier i zip-filen
   archived: boolean;
   pinned: boolean;
+  color?: string; // Dagbogs farvenøgle
   created: number; // ms
   edited: number; // ms
 }
@@ -36,6 +38,15 @@ export interface KeepScan {
   notes: KeepNote[];
   imageBytes: number; // samlet størrelse af billederne (før formindskning)
 }
+
+/** Keeps farver oversat til Dagbogs fem. */
+const KEEP_COLORS: Record<string, string> = {
+  YELLOW: 'gul', ORANGE: 'gul', BROWN: 'gul',
+  GREEN: 'groen', TEAL: 'groen',
+  BLUE: 'blaa', CERULEAN: 'blaa', GRAY: 'blaa',
+  RED: 'roed', PINK: 'roed',
+  PURPLE: 'lilla',
+};
 
 const isImage = (name: string) => /\.(jpe?g|png|gif|webp|heic)$/i.test(name);
 const base = (path: string) => path.split('/').pop()!.replace(/\.[^.]+$/, '').toLowerCase();
@@ -68,6 +79,7 @@ export function parseKeepNote(fileName: string, raw: KeepJson, images: Map<strin
     images: imgs,
     archived: !!raw.isArchived,
     pinned: !!raw.isPinned,
+    color: KEEP_COLORS[raw.color ?? ''],
     created: created || Date.now(),
     edited: edited || created || Date.now(),
   };
@@ -122,7 +134,7 @@ export function chosen(n: KeepNote, labels: Set<string>, archived: boolean): boo
 export function toNote(k: KeepNote, existing: Note | undefined, photos: string[], id: string): Note | null {
   if (existing?.keep && existing.keep.edited >= k.edited) return null;
   return {
-    ...(existing ?? { icon: k.pinned ? '📌' : '🗒️', createdAt: k.created }),
+    ...(existing ?? { icon: '🗒️', createdAt: k.created, pinned: k.pinned || undefined, color: k.color }),
     id,
     title: k.title,
     text: k.text,

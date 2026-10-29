@@ -30,8 +30,8 @@ import { UpdateBanner } from './UpdateBanner';
 const TABS = [
   { id: 'skriv', label: 'Skriv', icon: Icon.pen },
   { id: 'husk', label: 'Husk', icon: Icon.memory },
+  { id: 'noter', label: 'Noter', icon: Icon.note },
   { id: 'kalender', label: 'Kalender', icon: Icon.calendar },
-  { id: 'mennesker', label: 'Mennesker', icon: Icon.people },
   { id: 'mere', label: 'Mere', icon: Icon.more },
 ];
 
@@ -181,7 +181,7 @@ function Unlocked() {
       break;
     case 'mere': screen = <MoreScreen />; break;
     case 'huskeliste': screen = a ? <TodoEditScreen key={a} id={a === 'ny' ? undefined : a} /> : <TodosScreen />; break;
-    case 'noter': screen = a === 'keep' ? <KeepImportScreen /> : a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
+    case 'noter': screen = a === 'keep' ? <KeepImportScreen /> : a ? <NoteScreen key={`${a}/${b ?? ''}`} id={a} mode={b} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     case 'forbrug': screen = <UsageScreen />; break;
     case 'kopi':
@@ -193,7 +193,7 @@ function Unlocked() {
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
-  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter', 'huskeliste'].includes(tab) ? 'husk'
+  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'huskeliste', 'mennesker'].includes(tab) ? 'husk'
     : ['moenstre', 'indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere' : tab;
 
   return (

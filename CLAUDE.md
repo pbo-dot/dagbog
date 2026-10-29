@@ -15,6 +15,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 - Huskeliste (`src/lib/todos.ts`, `src/screens/Todos.tsx`): huskepunkter uden tidspunkt (samling `todos`). "I dag" på Skriv-siden viser højst 3 (fristen først); punkter kan udsættes (`showFrom`) eller lægges væk til "Engang" (`someday`).
 - Forbrug (`src/lib/usage.ts`, `src/screens/Usage.tsx`): `track()` efter hvert Claude-svar i `ai.ts` regner tokens om til dollar (listepriser i `PRICES`) og gemmes pr. måned i samlingen `usage`. Vises i kroner (`DKK_PER_USD`) under Indstillinger → AI, på siden Forbrug og under hvert svar i Spørg.
 - Google Keep (`src/lib/keep.ts`, `src/screens/Keep.tsx`): Google tillader ikke Keep-adgang for almindelige konti, så noter hentes fra en Takeout-zip, der pakkes ud på telefonen med fflate. Etiketter, links og billeder kommer med (`Note.labels/links/photos`); `Note.keep` forhindrer dubletter ved ny import. Etiketter er filtre i Noter og sendes med til Spørg.
+- Noter er en fane (Mennesker ligger under Husk): kort i to spalter som i Keep, fastgjorte øverst (`Note.pinned`), farver (`Note.color`, `--nc-*`), filter på etiket som dropdown. Noter gemmer sig selv, mens der skrives.
 - `public/share-sw.js` modtager "Del → Dagbog" (tekst og lydfiler).
 - Søsterappen DB (optager) ligger i repoet pbo-dot/db.
 
