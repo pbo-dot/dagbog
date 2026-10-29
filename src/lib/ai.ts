@@ -743,6 +743,8 @@ export function talkContext(data: AskData, today: string): string {
     ['DAGENS AFTALER', calendarLines(data, (d) => d === today)],
     ['ALLEREDE SKREVET I DAG', data.entries[today] ? [data.entries[today].text] : []],
     ['DE SENESTE DAGE', recent],
+    ['ÅBNE HUSKEPUNKTER (nyeste)', Object.values(data.todos ?? {}).filter((t) => !t.doneAt && !t.someday)
+      .sort((a, b) => b.createdAt - a.createdAt).slice(0, 8).map((t) => `- ${t.text}${t.due ? ` (frist ${t.due})` : ''}`)],
     ['MENNESKER (navne)', Object.values(data.people).map((p) => `- ${p.name}${p.relation ? ` (${p.relation})` : ''}`)],
   ];
   return parts.filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n${xs.join('\n')}`).join('\n\n') || '(Intet at vise.)';
@@ -752,6 +754,7 @@ const TALK = `Personen fortæller om sin dag med stemmen, og du stiller spørgsm
 - Stil ét kort, åbent spørgsmål ad gangen (højst to korte sætninger). Det læses højt.
 - Spørg ind til det, personen selv nævner, især følelser og det, der fyldte. Brug gerne dagens aftaler, hvis personen ikke selv nævner dem.
 - Ingen råd, ingen vurderinger og ingen opsummeringer undervejs. Ingen emojis.
+- Du husker, hvad personen har fortalt de seneste dage. Følg gerne op på én ting derfra (en bekymring, en plan eller et huskepunkt), fx "I går var du bekymret for hjemmeplejen. Fik du ringet?" Højst én gang i samtalen, kun hvis personen ikke selv har nævnt det, og nysgerrigt, ikke kontrollerende.
 - Talegenkendelsen kan have fejl; gæt det mest sandsynlige og spørg ikke ind til stavning.
 - Har personen fortalt nok, eller vil personen stoppe, så svar præcis: SLUT`;
 
