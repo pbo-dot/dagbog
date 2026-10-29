@@ -642,3 +642,88 @@ export async function testKey(settings: Settings): Promise<void> {
     explain(e);
   }
 }
+
+// ---------------- Ryd op i noter ----------------
+
+const TidySchema = z.object({
+  notes: z.array(z.object({
+    id: z.string().describe('Notens id, præcis som i materialet'),
+    remove: z.boolean().describe('true hvis noten tydeligt er forældet eller tom og kan slettes'),
+    sure: z.boolean().describe('true hvis du er helt sikker på, at den kan slettes; false ved den mindste tvivl'),
+    reason: z.string().describe('Kort grund til sletning (3-8 ord), fx "Tilbud fra marts 2019". Tom streng hvis noten ikke skal slettes.'),
+    addLabels: z.array(z.string()).describe('Etiketter at tilføje (ikke dem, noten allerede har). Tom liste hvis ingen.'),
+  })).describe('Kun noter, du har et forslag til. Noter uden forslag udelades.'),
+});
+
+export interface TidyOptions { remove: boolean; label: boolean; newLabels: boolean }
+export interface TidyNote { id: string; remove: boolean; sure: boolean; reason: string; addLabels: string[] }
+
+/** Tekst om én note til oprydningen (afkortet, så mange noter kan gå med på én gang). */
+function tidyBlock(n: Note): string {
+  const d = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+  const text = n.text.length > 700 ? `${n.text.slice(0, 700)} …` : n.text;
+  return [
+    `### [id: ${n.id}] ${n.title || '(uden titel)'}`,
+    `oprettet ${d(n.createdAt)}, rettet ${d(n.updatedAt)}${n.labels?.length ? ` · etiketter: ${n.labels.join(', ')}` : ''}${n.photos?.length ? ` · ${n.photos.length} billede(r)` : ''}${n.pinned ? ' · fastgjort' : ''}`,
+    text,
+    ...(n.links ?? []).map((l) => `Link: ${l.title} – ${l.url}`),
+  ].join('\n');
+}
+
+/** Groft skøn over prisen i dollar for at gennemgå noterne (Sonnet). */
+export function tidyEstimate(notes: Note[]): number {
+  const chars = notes.reduce((a, n) => a + tidyBlock(n).length, 0);
+  return (chars / 3.2) * 2e-6 + notes.length * 45 * 10e-6;
+}
+
+export const TIDY_MODEL = 'claude-sonnet-5-5';
+const TIDY_BATCH = 40;
+
+/**
+ * Claude gennemgår noterne i bunker og foreslår sletning og etiketter.
+ * Intet gemmes her; skærmen viser forslagene først.
+ */
+export async function tidyNotes(
+  settings: Settings, notes: Note[], labels: string[], opts: TidyOptions, today: string,
+  progress: (done: number) => void, stopped: () => boolean,
+): Promise<{ results: TidyNote[]; usd: number; checked: number }> {
+  const rules = [
+    `I dag er ${today}. Du hjælper en person med at rydde op i sine noter (mange er hentet fra Google Keep).`,
+    opts.remove
+      ? 'Sletning: Foreslå kun at slette noter, der tydeligt er forældede eller tomme: udløbne tilbud, gamle billetter og arrangementer, der er overstået, huskesedler om noget, der helt sikkert er overstået, tomme noter eller noter med kun et par ord uden mening, og rene dubletter af en anden note. Slet aldrig koder, adgangskoder, telefonnumre, adresser, kontonumre, opskrifter, vejledninger, minder, links til noget, der stadig kan være nyttigt, eller noget med billeder af personlig værdi. Er du i tvivl, så slet ikke, eller sæt sure=false.'
+      : 'Foreslå ikke at slette noget (remove=false).',
+    opts.label
+      ? opts.newLabels
+        ? 'Etiketter: Giv hver note 1-2 passende etiketter. Brug helst de eksisterende etiketter nedenfor; lav kun en ny, når ingen passer, og hold nye etiketter korte (ét ord, stort begyndelsesbogstav) og få, så de kan bruges igen på mange noter.'
+        : 'Etiketter: Giv noter 1-2 passende etiketter, men KUN fra listen over eksisterende etiketter nedenfor, stavet præcis som dér. Passer ingen, så tilføj ingen.'
+      : 'Foreslå ikke etiketter (addLabels tom).',
+    'Tilføj aldrig en etiket, noten allerede har. Udelad noter, du ikke har noget forslag til. Svar på dansk.',
+    `EKSISTERENDE ETIKETTER: ${labels.length ? labels.join(', ') : '(ingen endnu)'}`,
+  ].join('\n\n');
+  const ids = new Set(notes.map((n) => n.id));
+  const results: TidyNote[] = [];
+  let usd = 0;
+  let checked = 0;
+  for (let i = 0; i < notes.length; i += TIDY_BATCH) {
+    if (stopped()) break;
+    const batch = notes.slice(i, i + TIDY_BATCH);
+    try {
+      const res = await client(settings).beta.messages.parse({
+        model: TIDY_MODEL,
+        max_tokens: 8000,
+        output_config: { effort: 'low', format: betaZodOutputFormat(TidySchema) },
+        system: [{ type: 'text', text: rules, cache_control: { type: 'ephemeral' } }],
+        messages: [{ role: 'user', content: `NOTER:\n\n${batch.map(tidyBlock).join('\n\n')}` }],
+      });
+      usd += track('tidy', res);
+      for (const r of res.parsed_output?.notes ?? []) if (ids.has(r.id)) results.push(r);
+    } catch (e) {
+      // Det, der allerede er gennemgået, bevares
+      if (results.length) break;
+      explain(e);
+    }
+    checked = Math.min(notes.length, i + TIDY_BATCH);
+    progress(checked);
+  }
+  return { results, usd, checked };
+}

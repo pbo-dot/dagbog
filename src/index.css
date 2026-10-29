@@ -559,3 +559,14 @@ label.btn { cursor: pointer; }
 .note-filter { position: relative; display: inline-flex; align-items: center; }
 .note-filter-ico { position: absolute; left: 12px; pointer-events: none; font-size: 0.95rem; }
 .note-filter select { padding-left: 36px !important; }
+
+/* Ryd op i noter */
+.tidy-item { display: flex; align-items: flex-start; gap: 12px; background: var(--surface); border-radius: 20px; padding: 12px 14px; }
+.tidy-item input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.tidy-item > button { display: flex; flex-direction: column; gap: 4px; text-align: left; background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; min-height: 28px; }
+.tidy-item.del strong { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+.tidy-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.label-chip.new { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.tidy-foot { position: sticky; bottom: calc(76px + env(safe-area-inset-bottom)); padding-top: 18px; background: linear-gradient(transparent, var(--bg) 40%); z-index: 2; }
+.tidy-check { width: 64px; height: 64px; margin: 24px auto 0; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+.tidy-check svg { width: 34px; height: 34px; }

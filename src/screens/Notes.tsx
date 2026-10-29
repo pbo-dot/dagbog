@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { aiReady } from '../lib/generate';
 import { formatShort, toISO, today } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { compressImage } from '../lib/photos';
@@ -157,7 +158,10 @@ export function NotesScreen() {
         </section>
       )}
       {(term || filter) && list.length === 0 && <p className="small muted">Ingen noter her.</p>}
-      <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} onClick={() => go('noter/keep')}>Hent fra Google Keep</button>
+      <div className="row" style={{ flexWrap: 'wrap', gap: 4 }}>
+        <button className="btn ghost small" onClick={() => go('noter/keep')}>Hent fra Google Keep</button>
+        {all.length > 0 && aiReady(store.data) && <button className="btn ghost small" onClick={() => go('noter/ryd')}>Ryd op med Claude</button>}
+      </div>
     </div>
   );
 }
