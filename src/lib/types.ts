@@ -222,6 +222,7 @@ export interface Settings {
     apiKey: string;
     analysisModel: string;
     searchModel: string;
+    askModel: string; // Spørg dagbogen (Dagbogen og + Nettet)
     limitKr: number; // advar, når måneden passerer (0 = ingen grænse)
     showCost: boolean; // vis prisen under hvert svar i Spørg
   };
@@ -256,6 +257,7 @@ export const DEFAULT_SETTINGS: Settings = {
     apiKey: '',
     analysisModel: 'claude-opus-5-5',
     searchModel: 'claude-haiku-5-5',
+    askModel: 'claude-sonnet-5-5',
     limitKr: 0,
     showCost: true,
   },

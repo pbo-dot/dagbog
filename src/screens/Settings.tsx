@@ -48,7 +48,7 @@ function Row({ label, hint, children }: { label: string; hint?: ReactNode; child
 
 const MODELS = [
   { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (klogest)' },
-  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5' },
+  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 (god og halv pris)' },
   { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5 (hurtigst, billigst)' },
 ];
 
@@ -257,12 +257,17 @@ export function SettingsScreen({ page }: { page?: string }) {
               }}>Test nøgle</button>
               <span className="small muted">{keyStatus}</span>
             </div>
-            <label className="field">Model til analyse
+            <label className="field">Model til Spørg dagbogen
+              <select value={s.ai.askModel} onChange={(e) => update((x) => ({ ...x, ai: { ...x.ai, askModel: e.target.value } }))}>
+                {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
+              </select>
+            </label>
+            <label className="field">Model til uge, måned og samtaler
               <select value={s.ai.analysisModel} onChange={(e) => update((x) => ({ ...x, ai: { ...x.ai, analysisModel: e.target.value } }))}>
                 {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
               </select>
             </label>
-            <label className="field">Model til søgning
+            <label className="field">Model til Hurtig og søgning
               <select value={s.ai.searchModel} onChange={(e) => update((x) => ({ ...x, ai: { ...x.ai, searchModel: e.target.value } }))}>
                 {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
               </select>

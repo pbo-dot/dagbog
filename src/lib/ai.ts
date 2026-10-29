@@ -566,7 +566,7 @@ const WEB = `Du hjælper en person, der skriver dagbog, med at slå ting op på 
 /** Slår op på nettet uden at sende dagbogen med. Giver null, når der ikke er brug for nettet. */
 export async function webLookup(settings: Settings, today: string, history: ChatTurn[], question: string): Promise<WebFindings | null> {
   // Websøgning kræver Opus eller Sonnet
-  const model = /opus|sonnet|fable/.test(settings.ai.analysisModel) ? settings.ai.analysisModel : 'claude-opus-5-5';
+  const model = /opus|sonnet|fable/.test(settings.ai.askModel) ? settings.ai.askModel : 'claude-sonnet-5-5';
   const messages: Anthropic.MessageParam[] = [
     ...history.filter((t) => t.role === 'user').slice(-3).map((t) => ({ role: 'user' as const, content: t.text })),
     { role: 'user', content: question },
@@ -609,7 +609,7 @@ export async function askDiary(settings: Settings, scope: AskScope, today: strin
     ...history.map((t) => ({ role: t.role, content: t.text })),
     { role: 'user', content: asked },
   ];
-  const model = mode === 'fast' ? settings.ai.searchModel : settings.ai.analysisModel;
+  const model = mode === 'fast' ? settings.ai.searchModel : settings.ai.askModel;
   try {
     const res = await client(settings).beta.messages.parse({
       model,
