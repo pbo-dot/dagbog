@@ -130,6 +130,21 @@ export function Header({ title, back: backTo, right }: { title?: ReactNode; back
   );
 }
 
+/** Toppen af fanen Plan: Kalender, Huskeliste og Faste ting, med evt. en knap til højre. */
+export function PlanTabs({ active, right }: { active: 'kalender' | 'huskeliste' | 'faste'; right?: ReactNode }) {
+  const tabs = [['kalender', 'Kalender'], ['huskeliste', 'Huskeliste'], ['faste', 'Faste ting']] as const;
+  return (
+    <div className="stack-sm" style={{ gap: 12 }}>
+      <div className="header"><h1>Plan</h1>{right}</div>
+      <div className="plan-tabs" role="tablist" aria-label="Plan">
+        {tabs.map(([id, label]) => (
+          <button key={id} role="tab" aria-selected={active === id} className={active === id ? 'on' : ''} onClick={() => go(id)}>{label}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** Knap der kræver to bekræftelser */
 export function DoubleConfirm({ label, first, second, onConfirm, className = 'btn danger' }: {
   label: string; first: string; second: string; onConfirm: () => void | Promise<void>; className?: string;

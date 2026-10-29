@@ -4,7 +4,7 @@ import { speechInputAvailable, startDictation } from '../lib/device';
 import { useStore } from '../lib/store';
 import { TODAY_MAX, dueSoon, dueText, groupTodos, postponeChoices, shortDate } from '../lib/todos';
 import type { Todo } from '../lib/types';
-import { go, Header, Icon, uid } from '../ui';
+import { go, Header, Icon, PlanTabs, uid } from '../ui';
 
 /** Afkrydsning med ét tryk. Et klaret punkt kan fortrydes med et tryk mere. */
 function TodoRow({ todo, onMenu, dim }: { todo: Todo; onMenu: (t: Todo) => void; dim?: boolean }) {
@@ -132,10 +132,9 @@ export function TodosScreen() {
   const empty = !g.now.length && !g.later.length && !g.someday.length && !g.done.length;
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header back="husk" right={<button className="btn primary small" onClick={() => go('huskeliste/ny')}>
+      <PlanTabs active="huskeliste" right={<button className="btn primary small" onClick={() => go('huskeliste/ny')}>
         <span style={{ width: 18, height: 18, display: 'inline-flex', marginRight: 4 }}>{Icon.plus}</span>Nyt
       </button>} />
-      <h1>Huskeliste</h1>
       {empty && <p className="muted">Ting, du skal huske at få gjort, men ikke på et bestemt tidspunkt.</p>}
       {group('Nu', g.now)}
       {group('Senere', g.later, true)}

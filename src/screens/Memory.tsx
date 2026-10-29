@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AIError, searchDiary, type AIHit } from '../lib/ai';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { AIError } from '../lib/ai';
 import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, tokenize } from '../lib/search';
@@ -7,6 +7,7 @@ import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
 import { MOODS, type Entry } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
+import { askSoon } from './Ask';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -47,74 +48,85 @@ function ThatDay() {
   );
 }
 
+/** Ét søgefelt for det hele: dage, noter, mennesker og huskeliste, og "Spørg Claude" med samme ord. */
 function Search() {
   const data = useStore().data;
   const [q, setQ] = useState('');
-  const [aiHits, setAiHits] = useState<AIHit[] | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
+  const [allDays, setAllDays] = useState(false);
   const entries = useMemo(() => Object.values(data.entries), [data.entries]);
   const local = useMemo(() => localSearch(q, entries), [q, entries]);
   const canAI = aiReady(data);
-
-  useEffect(() => setAiHits(null), [q]);
-
-  const runAI = async () => {
-    if (!q.trim() || !canAI) return;
-    setBusy(true);
-    setError('');
-    try {
-      setAiHits((await searchDiary(data.settings, q, entries)).filter((h) => data.entries[h.date]));
-    } catch (e) {
-      setError(e instanceof AIError ? e.message : 'Søgningen fejlede.');
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const terms = tokenize(q);
+  const has = (text: string) => terms.length > 0 && terms.every((t) => text.toLowerCase().includes(t));
+  const notes = terms.length ? Object.values(data.notes).filter((n) => has(`${n.title}\n${n.text}\n${(n.labels ?? []).join(' ')}`)).slice(0, 5) : [];
+  const people = terms.length ? Object.values(data.people).filter((p) => has(`${p.name}\n${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`)).slice(0, 5) : [];
+  const todos = terms.length ? Object.values(data.todos).filter((t) => !t.doneAt && has(t.text)).slice(0, 5) : [];
+  const days = allDays ? local : local.slice(0, 5);
+  const nothing = q.trim() && !local.length && !notes.length && !people.length && !todos.length;
+
   return (
     <div className="stack-sm">
-      <form className="row" onSubmit={(e) => { e.preventDefault(); runAI(); }}>
-        <input type="search" className="grow" value={q} onChange={(e) => setQ(e.target.value)} placeholder='Fx "Aarhus" eller "hvornår var jeg træt af arbejdet"' enterKeyHint="search" />
-        {canAI && (
-          <button className="icon-btn" aria-label="Søg med AI" disabled={!q.trim() || busy} title="Søg med naturligt sprog">
-            {busy ? <span className="spinner" /> : <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.sparkle}</span>}
+      <form className="search-bar" role="search" onSubmit={(e) => { e.preventDefault(); if (canAI && q.trim()) askSoon(q.trim()); }}>
+        <span className="search-ico" aria-hidden="true">{Icon.search}</span>
+        <input type="search" className="grow" value={q} onChange={(e) => { setQ(e.target.value); setAllDays(false); }}
+          placeholder={canAI ? 'Søg eller spørg …' : 'Søg i dagbogen …'} aria-label="Søg eller spørg" enterKeyHint={canAI ? 'send' : 'search'} />
+        {canAI && !q.trim() && (
+          <button type="button" className="search-ask" onClick={() => go('spoerg')} aria-label="Spørg dagbogen">
+            <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.sparkle}</span>
           </button>
         )}
       </form>
-      {canAI && q.trim() && !aiHits && !busy && <p className="tiny muted">Tryk på stjernen eller Enter for at lade AI søge efter betydning, ikke kun ord.</p>}
-      {error && <p className="error">{error}</p>}
-
-      {aiHits && (
-        <div className="list">
-          {aiHits.length === 0 && <p className="small muted" style={{ padding: '8px 0' }}>AI fandt ingen dage, der passer.</p>}
-          {aiHits.map((h) => {
-            const e = data.entries[h.date];
-            const text = h.quotes[0] && e.text.includes(h.quotes[0]) ? excerpt(e.text, h.quotes, 220) : excerpt(e.text, terms);
-            return (
-              <button key={h.date} className="list-item" onClick={() => go(`husk/dag/${h.date}`)}>
-                <div className="row between"><span className="small">{formatShort(h.date)}</span><MoodTag mood={e.mood} /></div>
-                <span className="small serif"><Highlighted text={text} terms={h.quotes.length ? h.quotes : terms} /></span>
-              </button>
-            );
-          })}
-        </div>
+      {canAI && q.trim() && (
+        <button className="ask-row" onClick={() => askSoon(q.trim())}>
+          <span style={{ width: 20, height: 20, display: 'inline-flex', flex: 'none' }}>{Icon.sparkle}</span>
+          <span className="grow">Spørg Claude: <strong>"{q.trim()}"</strong></span>
+          <span aria-hidden="true">›</span>
+        </button>
       )}
-
-      {!aiHits && q.trim() && (
-        <div className="list">
-          {local.length === 0 && <p className="small muted" style={{ padding: '8px 0' }}>Ingen dage med de ord.{canAI ? ' Prøv AI-søgning.' : ''}</p>}
-          {local.map((h) => (
+      {nothing && <p className="small muted" style={{ padding: '4px 2px' }}>Ingen ord fundet.{canAI ? ' Claude kan søge efter betydningen.' : ''}</p>}
+      {todos.length > 0 && (
+        <div className="stack-sm"><h3>Huskeliste</h3><div className="card list" style={{ padding: '0 16px' }}>
+          {todos.map((t) => <button key={t.id} className="list-item" onClick={() => go(`huskeliste/${t.id}`)}><span>☐ <Highlighted text={t.text} terms={terms} /></span></button>)}
+        </div></div>
+      )}
+      {notes.length > 0 && (
+        <div className="stack-sm"><h3>Noter</h3><div className="card list" style={{ padding: '0 16px' }}>
+          {notes.map((n) => (
+            <button key={n.id} className="list-item" onClick={() => go(`noter/${n.id}`)}>
+              <strong><Highlighted text={n.title} terms={terms} /></strong>
+              <span className="small muted"><Highlighted text={excerpt(n.text, terms, 120)} terms={terms} /></span>
+            </button>
+          ))}
+        </div></div>
+      )}
+      {people.length > 0 && (
+        <div className="stack-sm"><h3>Mennesker</h3><div className="card list" style={{ padding: '0 16px' }}>
+          {people.map((p) => <button key={p.id} className="list-item" onClick={() => go(`mennesker/${p.id}`)}><strong>{p.name}</strong>{p.relation && <span className="small muted">{p.relation}</span>}</button>)}
+        </div></div>
+      )}
+      {local.length > 0 && (
+        <div className="stack-sm"><h3>Dage · {local.length}</h3><div className="card list" style={{ padding: '0 16px' }}>
+          {days.map((h) => (
             <button key={h.entry.date} className="list-item" onClick={() => go(`husk/dag/${h.entry.date}`)}>
               <div className="row between"><span className="small">{formatShort(h.entry.date)}</span><MoodTag mood={h.entry.mood} /></div>
               <span className="small serif"><Highlighted text={excerpt(h.entry.text, h.terms)} terms={h.terms} /></span>
-              {h.entry.tags.length > 0 && <span className="tiny muted">{h.entry.tags.join(' · ')}</span>}
             </button>
           ))}
-        </div>
+          {local.length > days.length && <button className="today-later" onClick={() => setAllDays(true)}>Vis alle {local.length} dage ›</button>}
+        </div></div>
       )}
     </div>
+  );
+}
+
+function HubRow({ icon, title, text, onClick, dot }: { icon: ReactNode; title: string; text: string; onClick: () => void; dot?: boolean }) {
+  return (
+    <button className="list-item hub-row" onClick={onClick}>
+      <span className="hub-ico">{icon}</span>
+      <span className="grow"><strong style={{ display: 'block' }}>{title}</strong><span className="small muted">{text}</span></span>
+      {dot && <span className="dot" style={{ position: 'static' }} aria-label="Nyt" />}
+      <span style={{ width: 18, height: 18, display: 'inline-flex', flex: 'none' }} className="muted">{Icon.chevronRight}</span>
+    </button>
   );
 }
 
@@ -128,6 +140,7 @@ export function MemoryScreen() {
   return (
     <div className="stack" style={{ gap: 24 }}>
       <Header title="Husk" />
+      <Search />
       {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
       {!empty && (
         <button className="card tappable overview-card" onClick={() => go('husk/overblik')}>
@@ -140,59 +153,13 @@ export function MemoryScreen() {
           </span>
         </button>
       )}
-      <button className="card tappable" onClick={() => go('uge')}>
-        <div className="row between">
-          <div className="row" style={{ gap: 8 }}>
-            <span style={{ width: 20, height: 20, display: 'inline-flex', color: 'var(--accent)' }}>{Icon.week}</span>
-            <strong>Ugen</strong>
-          </div>
-          {weekDot && <span className="dot" style={{ position: 'static' }} aria-label="Ny ugeopsummering" />}
-        </div>
-        <span className="small muted" style={{ display: 'block' }}>Ugeopsummering og tre ord</span>
-      </button>
-      {aiReady(data) && (
-        <button className="card tappable" onClick={() => go('spoerg')}>
-          <div className="row" style={{ gap: 8 }}>
-            <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.sparkle}</span>
-            <strong>Spørg dagbogen</strong>
-          </div>
-          <span className="small muted" style={{ display: 'block' }}>Fx "Hvad lavede jeg i januar?" eller "Hvad sagde lægen sidst?"</span>
-        </button>
-      )}
       <ThatDay />
-      <button className="card tappable" onClick={() => go('huskeliste')}>
-        <div className="row between">
-          <strong>Huskeliste</strong>
-          <span className="tiny muted">{Object.values(data.todos).filter((t) => !t.doneAt).length || 'Ny'}</span>
-        </div>
-        <span className="small muted" style={{ display: 'block' }}>Ting, der skal gøres, men ikke på et bestemt tidspunkt</span>
-      </button>
-      <button className="card tappable" onClick={() => go('faste')}>
-        <div className="row between">
-          <strong>Faste ting</strong>
-          <span className="tiny muted">{Object.keys(data.routines).length || 'Ny'}</span>
-        </div>
-        <span className="small muted" style={{ display: 'block' }}>Medicin, indsprøjtninger og andet på en fast plan</span>
-      </button>
-      <button className="card tappable" onClick={() => go('mennesker')}>
-        <div className="row between">
-          <strong>Mennesker</strong>
-          <span className="tiny muted">{Object.keys(data.people).length || 'Ny'}</span>
-        </div>
-        <span className="small muted" style={{ display: 'block' }}>Familie, venner og hvad der er vigtigt for dem</span>
-      </button>
-      <button className="card tappable" onClick={() => go('samtale')}>
-        <div className="row between">
-          <strong>Samtaler</strong>
-          <span className="tiny muted">{Object.keys(data.conversations).length || 'Ny'}</span>
-        </div>
-        <span className="small muted" style={{ display: 'block' }}>Resuméer af samtaler med aftaler og ting at huske</span>
-        {inboxCount > 0 && <span className="small" style={{ display: 'block', color: 'var(--accent)', marginTop: 4 }}>{inboxCount} {inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}</span>}
-      </button>
-      <section className="stack-sm">
-        <h3>Søg</h3>
-        <Search />
-      </section>
+      <div className="card list hub">
+        <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />
+        <HubRow icon={Icon.chat} title="Samtaler" text={inboxCount > 0 ? `${inboxCount} ${inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}` : 'Resuméer med aftaler og ting at huske'} onClick={() => go('samtale')} dot={inboxCount > 0} />
+        <HubRow icon={Icon.people} title="Mennesker" text="Familie, venner og hvad der er vigtigt for dem" onClick={() => go('mennesker')} />
+        <HubRow icon={Icon.patterns} title="Mønstre" text="Tanker og mønstre, der går igen" onClick={() => go('moenstre')} />
+      </div>
     </div>
   );
 }

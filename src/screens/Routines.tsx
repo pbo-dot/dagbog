@@ -6,7 +6,7 @@ import { upcomingBirthdays } from '../lib/people';
 import { askSoon } from './Ask';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
-import { AgendaIcon, DoubleConfirm, go, Header, Icon, uid } from '../ui';
+import { AgendaIcon, DoubleConfirm, go, Header, Icon, PlanTabs, uid } from '../ui';
 
 const ICONS = ['💉', '💊', '🩹', '🧴', '💧', '⭐'];
 const EVERY: { label: string; days: number; monthly: boolean }[] = [
@@ -116,10 +116,10 @@ export function RoutinesScreen() {
   const list = Object.values(routines).sort((a, b) => a.createdAt - b.createdAt);
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header back="husk" />
-      <h1>Faste ting</h1>
-      <p className="small muted">Medicin og andet på en fast plan. På dagen står de øverst på Skriv-siden.</p>
-      <button className="btn primary" onClick={() => go('faste/ny')}>Ny fast ting</button>
+      <PlanTabs active="faste" right={<button className="btn primary small" onClick={() => go('faste/ny')}>
+        <span style={{ width: 18, height: 18, display: 'inline-flex', marginRight: 4 }}>{Icon.plus}</span>Ny
+      </button>} />
+      {list.length === 0 && <p className="small muted">Medicin og andet på en fast plan. På dagen står de øverst på Skriv-siden.</p>}
       <div className="list">
         {list.length === 0 && <p className="small muted">Ingen faste ting endnu.</p>}
         {list.map((r) => {

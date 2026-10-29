@@ -7,7 +7,7 @@ import type { Appointment } from '../lib/types';
 import { currentToken } from '../lib/google';
 import { needsPush } from '../lib/gcalWrite';
 import { pushAppointments, pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
-import { AgendaIcon, go, Header, Icon, Switch, uid } from '../ui';
+import { AgendaIcon, go, Icon, PlanTabs, Switch, uid } from '../ui';
 
 const DAYS = ['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'];
 
@@ -110,7 +110,7 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
 
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <Header title="Kalender" right={<button className="btn small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
+      <PlanTabs active="kalender" right={<button className="btn small" onClick={() => { setMonth(monthId(t)); setSelected(t); }}>I dag</button>} />
 
       {hasDaily && (
         <div className="seg-chips" role="group" aria-label="Vis faste ting hver dag">

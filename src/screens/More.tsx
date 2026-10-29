@@ -22,13 +22,11 @@ function Row({ icon, title, text, onClick, href }: { icon: ReactNode; title: str
 /** Fanen "Mere": det, der bruges sjældnere, samlet ét sted. */
 export function MoreScreen() {
   const store = useStore();
-  const patterns = Object.keys(store.data.patterns).length;
   const b = store.data.settings.backup;
   return (
     <div className="stack" style={{ gap: 20 }}>
       <Header title="Mere" />
       <div className="card list" style={{ padding: '2px 16px' }}>
-        <Row icon={Icon.patterns} title="Mønstre" text={patterns ? `${patterns} ${patterns === 1 ? 'mønster' : 'mønstre'}` : 'Tanker og mønstre, der går igen'} onClick={() => go('moenstre')} />
         <Row icon={Icon.cloud} title="Sikkerhedskopi" text={b.last ? `Gemt på Drev · ${whenText(b.last).toLowerCase()}` : 'Gem en låst kopi på Google Drev'} onClick={() => go('kopi')} />
         <Row icon={Icon.gear} title="Indstillinger" text="Låsning, AI, påmindelser og sikkerhedskopi" onClick={() => go('indstillinger')} />
         <Row icon={Icon.lock} title="Lås nu" text="Dagbogen låses straks" onClick={store.lock} />

@@ -539,3 +539,20 @@ label.btn { cursor: pointer; }
 .todo-pick-row { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 0; border-bottom: 1px solid var(--line); }
 .todo-pick-row:last-child { border-bottom: 0; }
 .add-todo { flex: none; white-space: nowrap; }
+
+/* Fanen Plan: Kalender, Huskeliste, Faste ting */
+.plan-tabs { display: flex; gap: 4px; background: var(--surface-2); border-radius: 999px; padding: 4px; }
+.plan-tabs button { flex: 1; min-height: 44px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+.plan-tabs button.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+
+/* Husk: søg eller spørg, og samlede genveje */
+.search-bar { display: flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 999px; padding: 4px 6px 4px 16px; min-height: 56px; }
+.search-bar input { border: 0; background: transparent; box-shadow: none; padding: 8px 0; font-size: 1.02rem; }
+.search-ico { width: 20px; height: 20px; display: inline-flex; color: var(--muted); flex: none; }
+.search-ask { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--accent-soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.ask-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 16px; border: 0; border-radius: 18px; background: var(--accent-soft); color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.ask-row svg { color: var(--accent); }
+.card.list.hub { padding: 2px 16px; }
+.hub-row { flex-direction: row !important; align-items: center; gap: 12px !important; }
+.hub-ico { flex: none; width: 40px; height: 40px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; }
+.hub-ico svg { width: 22px; height: 22px; }

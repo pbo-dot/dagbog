@@ -31,7 +31,7 @@ const TABS = [
   { id: 'skriv', label: 'Skriv', icon: Icon.pen },
   { id: 'husk', label: 'Husk', icon: Icon.memory },
   { id: 'noter', label: 'Noter', icon: Icon.note },
-  { id: 'kalender', label: 'Kalender', icon: Icon.calendar },
+  { id: 'kalender', label: 'Plan', icon: Icon.calendar },
   { id: 'mere', label: 'Mere', icon: Icon.more },
 ];
 
@@ -192,9 +192,10 @@ function Unlocked() {
     default: screen = <EntryScreen />;
   }
 
-  const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
-  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'huskeliste', 'mennesker'].includes(tab) ? 'husk'
-    : ['moenstre', 'indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere' : tab;
+  const dots: Record<string, boolean> = { skriv: w.today || w.due > 0, husk: w.week || w.month || inbox.some((i) => i.done) };
+  const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
+    : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
+    : ['indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere' : tab;
 
   return (
     <>

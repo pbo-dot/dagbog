@@ -224,6 +224,7 @@ export interface Waiting {
   today: boolean; // ikke skrevet i dag (efter påmindelsestid)
   week: boolean; // ny ugeopsummering ikke set
   month: boolean; // nyt månedskapitel ikke set
+  due: number; // huskepunkter med frist i dag eller før
 }
 
 /** ignoreTime: til app-ikonet, som kun kan opdateres mens appen kører – så
@@ -240,13 +241,15 @@ export function waiting(data: Data, now = new Date(), ignoreTime = false): Waiti
     today: reminder.enabled && afterReminder && !data.entries[t] && !data.meta.skipped.includes(t),
     week: !!week && !week.seen && weekDays(wid).some((d) => data.entries[d]),
     month: !!chapter && !chapter.seen,
+    // Huskepunkter med frist i dag eller overskredet (ikke dem, der er lagt væk)
+    due: Object.values(data.todos ?? {}).filter((x) => !x.doneAt && !x.someday && x.due && x.due <= t).length,
   };
 }
 
 export async function updateAppBadge(w: Waiting | null) {
   const nav = navigator as Navigator & { setAppBadge?: (n?: number) => Promise<void>; clearAppBadge?: () => Promise<void> };
   try {
-    const n = w ? Number(w.today) + Number(w.week) + Number(w.month) : 0;
+    const n = w ? Number(w.today) + Number(w.week) + Number(w.month) + w.due : 0;
     if (n > 0) await nav.setAppBadge?.(n);
     else await nav.clearAppBadge?.();
   } catch {

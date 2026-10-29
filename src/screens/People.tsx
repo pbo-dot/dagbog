@@ -225,7 +225,7 @@ export function PatternsScreen() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <Header back="mere" />
+      <Header back="husk" />
       <h1>Mønsterbog</h1>
       <p className="small muted">Tanker og mønstre, der går igen. Fx "Jeg bliver altid lettet, når jeg går en tur."</p>
       <form className="stack-sm" onSubmit={(e) => {
