@@ -6,6 +6,7 @@ import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addD
 import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type Routine, type Settings, type WeekSummary } from './types';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
+import { track } from './usage';
 
 export class AIError extends Error {}
 
@@ -106,6 +107,7 @@ Lav ugens opsummering.`;
       messages: [{ role: 'user', content: prompt }],
       ...fallbackFor(settings.ai.analysisModel),
     });
+    track('week', res);
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave en opsummering af denne uge.');
     const out = res.parsed_output;
     return { ...out, threeWords: out.threeWords.slice(0, 3), patterns: out.patterns.slice(0, 2), looseEnds: out.looseEnds.slice(0, 5) };
@@ -131,6 +133,7 @@ export async function goDeeper(settings: Settings, weekLabel: string, weekText: 
       messages,
       ...fallbackFor(settings.ai.analysisModel),
     });
+    track('week', res);
     if (res.stop_reason === 'refusal') throw new AIError('Claude ville ikke svare på dette.');
     return textOf(res.content);
   } catch (e) {
@@ -167,6 +170,7 @@ Skriv et udkast til månedens kapitel. Det er et udkast, som personen selv rette
       messages: [{ role: 'user', content: prompt }],
       ...fallbackFor(settings.ai.analysisModel),
     });
+    track('month', res);
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke skrive kapitlet.');
     return { ...res.parsed_output, themes: res.parsed_output.themes.slice(0, 5) };
   } catch (e) {
@@ -210,6 +214,7 @@ export async function searchDiary(settings: Settings, query: string, entries: En
       ],
       messages: [{ role: 'user', content: `Søgning: ${query}` }],
     });
+    track('search', res);
     if (res.stop_reason === 'refusal' || !res.parsed_output) return [];
     return res.parsed_output.results;
   } catch (e) {
@@ -266,6 +271,7 @@ Lav et resumé af samtalen.`;
       messages: [{ role: 'user', content: prompt }],
       ...fallbackFor(settings.ai.analysisModel),
     });
+    track('talk', res);
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave et resumé af samtalen.');
     return res.parsed_output;
   } catch (e) {
@@ -302,6 +308,8 @@ const AskSchema = z.object({
 });
 export type AskAI = z.infer<typeof AskSchema>;
 export type Proposal = AskAI['proposals'][number];
+/** Svaret med hvad det kostede (dollar, også en evt. websøgning). */
+export type AskAnswer = AskAI & { cost?: { usd: number; model: string } };
 
 const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres private dagbog, deres samtaler og deres noter om mennesker. Du får materialet nedenfor.
 
@@ -489,6 +497,7 @@ export type AskMode = 'diary' | 'web' | 'fast';
 export interface WebFindings {
   notes: string;
   links: Array<{ url: string; title: string }>;
+  usd?: number; // hvad opslaget kostede
 }
 
 const WEB = `Du hjælper en person, der skriver dagbog, med at slå ting op på nettet. Du ser ikke dagbogen.
@@ -506,6 +515,7 @@ export async function webLookup(settings: Settings, today: string, history: Chat
   ];
   const links = new Map<string, string>();
   let notes = '';
+  let usd = 0;
   try {
     // Lange søgninger kan holde pause (pause_turn); så fortsættes, højst tre gange
     for (let round = 0; round < 3; round++) {
@@ -518,6 +528,7 @@ I dag er det ${formatFull(today)} (${today}). Personen bor i Danmark.`,
         tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 4, user_location: { type: 'approximate', country: 'DK', timezone: 'Europe/Copenhagen' } }],
         messages,
       });
+      usd += track('web', res);
       for (const b of res.content) {
         if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) {
           for (const r of b.content) if (r.type === 'web_search_result') links.set(r.url, r.title);
@@ -531,10 +542,10 @@ I dag er det ${formatFull(today)} (${today}). Personen bor i Danmark.`,
   }
   notes = notes.trim();
   if (!notes || /^INGEN\b/.test(notes)) return null;
-  return { notes, links: [...links].slice(0, 6).map(([url, title]) => ({ url, title })) };
+  return { notes, links: [...links].slice(0, 6).map(([url, title]) => ({ url, title })), usd };
 }
 
-export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string, mode: AskMode = 'diary', web?: WebFindings | null): Promise<AskAI> {
+export async function askDiary(settings: Settings, scope: AskScope, today: string, history: ChatTurn[], question: string, mode: AskMode = 'diary', web?: WebFindings | null): Promise<AskAnswer> {
   const asked = web ? `${question}\n\n[Slået op på nettet lige nu – brug det, hvor det er relevant]\n${web.notes}` : question;
   const messages: Anthropic.Beta.BetaMessageParam[] = [
     ...history.map((t) => ({ role: t.role, content: t.text })),
@@ -553,8 +564,9 @@ export async function askDiary(settings: Settings, scope: AskScope, today: strin
       messages,
       ...fallbackFor(model),
     });
+    const usd = track('ask', res);
     if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke svare på dette.');
-    return { ...res.parsed_output, sources: res.parsed_output.sources.slice(0, 8) };
+    return { ...res.parsed_output, sources: res.parsed_output.sources.slice(0, 8), cost: { usd: usd + (web?.usd ?? 0), model: res.model } };
   } catch (e) {
     explain(e);
   }
@@ -562,11 +574,12 @@ export async function askDiary(settings: Settings, scope: AskScope, today: strin
 
 export async function testKey(settings: Settings): Promise<void> {
   try {
-    await client(settings).messages.create({
+    const res = await client(settings).messages.create({
       model: settings.ai.searchModel,
       max_tokens: 16,
       messages: [{ role: 'user', content: 'Svar kun: ok' }],
     });
+    track('test', res);
   } catch (e) {
     explain(e);
   }

@@ -5,6 +5,9 @@ import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText } from './lib/conversation';
 import { useGoogleAutoSync } from './lib/googleSync';
 import { useAutoBackup } from './lib/backupSync';
+import { addSpend, onSpend } from './lib/usage';
+import { monthId, today } from './lib/dates';
+import type { Usage } from './lib/types';
 import { BackupScreen, RestoreFlow } from './screens/Backup';
 import { AskScreen } from './screens/Ask';
 import { CalendarScreen } from './screens/Calendar';
@@ -17,6 +20,7 @@ import { MoreScreen } from './screens/More';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
+import { UsageScreen } from './screens/Usage';
 import { TodoEditScreen, TodosScreen } from './screens/Todos';
 import { WeekScreen } from './screens/Week';
 import { go, Icon, useRoute } from './ui';
@@ -63,6 +67,26 @@ function useAutoLock() {
   }, [minutes, lock]);
 }
 
+/** Lægger hvert svar fra Claude til månedens forbrug. */
+function useSpendLog() {
+  const store = useStore();
+  const ref = useRef(store);
+  // Seneste opgørelse, så to svar lige efter hinanden ikke overskriver hinanden
+  const latest = useRef<Record<string, Usage>>({});
+  useEffect(() => {
+    ref.current = store;
+  });
+  useEffect(() => onSpend((s) => {
+    const { data, put } = ref.current;
+    const id = monthId(today());
+    const mine = latest.current[id];
+    const saved = data.usage[id];
+    const next = addSpend(mine && mine.count >= (saved?.count ?? 0) ? mine : saved, s);
+    latest.current[id] = next;
+    put('usage', id, next);
+  }), []);
+}
+
 /** Laver ugeopsummering og månedskapitel i baggrunden, når det er tid. */
 function useAutoGenerate() {
   const store = useStore();
@@ -104,6 +128,7 @@ function Unlocked() {
   useAutoGenerate();
   useGoogleAutoSync();
   useAutoBackup();
+  useSpendLog();
 
   // Tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
   useEffect(() => {
@@ -157,6 +182,7 @@ function Unlocked() {
     case 'huskeliste': screen = a ? <TodoEditScreen key={a} id={a === 'ny' ? undefined : a} /> : <TodosScreen />; break;
     case 'noter': screen = a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
+    case 'forbrug': screen = <UsageScreen />; break;
     case 'kopi':
       screen = a === 'hent'
         ? <div className="stack" style={{ alignItems: 'center' }}><RestoreFlow back="#/kopi/hent" replacing onCancel={() => go('kopi')} /></div>
@@ -167,7 +193,7 @@ function Unlocked() {
 
   const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter', 'huskeliste'].includes(tab) ? 'husk'
-    : ['moenstre', 'indstillinger', 'kopi'].includes(tab) ? 'mere' : tab;
+    : ['moenstre', 'indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere' : tab;
 
   return (
     <>

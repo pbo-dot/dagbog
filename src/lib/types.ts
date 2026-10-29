@@ -106,6 +106,15 @@ export interface Todo {
   createdAt: number;
 }
 
+/** Forbrug af Claude i én måned (dollar, se usage.ts). */
+export interface Usage {
+  id: string; // YYYY-MM
+  days: Record<string, number>; // YYYY-MM-DD → dollar
+  features: Record<string, number>; // fx "ask" → dollar
+  models: Record<string, number>; // fx "Opus" → dollar
+  count: number; // antal svar
+}
+
 /** En aftale, man selv har skrevet ind i dagbogens kalender. */
 export interface Appointment {
   id: string;
@@ -207,6 +216,8 @@ export interface Settings {
     apiKey: string;
     analysisModel: string;
     searchModel: string;
+    limitKr: number; // advar, når måneden passerer (0 = ingen grænse)
+    showCost: boolean; // vis prisen under hvert svar i Spørg
   };
   reminder: {
     enabled: boolean;
@@ -239,6 +250,8 @@ export const DEFAULT_SETTINGS: Settings = {
     apiKey: '',
     analysisModel: 'claude-opus-5-5',
     searchModel: 'claude-haiku-5-5',
+    limitKr: 0,
+    showCost: true,
   },
   reminder: { enabled: true, time: '21:00', text: 'Hvad fyldte i dag?' },
   summaryWeekday: 0,

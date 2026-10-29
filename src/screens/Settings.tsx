@@ -1,3 +1,4 @@
+import { UsageCard } from './Usage';
 import { useState, type ReactNode } from 'react';
 import { AIError, testKey } from '../lib/ai';
 import { biometricsAvailable } from '../lib/crypto';
@@ -239,6 +240,7 @@ export function SettingsScreen() {
                 {MODELS.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
               </select>
             </label>
+            <UsageCard />
           </>
         )}
       </Section>

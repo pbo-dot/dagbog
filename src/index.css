@@ -465,3 +465,14 @@ button.list-item:first-child { border-top: 0; }
 @keyframes sheet-up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .sheet, .sheet-wrap { animation: none; } }
+
+/* Forbrug */
+.usage-card { display: flex; flex-direction: column; gap: 4px; text-align: left; border: 0; background: var(--surface-2); border-radius: 18px; padding: 14px 16px; font: inherit; color: inherit; cursor: pointer; }
+.usage-big { font-family: var(--serif); font-size: 1.9rem; line-height: 1.15; }
+.usage-bar { display: block; height: 10px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+.usage-card .usage-bar { background: var(--surface); }
+.usage-bar i { display: block; height: 100%; border-radius: 5px; background: var(--accent); }
+.usage-bar i.over { background: var(--danger); }
+.usage-link { color: var(--accent); font-weight: 600; font-size: 0.92rem; margin-top: 4px; }
+.usage-days { display: flex; align-items: flex-end; gap: 4px; height: 90px; margin-bottom: 6px; }
+.usage-days i { flex: 1; background: var(--accent); opacity: 0.8; border-radius: 4px 4px 0 0; }

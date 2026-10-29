@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { AIError, askDiary, askScope, webLookup, type AskAI, type AskMode, type WebFindings } from '../lib/ai';
+import { AIError, askDiary, askScope, webLookup, type AskAnswer, type AskMode, type WebFindings } from '../lib/ai';
+import { krText, modelName, overLimitText } from '../lib/usage';
 import { findPeriod, type Period } from '../lib/period';
 import { formatShort, today } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
@@ -11,7 +12,7 @@ import { ProposalCard } from './Proposal';
 
 interface Turn {
   question: string;
-  answer: AskAI;
+  answer: AskAnswer;
   period: Period | null;
   shown: string; // hvad der blev sendt med, fx "januar 2026 · 23 dage"
   web?: WebFindings | null; // det, der blev slået op på nettet
@@ -148,6 +149,9 @@ export function AskScreen() {
       <Header back="husk" right={turns.length ? <button className="btn ghost small" onClick={reset}>Nyt spørgsmål</button> : undefined} />
       <h1>Spørg dagbogen</h1>
       {!canAI && <p className="small muted">Kræver AI og en API-nøgle under Indstillinger.</p>}
+      {canAI && overLimitText(data.usage, data.settings.ai.limitKr) && (
+        <button className="notice small" style={{ textAlign: 'left' }} onClick={() => go('forbrug')}>{overLimitText(data.usage, data.settings.ai.limitKr)} Se forbrug ›</button>
+      )}
       {canAI && !turns.length && (
         <>
           <p className="small muted">Spørg om alt, du har skrevet, eller bed om en note, en aftale eller en fast ting.</p>
@@ -162,7 +166,7 @@ export function AskScreen() {
           <p className="small" style={{ fontWeight: 600 }}>{t.question}</p>
           <p className="prose">{t.answer.answer}</p>
           {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
-          <p className="tiny muted">Læste: {t.shown}</p>
+          <p className="tiny muted">Læste: {t.shown}{data.settings.ai.showCost && t.answer.cost ? ` · ≈ ${krText(t.answer.cost.usd)} · ${modelName(t.answer.cost.model)}` : ''}</p>
           {t.web && t.web.links.length > 0 && (
             <div className="stack-sm" style={{ gap: 6 }}>
               <span className="proposal-field">Fra nettet</span>
