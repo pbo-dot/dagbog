@@ -129,16 +129,17 @@ export function NotesScreen() {
           </button>
         )}
       </div>
-      {(counts.length > 0 || hasKeep) && (
+      {all.length > 0 && (
         <label className="chip-select note-filter">
-          <span className="sr-only">Vis</span>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="">Alle noter ({all.length})</option>
+          <span className="note-filter-ico" aria-hidden="true">🏷</span>
+          <span className="sr-only">Etiket</span>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="Vis noter med etiket">
+            <option value="">Alle etiketter ({all.length})</option>
             {hasKeep && <option value={FROM_KEEP}>Fra Google Keep</option>}
             <option value={NO_LABEL}>Uden etiket</option>
-            <optgroup label="Etiketter">
-              {counts.map(([l, c]) => <option key={l} value={l}>{l} ({c})</option>)}
-            </optgroup>
+            {counts.length > 0
+              ? <optgroup label="Etiketter">{counts.map(([l, c]) => <option key={l} value={l}>{l} ({c})</option>)}</optgroup>
+              : <option disabled>Ingen etiketter endnu</option>}
           </select>
         </label>
       )}
