@@ -6,6 +6,7 @@ import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
 import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
 import { RoutineCards } from './Routines';
+import { TodoCard } from './Todos';
 
 const QUESTIONS = [
   'Hvad fyldte mest i dag?',
@@ -233,7 +234,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   if (skipped) {
     return (
       <div className="stack" style={{ paddingTop: '20vh', alignItems: 'center', textAlign: 'center' }}>
-        <div style={{ width: '100%', textAlign: 'left' }}><RoutineCards /></div>
+        <div className="stack-sm" style={{ width: '100%', textAlign: 'left' }}><RoutineCards /><TodoCard /></div>
         <p className="question">Fint. Vi ses i morgen.</p>
         <button className="link small" onClick={unskip}>Skriv alligevel</button>
       </div>
@@ -275,6 +276,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           {!isToday && <button className="btn small" onClick={() => go('skriv')}>I dag</button>}
         </div>
         {isToday && <RoutineCards />}
+        {isToday && <TodoCard />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
       </div>

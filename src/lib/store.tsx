@@ -8,7 +8,7 @@ import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type GoogleMonth, type Meta, type Note, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
+  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type Todo, type GoogleMonth, type Meta, type Note, type MonthChapter, type Pattern, type Person, type Photo, type Settings, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -22,16 +22,17 @@ export interface Data {
   appointments: Record<string, Appointment>;
   google: Record<string, GoogleMonth>;
   notes: Record<string, Note>;
+  todos: Record<string, Todo>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google' | 'notes';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google' | 'notes' | 'todos';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes', 'todos'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {}, notes: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {}, notes: {}, todos: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,

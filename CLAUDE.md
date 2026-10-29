@@ -12,6 +12,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 - `src/screens/` skærme, `src/lib/` logik (lager, kryptering, AI, kalender, Google), `src/ui.tsx` fælles komponenter og ikoner, `src/index.css` al styling.
 - Claude API kaldes direkte fra telefonen med ejerens egen nøgle. "Spørg dagbogen" kan foreslå nye noter, aftaler, faste ting og noter om mennesker og rette egne noter, aftaler og faste ting (`proposals.ts`, `Proposal.tsx`); intet gemmes før Gem, og alt kan fortrydes. Google-aftaler, dagbogsdage og sletning røres aldrig. Tre typer svar: Dagbogen (analysemodel), + Nettet (først `webLookup` med web_search uden dagbogen, så svaret med fundene) og Hurtig (søgemodel). Google Kalender hentes med ejerens eget klient-id. Aftaler oprettet i Dagbog sendes til Google (`gcalWrite.ts`, scope `calendar.events`); aftaler fra Google røres aldrig.
 - Sikkerhedskopi (`src/lib/backup.ts`, `drive.ts`, `backupSync.ts`): hele databasen pakkes og krypteres med dagbogens nøgle og gemmes dagligt i mappen "Dagbog-kopi" på ejerens Google Drev (scope `drive.file`, de seneste 14). Ved ny start kan kopien hentes og åbnes med koden.
+- Huskeliste (`src/lib/todos.ts`, `src/screens/Todos.tsx`): huskepunkter uden tidspunkt (samling `todos`). "I dag" på Skriv-siden viser højst 3 (fristen først); punkter kan udsættes (`showFrom`) eller lægges væk til "Engang" (`someday`).
 - `public/share-sw.js` modtager "Del → Dagbog" (tekst og lydfiler).
 - Søsterappen DB (optager) ligger i repoet pbo-dot/db.
 

@@ -17,6 +17,7 @@ import { MoreScreen } from './screens/More';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
+import { TodoEditScreen, TodosScreen } from './screens/Todos';
 import { WeekScreen } from './screens/Week';
 import { go, Icon, useRoute } from './ui';
 import { UpdateBanner } from './UpdateBanner';
@@ -153,6 +154,7 @@ function Unlocked() {
       else screen = <ConversationsScreen />;
       break;
     case 'mere': screen = <MoreScreen />; break;
+    case 'huskeliste': screen = a ? <TodoEditScreen key={a} id={a === 'ny' ? undefined : a} /> : <TodosScreen />; break;
     case 'noter': screen = a ? <NoteScreen key={a} id={a} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen />; break;
     case 'kopi':
@@ -164,7 +166,7 @@ function Unlocked() {
   }
 
   const dots: Record<string, boolean> = { skriv: w.today, husk: w.week || w.month || inbox.some((i) => i.done) };
-  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter'].includes(tab) ? 'husk'
+  const activeTab = ['samtale', 'spoerg', 'faste', 'uge', 'noter', 'huskeliste'].includes(tab) ? 'husk'
     : ['moenstre', 'indstillinger', 'kopi'].includes(tab) ? 'mere' : tab;
 
   return (

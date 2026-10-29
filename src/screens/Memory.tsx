@@ -160,6 +160,13 @@ export function MemoryScreen() {
         </button>
       )}
       <ThatDay />
+      <button className="card tappable" onClick={() => go('huskeliste')}>
+        <div className="row between">
+          <strong>Huskeliste</strong>
+          <span className="tiny muted">{Object.values(data.todos).filter((t) => !t.doneAt).length || 'Ny'}</span>
+        </div>
+        <span className="small muted" style={{ display: 'block' }}>Ting, der skal gøres, men ikke på et bestemt tidspunkt</span>
+      </button>
       <button className="card tappable" onClick={() => go('faste')}>
         <div className="row between">
           <strong>Faste ting</strong>

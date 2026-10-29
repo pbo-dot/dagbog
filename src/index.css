@@ -429,3 +429,39 @@ button.list-item:first-child { border-top: 0; }
 .today-compact { display: flex; flex-wrap: wrap; gap: 8px; }
 .today-pill { border: 0; background: var(--surface); border-radius: 999px; padding: 8px 14px; font: inherit; font-size: 0.88rem; color: inherit; min-height: 40px; display: inline-flex; align-items: center; gap: 6px; }
 .today-pill .ok { color: var(--accent); }
+
+/* Huskeliste */
+.todo-list { padding: 2px 16px; }
+.todo-row { display: flex; align-items: center; gap: 10px; min-height: 56px; border-bottom: 1px solid var(--line); }
+.todo-row:last-child { border-bottom: 0; }
+.today .todo-row:last-of-type { border-bottom: 1px solid var(--line); }
+.todo-check {
+  flex: none; width: 44px; height: 44px; margin-left: -10px; border: 0; background: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; position: relative; color: var(--accent-text);
+}
+.todo-check::before { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--accent); transition: background-color 0.15s; }
+.todo-check.dim::before { opacity: 0.45; }
+.todo-check.on::before { background: var(--accent); }
+.todo-check > span { position: relative; }
+.todo-text { border: 0; background: none; text-align: left; font: inherit; color: inherit; padding: 8px 0; min-height: 48px; cursor: pointer; min-width: 0; }
+.todo-text strong { font-weight: 600; }
+.todo-row.done .todo-text strong { text-decoration: line-through; color: var(--muted); font-weight: 400; }
+.todo-more { flex: none; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; }
+.todo-more:active { background: var(--surface-2); }
+.fold { border: 0; background: none; padding: 8px 0; font: inherit; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); text-align: left; min-height: 44px; cursor: pointer; }
+
+.sheet-wrap { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.35); display: flex; align-items: flex-end; justify-content: center; animation: fade 0.15s ease; }
+.sheet {
+  width: 100%; max-width: 560px; background: var(--surface); border-radius: 28px 28px 0 0;
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px;
+  animation: sheet-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sheet h3 { margin: 6px 0 0; }
+.sheet-grab { width: 36px; height: 4px; border-radius: 2px; background: var(--line); margin: 0 auto 6px; }
+.sheet-title { font-size: 1.1rem; }
+.sheet-item { display: flex; align-items: center; gap: 14px; min-height: 52px; border: 0; background: none; text-align: left; font: inherit; color: inherit; padding: 4px 0; cursor: pointer; }
+.sheet-item.danger { color: var(--danger); }
+.sheet-ico { flex: none; width: 36px; height: 36px; border-radius: 12px; background: var(--surface-2); display: inline-flex; align-items: center; justify-content: center; }
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .sheet, .sheet-wrap { animation: none; } }

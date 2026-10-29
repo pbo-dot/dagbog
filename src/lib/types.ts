@@ -94,6 +94,18 @@ export interface Note {
   updatedAt: number;
 }
 
+/** Et huskepunkt: noget, der skal gøres, men ikke på et bestemt tidspunkt. */
+export interface Todo {
+  id: string;
+  text: string;
+  due?: string; // frist (YYYY-MM-DD)
+  showFrom?: string; // udsat: vises først i "I dag" fra denne dag
+  someday?: boolean; // lagt væk til "Engang": vises ikke i "I dag"
+  doneAt?: number; // klaret
+  from?: string; // hvor det kom fra, fx "fra samtalen tirsdag"
+  createdAt: number;
+}
+
 /** En aftale, man selv har skrevet ind i dagbogens kalender. */
 export interface Appointment {
   id: string;
