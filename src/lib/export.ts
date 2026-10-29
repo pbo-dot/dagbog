@@ -42,54 +42,6 @@ export function toText(data: Data, from: string, to: string): string {
   return parts.join('\n');
 }
 
-export async function toPDF(data: Data, from: string, to: string): Promise<Blob> {
-  const { jsPDF } = await import('jspdf');
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  const W = 210, M = 20, maxW = W - 2 * M, bottom = 297 - M;
-  let y = M;
-
-  const write = (text: string, size: number, style: 'normal' | 'bold' | 'italic' = 'normal', gap = 1.5) => {
-    doc.setFont('helvetica', style);
-    doc.setFontSize(size);
-    const lh = size * 0.42;
-    for (const line of doc.splitTextToSize(text, maxW) as string[]) {
-      if (y + lh > bottom) {
-        doc.addPage();
-        y = M;
-      }
-      doc.text(line, M, y);
-      y += lh;
-    }
-    y += gap;
-  };
-
-  write('Dagbog', 22, 'bold', 2);
-  write(`${from} – ${to}`, 11, 'normal', 8);
-
-  let month = '';
-  for (const e of entriesInRange(data, from, to)) {
-    const m = e.date.slice(0, 7);
-    if (m !== month) {
-      month = m;
-      y += 4;
-      write(formatMonth(m), 16, 'bold', 3);
-      const ch = data.months[m];
-      if (ch?.text) {
-        write(ch.title, 11, 'italic', 1);
-        write(ch.text, 10, 'italic', 5);
-      }
-    }
-    write(formatFull(e.date), 12, 'bold', 1);
-    const meta = [e.mood ? moodLabel(e.mood) : '', e.tags.join(', ')].filter(Boolean).join(' · ');
-    if (meta) write(meta, 9, 'italic', 1.5);
-    for (const para of e.text.split(/\n+/)) write(para, 10.5, 'normal', 1.5);
-    const good = e.good.filter(Boolean);
-    if (good.length) write(`Gode ting: ${good.join(' · ')}`, 9.5, 'italic', 1);
-    y += 5;
-  }
-  return doc.output('blob');
-}
-
 export function download(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

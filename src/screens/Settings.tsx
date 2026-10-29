@@ -4,7 +4,7 @@ import { AIError, testKey } from '../lib/ai';
 import { biometricsAvailable } from '../lib/crypto';
 import { addMonths, today, WEEKDAYS } from '../lib/dates';
 import { badgeSupported, reminderICS } from '../lib/device';
-import { download, parseBackup, toPDF, toText } from '../lib/export';
+import { download, parseBackup, toText } from '../lib/export';
 import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
@@ -317,7 +317,6 @@ export function SettingsScreen() {
           <label className="field grow">Til<input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
         </div>
         <div className="row wrap">
-          <button className="btn small" onClick={async () => download(await toPDF(store.data, from, to), `dagbog-${from}-${to}.pdf`)}>PDF</button>
           <button className="btn small" onClick={() => download(new Blob([toText(store.data, from, to)], { type: 'text/plain;charset=utf-8' }), `dagbog-${from}-${to}.txt`)}>Tekst</button>
           <button className="btn small" onClick={() => { setFrom('1900-01-01'); setTo(today()); }}>Hele dagbogen</button>
         </div>
