@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
-import { hasSharedText } from './lib/conversation';
+import { hasSharedText, takeSharedLink } from './lib/conversation';
 import { useGoogleAutoSync } from './lib/googleSync';
 import { useAutoBackup } from './lib/backupSync';
 import { addSpend, onSpend } from './lib/usage';
 import { monthId, today } from './lib/dates';
-import type { Usage } from './lib/types';
+import type { Note, Usage } from './lib/types';
 import { BackupScreen, RestoreFlow } from './screens/Backup';
 import { AskScreen } from './screens/Ask';
 import { CalendarScreen } from './screens/Calendar';
@@ -26,7 +26,7 @@ import { SettingsScreen } from './screens/Settings';
 import { UsageScreen } from './screens/Usage';
 import { TodoEditScreen, TodosScreen } from './screens/Todos';
 import { WeekScreen } from './screens/Week';
-import { go, Icon, useRoute } from './ui';
+import { go, Icon, uid, useRoute } from './ui';
 import { UpdateBanner } from './UpdateBanner';
 
 const TABS = [
@@ -133,10 +133,19 @@ function Unlocked() {
   useAutoBackup();
   useSpendLog();
 
-  // Tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
+  // Et delt link bliver til en note; anden tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
+  const store = useStore();
   useEffect(() => {
+    const link = takeSharedLink();
+    if (link) {
+      const host = (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return 'Link'; } })();
+      const now = Date.now();
+      const note: Note = { id: uid(), title: link.title || host, icon: '🔗', text: link.text, links: [{ url: link.url, title: link.title || host }], createdAt: now, updatedAt: now };
+      store.put('notes', note.id, note).then(() => go(`noter/${note.id}`));
+      return;
+    }
     if (hasSharedText()) go('samtale/ny');
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Nye optagelser fra Optager-appen hentes, når dagbogen kommer frem igen.
   const { refreshInbox, inbox } = useStore();

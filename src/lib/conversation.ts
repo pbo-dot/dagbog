@@ -50,6 +50,27 @@ export function personNote(c: Conversation): string {
 let shared: string | null = null;
 let sharedAudio = false;
 
+/** Et link delt fra fx Chrome. Bliver til en note i stedet for en samtale. */
+export interface SharedLink { title: string; url: string; text: string }
+let sharedLink: SharedLink | null = null;
+
+const URL_RE = /https?:\/\/[^\s]+/;
+
+/** Er det delte et link (med højst lidt tekst omkring), og ikke en lang tekst fra fx Optager? */
+export function asLink(title: string, text: string, url: string): SharedLink | null {
+  const link = url || URL_RE.exec(text)?.[0] || '';
+  if (!link) return null;
+  const rest = text.replace(link, '').trim();
+  if (rest.length > 300) return null;
+  return { title: title.trim(), url: link, text: rest };
+}
+
+export function takeSharedLink(): SharedLink | null {
+  const l = sharedLink;
+  sharedLink = null;
+  return l;
+}
+
 export function readSharedText(): void {
   const q = new URLSearchParams(location.search);
   if (q.get('lyd')) {
@@ -57,9 +78,11 @@ export function readSharedText(): void {
     history.replaceState(null, '', location.pathname + location.hash);
     return;
   }
+  const link = asLink(q.get('title') ?? '', q.get('text') ?? '', q.get('url') ?? '');
   const text = [q.get('title'), q.get('text'), q.get('url')].filter(Boolean).join('\n\n').trim();
-  if (!text) return;
-  shared = text;
+  if (link) sharedLink = link;
+  else if (text) shared = text;
+  else return;
   // Fjern teksten fra adressen, så den ikke bliver liggende i historikken.
   history.replaceState(null, '', location.pathname + location.hash);
 }
