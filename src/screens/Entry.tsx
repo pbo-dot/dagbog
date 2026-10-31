@@ -94,6 +94,8 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoError, setPhotoError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  // Android viser ikke kameraet i billedvælgeren, så kameraet har sin egen knap
+  const cameraRef = useRef<HTMLInputElement>(null);
   const stopRef = useRef<(() => void) | null>(null);
   const loadedFor = useRef<string | null>(null);
   const dirty = useRef(false);
@@ -185,6 +187,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
       }
       setPhotoBusy(false);
       if (fileRef.current) fileRef.current.value = '';
+      if (cameraRef.current) cameraRef.current.value = '';
     }
   };
 
@@ -313,13 +316,17 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
       )}
       {photoError && <p className="tiny error">{photoError}</p>}
       <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
+      <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
 
       <div className="chips">
-        {photos.length < MAX_PHOTOS && (
+        {photos.length < MAX_PHOTOS && (<>
           <button className="chip extra" onClick={() => fileRef.current?.click()} disabled={photoBusy}>
-            <span className="extra-ico">{photoBusy ? <span className="spinner" /> : Icon.camera}</span>{photoBusy ? 'Gemmer …' : 'Foto'}
+            <span className="extra-ico">{photoBusy ? <span className="spinner" /> : Icon.image}</span>{photoBusy ? 'Gemmer …' : 'Billeder'}
           </button>
-        )}
+          <button className="chip extra" onClick={() => cameraRef.current?.click()} disabled={photoBusy}>
+            <span className="extra-ico">{Icon.camera}</span>Kamera
+          </button>
+        </>)}
         {chip('humor', Icon.smile, moodName ?? 'Humør')}
         {chip('tags', Icon.tag, tags.length ? tags.join(', ') : 'Tags')}
         {chip('gode', Icon.heart, 'Gode ting')}

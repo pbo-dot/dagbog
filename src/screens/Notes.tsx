@@ -124,6 +124,9 @@ export function NotesScreen() {
         <label className="quick-ico" aria-label="Ny note med billede">🖼
           <input type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) addPhotoNote(f); }} />
         </label>
+        <label className="quick-ico" aria-label="Ny note med foto fra kameraet">📷
+          <input type="file" accept="image/*" capture="environment" hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) addPhotoNote(f); }} />
+        </label>
         {speechInputAvailable() && (
           <button className="quick-ico" onClick={() => go('noter/ny/tale')} aria-label="Indtal en note">
             <span style={{ width: 18, height: 18, display: 'inline-flex' }}>{Icon.mic}</span>
@@ -234,6 +237,13 @@ function Toolbar({ note, save, onList }: { note: Note; save: (patch: Partial<Not
         {onList && tool('Tilføj afkrydsning', '☑', onList)}
         <label className="tool" aria-label="Tilføj billede">🖼
           <input type="file" accept="image/*" hidden onChange={async (e) => {
+            const f = e.target.files?.[0];
+            e.target.value = '';
+            if (f) save({ photos: [...(note.photos ?? []), await savePhoto(store, f)] });
+          }} />
+        </label>
+        <label className="tool" aria-label="Tag et foto">📷
+          <input type="file" accept="image/*" capture="environment" hidden onChange={async (e) => {
             const f = e.target.files?.[0];
             e.target.value = '';
             if (f) save({ photos: [...(note.photos ?? []), await savePhoto(store, f)] });
