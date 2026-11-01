@@ -36,6 +36,15 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 - Sig til med link, når en ændring er ude. Vær ærlig om, hvad der er testet, og hvad kun kan testes på telefonen.
 - Kommentarer og brugertekster på dansk.
 
+## Færdig-tjekliste (før ejeren får besked)
+
+- [ ] `npm run build` og `npm run lint` uden fejl.
+- [ ] Prøvet i browseren (`npx vite preview` + Playwright) med skærmbillede, også mørk tilstand ved nye skærme.
+- [ ] CLAUDE.md opdateret, hvis noget nyt er bygget.
+- [ ] Skubbet til arbejdsgrenen og `main`, og GitHub Pages-byggeriet er grønt.
+- [ ] Ejeren har fået linket og en ærlig besked om, hvad der kun kan testes på telefonen.
+- [ ] Guide-noterne ("Guide til Dagbog" / "Teknisk guide") nævner det, hvis ejeren selv skal kunne finde funktionen.
+
 ## Design (top-design anno 2026)
 
 Ejeren ønsker, at alt nyt og alt, der ændres, lever op til top-design anno 2026. Det gælder alle ejerens apps.
