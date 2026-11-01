@@ -170,10 +170,9 @@ export async function unwrapWithBiometrics(w: BioWrap): Promise<CryptoKey> {
   return importDek(await openBytes(kek, w.wrapped));
 }
 
-// ---------- Indbakke til optageren ----------
-// Optager-appen kan gemme tekst, uden at dagbogen er låst op: den krypterer med
-// en offentlig nøgle (RSA-OAEP), og kun dagbogen har den private nøgle, som er
-// krypteret med DEK'en. Selve teksten krypteres med en ny AES-nøgle pr. gang.
+// ---------- Indbakke fra DB-appen (ikke længere i brug) ----------
+// DB-appen krypterede tekst med en offentlig nøgle (RSA-OAEP); kun dagbogen har den
+// private nøgle (krypteret med DEK'en). Her kan gamle optagelser stadig læses.
 
 export interface InboxSealed {
   key: string; // AES-nøglen, krypteret med den offentlige nøgle
@@ -181,28 +180,8 @@ export interface InboxSealed {
   ct: string;
 }
 
-export async function createInboxKeys(): Promise<{ publicJwk: JsonWebKey; privatePkcs8: string }> {
-  const pair = await crypto.subtle.generateKey(
-    { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
-    true,
-    ['encrypt', 'decrypt'],
-  );
-  return {
-    publicJwk: await crypto.subtle.exportKey('jwk', pair.publicKey),
-    privatePkcs8: toB64(await crypto.subtle.exportKey('pkcs8', pair.privateKey)),
-  };
-}
-
 export async function importInboxPrivate(pkcs8: string): Promise<CryptoKey> {
   return crypto.subtle.importKey('pkcs8', fromB64(pkcs8), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
-}
-
-export async function sealForInbox(publicJwk: JsonWebKey, value: unknown): Promise<InboxSealed> {
-  const pub = await crypto.subtle.importKey('jwk', publicJwk, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
-  const aes = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
-  const sealed = await sealJSON(aes, value);
-  const raw = await crypto.subtle.exportKey('raw', aes);
-  return { key: toB64(await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pub, raw)), ...sealed };
 }
 
 export async function openInbox<T>(privateKey: CryptoKey, sealed: InboxSealed): Promise<T> {

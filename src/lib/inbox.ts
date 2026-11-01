@@ -1,6 +1,7 @@
-// Indbakken: optagelser fra Optager-appen, der venter på at blive til en samtale.
-import { createInboxKeys, importInboxPrivate, openInbox, sealForInbox, type InboxSealed } from './crypto';
-import { vaultDelete, vaultGet, vaultKeysWithPrefix, vaultSet } from './db';
+// Indbakken: gamle optagelser fra DB-appen (ikke længere i brug), der stadig venter på at
+// blive til en samtale. Der laves ingen ny nøgle; findes der ingen, er indbakken tom.
+import { importInboxPrivate, openInbox, type InboxSealed } from './crypto';
+import { vaultDelete, vaultGet, vaultKeysWithPrefix } from './db';
 
 export interface InboxItem {
   id: string;
@@ -10,33 +11,12 @@ export interface InboxItem {
   done: boolean; // false mens der stadig optages (eller hvis optageren blev lukket undervejs)
 }
 
-const PUBLIC = 'inboxPub';
 const PREFIX = 'inbox:';
 
-/** Optageren: er dagbogen sat op til at modtage optagelser? */
-export async function inboxPublicKey(): Promise<JsonWebKey | undefined> {
-  return vaultGet<JsonWebKey>(PUBLIC);
-}
-
-/** Optageren: gem (eller opdatér) en optagelse krypteret til dagbogen. */
-export async function putInbox(publicJwk: JsonWebKey, item: InboxItem): Promise<void> {
-  await vaultSet(PREFIX + item.id, await sealForInbox(publicJwk, item));
-}
-
-/**
- * Dagbogen: sørger for et nøglepar. Den private nøgle gemmes via `savePrivate`
- * (krypteret med dagbogens nøgle) og hentes med `loadPrivate`.
- */
-export async function ensureInboxKeys(
-  loadPrivate: () => Promise<string | undefined>,
-  savePrivate: (pkcs8: string) => Promise<void>,
-): Promise<CryptoKey> {
+/** Dagbogen: den gemte private nøgle til indbakken, eller null (så er indbakken tom). */
+export async function loadInboxKey(loadPrivate: () => Promise<string | undefined>): Promise<CryptoKey | null> {
   const existing = await loadPrivate();
-  if (existing && (await vaultGet(PUBLIC))) return importInboxPrivate(existing);
-  const keys = await createInboxKeys();
-  await savePrivate(keys.privatePkcs8);
-  await vaultSet(PUBLIC, keys.publicJwk);
-  return importInboxPrivate(keys.privatePkcs8);
+  return existing ? importInboxPrivate(existing) : null;
 }
 
 /** Dagbogen: alle optagelser i indbakken, nyeste først. Ulæselige springes over. */

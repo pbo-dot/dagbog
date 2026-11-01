@@ -4,7 +4,7 @@ import {
   type BioWrap, type PinWrap,
 } from './crypto';
 import { makeBackup, openBackup, writeBackup, type BackupFile } from './backup';
-import { deleteInbox, ensureInboxKeys, readInbox, type InboxItem } from './inbox';
+import { deleteInbox, loadInboxKey, readInbox, type InboxItem } from './inbox';
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
@@ -154,18 +154,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const inboxKeyRef = useRef<CryptoKey | null>(null);
   const [inbox, setInbox] = useState<InboxItem[]>([]);
 
-  /** Sætter nøgleparret til Optager-appen op (første gang) og læser indbakken. */
+  /** Læser gamle optagelser fra DB-appen, hvis der er en nøgle til dem. */
   const openInboxFor = useCallback(async (key: CryptoKey) => {
     try {
-      const priv = await ensureInboxKeys(
-        async () => {
-          const sealed = await recordGet('inboxkey');
-          return sealed ? (await openJSON<{ pkcs8: string }>(key, sealed)).pkcs8 : undefined;
-        },
-        async (pkcs8) => recordPut('inboxkey', await sealJSON(key, { pkcs8 })),
-      );
+      const priv = await loadInboxKey(async () => {
+        const sealed = await recordGet('inboxkey');
+        return sealed ? (await openJSON<{ pkcs8: string }>(key, sealed)).pkcs8 : undefined;
+      });
       inboxKeyRef.current = priv;
-      setInbox(await readInbox(priv));
+      setInbox(priv ? await readInbox(priv) : []);
     } catch (e) {
       console.error('Indbakken kunne ikke åbnes', e);
     }

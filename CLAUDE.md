@@ -19,7 +19,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 - Faner: Skriv, Husk (minder: søg eller spørg, overblik, ugen, samtaler, mennesker, mønstre), Noter, Plan (`PlanTabs`: Kalender, Huskeliste, Faste ting) og Mere. Søgefeltet i Husk søger i dage, noter, mennesker og huskeliste på telefonen, og "Spørg Claude" sender ordene videre til Spørg. Huskepunkter med frist i dag eller før giver prik på Skriv og app-ikonet. Indstillinger er delt i korte sider (`indstillinger/<side>`, se `PAGES` i `Settings.tsx`).
 - Tal med dagbogen (`src/screens/Talk.tsx`, `talkNext`/`talkDraft` i `ai.ts`, rute `tal`): telefonens talegenkendelse og oplæsning (`speak` i `device.ts`). Claude (askModel) stiller højst 3 korte spørgsmål med dagens aftaler, de seneste 3 dage og åbne huskepunkter som baggrund (følger højst én gang op på noget derfra), og skriver så dagen med personens egne ord plus humør, tags og huskepunkter. Lægges efter det, der allerede er skrevet i dag; intet gemmes før "Gem dagen".
 - `public/share-sw.js` modtager "Del → Dagbog" (tekst og lydfiler). Et delt link (`asLink` i `conversation.ts`: url eller tekst med link og højst 300 tegn mere) bliver straks til en note med `links`; anden tekst åbner en ny samtale.
-- Søsterappen DB (optager) ligger i repoet pbo-dot/db.
+- DB-appen (pbo-dot/db, optager) bruges ikke længere og er sat på pause. Dagbog laver ingen ny nøgle til den; gamle optagelser, der stadig venter, kan læses med en gemt nøgle (`loadInboxKey` i `inbox.ts`) og vises under Samtaler som "Optagelser, der venter".
 
 ## Byg og udgivelse
 

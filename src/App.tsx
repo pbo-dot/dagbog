@@ -147,7 +147,7 @@ function Unlocked() {
     if (hasSharedText()) go('samtale/ny');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Nye optagelser fra Optager-appen hentes, når dagbogen kommer frem igen.
+  // Gamle optagelser fra DB-appen genindlæses, når dagbogen kommer frem igen.
   const { refreshInbox, inbox } = useStore();
   useEffect(() => {
     const on = () => !document.hidden && refreshInbox();
