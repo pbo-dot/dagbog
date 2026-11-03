@@ -49,6 +49,7 @@ export function personNote(c: Conversation): string {
 /** Tekst delt til appen (fx fra Pixel Optager), læst fra adressen ved start. */
 let shared: string | null = null;
 let sharedAudio = false;
+let sharedDoc = false;
 
 /** Et link delt fra fx Chrome. Bliver til en note i stedet for en samtale. */
 export interface SharedLink { title: string; url: string; text: string }
@@ -73,6 +74,11 @@ export function takeSharedLink(): SharedLink | null {
 
 export function readSharedText(): void {
   const q = new URLSearchParams(location.search);
+  if (q.get('dok')) {
+    sharedDoc = true;
+    history.replaceState(null, '', location.pathname + location.hash);
+    return;
+  }
   if (q.get('lyd')) {
     sharedAudio = true;
     history.replaceState(null, '', location.pathname + location.hash);
@@ -111,6 +117,21 @@ export async function takeSharedAudio(): Promise<SharedAudio | null> {
       name: decodeURIComponent(res.headers.get('X-Name') ?? 'optagelse'),
       modified: Number(res.headers.get('X-Modified')) || Date.now(),
     };
+  } catch {
+    return null;
+  }
+}
+
+/** Et dokument (Word eller tekst) delt fra fx Google Drev. Hentes én gang og slettes fra cachen. */
+export async function takeSharedDoc(): Promise<{ blob: Blob; name: string } | null> {
+  if (!sharedDoc) return null;
+  sharedDoc = false;
+  try {
+    const cache = await caches.open('dagbog-delt-dok');
+    const res = await cache.match('dok');
+    if (!res) return null;
+    await cache.delete('dok');
+    return { blob: await res.blob(), name: decodeURIComponent(res.headers.get('X-Name') ?? 'Dokument') };
   } catch {
     return null;
   }

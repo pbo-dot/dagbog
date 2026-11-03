@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { aiReady } from '../lib/generate';
 import { formatShort, toISO, today } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
+import { DOC_ACCEPT, noteFromFile } from '../lib/docNote';
 import { compressImage } from '../lib/photos';
 import { useStore } from '../lib/store';
 import type { Note } from '../lib/types';
@@ -109,6 +110,16 @@ export function NotesScreen() {
     go(`noter/${n.id}`);
   };
 
+  const addDocNote = async (file: File) => {
+    try {
+      const n = await noteFromFile(file, file.name);
+      await store.put('notes', n.id, n);
+      go(`noter/${n.id}`);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Dokumentet kunne ikke læses.');
+    }
+  };
+
   return (
     <div className="stack" style={{ gap: 14 }}>
       <div className="header">
@@ -162,6 +173,9 @@ export function NotesScreen() {
       )}
       {(term || filter) && list.length === 0 && <p className="small muted">Ingen noter her.</p>}
       <div className="row" style={{ flexWrap: 'wrap', gap: 4 }}>
+        <label className="btn ghost small">Hent fra dokument
+          <input type="file" accept={DOC_ACCEPT} hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) addDocNote(f); }} />
+        </label>
         <button className="btn ghost small" onClick={() => go('noter/keep')}>Hent fra Google Keep</button>
         {all.length > 0 && aiReady(store.data) && <button className="btn ghost small" onClick={() => go('noter/ryd')}>Ryd op med Claude</button>}
       </div>

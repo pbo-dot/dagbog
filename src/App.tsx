@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
-import { hasSharedText, takeSharedLink } from './lib/conversation';
+import { hasSharedText, takeSharedDoc, takeSharedLink } from './lib/conversation';
+import { noteFromFile } from './lib/docNote';
 import { useGoogleAutoSync } from './lib/googleSync';
 import { useAutoBackup } from './lib/backupSync';
 import { addSpend, onSpend } from './lib/usage';
@@ -144,7 +145,18 @@ function Unlocked() {
       store.put('notes', note.id, note).then(() => go(`noter/${note.id}`));
       return;
     }
-    if (hasSharedText()) go('samtale/ny');
+    if (hasSharedText()) { go('samtale/ny'); return; }
+    // Et delt Word-dokument eller en tekstfil bliver til en note med hele teksten
+    takeSharedDoc().then(async (doc) => {
+      if (!doc) return;
+      try {
+        const note = await noteFromFile(doc.blob, doc.name);
+        await store.put('notes', note.id, note);
+        go(`noter/${note.id}`);
+      } catch (e) {
+        alert(e instanceof Error ? e.message : 'Dokumentet kunne ikke læses.');
+      }
+    });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Gamle optagelser fra DB-appen genindlæses, når dagbogen kommer frem igen.
