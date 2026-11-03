@@ -285,6 +285,12 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
             <span><strong>{existing ? 'Fortæl mere om din dag' : 'Fortæl om din dag'}</strong><span>Claude lytter og spørger ind</span></span>
           </button>
         )}
+        {isToday && aiReady(data) && (
+          <button className="talk-start clarity-start" onClick={() => go('overblik')}>
+            <span className="talk-start-ico" aria-hidden="true">🧭</span>
+            <span><strong>Få overblik</strong><span>Når noget er svært eller uoverskueligt</span></span>
+          </button>
+        )}
         {isToday && <RoutineCards />}
         {isToday && <TodoCard />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}

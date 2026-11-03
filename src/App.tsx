@@ -21,6 +21,7 @@ import { MoreScreen } from './screens/More';
 import { KeepImportScreen } from './screens/Keep';
 import { TidyScreen } from './screens/Tidy';
 import { TalkScreen } from './screens/Talk';
+import { ClarityScreen } from './screens/Clarity';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { SettingsScreen } from './screens/Settings';
@@ -186,6 +187,7 @@ function Unlocked() {
   switch (tab) {
     case 'skriv': screen = <EntryScreen key={a ?? 'today'} date={a} />; break;
     case 'tal': screen = <TalkScreen />; break;
+    case 'overblik': screen = <ClarityScreen />; break;
     case 'uge': screen = <WeekScreen key={a ?? 'now'} id={a} />; break;
     case 'husk':
       if (a === 'maaned' && b) screen = <MonthScreen id={b} />;
@@ -220,7 +222,7 @@ function Unlocked() {
   const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
     : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
     : ['indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere'
-    : tab === 'tal' ? 'skriv' : tab;
+    : tab === 'tal' || tab === 'overblik' ? 'skriv' : tab;
 
   return (
     <>

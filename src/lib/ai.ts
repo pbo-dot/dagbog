@@ -806,3 +806,88 @@ export async function talkDraft(settings: Settings, lines: TalkLine[], tags: str
     explain(e);
   }
 }
+
+// ---------------- Få overblik ----------------
+
+/** Konflikttrappens 7 trin (dansk udgave af Glasls model). */
+export const LADDER = ['Uenighed', 'Det bliver personligt', 'Problemet vokser', 'Samtalen opgives', 'Fjendebilleder', 'Åben fjendtlighed', 'Polarisering'];
+
+/** Tankefælder fra kognitiv terapi, som mærker på antagelser og vurderinger. */
+export const TRAPS = ['tankelæsning', 'katastrofetanke', 'altid/aldrig', 'sort-hvid', 'spådom', 'skyld', 'burde'] as const;
+
+export interface ClarityLine extends TalkLine { kind?: 'modspil' | 'krise' }
+
+const CLARITY = `Personen står i en svær, presset eller uoverskuelig situation (ofte en konflikt med et andet menneske) og vil have overblik. Du hjælper med at skille fakta fra antagelser, vurderinger og følelser. Du stiller spørgsmål; du giver ikke råd undervejs.
+
+Regler:
+- Ét kort, åbent spørgsmål ad gangen (højst to korte sætninger). Ingen ledende spørgsmål.
+- Ingen ros, ingen dom, ingen opsummering. Tag aldrig parti, heller ikke den andens.
+- Brug personens egne ord.
+- Gode spørgsmål (vælg det, der passer; stil højst 4 i alt):
+  - "Hvad ved du helt sikkert?" / "Hvad ville et kamera have set?"
+  - "Hvad sagde eller gjorde [den anden] helt præcist?"
+  - "Hvad havde du gerne villet, [den anden] sagde eller gjorde?"
+  - "Hvad tror du, [den anden] ville sige, der skete?" / "Hvorfor mon [den anden] ikke svarede sådan? Giv gerne flere bud."
+  - "Hvad er du bange for, der sker?"
+- Højst ÉN gang i samtalen må du give modspil: udfordr en antagelse eller et ord som "altid", "aldrig" eller "sikkert", gerne med noget personen selv har sagt eller noget fra dagbogen. Modspillet går på tanken, aldrig på personen, og slutter med et spørgsmål. Start da svaret med "MODSPIL: ".
+- Er der ingen anden person i situationen (fx et brev fra kommunen eller et helbredsproblem), så spørg ikke til "den anden".
+- Er der tegn på krise (tanker om selvmord eller selvskade, vold, fare), så start svaret med "KRISE: " og vær blid og direkte; ingen modspil.
+- Har du nok til at give overblik, eller vil personen stoppe, så svar præcis: SLUT`;
+
+/** Næste spørgsmål i "Få overblik", eller null når Claude har nok. */
+export async function clarityNext(settings: Settings, context: string, lines: ClarityLine[], today: string): Promise<ClarityLine | null> {
+  try {
+    const res = await client(settings).messages.create({
+      model: settings.ai.askModel,
+      max_tokens: 400,
+      system: `${FRIEND}\n\n${CLARITY}\n\nI dag er det ${formatFull(today)}.\n\n${context}`,
+      messages: [
+        { role: 'user', content: '(Personen har trykket "Få overblik".)' },
+        ...lines.map((l) => ({ role: l.who === 'claude' ? 'assistant' as const : 'user' as const, content: l.kind ? `${l.kind === 'modspil' ? 'MODSPIL' : 'KRISE'}: ${l.text}` : l.text })),
+      ],
+    });
+    track('clarity', res);
+    const text = res.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+    if (!text || /^SLUT\b/.test(text)) return null;
+    const m = /^(MODSPIL|KRISE):\s*/.exec(text);
+    return { who: 'claude', text: m ? text.slice(m[0].length) : text, kind: m ? (m[1] === 'MODSPIL' ? 'modspil' : 'krise') : undefined };
+  } catch (e) {
+    explain(e);
+  }
+}
+
+const Trap = z.enum(['', ...TRAPS]).describe('Tankefælde, hvis en tydeligt passer: tankelæsning (gætter hvad andre tænker), katastrofetanke, altid/aldrig, sort-hvid, spådom (gætter fremtiden), skyld (alt er min/din skyld), burde. Ellers tom streng.');
+
+const ClaritySchema = z.object({
+  title: z.string().describe('Kort titel på 2-5 ord, fx "Lars og bilen"'),
+  facts: z.array(z.string()).describe('Fakta: det et kamera kunne have set eller hørt. Korte sætninger.'),
+  assumptions: z.array(z.object({ text: z.string(), trap: Trap })).describe('Antagelser: gæt om andres tanker, grunde eller fremtiden, som ikke er tjekket'),
+  judgments: z.array(z.object({ text: z.string(), trap: Trap })).describe('Vurderinger og holdninger: personens fortolkninger'),
+  feelings: z.array(z.string()).describe('Følelser, 1-3 ord hver, fx "træt", "lidt såret"'),
+  unknown: z.array(z.string()).describe('Det, personen ikke ved endnu, og som ville gøre billedet klarere'),
+  ladder: z.number().int().describe('Konflikttrappen 1-7 (1 uenighed, 2 det bliver personligt, 3 problemet vokser, 4 samtalen opgives, 5 fjendebilleder, 6 åben fjendtlighed, 7 polarisering). 0 hvis der ikke er en konflikt med et andet menneske.'),
+  ladderText: z.string().describe('Én kort sætning om, hvorfor trinnet passer, og hvad der passer til det: trin 1-2 tal direkte sammen snart, trin 3-4 en rolig, afklarende samtale hvor personen mest lytter, trin 5-7 få en tredje person med og pas på dig selv. Tom hvis trin 0.'),
+  steps: z.array(z.string()).describe('2-3 konkrete, små næste skridt, der kun bygger på fakta. Korte, som huskepunkter (fx "Ring til Lars i stedet for at skrive").'),
+  say: z.string().describe('Hvis der er en anden person: forslag til hvad personen kan sige, i formen "Jeg blev/føler ... da/når ... og jeg har brug for ...", højst 2 sætninger, i personens egen stil. Ellers tom streng.'),
+  crisis: z.boolean().describe('Sandt hvis der er tegn på krise (selvmord, selvskade, vold, fare)'),
+});
+export type Clarity = z.infer<typeof ClaritySchema>;
+
+/** Sorterer det fortalte i fakta, antagelser, vurderinger og følelser og finder næste skridt. */
+export async function clarityResult(settings: Settings, lines: ClarityLine[], today: string): Promise<Clarity> {
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.askModel,
+      max_tokens: 4000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(ClaritySchema) },
+      system: `${FRIEND}\n\nDu giver overblik over en svær situation ud fra en samtale. Sortér kun det, personen selv har sagt; find ikke på noget. Brug personens egne ord, kort. Tag ikke parti. Skriv på dansk. I dag er det ${formatFull(today)}.`,
+      messages: [{ role: 'user', content: lines.map((l) => `${l.who === 'claude' ? 'Claude' : 'Personen'}: ${l.text}`).join('\n\n') }],
+    });
+    track('clarity', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave overblikket.');
+    const out = res.parsed_output;
+    return { ...out, ladder: Math.max(0, Math.min(7, Math.round(out.ladder))), steps: out.steps.slice(0, 3) };
+  } catch (e) {
+    explain(e);
+  }
+}

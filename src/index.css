@@ -10,6 +10,13 @@
   --accent-soft: #e2ede7;
   --danger: #b4483a;
   --hl: #f4e2a6;
+  --clarity: #b8893a;
+  --clarity-bg: #f3e6cc;
+  --clarity-ink: #7a5a1e;
+  --pile-facts: #dcebe3;
+  --pile-assumptions: #e6e1f2;
+  --pile-judgments: #f3e8cd;
+  --pile-feelings: #f6ddd6;
   --shadow: 0 1px 2px rgba(60, 45, 30, 0.06), 0 4px 16px rgba(60, 45, 30, 0.05);
 
   --mood-traet: #7c8db5;
@@ -38,6 +45,13 @@
     --accent-soft: #263630;
     --danger: #e0806f;
     --hl: #5b4c1f;
+  --clarity: #c99a4a;
+  --clarity-bg: #3a3122;
+  --clarity-ink: #e8c98c;
+  --pile-facts: #23362e;
+  --pile-assumptions: #2d2a3c;
+  --pile-judgments: #393222;
+  --pile-feelings: #3c2a26;
     --shadow: none;
     color-scheme: dark;
   }
@@ -54,6 +68,13 @@
   --accent-soft: #263630;
   --danger: #e0806f;
   --hl: #5b4c1f;
+  --clarity: #c99a4a;
+  --clarity-bg: #3a3122;
+  --clarity-ink: #e8c98c;
+  --pile-facts: #23362e;
+  --pile-assumptions: #2d2a3c;
+  --pile-judgments: #393222;
+  --pile-feelings: #3c2a26;
   --shadow: none;
   color-scheme: dark;
 }
@@ -589,3 +610,34 @@ label.btn { cursor: pointer; }
 .talk-mic:disabled { opacity: 0.5; }
 .talk-entry { font-family: var(--serif, Georgia, serif); font-size: 1.05rem; line-height: 1.5; }
 @media (prefers-reduced-motion: reduce) { .talk-mic, .talk-start { transition: none; } }
+
+/* Få overblik */
+.clarity-start { background: var(--clarity-bg); color: var(--text); }
+.clarity-start .talk-start-ico { background: var(--clarity); color: #fff; font-size: 1.5rem; }
+.clarity-steps { display: flex; gap: 6px; }
+.clarity-steps i { flex: 1; height: 5px; border-radius: 3px; background: var(--surface-2); }
+.clarity-steps i.on { background: var(--accent); }
+.clarity .talk-bubble { white-space: pre-wrap; }
+.talk-bubble.mod { background: var(--clarity-bg); border-left: 5px solid var(--clarity); }
+.mod-label { display: block; font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--clarity-ink); margin-bottom: 2px; }
+.clarity-compose { display: flex; flex-direction: column; gap: 10px; }
+.clarity-compose textarea { font-family: var(--serif); font-size: 1.05rem; border: 0; background: transparent; resize: vertical; min-height: 72px; padding: 4px 2px; }
+.clarity-mic { width: 52px; height: 52px; flex: none; border-radius: 50%; border: 0; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.clarity-mic.on { background: var(--accent); color: var(--accent-text); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 18%, transparent); }
+.pile { border-radius: 22px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.pile h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 0 2px; }
+.pile h3 span { font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 0.78rem; color: var(--muted); }
+.pile-card { display: block; width: 100%; text-align: left; border: 0; border-radius: 14px; padding: 10px 12px; min-height: 44px; font: inherit; font-size: 0.98rem; line-height: 1.35; color: var(--text); background: color-mix(in srgb, var(--surface) 72%, transparent); cursor: pointer; }
+.pile-move { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 2px 2px; }
+.pile-facts { background: var(--pile-facts); }
+.pile-assumptions { background: var(--pile-assumptions); }
+.pile-judgments { background: var(--pile-judgments); }
+.pile-feelings { background: var(--pile-feelings); }
+.pile-unknown { background: var(--surface-2); }
+.trap { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; background: var(--clarity-bg); color: var(--clarity-ink); white-space: nowrap; }
+.ladder { display: flex; align-items: flex-end; gap: 4px; height: 64px; margin-top: 14px; }
+.ladder i { flex: 1; border-radius: 6px 6px 2px 2px; background: var(--surface-2); position: relative; }
+.ladder i.past { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
+.ladder i.on { background: var(--accent); }
+.ladder em { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; font-style: normal; color: var(--accent); }
+.clarity-say { font-family: var(--serif); font-size: 1.05rem; line-height: 1.5; border-left: 4px solid var(--accent); padding-left: 12px; margin: 0; }
