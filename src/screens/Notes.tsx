@@ -151,6 +151,13 @@ export function NotesScreen() {
           </button>
         )}
       </div>
+      <div className="row" style={{ flexWrap: 'wrap', gap: 4 }}>
+        <label className="btn ghost small">Hent fra dokument
+          <input type="file" accept={DOC_ACCEPT} hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) addDocNote(f); }} />
+        </label>
+        <button className="btn ghost small" onClick={() => go('noter/keep')}>Hent fra Google Keep</button>
+        {all.length > 0 && aiReady(store.data) && <button className="btn ghost small" onClick={() => go('noter/ryd')}>Ryd op med Claude</button>}
+      </div>
       {all.length > 0 && (
         <label className="chip-select note-filter">
           <span className="note-filter-ico" aria-hidden="true">🏷</span>
@@ -179,13 +186,6 @@ export function NotesScreen() {
         </section>
       )}
       {(term || filter) && list.length === 0 && <p className="small muted">Ingen noter her.</p>}
-      <div className="row" style={{ flexWrap: 'wrap', gap: 4 }}>
-        <label className="btn ghost small">Hent fra dokument
-          <input type="file" accept={DOC_ACCEPT} hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) addDocNote(f); }} />
-        </label>
-        <button className="btn ghost small" onClick={() => go('noter/keep')}>Hent fra Google Keep</button>
-        {all.length > 0 && aiReady(store.data) && <button className="btn ghost small" onClick={() => go('noter/ryd')}>Ryd op med Claude</button>}
-      </div>
     </div>
   );
 }
