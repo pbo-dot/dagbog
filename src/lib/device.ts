@@ -253,7 +253,8 @@ export function waiting(data: Data, now = new Date(), ignoreTime = false): Waiti
     week: !!week && !week.seen && weekDays(wid).some((d) => data.entries[d]),
     month: !!chapter && !chapter.seen,
     // Huskepunkter med frist i dag eller overskredet (ikke dem, der er lagt væk)
-    due: Object.values(data.todos ?? {}).filter((x) => !x.doneAt && !x.someday && x.due && x.due <= t).length,
+    // (udsatte punkter tæller først fra den dag, de skal vises igen)
+    due: Object.values(data.todos ?? {}).filter((x) => !x.doneAt && !x.someday && x.due && x.due <= t && !(x.showFrom && x.showFrom > t)).length,
   };
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AIError } from '../lib/ai';
-import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, today, WEEKDAYS } from '../lib/dates';
+import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
@@ -133,7 +133,10 @@ export function MemoryScreen() {
   const { data, inbox } = useStore();
   const inboxCount = inbox.filter((i) => i.done).length;
   const empty = Object.keys(data.entries).length === 0;
-  const weekDot = waiting(data).week;
+  const w = waiting(data);
+  const weekDot = w.week;
+  // Et nyt månedskapitel giver prik på Husk: vis, hvor det ligger
+  const chapterId = prevMonthId(monthId(today()));
   const written = Object.keys(data.entries).sort();
   const years = written.length ? [...new Set([written[0].slice(0, 4), written[written.length - 1].slice(0, 4)])].join('–') : '';
   return (
@@ -154,6 +157,7 @@ export function MemoryScreen() {
       )}
       <ThatDay />
       <div className="card list hub">
+        {w.month && <HubRow icon={Icon.grid} title={`Kapitlet for ${formatMonth(chapterId).toLowerCase()}`} text="Nyt månedskapitel er klar" onClick={() => go(`husk/maaned/${chapterId}`)} dot />}
         <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />
         <HubRow icon={Icon.chat} title="Samtaler" text={inboxCount > 0 ? `${inboxCount} ${inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}` : 'Resuméer med aftaler og ting at huske'} onClick={() => go('samtale')} dot={inboxCount > 0} />
         <HubRow icon={Icon.people} title="Mennesker" text="Familie, venner og hvad der er vigtigt for dem" onClick={() => go('mennesker')} />
