@@ -47,6 +47,12 @@ function split(text: string) {
   return { checks, rest };
 }
 
+/** Kort dato til en note: "3. nov." i år, ellers "3. nov. 2024". */
+function noteDate(ms: number): string {
+  const s = formatShort(toISO(new Date(ms)));
+  return new Date(ms).getFullYear() === new Date().getFullYear() ? s.replace(/ \d{4}$/, '') : s;
+}
+
 /** Et kort i gitteret, som i Keep. */
 function NoteCard({ n }: { n: Note }) {
   const { checks, rest } = split(n.text);
@@ -71,6 +77,7 @@ function NoteCard({ n }: { n: Note }) {
           {labels.length > 2 && <span className="label">+{labels.length - 2}</span>}
         </span>
       )}
+      {n.createdAt > 0 && <span className="note-card-date">{noteDate(n.createdAt)}</span>}
     </button>
   );
 }
@@ -372,7 +379,10 @@ export function NoteScreen({ id, mode }: { id: string; mode?: string }) {
     <div className="stack" style={{ gap: 14 }}>
       <Header back="noter" right={<button className="btn small" onClick={() => setEditing(true)}>Ret</button>} />
       <h1>{n.icon && n.icon !== '📌' && n.icon !== '🗒️' ? `${n.icon} ` : ''}{n.title}</h1>
-      {n.keep && <p className="tiny muted" style={{ marginTop: -8 }}>Fra Google Keep · {formatShort(toISO(new Date(n.keep.edited)))}</p>}
+      <p className="tiny muted" style={{ marginTop: -8 }}>
+        {n.keep ? 'Fra Google Keep · ' : ''}Oprettet {formatShort(toISO(new Date(n.createdAt)))}
+        {formatShort(toISO(new Date(n.updatedAt))) !== formatShort(toISO(new Date(n.createdAt))) && ` · rettet ${formatShort(toISO(new Date(n.updatedAt)))}`}
+      </p>
       {n.text.trim() && (
         <div className={`card note-body${colorClass(n)}`}>
           {lines.map((l, i) => {

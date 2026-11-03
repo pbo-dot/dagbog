@@ -518,6 +518,7 @@ label.btn { cursor: pointer; }
 .note-card-bar { display: block; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); margin-top: 6px; overflow: hidden; }
 .note-card-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
 .note-card .label-row { margin-top: 4px; }
+.note-card-date { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 .quick-note { display: flex; align-items: center; gap: 6px; background: var(--surface); border-radius: 999px; padding: 4px 6px 4px 4px; }
 .quick-note-text { border: 0; background: none; text-align: left; font: inherit; color: var(--muted); min-height: 44px; padding: 0 14px; cursor: pointer; }
 .quick-ico { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--text); font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }

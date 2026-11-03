@@ -10,6 +10,7 @@ import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
 import { DEFAULT_SETTINGS, type MemoryKind, type Settings } from '../lib/types';
+import type { Data } from '../lib/store';
 import { DoubleConfirm, go, Header, Icon, Switch } from '../ui';
 import { PinChooser } from './Lock';
 
@@ -143,6 +144,20 @@ const PAGES: Array<{ id: string; title: string; text: string }> = [
   { id: 'data', title: 'Eksport og indlæsning', text: 'Tekstfil og indlæs fil' },
 ];
 
+/** Hvad en fil med "tilfoej" lagde ind, fx "2 noter og 1 dag". */
+function importedText(d: Partial<Data>): string {
+  const parts: Array<[number, string, string]> = [
+    [Object.keys(d.notes ?? {}).length, 'note', 'noter'],
+    [Object.keys(d.entries ?? {}).length, 'dag', 'dage'],
+    [Object.keys(d.people ?? {}).length, 'menneske', 'mennesker'],
+    [Object.keys(d.todos ?? {}).length, 'huskepunkt', 'huskepunkter'],
+    [Object.keys(d.appointments ?? {}).length, 'aftale', 'aftaler'],
+  ];
+  const list = parts.filter(([n]) => n > 0).map(([n, one, many]) => `${n} ${n === 1 ? one : many}`);
+  if (!list.length) return 'filen';
+  return list.length === 1 ? list[0] : `${list.slice(0, -1).join(', ')} og ${list[list.length - 1]}`;
+}
+
 export function SettingsScreen({ page }: { page?: string }) {
   const store = useStore();
   const s = store.data.settings;
@@ -154,6 +169,7 @@ export function SettingsScreen({ page }: { page?: string }) {
   const [oldPin, setOldPin] = useState('');
   const [msg, setMsg] = useState('');
   const [wipeMsg, setWipeMsg] = useState('');
+  const [dataMsg, setDataMsg] = useState('');
   const [bioMsg, setBioMsg] = useState('');
   const [from, setFrom] = useState(addMonths(today(), -12));
   const [to, setTo] = useState(today());
@@ -368,7 +384,11 @@ export function SettingsScreen({ page }: { page?: string }) {
           <label className="field grow">Til<input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
         </div>
         <div className="row wrap">
-          <button className="btn small" onClick={() => download(new Blob([toText(store.data, from, to)], { type: 'text/plain;charset=utf-8' }), `dagbog-${from}-${to}.txt`)}>Tekst</button>
+          <button className="btn small" onClick={() => {
+            const name = `dagbog-${from}-${to}.txt`;
+            download(new Blob([toText(store.data, from, to)], { type: 'text/plain;charset=utf-8' }), name);
+            setDataMsg(`✓ Gemt som ${name} i Overførsler (Downloads).`);
+          }}>Tekst</button>
           <button className="btn small" onClick={() => { setFrom('1900-01-01'); setTo(today()); }}>Hele dagbogen</button>
         </div>
         <div className="stack-sm">
@@ -379,17 +399,19 @@ export function SettingsScreen({ page }: { page?: string }) {
               <input type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
+                setDataMsg('Indlæser …');
                 try {
                   const backup = parseBackup(await f.text());
                   await store.replaceAll(backup.data, backup.photos, backup.merge);
-                  setMsg(backup.merge ? 'Dine gamle noter er lagt ind.' : 'Sikkerhedskopien er indlæst.');
+                  setDataMsg(backup.merge ? `✓ Indlæst: ${importedText(backup.data)}.` : '✓ Sikkerhedskopien er indlæst.');
                 } catch (err) {
-                  setMsg((err as Error).message);
+                  setDataMsg((err as Error).message);
                 }
                 e.target.value = '';
               }} />
             </label>
           </div>
+          {dataMsg && <p className="notice small" role="status">{dataMsg}</p>}
         </div>
       </Section>
       </>)}
