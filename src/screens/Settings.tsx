@@ -9,7 +9,7 @@ import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
-import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
+import { DEFAULT_SETTINGS, type MemoryKind, type Settings } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, Switch } from '../ui';
 import { PinChooser } from './Lock';
 
@@ -45,6 +45,9 @@ function Row({ label, hint, children }: { label: string; hint?: ReactNode; child
     </div>
   );
 }
+
+/** Minde-kortene på Husk, der kan slås til og fra. */
+const MEMORY_KINDS: Array<[MemoryKind, string]> = [['year', 'I dag for et år siden'], ['quarter', 'For tre måneder siden'], ['month', 'For en måned siden']];
 
 const MODELS = [
   { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (klogest)' },
@@ -132,7 +135,7 @@ function GoogleSection() {
 }
 
 const PAGES: Array<{ id: string; title: string; text: string }> = [
-  { id: 'skriv', title: 'Skrivning og udseende', text: 'Dagens spørgsmål, tags, lys og mørk' },
+  { id: 'skriv', title: 'Skrivning og udseende', text: 'Dagens spørgsmål, minder, tags, lys og mørk' },
   { id: 'paamindelser', title: 'Påmindelser', text: 'Daglig påmindelse og ugeopsummering' },
   { id: 'ai', title: 'AI', text: 'Claude, API-nøgle, modeller og forbrug' },
   { id: 'google', title: 'Google Kalender', text: 'Hent og send aftaler' },
@@ -187,6 +190,14 @@ export function SettingsScreen({ page }: { page?: string }) {
         <Row label="Vis dagens spørgsmål" hint="Et lille spørgsmål over skrivefeltet, der skifter hver dag.">
           <Switch label="Vis dagens spørgsmål" checked={s.showQuestion} onChange={(v) => update((x) => ({ ...x, showQuestion: v }))} />
         </Row>
+      </Section>
+      <Section title="Minder på Husk">
+        {MEMORY_KINDS.map(([kind, label]) => (
+          <Row key={kind} label={label}>
+            <Switch label={label} checked={(s.memories ?? []).includes(kind)}
+              onChange={(v) => update((x) => ({ ...x, memories: v ? [...(x.memories ?? []).filter((k) => k !== kind), kind] : (x.memories ?? []).filter((k) => k !== kind) }))} />
+          </Row>
+        ))}
       </Section>
       </>)}
 

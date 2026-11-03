@@ -5,7 +5,7 @@ import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
-import { MOODS, type Entry } from '../lib/types';
+import { MOODS, type Entry, type MemoryKind } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 import { askSoon } from './Ask';
 
@@ -22,13 +22,15 @@ function findNear(entries: Record<string, Entry>, iso: string, radius = 3): Entr
 }
 
 function ThatDay() {
-  const { entries } = useStore().data;
+  const { entries, settings } = useStore().data;
   const t = today();
+  const show = settings.memories ?? ['year', 'quarter', 'month'];
   const cards = [
-    { label: 'I dag for et år siden', iso: addMonths(t, -12) },
-    { label: 'For tre måneder siden', iso: addMonths(t, -3) },
-    { label: 'For en måned siden', iso: addMonths(t, -1) },
+    { kind: 'year', label: 'I dag for et år siden', iso: addMonths(t, -12) },
+    { kind: 'quarter', label: 'For tre måneder siden', iso: addMonths(t, -3) },
+    { kind: 'month', label: 'For en måned siden', iso: addMonths(t, -1) },
   ]
+    .filter((c) => show.includes(c.kind as MemoryKind))
     .map((c) => ({ ...c, entry: findNear(entries, c.iso) }))
     .filter((c): c is typeof c & { entry: Entry } => !!c.entry);
 

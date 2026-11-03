@@ -215,6 +215,9 @@ export interface Pattern {
   source: 'manual' | 'ai';
 }
 
+/** Minde-kort på Husk: for et år, tre måneder eller en måned siden. */
+export type MemoryKind = 'year' | 'quarter' | 'month';
+
 export interface Settings {
   tags: string[];
   ai: {
@@ -234,6 +237,7 @@ export interface Settings {
   summaryWeekday: number; // 0 = søndag
   autoLockMinutes: number; // 0 = straks
   showQuestion: boolean; // dagens spørgsmål over skrivefeltet
+  memories: MemoryKind[]; // minde-kort på Husk (tom = ingen)
   google: {
     clientId: string; // fra Google Cloud (ikke hemmeligt)
     email: string; // kontoen, der er forbundet ('' = ikke forbundet)
@@ -265,6 +269,7 @@ export const DEFAULT_SETTINGS: Settings = {
   summaryWeekday: 0,
   autoLockMinutes: 5,
   showQuestion: true,
+  memories: ['year', 'quarter', 'month'],
   google: { clientId: '', email: '', calendars: [], lastSync: 0, push: true, pushCal: '', pendingDeletes: [] },
   backup: { auto: true, folderId: '', last: 0 },
 };
