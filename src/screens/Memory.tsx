@@ -139,6 +139,8 @@ export function MemoryScreen() {
   const weekDot = w.week;
   // Et nyt månedskapitel giver prik på Husk: vis, hvor det ligger
   const chapterId = prevMonthId(monthId(today()));
+  // Det nyeste kapitel, der findes (ellers sidste måned)
+  const latestChapter = Object.keys(data.months).filter((k) => data.months[k].text?.trim()).sort().pop() ?? chapterId;
   const written = Object.keys(data.entries).sort();
   const years = written.length ? [...new Set([written[0].slice(0, 4), written[written.length - 1].slice(0, 4)])].join('–') : '';
   return (
@@ -159,7 +161,7 @@ export function MemoryScreen() {
       )}
       <ThatDay />
       <div className="card list hub">
-        {w.month && <HubRow icon={Icon.grid} title={`Kapitlet for ${formatMonth(chapterId).toLowerCase()}`} text="Nyt månedskapitel er klar" onClick={() => go(`husk/maaned/${chapterId}`)} dot />}
+        <HubRow icon={Icon.grid} title="Månedens kapitel" text={w.month ? `Nyt: ${formatMonth(chapterId).toLowerCase()}` : `Seneste: ${formatMonth(latestChapter).toLowerCase()}`} onClick={() => go(`husk/maaned/${w.month ? chapterId : latestChapter}`)} dot={w.month} />
         <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />
         <HubRow icon={Icon.chat} title="Samtaler" text={inboxCount > 0 ? `${inboxCount} ${inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}` : 'Resuméer med aftaler og ting at huske'} onClick={() => go('samtale')} dot={inboxCount > 0} />
         <HubRow icon={Icon.people} title="Mennesker" text="Familie, venner og hvad der er vigtigt for dem" onClick={() => go('mennesker')} />
@@ -196,11 +198,17 @@ export function MonthScreen({ id }: { id: string }) {
   };
 
   const monthDone = id < monthId(today());
+  // Man kan bladre tilbage til den første måned med noget skrevet
+  const firstMonth = [...Object.keys(data.entries).map((d) => d.slice(0, 7)), ...Object.keys(data.months)].sort()[0] ?? id;
 
   return (
     <div className="stack" style={{ gap: 20 }}>
       <Header back={`husk/overblik/${id.slice(0, 4)}`} />
-      <h1>{formatMonth(id)}</h1>
+      <div className="row between" style={{ alignItems: 'center' }}>
+        <button className="day-arrow" disabled={id <= firstMonth} onClick={() => go(`husk/maaned/${prevMonthId(id)}`)} aria-label="Måneden før">{Icon.chevronLeft}</button>
+        <h1 style={{ textAlign: 'center' }}>{formatMonth(id)}</h1>
+        <button className="day-arrow" disabled={id >= monthId(today())} onClick={() => go(`husk/maaned/${addMonths(`${id}-01`, 1).slice(0, 7)}`)} aria-label="Måneden efter">{Icon.chevronRight}</button>
+      </div>
 
       <section className="stack-sm">
         <h3>{days.length} {days.length === 1 ? 'dag' : 'dage'} skrevet</h3>
