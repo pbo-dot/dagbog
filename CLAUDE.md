@@ -29,6 +29,7 @@ Dagbog er en personlig, krypteret dagbog (PWA) til eget brug: https://pbo-dot.gi
 
 ## Arbejdsform med ejeren
 
+- **Se før du retter:** Byg detaljeret log og "Del med Claude" (én fil, ejeren gemmer på Drev) som noget af det første i en ny funktion, der skal virke på telefonen. Bed om én hel rigtig kørsel med log, før der designes, og ret først, når loggen viser fejlen. Én rettelse ad gangen: ret → kør → send loggen. Lært af Lukker (ca. 70 versioner, hvor loggen kom for sent).
 - **Nye, ukendte funktioner:** Skriv ikke fra bunden først. Undersøg kendte løsninger (open source-projekter på GitHub, velholdte biblioteker og officiel dokumentation), sammenlign kort 2–3 fremgangsmåder i forslaget til ejeren, og vælg den mest gennemprøvede. Brug kun kode med åben licens, og hold appen let.
 - **Forslag undervejs:** Kom løbende med korte forslag til forbedringer, når du ser noget, der gentager sig, kan gå galt eller kan gøres nemmere for ejeren. Giv en anbefaling og en rækkefølge. Forslag bygges først, når ejeren har sagt ja (fejlrettelser dog med det samme).
 - **Gennemgang en gang imellem:** Når ejeren beder om det (fx "Hvad tænker du om den overordnede funktionalitet, brugervenlighed, struktur og design? Du har frie tøjler, tænk kreativt"), så tag en rundtur i hele appen med friske skærmbilleder, og giv en ærlig vurdering: hvad der virker, hvad der halter, og 3–5 forslag i anbefalet rækkefølge. Byg først efter ejerens ja.
