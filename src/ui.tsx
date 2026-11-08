@@ -187,12 +187,19 @@ export function PhotoGallery({ ids }: { ids: string[] }) {
       <div className="photo-gallery">
         {ids.map((id) => <PhotoImg key={id} id={id} className="photo-large" onClick={() => setOpen(id)} alt="Foto fra dagen" />)}
       </div>
-      {open && (
-        <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={() => setOpen(null)}>
-          <PhotoImg id={open} alt="Foto fra dagen" />
-          <button className="photo-close" aria-label="Luk">×</button>
-        </div>
-      )}
+      {open && <PhotoViewer id={open} onClose={() => setOpen(null)} />}
     </>
+  );
+}
+
+/** Et billede i fuld skærm. Knib for at zoome; tryk ved siden af billedet eller på × for at lukke. */
+export function PhotoViewer({ id, onClose }: { id: string; onClose: () => void }) {
+  return (
+    <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={onClose}>
+      <div className="photo-viewer-img" onClick={(e) => e.stopPropagation()}>
+        <PhotoImg id={id} alt="Foto" />
+      </div>
+      <button className="photo-close" aria-label="Luk" onClick={onClose}>×</button>
+    </div>
   );
 }

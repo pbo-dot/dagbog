@@ -5,7 +5,7 @@ import { aiReady } from '../lib/generate';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
-import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
+import { go, Icon, MoodPicker, PhotoImg, PhotoViewer, Toast, uid } from '../ui';
 import { BackupNudge } from './Backup';
 import { RoutineCards } from './Routines';
 import { TodoCard } from './Todos';
@@ -94,6 +94,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
   const [photos, setPhotos] = useState<string[]>([]);
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoError, setPhotoError] = useState('');
+  const [viewing, setViewing] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   // Android viser ikke kameraet i billedvælgeren, så kameraet har sin egen knap
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -316,12 +317,13 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         <div className="photo-row">
           {photos.map((id) => (
             <div key={id} className="photo-thumb">
-              <PhotoImg id={id} alt="Foto" />
+              <PhotoImg id={id} alt="Foto" onClick={() => setViewing(id)} />
               <button className="remove" onClick={() => removePhoto(id)} aria-label="Fjern foto">×</button>
             </div>
           ))}
         </div>
       )}
+      {viewing && <PhotoViewer id={viewing} onClose={() => setViewing(null)} />}
       {photoError && <p className="tiny error">{photoError}</p>}
       <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
       <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
