@@ -85,9 +85,14 @@ export function takeTokenFromUrl(): boolean {
   s?.removeItem(STATE);
   if (ok && p.get('access_token')) {
     const exp = Date.now() + (Number(p.get('expires_in')) || 3600) * 1000;
-    s?.setItem(TOKEN, JSON.stringify({ token: p.get('access_token'), exp, scope: p.get('scope') ?? '' }));
+    const scope = p.get('scope') ?? '';
+    s?.setItem(TOKEN, JSON.stringify({ token: p.get('access_token'), exp, scope }));
+    void noteAuto(`Google svarede: adgang${scope.split(' ').includes(DRIVE_SCOPE) ? ' (med Drev)' : ' — men UDEN lov til Drev'}`);
   } else if (ok && p.get('error')) {
     s?.setItem(ERROR, p.get('error')!);
+    void noteAuto(`Google svarede: ${p.get('error') === 'interaction_required' || p.get('error') === 'login_required' ? 'vil have, at du logger ind igen' : p.get('error')}`);
+  } else if (!ok) {
+    void noteAuto('Svar fra Google passede ikke (siden blev måske åbnet på ny)');
   }
   history.replaceState(null, '', location.pathname + location.search + (back && back.startsWith('#/') ? back : '#/kalender'));
   return true;
@@ -147,12 +152,37 @@ export async function forget() {
  * og ikke når appen åbnes med delt tekst.
  */
 export async function autoSignIn(): Promise<boolean> {
-  if (currentToken() || location.search || !navigator.onLine) return false;
+  if (currentToken()) return false;
+  if (location.search) return false;
+  if (!navigator.onLine) { await noteAuto('Automatisk login sprunget over: ingen net'); return false; }
   const hint = await vaultGet<Hint>('google').catch(() => undefined);
-  if (!hint?.clientId || !hint.email || Date.now() - hint.lastAuto < AUTO_EVERY_MS) return false;
+  if (!hint?.clientId || !hint.email) { await noteAuto('Automatisk login sprunget over: Google-konto ikke husket endnu'); return false; }
+  if (Date.now() - hint.lastAuto < AUTO_EVERY_MS) return false;
   await vaultSet('google', { ...hint, lastAuto: Date.now() });
+  await noteAuto('Automatisk login: sendt til Google');
   signIn(hint.clientId, { hint: hint.email, silent: true });
   return true;
+}
+
+/** Små notater om den automatiske kopi (uden for kryptering, kun tid og hvad der skete). Vises under Sikkerhedskopi. */
+export interface AutoNote { t: number; what: string }
+const AUTO_LOG = 'autolog';
+
+export async function noteAuto(what: string): Promise<void> {
+  try {
+    const old = (await vaultGet<AutoNote[]>(AUTO_LOG)) ?? [];
+    const last = old[old.length - 1];
+    if (last && last.what === what && Date.now() - last.t < 3_600_000) return; // ikke den samme igen og igen
+    await vaultSet(AUTO_LOG, [...old, { t: Date.now(), what }].slice(-12));
+  } catch { /* ikke afgørende */ }
+}
+
+export async function autoNotes(): Promise<AutoNote[]> {
+  try {
+    return ((await vaultGet<AutoNote[]>(AUTO_LOG)) ?? []).slice().reverse();
+  } catch {
+    return [];
+  }
 }
 
 async function get<T>(token: string, path: string, params: Record<string, string> = {}): Promise<T> {

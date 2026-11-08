@@ -641,3 +641,9 @@ label.btn { cursor: pointer; }
 .ladder i.on { background: var(--accent); }
 .ladder em { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; font-style: normal; color: var(--accent); }
 .clarity-say { font-family: var(--serif); font-size: 1.05rem; line-height: 1.5; border-left: 4px solid var(--accent); padding-left: 12px; margin: 0; }
+
+/* Skriv: kopien er for gammel */
+.backup-nudge { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 0; border-radius: 20px; padding: 14px 16px; background: var(--warn-bg, color-mix(in srgb, #e0a100 16%, var(--card))); color: inherit; font: inherit; cursor: pointer; }
+.backup-nudge .grow { display: flex; flex-direction: column; gap: 2px; }
+.auto-notes summary { cursor: pointer; padding: 4px 0; }
+.auto-notes ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }

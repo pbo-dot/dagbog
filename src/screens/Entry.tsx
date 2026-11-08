@@ -6,6 +6,7 @@ import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
 import { go, Icon, MoodPicker, PhotoImg, Toast, uid } from '../ui';
+import { BackupNudge } from './Backup';
 import { RoutineCards } from './Routines';
 import { TodoCard } from './Todos';
 
@@ -291,6 +292,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
             <span><strong>Få overblik</strong><span>Når noget er svært eller uoverskueligt</span></span>
           </button>
         )}
+        {isToday && <BackupNudge />}
         {isToday && <RoutineCards />}
         {isToday && <TodoCard />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}

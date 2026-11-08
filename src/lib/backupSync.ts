@@ -2,7 +2,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { backupName } from './backup';
 import { saveToDrive } from './drive';
-import { clientIdOf, driveToken, GoogleError, signIn } from './google';
+import { clientIdOf, driveToken, GoogleError, noteAuto, signIn } from './google';
 import { useStore } from './store';
 
 type Store = ReturnType<typeof useStore>;
@@ -27,10 +27,11 @@ export function useBackupState(): State {
 }
 
 /** Gemmer en kopi nu. Mangler der adgang til Drev, går den til Google først (med `login`). Giver true, når kopien er gemt. */
-export async function backupNow(store: Store, opts: { login?: boolean } = {}): Promise<boolean> {
+export async function backupNow(store: Store, opts: { login?: boolean; auto?: boolean } = {}): Promise<boolean> {
   if (state.busy) return false;
   const token = driveToken();
   if (!token) {
+    if (opts.auto) void noteAuto('Kopi sprunget over: ingen adgang til Drev');
     const g = store.data.settings.google;
     if (opts.login) signIn(clientIdOf(g), { hint: g.email || undefined, back: '#/kopi' });
     return false;
@@ -41,10 +42,13 @@ export async function backupNow(store: Store, opts: { login?: boolean } = {}): P
     const s = store.data.settings;
     const folderId = await saveToDrive(token, s.backup.folderId, backupName(), JSON.stringify(file));
     await store.saveSettings({ ...s, backup: { ...s.backup, folderId, last: Date.now() } });
+    void noteAuto(opts.auto ? 'Dagens kopi gemt automatisk' : 'Kopi gemt');
     set({ busy: false });
     return true;
   } catch (e) {
-    set({ busy: false, error: e instanceof GoogleError ? e.message : 'Kopien kunne ikke gemmes.' });
+    const msg = e instanceof GoogleError ? e.message : 'Kopien kunne ikke gemmes.';
+    void noteAuto(`Kopi fejlede: ${msg}`);
+    set({ busy: false, error: msg });
     return false;
   }
 }
@@ -57,9 +61,9 @@ export function useAutoBackup() {
     let timer: ReturnType<typeof setTimeout>;
     const run = () => {
       clearTimeout(timer);
-      if (!document.hidden && b.auto && driveToken() && olderThanToday(b.last)) {
+      if (!document.hidden && b.auto && olderThanToday(b.last)) {
         // Lidt senere, så det ikke forsinker åbningen
-        timer = setTimeout(() => backupNow(store), 4000);
+        timer = setTimeout(() => backupNow(store, { auto: true }), 4000);
       }
     };
     run();

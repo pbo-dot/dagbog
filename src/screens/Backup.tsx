@@ -3,7 +3,7 @@ import { backupName, parseBackupFile, type BackupFile } from '../lib/backup';
 import { backupNow, useBackupState } from '../lib/backupSync';
 import { downloadBackup, KEEP, listBackups, type DriveFile } from '../lib/drive';
 import { download } from '../lib/export';
-import { clientIdOf, driveToken, GoogleError, lastError, signIn } from '../lib/google';
+import { autoNotes, clientIdOf, driveToken, GoogleError, lastError, signIn, type AutoNote } from '../lib/google';
 import { useStore } from '../lib/store';
 import { go, Header, Icon, Switch } from '../ui';
 import { Dots, Keypad } from './Lock';
@@ -19,12 +19,33 @@ export function whenText(ms: number): string {
   return `${d.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })} ${time}`;
 }
 
+/** Hele dage siden den seneste kopi (0 = i dag). */
+function daysSince(ms: number): number {
+  return Math.round((new Date(new Date().toDateString()).getTime() - new Date(new Date(ms).toDateString()).getTime()) / 86_400_000);
+}
+
+/** På Skriv: kopien er mere end en dag gammel, selvom den skal tages af sig selv. */
+export function BackupNudge() {
+  const store = useStore();
+  const b = store.data.settings.backup;
+  const { busy } = useBackupState();
+  if (!b.auto || !b.last || daysSince(b.last) < 2) return null;
+  return (
+    <button className="backup-nudge" disabled={busy} onClick={() => backupNow(store, { login: true })}>
+      <span className="grow"><strong>Kopien er {daysSince(b.last)} dage gammel</strong><span className="small muted">Tryk for at gemme den nu</span></span>
+      <span className="btn small">{busy ? 'Gemmer …' : 'Gem nu'}</span>
+    </button>
+  );
+}
+
 /** Mere › Sikkerhedskopi */
 export function BackupScreen() {
   const store = useStore();
   const s = store.data.settings;
   const b = s.backup;
   const { busy, error } = useBackupState();
+  const [notes, setNotes] = useState<AutoNote[]>([]);
+  useEffect(() => { void autoNotes().then(setNotes); }, [busy, b.last]);
   const denied = lastError() === 'access_denied';
 
   const setAuto = async (auto: boolean) => {
@@ -62,6 +83,14 @@ export function BackupScreen() {
         Gem kopi på telefonen
       </button>
       <button className="btn ghost block" onClick={() => go('kopi/hent')}>Hent kopi fra Drev</button>
+      {notes.length > 0 && (
+        <details className="card auto-notes">
+          <summary className="small"><strong>Seneste forsøg</strong> <span className="muted">· {notes[0].what}</span></summary>
+          <ul className="small">
+            {notes.map((n) => <li key={n.t + n.what}><span className="muted">{whenText(n.t)}</span> · {n.what}</li>)}
+          </ul>
+        </details>
+      )}
       <p className="tiny muted">Kopien er låst med din kode. Skifter du kode, skal du bruge den gamle kode til ældre kopier.</p>
     </div>
   );
