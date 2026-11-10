@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
-import { hasSharedText, takeSharedDoc, takeSharedLink } from './lib/conversation';
+import { hasSharedText, takeSharedDoc, takeSharedImages, takeSharedLink } from './lib/conversation';
 import { noteFromFile } from './lib/docNote';
+import { compressImage } from './lib/photos';
 import { useGoogleAutoSync } from './lib/googleSync';
 import { useAutoBackup } from './lib/backupSync';
 import { addSpend, onSpend } from './lib/usage';
@@ -147,6 +148,24 @@ function Unlocked() {
       return;
     }
     if (hasSharedText()) { go('samtale/ny'); return; }
+    // Delte billeder bliver til en note med billederne (og en evt. tekst)
+    takeSharedImages().then(async (shared) => {
+      if (!shared) return;
+      try {
+        const ids: string[] = [];
+        for (const blob of shared.blobs) {
+          const id = uid();
+          await store.putPhoto({ id, date: today(), createdAt: Date.now(), ...(await compressImage(blob)) });
+          ids.push(id);
+        }
+        const now = Date.now();
+        const note: Note = { id: uid(), title: shared.text.split('\n')[0].slice(0, 60) || 'Billede', icon: '🖼️', text: shared.text, photos: ids, createdAt: now, updatedAt: now };
+        await store.put('notes', note.id, note);
+        go(`noter/${note.id}`);
+      } catch {
+        alert('Billedet kunne ikke indlæses.');
+      }
+    });
     // Et delt Word-dokument eller en tekstfil bliver til en note med hele teksten
     takeSharedDoc().then(async (doc) => {
       if (!doc) return;

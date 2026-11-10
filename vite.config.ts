@@ -34,6 +34,7 @@ export default defineConfig({
             text: 'text',
             url: 'url',
             files: [{ name: 'audio', accept: ['audio/*', '.m4a', '.mp3', '.wav', '.ogg', '.opus', '.aac', '.amr', '.3gp', '.webm', '.flac'] },
+              { name: 'image', accept: ['image/*'] },
               { name: 'doc', accept: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.docx', 'text/plain', '.txt', 'text/markdown', '.md'] },
             ],
           },

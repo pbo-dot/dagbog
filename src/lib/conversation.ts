@@ -50,6 +50,7 @@ export function personNote(c: Conversation): string {
 let shared: string | null = null;
 let sharedAudio = false;
 let sharedDoc = false;
+let sharedImages: { count: number; text: string } | null = null;
 
 /** Et link delt fra fx Chrome. Bliver til en note i stedet for en samtale. */
 export interface SharedLink { title: string; url: string; text: string }
@@ -74,6 +75,12 @@ export function takeSharedLink(): SharedLink | null {
 
 export function readSharedText(): void {
   const q = new URLSearchParams(location.search);
+  const bil = Number(q.get('bil'));
+  if (bil > 0) {
+    sharedImages = { count: bil, text: q.get('btext') ?? '' };
+    history.replaceState(null, '', location.pathname + location.hash);
+    return;
+  }
   if (q.get('dok')) {
     sharedDoc = true;
     history.replaceState(null, '', location.pathname + location.hash);
@@ -132,6 +139,25 @@ export async function takeSharedDoc(): Promise<{ blob: Blob; name: string } | nu
     if (!res) return null;
     await cache.delete('dok');
     return { blob: await res.blob(), name: decodeURIComponent(res.headers.get('X-Name') ?? 'Dokument') };
+  } catch {
+    return null;
+  }
+}
+
+/** Billeder delt fra fx Galleri eller Fotos (med en evt. tekst). Hentes én gang og slettes fra cachen. */
+export async function takeSharedImages(): Promise<{ blobs: Blob[]; text: string } | null> {
+  const info = sharedImages;
+  sharedImages = null;
+  if (!info) return null;
+  try {
+    const cache = await caches.open('dagbog-delt-billeder');
+    const blobs: Blob[] = [];
+    for (let i = 0; i < info.count; i++) {
+      const res = await cache.match('bil' + i);
+      if (res) blobs.push(await res.blob());
+      await cache.delete('bil' + i);
+    }
+    return blobs.length ? { blobs, text: info.text } : null;
   } catch {
     return null;
   }
