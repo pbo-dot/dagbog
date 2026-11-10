@@ -6,8 +6,8 @@ import { formatShort, today } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
-import type { ChatTurn } from '../lib/types';
-import { go, Header, Icon } from '../ui';
+import type { ChatTurn, Note } from '../lib/types';
+import { go, Header, Icon, uid } from '../ui';
 import { ProposalCard } from './Proposal';
 
 interface Turn {
@@ -19,6 +19,7 @@ interface Turn {
   focused?: boolean; // kun det, der passede til ordene, blev sendt med
   full?: boolean; // "Søg i hele dagbogen"
   deep?: boolean; // "Svar grundigere" (Opus)
+  noteId?: string; // gemt som note
 }
 
 const MODES: Array<{ id: AskMode; label: string; hint: string }> = [
@@ -70,7 +71,8 @@ const remember = (t: Turn[]) => {
 
 /** Spørg dagbogen: Claude svarer ud fra dagbog, samtaler og noter om mennesker. */
 export function AskScreen() {
-  const { data } = useStore();
+  const store = useStore();
+  const { data } = store;
   const [turns, setTurns] = useState<Turn[]>(() => saved);
   const [question, setQuestion] = useState('');
   const [busy, setBusy] = useState(false);
@@ -150,6 +152,28 @@ export function AskScreen() {
     ask(q);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  /** Svaret bliver til en note (spørgsmålet som titel), så det ikke forsvinder, når dagbogen låses. */
+  const saveAsNote = async (i: number) => {
+    const t = turns[i];
+    if (!t || t.noteId) return;
+    const now = Date.now();
+    const title = t.question.replace(/\s+/g, ' ').trim();
+    const note: Note = {
+      id: uid(),
+      title: title.length > 60 ? `${title.slice(0, 57)}…` : title,
+      icon: '💬',
+      text: t.answer.answer,
+      labels: ['Fra Spørg'],
+      ...(t.web?.links.length ? { links: t.web.links.map((l) => ({ url: l.url, title: l.title })) } : {}),
+      createdAt: now,
+      updatedAt: now,
+    };
+    await store.put('notes', note.id, note);
+    const next = turns.map((x, j) => (j === i ? { ...x, noteId: note.id } : x));
+    remember(next);
+    setTurns(next);
+  };
+
   const reset = () => {
     remember([]);
     setTurns([]);
@@ -177,6 +201,11 @@ export function AskScreen() {
         <section key={i} className="stack-sm">
           <p className="small" style={{ fontWeight: 600 }}>{t.question}</p>
           <p className="prose">{t.answer.answer}</p>
+          <div className="row wrap" style={{ gap: 4 }}>
+            {t.noteId
+              ? <button className="btn small" onClick={() => go(`noter/${t.noteId}`)}>✓ Gemt som note ›</button>
+              : <button className="btn small" onClick={() => saveAsNote(i)}>Gem som note</button>}
+          </div>
           {(t.answer.proposals ?? []).map((p, j) => <ProposalCard key={j} proposal={p} />)}
           <p className="tiny muted">Læste: {t.shown}{data.settings.ai.showCost && t.answer.cost ? ` · ≈ ${krText(t.answer.cost.usd)} · ${modelName(t.answer.cost.model)}` : ''}</p>
           {i === turns.length - 1 && (t.focused || !t.deep) && (

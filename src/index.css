@@ -650,3 +650,19 @@ label.btn { cursor: pointer; }
 .backup-nudge .grow { display: flex; flex-direction: column; gap: 2px; }
 .auto-notes summary { cursor: pointer; padding: 4px 0; }
 .auto-notes ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Skriv: kompakte genveje og "I dag" på én linje */
+.talk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.talk-row .talk-start { padding: 12px 14px; gap: 10px; border-radius: 24px; min-height: 64px; }
+.talk-row .talk-start-ico { width: 40px; height: 40px; }
+.talk-row .talk-start-ico svg { width: 22px; height: 22px; }
+.talk-row .talk-start strong { font-size: 0.98rem; line-height: 1.2; }
+.talk-row .talk-start span span { font-size: 0.78rem; }
+.talk-row .clarity-start .talk-start-ico { font-size: 1.25rem; }
+.today-fold { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 10px 16px; border: 0; border-radius: 22px; background: var(--surface); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: transform 0.15s; }
+.today-fold:active { transform: scale(0.98); }
+.today-fold strong { display: block; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.today-fold .grow > span { display: block; font-size: 0.95rem; }
+.today-fold .fold-chev { color: var(--muted); font-size: 1.2rem; }
+.today-fold .fold-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex: none; }
+@media (prefers-reduced-motion: reduce) { .today-fold { transition: none; } }

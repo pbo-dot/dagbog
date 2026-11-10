@@ -1,7 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { agenda } from '../lib/agenda';
 import { addDays, formatLong, today, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
+import { routineStatus } from '../lib/routines';
+import { groupTodos } from '../lib/todos';
+import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
@@ -24,6 +28,38 @@ const QUESTIONS = [
 function questionFor(date: string) {
   const n = Math.floor(new Date(date).getTime() / 86400000);
   return QUESTIONS[((n % QUESTIONS.length) + QUESTIONS.length) % QUESTIONS.length];
+}
+
+const FOLD_KEY = 'dagbog-idag-aaben';
+
+/**
+ * "I dag" på Skriv: én linje med tal ("1 aftale · 2 faste ting · 5 huskepunkter"), så skrivefeltet
+ * står øverst. Et tryk folder aftaler, faste ting og huskeliste ud; valget huskes.
+ */
+function TodayFold() {
+  const { data } = useStore();
+  const [open, setOpen] = useState(() => { try { return localStorage.getItem(FOLD_KEY) === '1'; } catch { return false; } });
+  const t = today();
+  const plans = agenda(data, t, t).filter((i) => i.kind !== 'routine').length;
+  const routines = Object.values(data.routines).filter((r) => routineStatus(r, t).kind === 'due').length;
+  const bdays = upcomingBirthdays(Object.values(data.people), t, 0).length;
+  const g = groupTodos(data.todos, t);
+  const overdue = g.now.some((x) => x.due && x.due <= t) || Object.values(data.routines).some((r) => { const s = routineStatus(r, t); return s.kind === 'due' && s.late; });
+  const n = (k: number, one: string, many: string) => (k ? `${k} ${k === 1 ? one : many}` : '');
+  const parts = [n(plans, 'aftale', 'aftaler'), n(bdays, 'fødselsdag', 'fødselsdage'), n(routines, 'fast ting', 'faste ting'), n(g.now.length, 'huskepunkt', 'huskepunkter')].filter(Boolean);
+  // Intet at tælle: de små kort (fx "Taget ✓") vises som de er
+  if (!parts.length) return <><RoutineCards /><TodoCard /></>;
+  const flip = () => setOpen((v) => { try { localStorage.setItem(FOLD_KEY, v ? '0' : '1'); } catch { /* ikke afgørende */ } return !v; });
+  return (
+    <div className="stack-sm">
+      <button className="today-fold" onClick={flip} aria-expanded={open}>
+        <span className="grow"><strong>I dag</strong><span>{parts.join(' · ')}</span></span>
+        {overdue && <span className="fold-dot" aria-label="Noget er overskredet" />}
+        <span className="fold-chev" aria-hidden="true">{open ? '▾' : '›'}</span>
+      </button>
+      {open && <><RoutineCards /><TodoCard /></>}
+    </div>
+  );
 }
 
 type Extra = 'humor' | 'tags' | 'gode' | 'samtale';
@@ -281,21 +317,22 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           {isToday && !existing && <button className="btn small" onClick={skipToday}>Spring over</button>}
           {!isToday && <button className="btn small" onClick={() => go('skriv')}>I dag</button>}
         </div>
-        {isToday && aiReady(data) && speechInputAvailable() && (
-          <button className="talk-start" onClick={() => go('tal')}>
-            <span className="talk-start-ico" aria-hidden="true">{Icon.mic}</span>
-            <span><strong>{existing ? 'Fortæl mere om din dag' : 'Fortæl om din dag'}</strong><span>Claude lytter og spørger ind</span></span>
-          </button>
-        )}
         {isToday && aiReady(data) && (
-          <button className="talk-start clarity-start" onClick={() => go('overblik')}>
-            <span className="talk-start-ico" aria-hidden="true">🧭</span>
-            <span><strong>Få overblik</strong><span>Når noget er svært eller uoverskueligt</span></span>
-          </button>
+          <div className="talk-row">
+            {speechInputAvailable() && (
+              <button className="talk-start" onClick={() => go('tal')}>
+                <span className="talk-start-ico" aria-hidden="true">{Icon.mic}</span>
+                <span><strong>{existing ? 'Fortæl mere' : 'Fortæl om dagen'}</strong><span>Claude lytter</span></span>
+              </button>
+            )}
+            <button className="talk-start clarity-start" onClick={() => go('overblik')}>
+              <span className="talk-start-ico" aria-hidden="true">🧭</span>
+              <span><strong>Få overblik</strong><span>Når noget er svært</span></span>
+            </button>
+          </div>
         )}
         {isToday && <BackupNudge />}
-        {isToday && <RoutineCards />}
-        {isToday && <TodoCard />}
+        {isToday && <TodayFold />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
       </div>
@@ -383,14 +420,16 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         </div>
       )}
 
-      <div style={{ height: 72 }} aria-hidden="true" />
-      <div className="save-bar">
-        <div className="inner">
-          <button className="btn primary block" onClick={save} disabled={!text.trim()}>
-            {existing ? 'Gem ændringer' : 'Gem'}
-          </button>
+      {text.trim() && (<>
+        <div style={{ height: 72 }} aria-hidden="true" />
+        <div className="save-bar">
+          <div className="inner">
+            <button className="btn primary block" onClick={save}>
+              {existing ? 'Gem ændringer' : 'Gem'}
+            </button>
+          </div>
         </div>
-      </div>
+      </>)}
       {toast && <Toast text={toast} onDone={() => setToast('')} />}
     </div>
   );

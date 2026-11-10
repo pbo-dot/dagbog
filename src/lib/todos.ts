@@ -1,8 +1,36 @@
 // Huskelisten: ting, der skal gøres, men ikke på et bestemt tidspunkt.
 // Et punkt står i "I dag", indtil det er klaret. Det kan udsættes til en dag
 // (showFrom) eller lægges væk til "Engang" (someday), så "I dag" ikke drukner.
-import { addDays, formatLong, fromISO } from './dates';
+import { addDays, addMonths, formatLong, fromISO } from './dates';
 import type { Todo } from './types';
+
+export const REPEATS: Array<{ id: NonNullable<Todo['repeat']>; label: string; short: string }> = [
+  { id: 'week', label: 'Hver uge', short: 'hver uge' },
+  { id: 'month', label: 'Hver måned', short: 'hver måned' },
+  { id: 'year', label: 'Hvert år', short: 'hvert år' },
+];
+
+/** Så mange dage før fristen det næste punkt dukker op i "I dag" (så "skift vinterdæk" ikke fylder hele året). */
+const LEAD_DAYS = { week: 0, month: 3, year: 14 } as const;
+
+function stepDate(iso: string, repeat: NonNullable<Todo['repeat']>): string {
+  return repeat === 'week' ? addDays(iso, 7) : addMonths(iso, repeat === 'month' ? 1 : 12);
+}
+
+/**
+ * Det næste huskepunkt, når et gentagende punkt klares. Med frist: næste frist efter i dag
+ * (ud fra den gamle frist), og punktet dukker op lidt før. Uden frist: det dukker op om en uge/måned/et år.
+ */
+export function nextTodo(todo: Todo, today: string, id: string, now = Date.now()): Todo | null {
+  const repeat = todo.repeat;
+  if (!repeat) return null;
+  let next = stepDate(todo.due ?? today, repeat);
+  while (next <= today) next = stepDate(next, repeat);
+  const base: Todo = { id, text: todo.text, repeat, createdAt: now };
+  if (!todo.due) return { ...base, showFrom: next };
+  const show = addDays(next, -LEAD_DAYS[repeat]);
+  return { ...base, due: next, ...(show > today ? { showFrom: show } : {}) };
+}
 
 /** Så mange huskepunkter vises højst under "I dag". */
 export const TODAY_MAX = 3;

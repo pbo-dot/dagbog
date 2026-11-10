@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { addDays, today } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { useStore } from '../lib/store';
-import { TODAY_MAX, dueSoon, dueText, groupTodos, postponeChoices, shortDate } from '../lib/todos';
+import { REPEATS, TODAY_MAX, dueSoon, dueText, groupTodos, nextTodo, postponeChoices, shortDate } from '../lib/todos';
 import type { Todo } from '../lib/types';
 import { go, Header, Icon, PlanTabs, uid } from '../ui';
 
@@ -11,8 +11,21 @@ function TodoRow({ todo, onMenu, dim }: { todo: Todo; onMenu: (t: Todo) => void;
   const store = useStore();
   const t = today();
   const done = !!todo.doneAt;
-  const toggle = () => store.put('todos', todo.id, { ...todo, doneAt: done ? undefined : Date.now() });
+  const toggle = async () => {
+    if (done) {
+      // Fortryd: det næste punkt, der blev lavet ved at klare dette, fjernes igen (hvis det ikke er rørt)
+      const next = todo.nextId ? store.data.todos[todo.nextId] : undefined;
+      if (next && !next.doneAt) await store.remove('todos', next.id);
+      await store.put('todos', todo.id, { ...todo, doneAt: undefined, nextId: undefined });
+      return;
+    }
+    // Et gentagende punkt får et nyt, når det klares
+    const next = nextTodo(todo, t, uid());
+    if (next) await store.put('todos', next.id, next);
+    await store.put('todos', todo.id, { ...todo, doneAt: Date.now(), ...(next ? { nextId: next.id } : {}) });
+  };
   const meta = [
+    todo.repeat && !done ? `↻ ${REPEATS.find((r) => r.id === todo.repeat)?.short}` : '',
     todo.due && !done ? dueText(todo.due, t) : '',
     todo.showFrom && todo.showFrom > t && !todo.someday && !done ? `vises fra ${shortDate(todo.showFrom)}` : '',
     todo.from ?? '',
@@ -157,6 +170,7 @@ export function TodoEditScreen({ id }: { id?: string }) {
   const [dueOpen, setDueOpen] = useState(!!old?.due && ![t, addDays(t, 1)].includes(old.due));
   const [when, setWhen] = useState<When>(old?.someday ? 'someday' : old?.showFrom && old.showFrom > t ? 'date' : 'now');
   const [showFrom, setShowFrom] = useState(old?.showFrom && old.showFrom > t ? old.showFrom : addDays(t, 1));
+  const [repeat, setRepeat] = useState<Todo['repeat']>(old?.repeat);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState('');
   const stopMic = useRef<(() => void) | null>(null);
@@ -189,6 +203,7 @@ export function TodoEditScreen({ id }: { id?: string }) {
       due: due || undefined,
       someday: when === 'someday' || undefined,
       showFrom: when === 'date' ? showFrom : undefined,
+      repeat,
     };
     await store.put('todos', todo.id, todo);
     go('huskeliste');
@@ -230,6 +245,14 @@ export function TodoEditScreen({ id }: { id?: string }) {
           <button className={`chip ${when === 'someday' ? 'on' : ''}`} onClick={() => setWhen('someday')}>Engang</button>
         </div>
         {when === 'date' && <input type="date" value={showFrom} min={addDays(t, 1)} onChange={(e) => e.target.value && setShowFrom(e.target.value)} aria-label="Vis fra" />}
+      </section>
+      <section className="stack-sm">
+        <h3>Gentag</h3>
+        <div className="chips">
+          <button className={`chip ${!repeat ? 'on' : ''}`} onClick={() => setRepeat(undefined)}>Aldrig</button>
+          {REPEATS.map((r) => <button key={r.id} className={`chip ${repeat === r.id ? 'on' : ''}`} onClick={() => setRepeat(r.id)}>{r.label}</button>)}
+        </div>
+        {repeat && <p className="small muted">Når du klarer det, kommer det igen{due ? ' med ny frist' : ' om en ' + (repeat === 'week' ? 'uge' : repeat === 'month' ? 'måned' : 'år')}.</p>}
       </section>
       {error && <p className="error">{error}</p>}
       <button className="btn primary block" onClick={save}>Gem</button>

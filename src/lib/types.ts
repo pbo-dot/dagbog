@@ -109,6 +109,8 @@ export interface Todo {
   someday?: boolean; // lagt væk til "Engang": vises ikke i "I dag"
   doneAt?: number; // klaret
   from?: string; // hvor det kom fra, fx "fra samtalen tirsdag"
+  repeat?: 'week' | 'month' | 'year'; // kommer igen, når det er klaret
+  nextId?: string; // det næste punkt, der blev lavet, da dette blev klaret (så det kan fortrydes)
   createdAt: number;
 }
 
