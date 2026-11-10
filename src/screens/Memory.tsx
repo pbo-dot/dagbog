@@ -1,53 +1,16 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AIError } from '../lib/ai';
-import { addDays, addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, today, WEEKDAYS } from '../lib/dates';
+import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
 import { useStore } from '../lib/store';
-import { MOODS, type Entry, type MemoryKind } from '../lib/types';
-import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
+import { MOODS } from '../lib/types';
+import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery } from '../ui';
 import { askSoon } from './Ask';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
-}
-
-function findNear(entries: Record<string, Entry>, iso: string, radius = 3): Entry | undefined {
-  if (entries[iso]) return entries[iso];
-  for (let r = 1; r <= radius; r++) {
-    const e = entries[addDays(iso, -r)] ?? entries[addDays(iso, r)];
-    if (e) return e;
-  }
-}
-
-function ThatDay() {
-  const { entries, settings } = useStore().data;
-  const t = today();
-  const show = settings.memories ?? ['year', 'quarter', 'month'];
-  const cards = [
-    { kind: 'year', label: 'I dag for et år siden', iso: addMonths(t, -12) },
-    { kind: 'quarter', label: 'For tre måneder siden', iso: addMonths(t, -3) },
-    { kind: 'month', label: 'For en måned siden', iso: addMonths(t, -1) },
-  ]
-    .filter((c) => show.includes(c.kind as MemoryKind))
-    .map((c) => ({ ...c, entry: findNear(entries, c.iso) }))
-    .filter((c): c is typeof c & { entry: Entry } => !!c.entry);
-
-  if (!cards.length) return null;
-  return (
-    <div className="memory-cards">
-      {cards.map((c) => (
-        <button key={c.label} className="card tappable memory-card" onClick={() => go(`husk/dag/${c.entry.date}`)}>
-          <span className="tiny muted">{c.label}{c.entry.date !== c.iso ? ' (cirka)' : ''}</span>
-          {c.entry.photos?.[0] && <PhotoImg id={c.entry.photos[0]} className="memory-photo" alt="" />}
-          <span className="when">{formatFull(c.entry.date)}</span>
-          <span className="serif small" style={{ display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{c.entry.text}</span>
-          <span style={{ marginTop: 'auto' }}><MoodTag mood={c.entry.mood} /></span>
-        </button>
-      ))}
-    </div>
-  );
 }
 
 /** Ét søgefelt for det hele: dage, noter, mennesker og huskeliste, og "Spørg Claude" med samme ord. */
@@ -159,7 +122,6 @@ export function MemoryScreen() {
           </span>
         </button>
       )}
-      <ThatDay />
       <div className="card list hub">
         <HubRow icon={Icon.grid} title="Månedens kapitel" text={w.month ? `Nyt: ${formatMonth(chapterId).toLowerCase()}` : `Seneste: ${formatMonth(latestChapter).toLowerCase()}`} onClick={() => go(`husk/maaned/${w.month ? chapterId : latestChapter}`)} dot={w.month} />
         <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />

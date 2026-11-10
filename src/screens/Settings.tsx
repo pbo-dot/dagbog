@@ -9,7 +9,7 @@ import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
-import { DEFAULT_SETTINGS, type MemoryKind, type Settings } from '../lib/types';
+import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
 import type { Data } from '../lib/store';
 import { DoubleConfirm, go, Header, Icon, Switch } from '../ui';
 import { PinChooser } from './Lock';
@@ -48,7 +48,6 @@ function Row({ label, hint, children }: { label: string; hint?: ReactNode; child
 }
 
 /** Minde-kortene på Husk, der kan slås til og fra. */
-const MEMORY_KINDS: Array<[MemoryKind, string]> = [['year', 'I dag for et år siden'], ['quarter', 'For tre måneder siden'], ['month', 'For en måned siden']];
 
 const MODELS = [
   { id: 'claude-opus-5-5', label: 'Claude Opus 5.5 (klogest)' },
@@ -206,14 +205,6 @@ export function SettingsScreen({ page }: { page?: string }) {
         <Row label="Vis dagens spørgsmål" hint="Et lille spørgsmål over skrivefeltet, der skifter hver dag.">
           <Switch label="Vis dagens spørgsmål" checked={s.showQuestion} onChange={(v) => update((x) => ({ ...x, showQuestion: v }))} />
         </Row>
-      </Section>
-      <Section title="Minder på Husk">
-        {MEMORY_KINDS.map(([kind, label]) => (
-          <Row key={kind} label={label}>
-            <Switch label={label} checked={(s.memories ?? []).includes(kind)}
-              onChange={(v) => update((x) => ({ ...x, memories: v ? [...(x.memories ?? []).filter((k) => k !== kind), kind] : (x.memories ?? []).filter((k) => k !== kind) }))} />
-          </Row>
-        ))}
       </Section>
       </>)}
 

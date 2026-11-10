@@ -273,10 +273,6 @@ label.field > input, label.field > select, label.field > textarea { color: var(-
 .crisis { border: 1px solid var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
 
 /* Husk */
-.memory-cards { display: grid; grid-auto-flow: column; grid-auto-columns: 85%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
-.memory-cards > * { scroll-snap-align: start; }
-.card.memory-card { min-height: 170px; display: flex; flex-direction: column; gap: 8px; }
-.memory-card .when { font-family: var(--serif); font-size: 1.2rem; }
 .month-row { display: flex; flex-direction: column; gap: 8px; }
 mark { background: var(--hl); color: inherit; border-radius: 3px; padding: 0 2px; }
 .list { display: flex; flex-direction: column; }
@@ -324,8 +320,6 @@ button.list-item:first-child { border-top: 0; }
 .photo-viewer img { max-width: 100vw; max-height: 100dvh; object-fit: contain; }
 .photo-thumb img { cursor: zoom-in; }
 .photo-close { position: absolute; top: calc(env(safe-area-inset-top) + 12px); right: 12px; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; font-size: 26px; line-height: 1; }
-.memory-photo { width: 100%; height: 120px; object-fit: cover; border-radius: 10px; display: block; }
-.memory-photo.photo-loading { height: 120px; border-radius: 10px; }
 
 /* Faste ting på Skriv-siden */
 .card.routine { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--accent-soft); box-shadow: none; }
