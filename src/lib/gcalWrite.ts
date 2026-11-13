@@ -66,17 +66,6 @@ export function needsPush(a: Appointment): boolean {
   return !!a.toGoogle && (!a.google || a.google.at < (a.changedAt ?? a.createdAt));
 }
 
-/** En påmindelse om et huskepunkt: 15 minutter på fristdagen, med besked på telefonen til tiden. */
-export function toReminderEvent(text: string, date: string, time: string) {
-  return {
-    summary: text,
-    description: 'Huskepunkt fra Dagbog',
-    start: { dateTime: `${date}T${time}:00`, timeZone: ZONE },
-    end: { dateTime: plusMinutes(date, time, 15), timeZone: ZONE },
-    reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 0 }] },
-  };
-}
-
 /** Opretter eller retter påmindelsen i Google. Giver dens plads i Google. */
 export async function pushReminder(token: string, old: { cal: string; id: string } | undefined, body: object, cal: string): Promise<{ cal: string; id: string }> {
   const json = JSON.stringify(body);

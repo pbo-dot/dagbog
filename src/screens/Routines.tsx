@@ -237,6 +237,13 @@ export function RoutineScreen({ id, earlier }: { id: string; earlier?: boolean }
         <input type="date" value={r.start} onChange={(e) => e.target.value && update({ start: e.target.value })} />
       </label>
 
+      <label className="field">Påmind kl. (valgfrit)
+        <input type="time" value={r.remindAt ?? ''} onChange={(e) => update({ remindAt: e.target.value || undefined })} aria-label="Påmind klokken" />
+      </label>
+      {r.remindAt && !store.data.settings.google.remind?.on && (
+        <button className="btn small" onClick={() => go('indstillinger/google')}>Slå påmindelser til under Google Kalender</button>
+      )}
+
       <section className="stack-sm">
         <h3>Skift mellem (valgfrit)</h3>
         <p className="tiny muted">Fx "højre ben" og "venstre ben". Næste gang foreslås det næste i rækken.</p>

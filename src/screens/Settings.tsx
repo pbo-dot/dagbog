@@ -111,13 +111,22 @@ function GoogleSection() {
               </label>
             )}
             <div className="setting"><strong>Påmindelser</strong>
-              <Switch checked={!!g.remind?.on} onChange={(on) => saveGoogle({ remind: { time: REMIND_TIME, ...g.remind, on } })} label="Huskepunkter med frist giver besked på telefonen" />
+              <Switch checked={!!g.remind?.on} onChange={(on) => saveGoogle({ remind: { time: REMIND_TIME, ...g.remind, on } })} label="Dagbog giver besked på telefonen via Google Kalender" />
             </div>
             {g.remind?.on && (
-              <label className="setting"><span>Klokken</span>
+              <label className="setting"><span>Huskepunkter med frist kl.</span>
                 <input type="time" value={g.remind.time || REMIND_TIME} onChange={(e) => saveGoogle({ remind: { ...g.remind!, time: e.target.value || REMIND_TIME } })} />
               </label>
             )}
+            {g.remind?.on && (<>
+              <div className="setting"><span>Skriv i dagbogen kl. {s.reminder.time}</span>
+                <Switch checked={!!g.remind.write} onChange={(write) => saveGoogle({ remind: { ...g.remind!, write } })} label="Skriv i dagbogen hver dag" />
+              </div>
+              <div className="setting"><span>Fødselsdage, også en uge før</span>
+                <Switch checked={!!g.remind.birthdays} onChange={(birthdays) => saveGoogle({ remind: { ...g.remind!, birthdays } })} label="Fødselsdage" />
+              </div>
+              <span className="small muted">Faste ting: vælg "Påmind kl." på den enkelte ting.</span>
+            </>)}
             {g.remind?.on && g.calendars.some((c) => c.writable) && (
               <label className="setting"><span>Kalender til påmindelser</span>
                 <select value={g.remind.cal || pushCalendar(g)} onChange={(e) => saveGoogle({ remind: { ...g.remind!, cal: e.target.value } })}>

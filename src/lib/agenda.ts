@@ -27,13 +27,13 @@ export interface AgendaData {
 export function googleEvents(data: AgendaData, from: string, to: string): GoogleEvent[] {
   const on = new Map((data.settings?.google.calendars ?? []).filter((c) => c.on).map((c) => [c.id, c]));
   const out: GoogleEvent[] = [];
-  // Påmindelser om huskepunkter ligger i Google, men står allerede på huskelisten
+  // Påmindelser fra Dagbog ligger i Google, men står allerede i Dagbog (gentagne har id "<id>_<tid>")
   const reminders = new Set(Object.values(data.settings?.google.todoEvents ?? {}).map((e) => e.id));
   for (const m of Object.values(data.google ?? {})) {
     // Aftaler over flere dage ligger under startmåneden
     if (m.id > monthId(to)) continue;
     for (const e of m.events) {
-      if (on.has(e.cal) && e.date <= to && e.end >= from && !reminders.has(e.id)) out.push(e);
+      if (on.has(e.cal) && e.date <= to && e.end >= from && !reminders.has(e.id) && !reminders.has(e.id.split('_')[0])) out.push(e);
     }
   }
   return out;

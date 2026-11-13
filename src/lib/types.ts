@@ -163,6 +163,7 @@ export interface Routine {
   start: string; // første gang (YYYY-MM-DD)
   options: string[]; // skift mellem, fx ["højre ben", "venstre ben"]
   log: RoutineLog[]; // nyeste først
+  remindAt?: string; // HH:MM: påmindelse i Google Kalender de dage, den skal tages
   createdAt: number;
 }
 
@@ -255,8 +256,10 @@ export interface Settings {
     push: boolean; // nye aftaler fra Dagbog lægges også i Google
     pushCal: string; // kalenderen, de lægges i ('' = hovedkalenderen)
     pendingDeletes: Array<{ cal: string; id: string }>; // slettet i Dagbog, mangler at blive slettet i Google
-    remind?: { on: boolean; time: string; cal?: string }; // påmindelser om huskepunkter med frist (HH:MM, kalender '' = samme som aftaler)
-    todoEvents?: Record<string, TodoEvent>; // huskepunkt-id → påmindelsen i Google
+    // Påmindelser i Google Kalender: huskepunkter med frist (kl. `time`), faste ting med klokkeslæt,
+    // "skriv i dagbogen" (`write`) og fødselsdage (`birthdays`). Kalender '' = samme som aftaler.
+    remind?: { on: boolean; time: string; cal?: string; write?: boolean; birthdays?: boolean };
+    todoEvents?: Record<string, TodoEvent>; // påmindelserne i Google: huskepunkt-id, "r:<fast ting>", "w" (skriv) eller "b:<person>"
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag

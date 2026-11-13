@@ -1,9 +1,9 @@
 // Henter Google-aftaler ind i dagbogen og holder styr på, om det kører.
 import { useEffect, useSyncExternalStore } from 'react';
 import { today } from './dates';
-import { deleteEvent, needsPush, pushAppointment, pushReminder, toReminderEvent } from './gcalWrite';
+import { deleteEvent, needsPush, pushAppointment, pushReminder } from './gcalWrite';
 import { clientIdOf, currentToken, fetchGoogle, GoogleError, lastError, mergeCalendars, noteAuto, saveHint, signIn, STALE_MS, writeToken } from './google';
-import { planReminders, REMIND_TIME } from './todoReminders';
+import { planReminders, wantedReminders } from './todoReminders';
 import type { Appointment, TodoEvent } from './types';
 import { useStore } from './store';
 
@@ -123,11 +123,9 @@ let latest: Store | null = null;
 export async function syncTodoReminders(store: Store): Promise<void> {
   const g = store.data.settings.google;
   const index = sentIndex ?? g.todoEvents ?? {};
-  const on = !!g.remind?.on;
-  if (!on && !Object.keys(index).length) return;
-  const time = g.remind?.time || REMIND_TIME;
+  if (!g.remind?.on && !Object.keys(index).length) return;
   const cal = g.remind?.cal || pushCalendar(g);
-  const plan = planReminders(store.data.todos, index, today(), time, cal, on);
+  const plan = planReminders(wantedReminders(store.data, today(), cal, location.origin + location.pathname), index);
   if (!plan.put.length && !plan.remove.length) return;
   const token = writeToken();
   if (!token) {
@@ -142,15 +140,15 @@ export async function syncTodoReminders(store: Store): Promise<void> {
   try {
     for (const r of plan.remove) {
       await deleteEvent(token, r.ev.cal, r.ev.id);
-      delete next[r.todoId];
+      delete next[r.ref];
       gone++;
     }
     for (const p of plan.put) {
-      const where = await pushReminder(token, p.old, toReminderEvent(p.todo.text, p.todo.due!, time), cal);
-      next[p.todo.id] = { ...where, key: p.key };
+      const where = await pushReminder(token, p.old, p.want.body, cal);
+      next[p.want.ref] = { ...where, key: p.want.sig };
       made++;
     }
-    void noteAuto(`Påmindelser: ${made} lagt i Google Kalender, ${gone} fjernet (kl. ${time})`);
+    void noteAuto(`Påmindelser: ${made} lagt i Google Kalender, ${gone} fjernet`);
   } catch (e) {
     const msg = e instanceof GoogleError ? e.message : 'Kunne ikke sende til Google.';
     set({ error: msg });
@@ -188,5 +186,5 @@ export function useGoogleAutoSync() {
   latest = store;
   useEffect(() => {
     remindSoon(1500);
-  }, [store.data.todos, g.remind?.on, g.remind?.time, g.remind?.cal]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [store.data.todos, store.data.routines, store.data.people, store.data.settings.reminder, g.remind]); // eslint-disable-line react-hooks/exhaustive-deps
 }

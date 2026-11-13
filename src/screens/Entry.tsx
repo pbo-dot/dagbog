@@ -4,7 +4,8 @@ import { addDays, formatLong, today, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
-import { groupTodos } from '../lib/todos';
+import { dayQuestion, meetPreps } from '../lib/meet';
+import { groupTodos, shortDate } from '../lib/todos';
 import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
@@ -14,20 +15,51 @@ import { BackupNudge } from './Backup';
 import { RoutineCards } from './Routines';
 import { TodoCard } from './Todos';
 
-const QUESTIONS = [
-  'Hvad fyldte mest i dag?',
-  'Hvad tager du med dig fra i dag?',
-  'Hvordan har din krop haft det i dag?',
-  'Hvad overraskede dig i dag?',
-  'Hvem tænkte du på i dag?',
-  'Hvad gav dig energi – og hvad tog den?',
-  'Hvad ville du ønske, du havde sagt eller gjort?',
-  'Hvad var et øjeblik, du gerne vil huske?',
-];
+/** Klokken nu som "HH:MM". */
+function nowHM(): string {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
 
-function questionFor(date: string) {
-  const n = Math.floor(new Date(date).getTime() / 86400000);
-  return QUESTIONS[((n % QUESTIONS.length) + QUESTIONS.length) % QUESTIONS.length];
+const MEET_KEY = 'dagbog-moedes-skjult';
+
+/**
+ * "Før du mødes": har du en aftale i dag eller i morgen med en fra Mennesker, vises det, du
+ * har skrevet om personen (vigtigt lige nu, seneste note, seneste samtale, huskepunkter).
+ * × skjuler kortet resten af dagen.
+ */
+function MeetCards() {
+  const { data } = useStore();
+  const t = today();
+  const [hidden, setHidden] = useState<string[]>(() => { try { const v = JSON.parse(localStorage.getItem(MEET_KEY) ?? '{}') as { day?: string; ids?: string[] }; return v.day === t ? v.ids ?? [] : []; } catch { return []; } });
+  const preps = meetPreps(data, t, nowHM()).filter((m) => !hidden.includes(m.person.id)).slice(0, 2);
+  if (!preps.length) return null;
+  const hide = (id: string) => setHidden((old) => { const ids = [...old, id]; try { localStorage.setItem(MEET_KEY, JSON.stringify({ day: t, ids })); } catch { /* ikke afgørende */ } return ids; });
+  const cut = (x: string, n = 140) => (x.length > n ? `${x.slice(0, n).trimEnd()} …` : x);
+  return (
+    <>
+      {preps.map((m) => {
+        const first = m.person.name.trim().split(/\s+/)[0];
+        return (
+          <section key={m.person.id} className="card meet-card" aria-label={`Før du mødes med ${first}`}>
+            <div className="row between">
+              <button className="meet-head" onClick={() => go(`mennesker/${m.person.id}`)}>
+                <strong>Før du mødes med {first}</strong>
+                <span className="small muted">{m.tomorrow ? 'I morgen' : 'I dag'}{m.item.time ? ` kl. ${m.item.time.replace(':', '.')}` : ''} · {m.item.title}</span>
+              </button>
+              <button className="icon-btn" onClick={() => hide(m.person.id)} aria-label={`Skjul ${first} i dag`}>×</button>
+            </div>
+            <ul className="meet-list">
+              {m.person.important.trim() && <li><span className="meet-k">Vigtigt lige nu</span>{cut(m.person.important.trim())}</li>}
+              {m.lastNote && <li><span className="meet-k">Sidst, {shortDate(m.lastNote.date)}</span>{cut(m.lastNote.text)}</li>}
+              {m.lastTalk && <li><span className="meet-k">Samtale {shortDate(m.lastTalk.date)}</span>{cut(m.lastTalk.remember.slice(0, 2).join(' · ') || m.lastTalk.summary || m.lastTalk.title)}</li>}
+              {m.todos.slice(0, 2).map((x) => <li key={x.id}><span className="meet-k">Huskeliste</span>{cut(x.text, 80)}</li>)}
+            </ul>
+          </section>
+        );
+      })}
+    </>
+  );
 }
 
 const FOLD_KEY = 'dagbog-idag-aaben';
@@ -183,7 +215,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
       tags,
       good: good.map((g) => g.trim()).filter(Boolean),
       photos,
-      question: existing?.question ?? (data.settings.showQuestion ? questionFor(date) : undefined),
+      question: existing?.question ?? (data.settings.showQuestion ? dayQuestion(data, date, today(), nowHM()) : undefined),
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
@@ -333,7 +365,8 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         )}
         {isToday && <BackupNudge />}
         {isToday && <TodayFold />}
-        {data.settings.showQuestion && <p className="question">{existing?.question ?? questionFor(date)}</p>}
+        {isToday && <MeetCards />}
+        {data.settings.showQuestion && <p className="question">{existing?.question ?? dayQuestion(data, date, today(), nowHM())}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
       </div>
 
