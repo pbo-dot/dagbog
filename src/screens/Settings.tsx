@@ -9,6 +9,7 @@ import { useStore } from '../lib/store';
 import { backupNow } from '../lib/backupSync';
 import { clientIdOf, currentToken, driveToken, forget, writeToken, GOOGLE_CLIENT_ID, redirectUri, signIn } from '../lib/google';
 import { pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
+import { REMIND_TIME } from '../lib/todoReminders';
 import { DEFAULT_SETTINGS, type Settings } from '../lib/types';
 import type { Data } from '../lib/store';
 import { DoubleConfirm, go, Header, Icon, Switch } from '../ui';
@@ -109,7 +110,22 @@ function GoogleSection() {
                 </select>
               </label>
             )}
-            {g.push && !writeToken() && (
+            <div className="setting"><strong>Påmindelser</strong>
+              <Switch checked={!!g.remind?.on} onChange={(on) => saveGoogle({ remind: { time: REMIND_TIME, ...g.remind, on } })} label="Huskepunkter med frist giver besked på telefonen" />
+            </div>
+            {g.remind?.on && (
+              <label className="setting"><span>Klokken</span>
+                <input type="time" value={g.remind.time || REMIND_TIME} onChange={(e) => saveGoogle({ remind: { ...g.remind!, time: e.target.value || REMIND_TIME } })} />
+              </label>
+            )}
+            {g.remind?.on && g.calendars.some((c) => c.writable) && (
+              <label className="setting"><span>Kalender til påmindelser</span>
+                <select value={g.remind.cal || pushCalendar(g)} onChange={(e) => saveGoogle({ remind: { ...g.remind!, cal: e.target.value } })}>
+                  {g.calendars.filter((c) => c.writable).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </label>
+            )}
+            {(g.push || g.remind?.on) && !writeToken() && (
               <div className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
                 <strong>Første gang</strong>
                 <span className="small">Google spørger, om Dagbog må skrive i kalenderen.</span>

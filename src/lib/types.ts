@@ -114,6 +114,13 @@ export interface Todo {
   createdAt: number;
 }
 
+/** En påmindelse i Google Kalender for et huskepunkt. `key` = det, der sidst blev sendt (frist, tid, tekst). */
+export interface TodoEvent {
+  cal: string;
+  id: string;
+  key: string;
+}
+
 /** Forbrug af Claude i én måned (dollar, se usage.ts). */
 export interface Usage {
   id: string; // YYYY-MM
@@ -248,6 +255,8 @@ export interface Settings {
     push: boolean; // nye aftaler fra Dagbog lægges også i Google
     pushCal: string; // kalenderen, de lægges i ('' = hovedkalenderen)
     pendingDeletes: Array<{ cal: string; id: string }>; // slettet i Dagbog, mangler at blive slettet i Google
+    remind?: { on: boolean; time: string; cal?: string }; // påmindelser om huskepunkter med frist (HH:MM, kalender '' = samme som aftaler)
+    todoEvents?: Record<string, TodoEvent>; // huskepunkt-id → påmindelsen i Google
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag

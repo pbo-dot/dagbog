@@ -1,9 +1,10 @@
 // Henter Google-aftaler ind i dagbogen og holder styr på, om det kører.
 import { useEffect, useSyncExternalStore } from 'react';
 import { today } from './dates';
-import { deleteEvent, needsPush, pushAppointment } from './gcalWrite';
-import { clientIdOf, currentToken, fetchGoogle, GoogleError, lastError, mergeCalendars, saveHint, signIn, STALE_MS, writeToken } from './google';
-import type { Appointment } from './types';
+import { deleteEvent, needsPush, pushAppointment, pushReminder, toReminderEvent } from './gcalWrite';
+import { clientIdOf, currentToken, fetchGoogle, GoogleError, lastError, mergeCalendars, noteAuto, saveHint, signIn, STALE_MS, writeToken } from './google';
+import { planReminders, REMIND_TIME } from './todoReminders';
+import type { Appointment, TodoEvent } from './types';
 import { useStore } from './store';
 
 type Store = ReturnType<typeof useStore>;
@@ -108,6 +109,65 @@ export async function pushAppointments(store: Store, changed: Appointment[] = []
   }
 }
 
+let reminding = false;
+// Det, der sidst blev sendt i denne session. Kun denne funktion retter i listen, så den er
+// rigtigere end en skærm, der endnu ikke er tegnet om (ellers kan samme påmindelse blive lavet to gange).
+let sentIndex: Record<string, TodoEvent> | null = null;
+let remindTimer: ReturnType<typeof setTimeout> | undefined;
+let latest: Store | null = null;
+
+/**
+ * Holder påmindelserne i Google Kalender ens med huskelisten: opretter, retter og fjerner.
+ * Hvert forsøg skrives i den lille log (Sikkerhedskopi › "Seneste forsøg").
+ */
+export async function syncTodoReminders(store: Store): Promise<void> {
+  const g = store.data.settings.google;
+  const index = sentIndex ?? g.todoEvents ?? {};
+  const on = !!g.remind?.on;
+  if (!on && !Object.keys(index).length) return;
+  const time = g.remind?.time || REMIND_TIME;
+  const cal = g.remind?.cal || pushCalendar(g);
+  const plan = planReminders(store.data.todos, index, today(), time, cal, on);
+  if (!plan.put.length && !plan.remove.length) return;
+  const token = writeToken();
+  if (!token) {
+    void noteAuto('Påmindelser venter: Dagbog har ikke lov til at skrive i Google Kalender lige nu');
+    return;
+  }
+  if (reminding) return;
+  reminding = true;
+  const next = { ...index };
+  let made = 0;
+  let gone = 0;
+  try {
+    for (const r of plan.remove) {
+      await deleteEvent(token, r.ev.cal, r.ev.id);
+      delete next[r.todoId];
+      gone++;
+    }
+    for (const p of plan.put) {
+      const where = await pushReminder(token, p.old, toReminderEvent(p.todo.text, p.todo.due!, time), cal);
+      next[p.todo.id] = { ...where, key: p.key };
+      made++;
+    }
+    void noteAuto(`Påmindelser: ${made} lagt i Google Kalender, ${gone} fjernet (kl. ${time})`);
+  } catch (e) {
+    const msg = e instanceof GoogleError ? e.message : 'Kunne ikke sende til Google.';
+    set({ error: msg });
+    void noteAuto(`Påmindelser fejlede efter ${made} lagt og ${gone} fjernet: ${msg}`);
+  } finally {
+    reminding = false;
+    if (made || gone) sentIndex = next;
+    if (made || gone) await store.saveSettings({ ...store.data.settings, google: { ...store.data.settings.google, todoEvents: next } });
+  }
+}
+
+/** Én fælles ventetid, og altid med de nyeste data, uanset hvor mange skærme der beder om det. */
+function remindSoon(ms: number) {
+  clearTimeout(remindTimer);
+  remindTimer = setTimeout(() => { if (latest) void syncTodoReminders(latest); }, ms);
+}
+
 /** Henter automatisk efter login og når appen kommer frem, hvis aftalerne er gamle. */
 export function useGoogleAutoSync() {
   const store = useStore();
@@ -118,9 +178,15 @@ export function useGoogleAutoSync() {
     const run = () => {
       if (!document.hidden && clientIdOf(g) && currentToken() && Date.now() - g.lastSync > STALE_MS) syncGoogle(store);
       if (!document.hidden && writeToken()) pushAppointments(store);
+      if (!document.hidden) remindSoon(0);
     };
     run();
     document.addEventListener('visibilitychange', run);
     return () => document.removeEventListener('visibilitychange', run);
   }, [store]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Huskelisten eller indstillingen er ændret: ret påmindelserne lidt efter (så flere rettelser samles)
+  latest = store;
+  useEffect(() => {
+    remindSoon(1500);
+  }, [store.data.todos, g.remind?.on, g.remind?.time, g.remind?.cal]); // eslint-disable-line react-hooks/exhaustive-deps
 }
