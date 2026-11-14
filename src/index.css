@@ -679,3 +679,17 @@ label.btn { cursor: pointer; }
 .photo-strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 18px; }
 .photo-strip::-webkit-scrollbar { display: none; }
 .strip-img { flex: none; width: 132px; height: 132px; border-radius: 18px; object-fit: cover; scroll-snap-align: start; cursor: zoom-in; background: var(--surface-2); }
+
+/* Månedskalender på Skriv: prik = skrevet, firkant = billeder */
+.date-grid { display: flex; flex-direction: column; gap: 10px; }
+.dg-cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.dg-head { text-align: center; font-size: .72rem; font-weight: 600; color: var(--muted); padding-bottom: 2px; }
+.dg-day { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 46px; border: none; border-radius: 14px; background: none; color: var(--text); font: inherit; font-size: .95rem; padding: 4px 0; }
+.dg-day:disabled { opacity: .3; }
+.dg-day.today span:first-child { font-weight: 700; color: var(--accent); }
+.dg-day.on { background: var(--accent); color: var(--accent-text); }
+.dg-day.on.today span:first-child { color: var(--accent-text); }
+.dg-marks { display: flex; gap: 3px; height: 7px; }
+.dg-text, .dg-photo { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
+.dg-photo { border-radius: 2px; background: var(--clarity); }
+.dg-day.on .dg-text, .dg-day.on .dg-photo { background: var(--accent-text); }

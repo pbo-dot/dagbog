@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { agenda } from '../lib/agenda';
-import { addDays, formatLong, today, weekId } from '../lib/dates';
+import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
@@ -51,6 +51,47 @@ function DayPhotos({ date }: { date: string }) {
         </ul>
       )}
       {open && <PhotoViewer id={open} onClose={() => setOpen(null)} />}
+    </section>
+  );
+}
+
+/**
+ * Månedskalender til at vælge dag på Skriv: en prik for skrevne dage og et billede-mærke for dage
+ * med billeder fra telefonen, så man kan se, hvor der er noget.
+ */
+function DateGrid({ date, onPick }: { date: string; onPick: (d: string) => void }) {
+  const { data } = useStore();
+  const [month, setMonth] = useState(monthId(date));
+  const t = today();
+  const first = `${month}-01`;
+  const lead = (new Date(`${first}T12:00:00`).getDay() + 6) % 7; // mandag først
+  const days = new Date(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0).getDate();
+  const photoDays = new Set((data.phonePhotos[month]?.photos ?? []).map((p) => toISO(new Date(p.t))));
+  const cells: Array<string | null> = [...Array(lead).fill(null), ...Array.from({ length: days }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)];
+  return (
+    <section className="card date-grid" aria-label="Vælg dag">
+      <div className="row between" style={{ alignItems: 'center' }}>
+        <button className="day-arrow" onClick={() => setMonth(monthId(addMonths(first, -1)))} aria-label="Måneden før">{Icon.chevronLeft}</button>
+        <strong>{formatMonth(month)}</strong>
+        <button className="day-arrow" disabled={month >= monthId(t)} onClick={() => setMonth(monthId(addMonths(first, 1)))} aria-label="Måneden efter">{Icon.chevronRight}</button>
+      </div>
+      <div className="dg-cells">
+        {['M', 'T', 'O', 'T', 'F', 'L', 'S'].map((d, i) => <span key={i} className="dg-head">{d}</span>)}
+        {cells.map((d, i) => d === null ? <span key={i} /> : (
+          <button key={d} className={`dg-day${d === date ? ' on' : ''}${d === t ? ' today' : ''}`} disabled={d > t} onClick={() => onPick(d)}
+            aria-label={`${formatLong(d)}${data.entries[d] ? ', skrevet' : ''}${photoDays.has(d) ? ', billeder' : ''}`}>
+            <span>{Number(d.slice(8))}</span>
+            <span className="dg-marks">
+              {data.entries[d] && <i className="dg-text" />}
+              {photoDays.has(d) && <i className="dg-photo" />}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="row" style={{ gap: 16, justifyContent: 'center' }}>
+        <span className="tiny muted"><i className="dg-text" /> skrevet</span>
+        <span className="tiny muted"><i className="dg-photo" /> billeder</span>
+      </div>
     </section>
   );
 }
@@ -367,17 +408,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           </button>
           <button className="day-arrow" disabled={isToday} onClick={() => { const n = addDays(date, 1); go(n === today() ? 'skriv' : `skriv/${n}`); }} aria-label="Dagen efter">{Icon.chevronRight}</button>
         </div>
-        {pickDate && (
-          <input
-            type="date"
-            value={date}
-            max={today()}
-            onChange={(e) => {
-              setPickDate(false);
-              if (e.target.value) go(e.target.value === today() ? 'skriv' : `skriv/${e.target.value}`);
-            }}
-          />
-        )}
+        {pickDate && <DateGrid date={date} onPick={(d) => { setPickDate(false); go(d === today() ? 'skriv' : `skriv/${d}`); }} />}
         <div className="row between" style={{ alignItems: 'center' }}>
           <h1>{isToday ? greeting() : existing ? 'Din dag' : 'Skriv om dagen'}</h1>
           {isToday && !existing && <button className="btn small" onClick={skipToday}>Spring over</button>}
