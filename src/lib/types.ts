@@ -130,6 +130,7 @@ export interface PhonePhoto {
   city?: string; // nærmeste by (regnet på telefonen ud fra GeoNames)
   cc?: string; // land (ISO, fx "PT")
   thumb?: string; // lille udgave i Dagbogs billedlager ("tel-<id>"), op til 5 pr. dag
+  desc?: string; // kort beskrivelse af billedet fra Claude (trin 4)
 }
 
 /** Billederne fra én måned (nøgle YYYY-MM). */

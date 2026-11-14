@@ -408,11 +408,28 @@ export function placeLines(months: Record<string, PhotoMonth>, visits: Record<st
     const stays = dayStays(months, d, visits, fixed);
     const n = dayPhotoCount(months, d);
     const ccs = [...new Set(stays.map((x) => x.cc))].filter((c) => c && c !== 'DK');
-    return `- ${d}: ${stays.map((x) => `${x.city} ${stayTime(x)}`).join(', ') || 'sted ukendt'}${ccs.length ? ` (${ccs.map(countryName).join(', ')})` : ''}${n ? ` · ${n} billeder` : ''}`;
+    const descs = dayDescs(months, d).map((x) => `${x.time} ${x.text}`);
+    return `- ${d}: ${stays.map((x) => `${x.city} ${stayTime(x)}`).join(', ') || 'sted ukendt'}${ccs.length ? ` (${ccs.map(countryName).join(', ')})` : ''}${n ? ` · ${n} billeder` : ''}${descs.length ? ` · billeder: ${descs.join('; ')}` : ''}`;
   });
 }
 
 /** Id'erne på dagens små billeder (i Dagbogs billedlager), i tidsorden. */
 export function dayThumbs(months: Record<string, PhotoMonth>, date: string): string[] {
   return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => p.thumb && toISO(new Date(p.t)) === date).map((p) => p.thumb!);
+}
+
+/** Claudes beskrivelser af dagens billeder: [{time: "11.02", text: "Strand ved Faro i sol"}]. */
+export function dayDescs(months: Record<string, PhotoMonth>, date: string): Array<{ time: string; text: string }> {
+  return (months[date.slice(0, 7)]?.photos ?? [])
+    .filter((p) => p.desc && toISO(new Date(p.t)) === date)
+    .map((p) => ({ time: hm(p.t), text: p.desc! }));
+}
+
+/** Til Spørg (hele dagbogen): én linje pr. beskrevet billede, nyeste først, højst `max`. */
+export function photoLines(months: Record<string, PhotoMonth>, max = 1500): string[] {
+  const all: Array<{ t: number; line: string }> = [];
+  for (const m of Object.values(months)) {
+    for (const p of m.photos) if (p.desc) all.push({ t: p.t, line: `- ${toISO(new Date(p.t))} ${hm(p.t)}${p.city ? ` ${p.city}` : ''}: ${p.desc}` });
+  }
+  return all.sort((a, b) => b.t - a.t).slice(0, max).sort((a, b) => a.t - b.t).map((x) => x.line);
 }

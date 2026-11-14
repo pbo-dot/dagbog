@@ -4,7 +4,9 @@ import { useMemo, useRef, useState } from 'react';
 import { addDays, formatMonth, toISO } from '../lib/dates';
 import { countryName, dayPhotoCount, fixedStays, openAppUrl, suggestFixed, tripLine, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
-import { importTimeline, useImportState } from '../lib/placesImport';
+import { describeAll, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
+import { costUsd, krText } from '../lib/usage';
+import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import { go, Header, uid } from '../ui';
 
@@ -22,6 +24,7 @@ export function PlacesScreen() {
   const store = useStore();
   const { data } = store;
   const imp = useImportState();
+  const desc = useDescribeState();
   const [copied, setCopied] = useState(false);
   const [allTrips, setAllTrips] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -59,6 +62,10 @@ export function PlacesScreen() {
   const days = new Set(photos.map((p) => toISO(new Date(p.t)))).size;
   const placed = photos.filter((p) => p.city).length;
   const thumbs = photos.filter((p) => p.thumb).length;
+  const missing = undescribed(data.phonePhotos);
+  const described = photos.filter((p) => p.desc).length;
+  // Overslag: ca. 480 tokens pr. lille billede ind og 45 ud, plus lidt pr. kald
+  const estimate = krText(costUsd(data.settings.ai.searchModel, { input_tokens: missing * 480 + Math.ceil(missing / 10) * 400, output_tokens: missing * 45 }));
   const last = Math.max(0, ...months.map((m) => m.importedAt));
   const home = 'DK'; // andre lande nævnes ved måneden
 
@@ -87,6 +94,20 @@ export function PlacesScreen() {
           {imp.busy ? 'Indlæser …' : 'Hent billeder'}
         </button>
       </section>
+
+      {thumbs > 0 && aiReady(data) && (missing > 0 || desc.busy || desc.error) && (
+        <section className="card stack-sm">
+          <strong>Claude beskriver billederne</strong>
+          {desc.busy
+            ? <span className="small">Beskriver {desc.done} af {desc.total} …</span>
+            : <span className="small">{missing} billeder mangler en beskrivelse. Ca. {estimate}, én gang. Så kan du spørge fx "hvornår var vi sidst på stranden?".</span>}
+          {desc.error && <span className="small error">{desc.error}</span>}
+          {desc.busy
+            ? <button className="btn block" onClick={stopDescribing}>Stop</button>
+            : <button className="btn primary block" onClick={() => void describeAll(store)}>Beskriv {missing} billeder</button>}
+        </section>
+      )}
+      {described > 0 && !desc.busy && missing === 0 && <p className="small muted">{described} billeder er beskrevet af Claude.</p>}
 
       <section className="card stack-sm">
         <strong>Tidslinje fra Google Maps</strong>

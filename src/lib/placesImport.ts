@@ -3,7 +3,8 @@
 import { useSyncExternalStore } from 'react';
 import { noteAuto } from './google';
 import { toISO } from './dates';
-import { addCities, mergeMonths, mergeVisits, parsePayload, parseTimeline } from './places';
+import { describePhotos, PHOTO_BATCH } from './ai';
+import { addCities, countryName, mergeMonths, mergeVisits, parsePayload, parseTimeline } from './places';
 import type { useStore } from './store';
 
 type Store = ReturnType<typeof useStore>;
@@ -92,5 +93,67 @@ export async function importTimeline(store: Store, file: File): Promise<void> {
     void noteAuto(`Tidslinje fejlede: ${msg}`);
   } finally {
     set({ busy: false });
+  }
+}
+
+export interface DescribeState { busy: boolean; done: number; total: number; error: string; stop: boolean }
+let dstate: DescribeState = { busy: false, done: 0, total: 0, error: '', stop: false };
+const dlisteners = new Set<() => void>();
+const dset = (s: Partial<DescribeState>) => { dstate = { ...dstate, ...s }; dlisteners.forEach((l) => l()); };
+
+export function useDescribeState(): DescribeState {
+  return useSyncExternalStore((l) => (dlisteners.add(l), () => dlisteners.delete(l)), () => dstate);
+}
+
+export function stopDescribing() { dset({ stop: true }); }
+
+/** Billeder med et lille billede, men uden beskrivelse. */
+export function undescribed(months: Store['data']['phonePhotos']): number {
+  let n = 0;
+  for (const m of Object.values(months)) for (const p of m.photos) if (p.thumb && p.desc === undefined) n++;
+  return n;
+}
+
+/**
+ * Claude beskriver de små billeder, PHOTO_BATCH ad gangen (nyeste først). Hver måned gemmes,
+ * når dens billeder er beskrevet, så intet går tabt, hvis man stopper eller lukker appen.
+ */
+export async function describeAll(store: Store): Promise<void> {
+  if (dstate.busy) return;
+  const todo: Array<{ month: string; t: number; id: number; thumb: string; where: string }> = [];
+  for (const m of Object.values(store.data.phonePhotos)) {
+    for (const p of m.photos) if (p.thumb && p.desc === undefined) todo.push({ month: m.id, t: p.t, id: p.id, thumb: p.thumb, where: [p.city, p.cc && p.cc !== 'DK' ? countryName(p.cc) : ''].filter(Boolean).join(', ') });
+  }
+  todo.sort((a, b) => b.t - a.t);
+  dset({ busy: true, done: 0, total: todo.length, error: '', stop: false });
+  const months = { ...store.data.phonePhotos };
+  try {
+    for (let i = 0; i < todo.length && !dstate.stop; i += PHOTO_BATCH) {
+      const batch = todo.slice(i, i + PHOTO_BATCH);
+      const items: Array<{ data: string; when: string; where: string }> = [];
+      const used: typeof batch = [];
+      for (const b of batch) {
+        const ph = await store.getPhoto(b.thumb);
+        if (!ph) continue;
+        items.push({ data: ph.data, when: new Date(b.t).toLocaleString('da-DK', { dateStyle: 'long', timeStyle: 'short' }), where: b.where });
+        used.push(b);
+      }
+      const texts = items.length ? await describePhotos(store.data.settings, items) : [];
+      const touched = new Set<string>();
+      used.forEach((b, k) => {
+        const m = months[b.month];
+        months[b.month] = { ...m, photos: m.photos.map((p) => (p.id === b.id && p.t === b.t ? { ...p, desc: texts[k] ?? '' } : p)) };
+        touched.add(b.month);
+      });
+      for (const id of touched) await store.put('phonePhotos', id, months[id]);
+      dset({ done: Math.min(todo.length, i + batch.length) });
+    }
+    void noteAuto(`Billeder beskrevet: ${dstate.done} af ${todo.length}`);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    dset({ error: msg });
+    void noteAuto(`Beskrivelse af billeder fejlede: ${msg}`);
+  } finally {
+    dset({ busy: false });
   }
 }

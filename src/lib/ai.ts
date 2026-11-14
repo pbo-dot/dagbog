@@ -4,7 +4,7 @@ import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
 import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type PhotoMonth, type Routine, type VisitMonth, type Settings, type Todo, type WeekSummary } from './types';
-import { placeLines } from './places';
+import { photoLines, placeLines } from './places';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
 import { track } from './usage';
@@ -224,6 +224,54 @@ export async function searchDiary(settings: Settings, query: string, entries: En
   }
 }
 
+// ---------------- Beskriv billeder ----------------
+
+const PhotoSchema = z.object({
+  billeder: z.array(z.object({
+    nr: z.number().describe('Billedets nummer'),
+    tekst: z.string().describe('Én kort sætning på dansk (højst ca. 15 ord) om, hvad billedet viser'),
+  })),
+});
+
+/** Højst så mange billeder i ét kald. */
+export const PHOTO_BATCH = 10;
+
+/**
+ * Korte beskrivelser af billeder fra telefonen (små udgaver), så dagbogen kan søges i dem.
+ * Claude får tid og sted med, men gætter aldrig på, hvem personer er.
+ */
+export async function describePhotos(settings: Settings, items: Array<{ data: string; when: string; where: string }>): Promise<string[]> {
+  const content: Anthropic.Beta.BetaContentBlockParam[] = [];
+  items.forEach((it, i) => {
+    content.push({ type: 'text', text: `Billede ${i + 1}: taget ${it.when}${it.where ? ` ved ${it.where}` : ''}` });
+    content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: it.data } });
+  });
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.searchModel,
+      max_tokens: 2000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(PhotoSchema) },
+      system: [{
+        type: 'text',
+        text: `Du beskriver billeder fra en persons egen telefon, så personen senere kan finde dem i sin private dagbog.
+- Én kort, konkret sætning pr. billede på dansk (højst ca. 15 ord): hvad der ses, hvor (strand, have, restaurant, by …) og hvad der sker.
+- Nævn tydelige ting, man kan søge på: mad, dyr, bygninger, vejr, årstid, aktiviteter, skilte.
+- Gæt aldrig på, hvem personer er. Skriv fx "en kvinde", "to voksne", "et barn". Ingen navne.
+- Brug stedet, når det passer, fx "Strand ved Faro i sol". Ingen indledning som "Billedet viser".
+- Skriv intet om, hvordan personer ser ud (alder, vægt, udseende), kun hvad de gør.`,
+      }],
+      messages: [{ role: 'user', content }],
+    });
+    track('photos', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output) return items.map(() => '');
+    const out = items.map(() => '');
+    for (const b of res.parsed_output.billeder) if (b.nr >= 1 && b.nr <= items.length) out[b.nr - 1] = b.tekst.trim();
+    return out;
+  } catch (e) {
+    explain(e);
+  }
+}
+
 // ---------------- Samtale ----------------
 
 const ConversationSchema = z.object({
@@ -319,7 +367,7 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
-- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd. Under HUSKELISTE står ting, personen skal huske at gøre. Under REJSER står perioder, hvor personen var mere end 50 km hjemmefra (fra Google Maps-tidslinjen og billedernes sted, tilbage til 2014), og under STEDER (når et spørgsmål handler om en bestemt periode) hvor personen var dag for dag med klokkeslæt. Faste steder (fx sommerhuset) står for sig selv sidst under REJSER, år for år med hvert ophold. Brug dem til spørgsmål som "hvornår var jeg i …" og "hvor var jeg …", og sig, at det bygger på Tidslinjen og billederne. Nævnes et sted ikke, kan personen godt have været der alligevel (Tidslinjen var ikke altid slået til).
+- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd. Under HUSKELISTE står ting, personen skal huske at gøre. Under REJSER står perioder, hvor personen var mere end 50 km hjemmefra (fra Google Maps-tidslinjen og billedernes sted, tilbage til 2014), og under STEDER (når et spørgsmål handler om en bestemt periode) hvor personen var dag for dag med klokkeslæt. Faste steder (fx sommerhuset) står for sig selv sidst under REJSER, år for år med hvert ophold. Under BILLEDER (og "billeder:" i STEDER) står korte beskrivelser af personens egne billeder med dato, klokkeslæt og by; personerne på billederne er ikke navngivet, så sig det, hvis du antager, hvem det er. Brug dem til spørgsmål som "hvornår var jeg i …" og "hvor var jeg …", og sig, at det bygger på Tidslinjen og billederne. Nævnes et sted ikke, kan personen godt have været der alligevel (Tidslinjen var ikke altid slået til).
 - Svar i du-form, enkelt og varmt, uden at finde på noget.
 
 Personen kan også bede dig om at oprette eller rette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …", "jeg skal tage vitaminer hver dag", "tilføj til aftalen at Camilla kommer" eller "sæt solcreme på pakkelisten". Så laver du forslag under proposals:
@@ -475,6 +523,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
     ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+    ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
   ]);
@@ -502,6 +551,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
     ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+    ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
   ]);
