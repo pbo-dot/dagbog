@@ -188,7 +188,8 @@ class MainActivity : Activity() {
                     val file = writeFile(lines)
                     runOnUiThread { sendToDagbog(file) }
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Også "for lidt hukommelse" (OutOfMemoryError), som ellers stopper uden besked
                 say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
             }
             busy = false
@@ -319,13 +320,15 @@ class MainActivity : Activity() {
         val t0 = SystemClock.elapsedRealtime()
         var failed = 0
         var next: String? = null
+        say("Laver billeder i bedre kvalitet${if (from != null) " fra $from" else ""} …")
         for (d in days) {
             val chosen = pick(byDay[d]!!)
             if (out.isNotEmpty() && out.size + chosen.size > maxThumbs) { next = d; break }
+            if (out.size / 20 != (out.size + chosen.size) / 20) say("… ${out.size + chosen.size} billeder (${(SystemClock.elapsedRealtime() - t0) / 1000} s)")
             for (p in chosen) {
                 try {
                     out.add("B;${p.id + idBase};${p.taken};${small(ContentUris.withAppendedId(base, p.id))}")
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     failed++
                     if (failed <= 3) say("Lille billede fejlede (${p.name}): ${e.javaClass.simpleName}: ${e.message}")
                 }
