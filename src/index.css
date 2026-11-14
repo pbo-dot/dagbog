@@ -672,3 +672,4 @@ label.btn { cursor: pointer; }
 /* Dagens små billeder fra telefonen: gitter med tre i hver række */
 .day-thumbs .photo-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .day-thumbs .photo-large { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 16px; max-height: none; }
+.row-thumb { width: 48px; height: 48px; flex: none; border-radius: 12px; object-fit: cover; background: var(--surface-2); }

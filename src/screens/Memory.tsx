@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AIError } from '../lib/ai';
-import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, today, WEEKDAYS } from '../lib/dates';
+import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, toISO, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
 import { countryName, dayPhotoCount, dayStays, dayThumbs, stayTime } from '../lib/places';
 import { useStore } from '../lib/store';
 import { MOODS } from '../lib/types';
-import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery } from '../ui';
+import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 import { askSoon } from './Ask';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
@@ -134,6 +134,13 @@ export function MemoryScreen() {
   );
 }
 
+/** Det første lille billede fra dagen (fra telefonen) som et lille firkantet billede i rækken. */
+function DayThumb({ date }: { date: string }) {
+  const { data } = useStore();
+  const id = dayThumbs(data.phonePhotos, date)[0];
+  return id ? <PhotoImg id={id} className="row-thumb" alt="" /> : null;
+}
+
 export function MonthScreen({ id }: { id: string }) {
   const store = useStore();
   const { data } = store;
@@ -162,7 +169,9 @@ export function MonthScreen({ id }: { id: string }) {
 
   const monthDone = id < monthId(today());
   // Man kan bladre tilbage til den første måned med noget skrevet
-  const firstMonth = [...Object.keys(data.entries).map((d) => d.slice(0, 7)), ...Object.keys(data.months)].sort()[0] ?? id;
+  const firstMonth = [...Object.keys(data.entries).map((d) => d.slice(0, 7)), ...Object.keys(data.months), ...Object.keys(data.phonePhotos)].sort()[0] ?? id;
+  // Dage med billeder fra telefonen, som ikke er skrevet (de skrevne viser antal billeder i rækken)
+  const photoDays = [...new Set((data.phonePhotos[id]?.photos ?? []).map((p) => toISO(new Date(p.t))))].filter((d) => !data.entries[d]).sort().reverse();
 
   return (
     <div className="stack" style={{ gap: 20 }}>
@@ -184,11 +193,35 @@ export function MonthScreen({ id }: { id: string }) {
                 <span className="grow" style={{ minWidth: 0 }}>
                   <span className="small serif" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{e.text}</span>
                 </span>
+                <DayThumb date={e.date} />
               </button>
             ))}
           </div>
         )}
       </section>
+
+      {photoDays.length > 0 && (
+        <section className="stack-sm">
+          <h3>{photoDays.length} {photoDays.length === 1 ? 'dag' : 'dage'} med billeder</h3>
+          <div className="card agenda">
+            {photoDays.map((d) => {
+              const stays = dayStays(data.phonePhotos, d, data.visits, data.settings.places?.fixed);
+              const n = dayPhotoCount(data.phonePhotos, d);
+              return (
+                <button key={d} className="agenda-row" onClick={() => go(`husk/dag/${d}`)}>
+                  <span className="agenda-date"><b>{fromISO(d).getDate()}</b><span>{WEEKDAYS[fromISO(d).getDay()].slice(0, 3)}</span></span>
+                  <span className="agenda-bar" style={{ background: 'var(--line)' }} />
+                  <span className="grow" style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <span className="small">{[...new Set(stays.map((x) => x.city))].slice(0, 3).join(' · ') || 'Sted ukendt'}</span>
+                    <span className="tiny muted">{n} {n === 1 ? 'billede' : 'billeder'}</span>
+                  </span>
+                  <DayThumb date={d} />
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="card stack-sm">
         <div className="row between">
