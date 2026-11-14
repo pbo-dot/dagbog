@@ -253,16 +253,16 @@ function DayConversations({ date }: { date: string }) {
   );
 }
 
-/** "Her var du": stederne fra dagens billeder (hjælpe-appen "Dagbog Billeder"). */
+/** "Her var du": stederne fra Google Maps-tidslinjen og dagens billeder (hjælpe-appen "Dagbog Billeder"). */
 function DayPlaces({ date }: { date: string }) {
   const { data } = useStore();
-  const stays = dayStays(data.phonePhotos, date);
+  const stays = dayStays(data.phonePhotos, date, data.visits);
   const n = dayPhotoCount(data.phonePhotos, date);
-  if (!n) return null;
+  if (!n && !stays.length) return null;
   const home = 'DK';
   return (
     <section className="card stack-sm">
-      <h3>Her var du · {n} {n === 1 ? 'billede' : 'billeder'}</h3>
+      <h3>Her var du{n ? ` · ${n} ${n === 1 ? 'billede' : 'billeder'}` : ''}</h3>
       {stays.length ? stays.map((s, i) => (
         <div key={i} className="row between">
           <span>{s.city}{s.cc && s.cc !== home ? `, ${countryName(s.cc)}` : ''}</span>

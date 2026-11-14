@@ -138,6 +138,24 @@ export interface PhotoMonth {
   importedAt: number;
 }
 
+/** Et ophold fra Google Maps-tidslinjen (kun stedet og tiden, ikke ruterne). */
+export interface Visit {
+  s: number; // start (ms)
+  e: number; // slut (ms)
+  lat: number;
+  lng: number;
+  city?: string;
+  cc?: string;
+  home?: boolean; // Google har mærket stedet som hjemme
+}
+
+/** Opholdene, der begynder i én måned (nøgle YYYY-MM). */
+export interface VisitMonth {
+  id: string;
+  visits: Visit[];
+  importedAt: number;
+}
+
 /** Forbrug af Claude i én måned (dollar, se usage.ts). */
 export interface Usage {
   id: string; // YYYY-MM

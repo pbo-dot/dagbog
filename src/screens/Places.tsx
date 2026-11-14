@@ -1,25 +1,38 @@
 // "Billeder og steder" (under Mere): hjælpe-appen "Dagbog Billeder" sender dato og sted for
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { formatMonth, toISO } from '../lib/dates';
-import { countryName, OPEN_APP_URL } from '../lib/places';
-import { useImportState } from '../lib/placesImport';
+import { countryName, OPEN_APP_URL, tripLine, trips } from '../lib/places';
+import { importTimeline, useImportState } from '../lib/placesImport';
 import { useStore } from '../lib/store';
 import { go, Header } from '../ui';
 
+/** "2.–6. maj 2025" eller "30. apr.–2. maj 2025" */
+function tripDates(from: string, to: string): string {
+  const f = new Date(`${from}T12:00:00`);
+  const t = new Date(`${to}T12:00:00`);
+  const d = (x: Date, o: Intl.DateTimeFormatOptions) => x.toLocaleDateString('da-DK', o);
+  if (from === to) return d(f, { day: 'numeric', month: 'long', year: 'numeric' });
+  if (from.slice(0, 7) === to.slice(0, 7)) return `${f.getDate()}.–${d(t, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  return `${d(f, { day: 'numeric', month: 'short' })}–${d(t, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+}
+
 export function PlacesScreen() {
-  const { data } = useStore();
+  const store = useStore();
+  const { data } = store;
   const imp = useImportState();
   const [copied, setCopied] = useState(false);
+  const [allTrips, setAllTrips] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const visits = Object.values(data.visits).flatMap((m) => m.visits);
+  const visitYears = visits.length ? [new Date(visits[0].s).getFullYear(), new Date(visits[visits.length - 1].s).getFullYear()] : [];
+  const tripList = useMemo(() => trips(data.phonePhotos, data.visits).reverse(), [data.phonePhotos, data.visits]);
   const months = Object.values(data.phonePhotos).sort((a, b) => b.id.localeCompare(a.id));
   const photos = months.flatMap((m) => m.photos);
   const days = new Set(photos.map((p) => toISO(new Date(p.t)))).size;
   const placed = photos.filter((p) => p.city).length;
   const last = Math.max(0, ...months.map((m) => m.importedAt));
-  // Hjemlandet er det land, der har flest billeder; andre lande nævnes ved måneden
-  const counts = new Map<string, number>();
-  for (const p of photos) if (p.cc) counts.set(p.cc, (counts.get(p.cc) ?? 0) + 1);
-  const home = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const home = 'DK'; // andre lande nævnes ved måneden
 
   return (
     <div className="stack" style={{ gap: 18 }}>
@@ -46,6 +59,19 @@ export function PlacesScreen() {
         </button>
       </section>
 
+      <section className="card stack-sm">
+        <strong>Tidslinje fra Google Maps</strong>
+        <span className="small">{visits.length
+          ? `${visits.length} ophold fra ${Math.min(...visitYears)} til ${Math.max(...visitYears)}.`
+          : 'Giver steder for alle dage, også uden billeder. Eksportér den under Indstillinger → Placering → Tidslinje.'}</span>
+        <button className="btn block" disabled={imp.busy} onClick={() => fileInput.current?.click()}>{visits.length ? 'Hent en Tidslinje-fil mere' : 'Vælg Tidslinje-fil'}</button>
+        <input ref={fileInput} type="file" accept=".json,application/json" hidden onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (f) void importTimeline(store, f);
+        }} />
+      </section>
+
       {imp.lines.length > 0 && (
         <section className="card stack-sm">
           <h3>{imp.busy ? 'Indlæser' : imp.error ? 'Det gik galt' : 'Seneste hentning'}</h3>
@@ -56,9 +82,26 @@ export function PlacesScreen() {
         </section>
       )}
 
+      {tripList.length > 0 && (
+        <section className="stack-sm">
+          <h3>Rejser · {tripList.length}</h3>
+          <div className="card list" style={{ padding: '2px 16px' }}>
+            {(allTrips ? tripList : tripList.slice(0, 12)).map((t) => (
+              <button key={t.from} className="list-item" onClick={() => go(`husk/dag/${t.from}`)}>
+                <span className="grow" style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <strong>{tripLine(t).replace(/^- [^:]+: /, '').replace(/ \(.*\)$/, '')}</strong>
+                  <span className="small muted">{tripDates(t.from, t.to)}{t.countries.length ? ` · ${t.countries.map(countryName).join(', ')}` : ''}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          {!allTrips && tripList.length > 12 && <button className="btn ghost" onClick={() => setAllTrips(true)}>Vis alle {tripList.length}</button>}
+        </section>
+      )}
+
       {months.length > 0 && (
         <section className="stack-sm">
-          <h3>Steder pr. måned</h3>
+          <h3>Billeder pr. måned</h3>
           <div className="card list" style={{ padding: '2px 16px' }}>
             {months.map((m) => {
               const byCity = new Map<string, number>();
