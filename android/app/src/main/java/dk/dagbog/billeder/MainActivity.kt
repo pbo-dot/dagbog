@@ -149,7 +149,7 @@ class MainActivity : Activity() {
         say("Tilladelser: alle billeder ${ja(granted(wanted[0]))} · kun udvalgte ${ja(granted(wanted[1]))} · sted ${ja(granted(wanted[2]))}")
         thread {
             try {
-                val lines = read(all = sendAfter)
+                val lines = read(everyPhoto = sendAfter)
                 if (sendAfter && lines != null) runOnUiThread { sendToDagbog(lines) }
             } catch (e: Exception) {
                 say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
@@ -162,8 +162,8 @@ class MainActivity : Activity() {
 
     private data class Pic(val id: Long, val name: String, val taken: Long, val path: String, val size: Long)
 
-    /** Læser billederne. Med `all` læses sted for alle kamera-billeder, og listen til Dagbog returneres. */
-    private fun read(all: Boolean): List<String>? {
+    /** Læser billederne. Med `everyPhoto` læses sted for alle kamera-billeder, og listen til Dagbog returneres. */
+    private fun read(everyPhoto: Boolean): List<String>? {
         val base = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cols = arrayOf(
             MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_TAKEN,
@@ -190,7 +190,7 @@ class MainActivity : Activity() {
         val days = camera.groupingBy { day.format(Date(it.taken)) }.eachCount()
         say("Dage med billeder: ${days.size} · flest på én dag: ${days.values.max()} · dage med over 3: ${days.values.count { it > 3 }}")
 
-        if (all) return readAll(camera, base)
+        if (everyPhoto) return readAll(camera, base)
 
         // Sted og dato for et udvalg (jævnt fordelt), og hvor længe det tager
         val n = minOf(60, camera.size)
