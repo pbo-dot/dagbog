@@ -1,0 +1,54 @@
+name: Byg Dagbog Billeder (APK)
+
+on:
+  push:
+    branches: [main]
+    paths: ["android/**", ".github/workflows/billeder-apk.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+
+      - name: Byg APK
+        run: gradle assembleDebug --no-daemon
+
+      - name: Saml APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk dagbog-billeder.apk
+
+      # Udgivelsen "billeder" har altid den nyeste APK, så den er nem at hente på telefonen.
+      - name: Opdater udgivelsen "billeder"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete billeder --yes --cleanup-tag || true
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/releases" --jq '.[] | select(.draft) | .id'); do
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id" || true
+          done
+          sleep 5
+          for i in 1 2 3; do
+            gh release create billeder dagbog-billeder.apk \
+              --title "Dagbog Billeder (build ${{ github.run_number }})" \
+              --notes "Hjælpe-app til Dagbog. Hent dagbog-billeder.apk og installér den på telefonen." \
+              --target "${{ github.sha }}" && break
+            sleep 15
+          done
+          gh release edit billeder --draft=false
+          gh release view billeder --json isDraft --jq '.isDraft' | grep -q false
