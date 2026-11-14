@@ -121,6 +121,23 @@ export interface TodoEvent {
   key: string;
 }
 
+/** Et billede fra telefonens kamera-mappe, læst af hjælpe-appen "Dagbog Billeder" (selve billedet ligger kun på telefonen). */
+export interface PhonePhoto {
+  id: number; // billedets nummer på telefonen (MediaStore)
+  t: number; // taget (ms)
+  lat?: number;
+  lng?: number;
+  city?: string; // nærmeste by (regnet på telefonen ud fra GeoNames)
+  cc?: string; // land (ISO, fx "PT")
+}
+
+/** Billederne fra én måned (nøgle YYYY-MM). */
+export interface PhotoMonth {
+  id: string;
+  photos: PhonePhoto[];
+  importedAt: number;
+}
+
 /** Forbrug af Claude i én måned (dollar, se usage.ts). */
 export interface Usage {
   id: string; // YYYY-MM

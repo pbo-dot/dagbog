@@ -36,6 +36,11 @@ self.addEventListener('fetch', (event) => {
           headers: { 'Content-Type': doc.type || 'application/octet-stream', 'X-Name': encodeURIComponent(doc.name || 'Dokument') },
         }));
         app.search = '?dok=1';
+      } else if (typeof form.get('text') === 'string' && form.get('text').startsWith('DAGBOG-BILLEDER v1')) {
+        // Dato og sted for billederne fra hjælpe-appen "Dagbog Billeder" (for stor til adressen)
+        const cache = await caches.open('dagbog-delt-steder');
+        await cache.put('steder', new Response(form.get('text'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }));
+        app.search = '?steder=1';
       } else {
         for (const k of ['title', 'text', 'url']) {
           const v = form.get(k);

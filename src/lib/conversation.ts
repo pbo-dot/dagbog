@@ -50,6 +50,7 @@ export function personNote(c: Conversation): string {
 let shared: string | null = null;
 let sharedAudio = false;
 let sharedDoc = false;
+let sharedPlaces = false;
 let sharedImages: { count: number; text: string } | null = null;
 
 /** Et link delt fra fx Chrome. Bliver til en note i stedet for en samtale. */
@@ -78,6 +79,11 @@ export function readSharedText(): void {
   const bil = Number(q.get('bil'));
   if (bil > 0) {
     sharedImages = { count: bil, text: q.get('btext') ?? '' };
+    history.replaceState(null, '', location.pathname + location.hash);
+    return;
+  }
+  if (q.get('steder')) {
+    sharedPlaces = true;
     history.replaceState(null, '', location.pathname + location.hash);
     return;
   }
@@ -158,6 +164,20 @@ export async function takeSharedImages(): Promise<{ blobs: Blob[]; text: string 
       await cache.delete('bil' + i);
     }
     return blobs.length ? { blobs, text: info.text } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Listen fra hjælpe-appen "Dagbog Billeder" (dato og sted for billederne), hvis den lige er delt. */
+export async function takeSharedPlaces(): Promise<string | null> {
+  if (!sharedPlaces) return null;
+  sharedPlaces = false;
+  try {
+    const cache = await caches.open('dagbog-delt-steder');
+    const res = await cache.match('steder');
+    await cache.delete('steder');
+    return res ? await res.text() : null;
   } catch {
     return null;
   }

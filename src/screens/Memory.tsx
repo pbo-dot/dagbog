@@ -4,6 +4,7 @@ import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prev
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
+import { countryName, dayPhotoCount, dayStays, stayTime } from '../lib/places';
 import { useStore } from '../lib/store';
 import { MOODS } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery } from '../ui';
@@ -252,6 +253,26 @@ function DayConversations({ date }: { date: string }) {
   );
 }
 
+/** "Her var du": stederne fra dagens billeder (hjælpe-appen "Dagbog Billeder"). */
+function DayPlaces({ date }: { date: string }) {
+  const { data } = useStore();
+  const stays = dayStays(data.phonePhotos, date);
+  const n = dayPhotoCount(data.phonePhotos, date);
+  if (!n) return null;
+  const home = 'DK';
+  return (
+    <section className="card stack-sm">
+      <h3>Her var du · {n} {n === 1 ? 'billede' : 'billeder'}</h3>
+      {stays.length ? stays.map((s, i) => (
+        <div key={i} className="row between">
+          <span>{s.city}{s.cc && s.cc !== home ? `, ${countryName(s.cc)}` : ''}</span>
+          <span className="small muted">{stayTime(s)}</span>
+        </div>
+      )) : <span className="small muted">Billederne har intet sted.</span>}
+    </section>
+  );
+}
+
 export function DayScreen({ date }: { date: string }) {
   const store = useStore();
   const e = store.data.entries[date];
@@ -259,6 +280,8 @@ export function DayScreen({ date }: { date: string }) {
     return (
       <div className="stack">
         <Header back="husk" />
+        <h1>{formatFull(date)}</h1>
+        <DayPlaces date={date} />
         <p className="muted">Der er ikke skrevet noget denne dag.</p>
         <button className="btn" onClick={() => go(date === today() ? 'skriv' : `skriv/${date}`)}>Skriv om dagen</button>
       </div>
@@ -278,6 +301,7 @@ export function DayScreen({ date }: { date: string }) {
       {e.question && <p className="small muted serif" style={{ fontStyle: 'italic' }}>{e.question}</p>}
       <p className="prose">{e.text}</p>
       <PhotoGallery ids={e.photos ?? []} />
+      <DayPlaces date={date} />
       <DayConversations date={date} />
       {good.length > 0 && (
         <section className="stack-sm">

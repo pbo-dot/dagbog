@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
-import { hasSharedText, takeSharedDoc, takeSharedImages, takeSharedLink } from './lib/conversation';
+import { hasSharedText, takeSharedDoc, takeSharedImages, takeSharedLink, takeSharedPlaces } from './lib/conversation';
+import { importPlaces } from './lib/placesImport';
 import { noteFromFile } from './lib/docNote';
 import { compressImage } from './lib/photos';
 import { useGoogleAutoSync } from './lib/googleSync';
@@ -26,6 +27,7 @@ import { ClarityScreen } from './screens/Clarity';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { PhotoTestScreen } from './screens/PhotoTest';
+import { PlacesScreen } from './screens/Places';
 import { SettingsScreen } from './screens/Settings';
 import { UsageScreen } from './screens/Usage';
 import { TodoEditScreen, TodosScreen } from './screens/Todos';
@@ -167,6 +169,12 @@ function Unlocked() {
         alert('Billedet kunne ikke indlæses.');
       }
     });
+    // Dato og sted for billederne fra hjælpe-appen "Dagbog Billeder"
+    takeSharedPlaces().then(async (text) => {
+      if (!text) return;
+      go('billeder');
+      await importPlaces(store, text);
+    });
     // Et delt Word-dokument eller en tekstfil bliver til en note med hele teksten
     takeSharedDoc().then(async (doc) => {
       if (!doc) return;
@@ -231,6 +239,7 @@ function Unlocked() {
     case 'indstillinger': screen = <SettingsScreen key={a ?? ''} page={a} />; break;
     case 'forbrug': screen = <UsageScreen />; break;
     case 'billedtest': screen = <PhotoTestScreen />; break;
+    case 'billeder': screen = <PlacesScreen />; break;
     case 'kopi':
       screen = a === 'hent'
         ? <div className="stack" style={{ alignItems: 'center' }}><RestoreFlow back="#/kopi/hent" replacing onCancel={() => go('kopi')} /></div>
@@ -242,7 +251,7 @@ function Unlocked() {
   const dots: Record<string, boolean> = { skriv: w.today || w.due > 0, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
     : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
-    : ['indstillinger', 'kopi', 'forbrug', 'billedtest'].includes(tab) ? 'mere'
+    : ['indstillinger', 'kopi', 'forbrug', 'billedtest', 'billeder'].includes(tab) ? 'mere'
     : tab === 'tal' || tab === 'overblik' ? 'skriv' : tab;
 
   return (

@@ -3,7 +3,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type Routine, type Settings, type Todo, type WeekSummary } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type PhotoMonth, type Routine, type Settings, type Todo, type WeekSummary } from './types';
+import { placeLines } from './places';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
 import { track } from './usage';
@@ -318,7 +319,7 @@ const ASK = `Du svarer på spørgsmål om personens eget liv ud fra deres privat
 - Nævn datoer og konkrete detaljer, når det hjælper ("Den 14. januar skrev du …").
 - Spørgsmål om en periode ("hvad lavede jeg i januar") besvares med et kort overblik over det vigtigste: hvad der skete, hvem du var sammen med, og hvordan du havde det.
 - Er spørgsmålet om fremtiden, så kig efter aftaler og planer i materialet.
-- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd. Under HUSKELISTE står ting, personen skal huske at gøre.
+- Under FASTE TING står ting på en fast plan (fx medicin) og hvornår de er taget. Under AFTALER I KALENDEREN står aftaler, personen selv har skrevet ind, og aftaler fra deres Google Kalender (mærket "Google"). Under NOTER står faste oplysninger uden dato, fx regler, lister og gode råd. Under HUSKELISTE står ting, personen skal huske at gøre. Under STEDER (fra billederne) står, hvor personen tog billeder hver dag (nærmeste by og klokkeslæt, udlandet med landets navn); brug det til spørgsmål som "hvornår var jeg i …", og sig, at det bygger på billederne.
 - Svar i du-form, enkelt og varmt, uden at finde på noget.
 
 Personen kan også bede dig om at oprette eller rette noget, fx "lav en pakkeliste til Fanø", "tandlæge torsdag kl. 10", "skriv under Birgitte at …", "jeg skal tage vitaminer hver dag", "tilføj til aftalen at Camilla kommer" eller "sæt solcreme på pakkelisten". Så laver du forslag under proposals:
@@ -384,6 +385,7 @@ export interface AskData {
   todos?: Record<string, Todo>;
   google?: Record<string, GoogleMonth>;
   settings?: Pick<Settings, 'google'>;
+  phonePhotos?: Record<string, PhotoMonth>;
 }
 
 /** Egne aftaler og Google-aftaler som linjer, sorteret efter dato. */
@@ -454,6 +456,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
       ['MENNESKER', people.map((p) => personBlock(p, inside))],
       ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r, inside))],
       ['AFTALER I KALENDEREN', calendarLines(data, inside)],
+      ['STEDER (fra billederne)', placeLines(data.phonePhotos ?? {}, inside)],
       ['NOTER', noteBlocks(data)],
       ['HUSKELISTE', todoLines(data)],
     ]);
@@ -470,6 +473,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
+    ['STEDER (fra billederne)', placeLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
   ]);
@@ -496,6 +500,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
+    ['STEDER (fra billederne)', placeLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
   ]);

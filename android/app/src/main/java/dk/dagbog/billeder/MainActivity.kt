@@ -67,14 +67,14 @@ class MainActivity : Activity() {
             setTextColor(text)
         })
         col.addView(TextView(this).apply {
-            this.text = "Prøve: læser dato og sted fra dine billeder. Intet gemmes, og ingen billeder sendes."
+            this.text = "Læser dato og sted fra kamera-billederne og sender dem til Dagbog. Selve billederne bliver på telefonen."
             textSize = 16f
             setTextColor(text)
             setPadding(0, dp(6), 0, dp(18))
         })
-        col.addView(button("1. Læs billederne", accent, onAccent) { start() })
-        col.addView(button("2. Send resultatet til Dagbog", tonal, text) { sendToDagbog() })
-        col.addView(button("Kopiér resultatet", tonal, text) { copy() })
+        col.addView(button("Send billederne til Dagbog", accent, onAccent) { start(send = true) })
+        col.addView(button("Prøve: læs uden at sende", tonal, text) { start(send = false) })
+        col.addView(button("Kopiér loggen", tonal, text) { copy() })
         out = TextView(this).apply {
             textSize = 13f
             typeface = Typeface.MONOSPACE
@@ -88,7 +88,15 @@ class MainActivity : Activity() {
             setBackgroundColor(bg)
             addView(col)
         })
-        say("Tryk \"1. Læs billederne\", og vælg \"Tillad alle\", når telefonen spørger.")
+        say("Tryk \"Send billederne til Dagbog\", og vælg \"Tillad alle\", når telefonen spørger.")
+        if (intent?.data?.scheme == "dagbogbilleder") start(send = true)
+    }
+
+    // Åbnet igen fra Dagbog, mens appen stadig kører
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.data?.scheme == "dagbogbilleder") start(send = true)
     }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
@@ -114,8 +122,11 @@ class MainActivity : Activity() {
 
     private fun granted(p: String) = checkSelfPermission(p) == PackageManager.PERMISSION_GRANTED
 
-    private fun start() {
+    private var sendAfter = false
+
+    private fun start(send: Boolean) {
         if (busy) return
+        sendAfter = send
         if (!granted(Manifest.permission.READ_MEDIA_IMAGES) || !granted(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
             requestPermissions(wanted, 1)
             return
@@ -138,7 +149,8 @@ class MainActivity : Activity() {
         say("Tilladelser: alle billeder ${ja(granted(wanted[0]))} · kun udvalgte ${ja(granted(wanted[1]))} · sted ${ja(granted(wanted[2]))}")
         thread {
             try {
-                read()
+                val lines = read(all = sendAfter)
+                if (sendAfter && lines != null) runOnUiThread { sendToDagbog(lines) }
             } catch (e: Exception) {
                 say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
             }
@@ -150,7 +162,8 @@ class MainActivity : Activity() {
 
     private data class Pic(val id: Long, val name: String, val taken: Long, val path: String, val size: Long)
 
-    private fun read() {
+    /** Læser billederne. Med `all` læses sted for alle kamera-billeder, og listen til Dagbog returneres. */
+    private fun read(all: Boolean): List<String>? {
         val base = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cols = arrayOf(
             MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_TAKEN,
@@ -170,12 +183,14 @@ class MainActivity : Activity() {
         val camera = all.filter { it.path.startsWith("DCIM/") }.sortedBy { it.taken }
         if (camera.isEmpty()) {
             say("Ingen billeder i DCIM. Har appen fået lov til alle billeder?")
-            return
+            return null
         }
         val day = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         say("Kamera-billeder: ${camera.size} · fra ${day.format(Date(camera.first().taken))} til ${day.format(Date(camera.last().taken))}")
         val days = camera.groupingBy { day.format(Date(it.taken)) }.eachCount()
         say("Dage med billeder: ${days.size} · flest på én dag: ${days.values.max()} · dage med over 3: ${days.values.count { it > 3 }}")
+
+        if (all) return readAll(camera, base)
 
         // Sted og dato for et udvalg (jævnt fordelt), og hvor længe det tager
         val n = minOf(60, camera.size)
@@ -208,6 +223,41 @@ class MainActivity : Activity() {
         say("Undersøgt: $n på $ms ms (${ms / maxOf(1, n)} ms pr. billede) · med sted: $withPlace · fejl: $failed")
         shown.forEach { say(it) }
         say("Alle ${camera.size} ville tage ca. ${camera.size * ms / maxOf(1, n) / 1000} s")
+        return null
+    }
+
+    /** Sted for alle kamera-billeder: én linje pr. billede, "id;taget-ms;bredde;længde". */
+    private fun readAll(camera: List<Pic>, base: android.net.Uri): List<String> {
+        val t0 = SystemClock.elapsedRealtime()
+        val out = ArrayList<String>(camera.size)
+        var withPlace = 0
+        var failed = 0
+        for ((i, p) in camera.withIndex()) {
+            var place = ";"
+            try {
+                val uri = MediaStore.setRequireOriginal(ContentUris.withAppendedId(base, p.id))
+                contentResolver.openInputStream(uri)?.use { s ->
+                    val ll = FloatArray(2)
+                    if (ExifInterface(s).getLatLong(ll)) {
+                        withPlace++
+                        place = String.format(Locale.ROOT, "%.5f;%.5f", ll[0], ll[1])
+                    }
+                }
+            } catch (e: Exception) {
+                failed++
+                if (failed <= 3) say("Fejl ved ${p.name}: ${e.javaClass.simpleName}: ${e.message}")
+            }
+            out.add("${p.id};${p.taken};$place")
+            if (i % 100 == 99) say("… ${i + 1} af ${camera.size}")
+        }
+        say("Læst: ${camera.size} på ${(SystemClock.elapsedRealtime() - t0) / 1000} s · med sted: $withPlace · fejl: $failed")
+        return out
+    }
+
+    private fun appVersion(): String = try {
+        packageManager.getPackageInfo(packageName, 0).versionName ?: "?"
+    } catch (e: Exception) {
+        "?"
     }
 
     private fun copy() {
@@ -219,12 +269,16 @@ class MainActivity : Activity() {
      * Sender teksten til Dagbog. Findes Dagbog blandt de apps, der kan modtage tekst, åbnes den
      * direkte (uden Del-menuen); ellers vises Del-menuen.
      */
-    private fun sendToDagbog() {
+    private fun sendToDagbog(lines: List<String>) {
         val send = Intent(Intent.ACTION_SEND).setType("text/plain")
         val targets = packageManager.queryIntentActivities(send, 0)
         val hit = targets.firstOrNull { it.loadLabel(packageManager).toString().trim().equals("Dagbog", ignoreCase = true) }
-        say("Apps, der kan modtage tekst: ${targets.size} · Dagbog fundet: ${hit?.activityInfo?.packageName ?: "NEJ"}")
-        send.putExtra(Intent.EXTRA_TEXT, "DAGBOG-BILLEDER-PRØVE\n$report")
+        say("Dagbog fundet: ${hit?.activityInfo?.packageName ?: "NEJ"} · sender ${lines.size} billeder")
+        // Første linje fortæller Dagbog, hvad det er; linjer med "#" er appens log
+        val log = report.lines().filter { it.isNotBlank() }.joinToString("\n") { "# $it" }
+        val body = "DAGBOG-BILLEDER v1\n# app ${appVersion()}\n$log\n${lines.joinToString("\n")}"
+        say("Størrelse: ${body.length / 1024} kB")
+        send.putExtra(Intent.EXTRA_TEXT, body)
         try {
             if (hit != null) {
                 startActivity(send.setClassName(hit.activityInfo.packageName, hit.activityInfo.name))
