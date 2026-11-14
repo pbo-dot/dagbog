@@ -5,7 +5,7 @@ import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
-import { dayDescs, dayStays, dayThumbs } from '../lib/places';
+import { dayDescs, dayStays, dayThumbs, stayTime } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
 import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
@@ -31,15 +31,23 @@ function DayPhotos({ date }: { date: string }) {
   const [open, setOpen] = useState<string | null>(null);
   const [showText, setShowText] = useState(false);
   const ids = dayThumbs(data.phonePhotos, date);
-  if (!ids.length) return null;
-  const places = [...new Set(dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed).map((x) => x.city))];
+  // Stederne fra Google Maps-tidslinjen (eller billederne), også på dage uden billeder
+  const stays = dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed);
+  if (!ids.length && !stays.length) return null;
   const descs = dayDescs(data.phonePhotos, date);
   return (
-    <section className="day-photos" aria-label="Dagens billeder">
-      {places.length > 0 && <span className="small muted">{places.slice(0, 4).join(' · ')}</span>}
-      <div className="photo-strip">
-        {ids.map((id) => <PhotoImg key={id} id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />)}
-      </div>
+    <section className="day-photos" aria-label="Dagens steder og billeder">
+      {stays.length > 0 && (
+        <span className="small muted">
+          {stays.slice(0, 5).map((x, i) => <span key={i}>{i ? ' · ' : ''}{x.city} <span className="tiny">{stayTime(x)}</span></span>)}
+          {stays.length > 5 ? ' …' : ''}
+        </span>
+      )}
+      {ids.length > 0 && (
+        <div className="photo-strip">
+          {ids.map((id) => <PhotoImg key={id} id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />)}
+        </div>
+      )}
       {descs.length > 0 && (
         <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setShowText((v) => !v)} aria-expanded={showText}>
           {showText ? 'Skjul Claudes beskrivelser' : 'Vis Claudes beskrivelser'}
