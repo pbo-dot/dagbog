@@ -2,7 +2,7 @@
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
 import { useMemo, useRef, useState } from 'react';
 import { addDays, formatMonth, toISO } from '../lib/dates';
-import { countryName, dayPhotoCount, fixedStays, openAppUrl, suggestFixed, tripLine, trips } from '../lib/places';
+import { countryName, dayPhotoCount, fixedStays, openAppUrl, THUMB_PX, suggestFixed, tripLine, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
 import { describeAll, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
 import { costUsd, krText } from '../lib/usage';
@@ -93,6 +93,14 @@ export function PlacesScreen() {
         <button className="btn primary block" disabled={imp.busy} onClick={() => { location.href = openAppUrl(data.settings.places?.thumbFrom); }}>
           {imp.busy ? 'Indlæser …' : 'Hent billeder'}
         </button>
+        {thumbs > 0 && !data.settings.places?.thumbRedo && (data.settings.places?.thumbPx ?? 640) < THUMB_PX && (
+          <button className="btn block" disabled={imp.busy} onClick={async () => {
+            // Henter alle billeder igen fra den første dag; Claudes beskrivelser bevares
+            await store.saveSettings({ ...data.settings, places: { ...(data.settings.places ?? { fixed: [], notFixed: [] }), thumbFrom: undefined, thumbRedo: true } });
+            location.href = openAppUrl();
+          }}>Hent billederne i bedre kvalitet</button>
+        )}
+        {data.settings.places?.thumbRedo && <span className="small">Henter i bedre kvalitet. Tryk "Hent billeder", til der ikke står "Der mangler flere".</span>}
       </section>
 
       {thumbs > 0 && aiReady(data) && (missing > 0 || desc.busy || desc.error) && (

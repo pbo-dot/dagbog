@@ -673,3 +673,9 @@ label.btn { cursor: pointer; }
 .day-thumbs .photo-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .day-thumbs .photo-large { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 16px; max-height: none; }
 .row-thumb { width: 48px; height: 48px; flex: none; border-radius: 12px; object-fit: cover; background: var(--surface-2); }
+
+/* Dagens billeder på Skriv: en række at rulle sidelæns i */
+.day-photos { display: flex; flex-direction: column; gap: 8px; }
+.photo-strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 18px; }
+.photo-strip::-webkit-scrollbar { display: none; }
+.strip-img { flex: none; width: 132px; height: 132px; border-radius: 18px; object-fit: cover; scroll-snap-align: start; cursor: zoom-in; background: var(--surface-2); }

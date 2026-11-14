@@ -28,7 +28,7 @@ export async function importPlaces(store: Store, text: string): Promise<void> {
   set({ busy: true, lines: [], error: '' });
   try {
     say(`Modtog ${Math.round(text.length / 1024)} kB fra Dagbog Billeder`);
-    const { log, photos, thumbs, next } = parsePayload(text);
+    const { log, photos, thumbs, next, size } = parsePayload(text);
     for (const l of log) say(`app: ${l}`);
     // Små billeder: gemmes krypteret i billedlageret som "tel-<id>" og knyttes til billedet
     if (thumbs.length) {
@@ -46,7 +46,10 @@ export async function importPlaces(store: Store, text: string): Promise<void> {
     }
     const places = store.data.settings.places ?? { fixed: [], notFixed: [] };
     const thumbFrom = next ?? (thumbs.length ? toISO(new Date(Math.max(...thumbs.map((x) => x.t)))) : places.thumbFrom);
-    if (thumbFrom !== places.thumbFrom) await store.saveSettings({ ...store.data.settings, places: { ...places, thumbFrom } });
+    // En hel runde er færdig (ingen "næste"): så har alle gemte billeder denne størrelse
+    const done = !next && thumbs.length > 0 && (!places.thumbRedo || !!size);
+    const nextPlaces = { ...places, thumbFrom, ...(done && size ? { thumbPx: size, thumbRedo: false } : {}) };
+    if (JSON.stringify(nextPlaces) !== JSON.stringify(places)) await store.saveSettings({ ...store.data.settings, places: nextPlaces });
     if (next) say(`Der mangler flere små billeder. Tryk "Hent billeder" igen (fra ${next}).`);
     const withPlace = photos.filter((p) => p.lat !== undefined).length;
     say(`${photos.length} billeder, ${withPlace} med sted`);

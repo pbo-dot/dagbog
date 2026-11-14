@@ -38,6 +38,9 @@ import kotlin.concurrent.thread
  * videre til Dagbog? Intet gemmes, og ingen billeder sendes. Resultatet er en tekst, der kan
  * kopieres eller sendes til Dagbog. Bygget i kode, ingen XML-layouts.
  */
+/** Billedernes størrelse på den lange led (Dagbog henter alle igen, når den ændres). */
+private const val THUMB_PX = 1080
+
 class MainActivity : Activity() {
     private lateinit var out: TextView
     private val report = StringBuilder()
@@ -281,13 +284,13 @@ class MainActivity : Activity() {
         say("(kopieret)")
     }
 
-    /** Så mange små billeder sendes højst ad gangen (ca. 15 MB); resten hentes næste gang. */
-    private val maxThumbs = 300
+    /** Så mange billeder sendes højst ad gangen (ca. 20 MB); resten hentes næste gang. */
+    private val maxThumbs = 120
 
     /**
      * Op til 5 billeder pr. dag, fordelt over dagen: dagen deles i lige store stykker, og i hvert
      * stykke vælges billedet nærmest midten. Billeder taget under 2 minutter fra et valgt springes
-     * over (serier af næsten ens billeder). Små udgaver (640 px) som "B;id;taget-ms;base64".
+     * over (serier af næsten ens billeder). Udgaver på 1080 px som "B;id;taget-ms;base64".
      */
     private fun thumbs(camera: List<Pic>, base: android.net.Uri): List<String> {
         val day = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
@@ -337,12 +340,12 @@ class MainActivity : Activity() {
         val bmp = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri)) { dec, info, _ ->
             val w = info.size.width
             val h = info.size.height
-            val scale = 640.0 / maxOf(w, h)
+            val scale = THUMB_PX.toDouble() / maxOf(w, h)
             if (scale < 1) dec.setTargetSize((w * scale).toInt().coerceAtLeast(1), (h * scale).toInt().coerceAtLeast(1))
             dec.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
         }
         val bytes = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.JPEG, 72, bytes)
+        bmp.compress(Bitmap.CompressFormat.JPEG, 80, bytes)
         bmp.recycle()
         return Base64.encodeToString(bytes.toByteArray(), Base64.NO_WRAP)
     }
@@ -351,7 +354,7 @@ class MainActivity : Activity() {
     private fun writeFile(lines: List<String>): File {
         val f = File(ShareProvider.dir(this), "dagbog-billeder.txt")
         f.bufferedWriter().use { w ->
-            w.write("DAGBOG-BILLEDER v2\n# app ${appVersion()}\n")
+            w.write("DAGBOG-BILLEDER v2\n# app ${appVersion()}\n# størrelse $THUMB_PX\n")
             for (l in report.lines()) if (l.isNotBlank()) w.write("# $l\n")
             for (l in lines) { w.write(l); w.write("\n") }
         }

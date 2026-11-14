@@ -311,6 +311,8 @@ export interface Settings {
     fixed: FixedPlace[]; // faste steder, fx sommerhuset (tæller ikke som rejser)
     notFixed: string[]; // byer, der ikke skal foreslås som faste steder igen
     thumbFrom?: string; // dagen, hjælpe-appen skal sende små billeder fra næste gang (ÅÅÅÅ-MM-DD)
+    thumbPx?: number; // størrelsen på alle gemte billeder (sættes, når en hel runde er hentet)
+    thumbRedo?: boolean; // ved at hente alle billeder igen i bedre kvalitet
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag

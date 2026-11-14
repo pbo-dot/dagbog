@@ -5,6 +5,7 @@ import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
+import { dayDescs, dayStays, dayThumbs } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
 import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
@@ -19,6 +20,39 @@ import { TodoCard } from './Todos';
 function nowHM(): string {
   const d = new Date();
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+/**
+ * Dagens billeder fra telefonen (hjælpe-appen "Dagbog Billeder") over skrivefeltet, så de hjælper
+ * med at huske: stederne, en række billeder at rulle i, og Claudes beskrivelser med et tryk.
+ */
+function DayPhotos({ date }: { date: string }) {
+  const { data } = useStore();
+  const [open, setOpen] = useState<string | null>(null);
+  const [showText, setShowText] = useState(false);
+  const ids = dayThumbs(data.phonePhotos, date);
+  if (!ids.length) return null;
+  const places = [...new Set(dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed).map((x) => x.city))];
+  const descs = dayDescs(data.phonePhotos, date);
+  return (
+    <section className="day-photos" aria-label="Dagens billeder">
+      {places.length > 0 && <span className="small muted">{places.slice(0, 4).join(' · ')}</span>}
+      <div className="photo-strip">
+        {ids.map((id) => <PhotoImg key={id} id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />)}
+      </div>
+      {descs.length > 0 && (
+        <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setShowText((v) => !v)} aria-expanded={showText}>
+          {showText ? 'Skjul Claudes beskrivelser' : 'Vis Claudes beskrivelser'}
+        </button>
+      )}
+      {showText && (
+        <ul className="small serif" style={{ margin: 0, paddingLeft: 18 }}>
+          {descs.map((x, i) => <li key={i}><span className="muted">{x.time}</span> {x.text}</li>)}
+        </ul>
+      )}
+      {open && <PhotoViewer id={open} onClose={() => setOpen(null)} />}
+    </section>
+  );
 }
 
 const MEET_KEY = 'dagbog-moedes-skjult';
@@ -368,6 +402,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         {isToday && <MeetCards />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? dayQuestion(data, date, today(), nowHM())}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
+        <DayPhotos date={date} />
       </div>
 
       <div className="writer-wrap">

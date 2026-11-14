@@ -5,6 +5,9 @@ import { addDays } from './dates';
 import type { FixedPlace, PhonePhoto, PhotoMonth, Visit, VisitMonth } from './types';
 
 /** Første linje fra hjælpe-appen: v1 = kun dato og sted, v2 = også små billeder ("B;id;taget-ms;base64"). */
+/** Billedernes størrelse i den nyeste hjælpe-app; er de gemte mindre, tilbydes "Hent i bedre kvalitet". */
+export const THUMB_PX = 1080;
+
 export const PAYLOAD_HEADS = ['DAGBOG-BILLEDER v1', 'DAGBOG-BILLEDER v2'];
 /** Hjælpe-appen åbnes fra Dagbog med denne adresse (Chrome på Android); mangler den, hentes APK'en. */
 export const APK_URL = 'https://github.com/pbo-dot/dagbog/releases/download/billeder/dagbog-billeder.apk';
@@ -18,6 +21,7 @@ export interface Payload {
   photos: PhonePhoto[];
   thumbs: Array<{ id: number; t: number; data: string }>; // små billeder (base64 JPEG)
   next?: string; // hjælpe-appen havde flere små billeder: næste gang fra denne dag
+  size?: number; // billedernes størrelse (px på den lange led)
 }
 
 /** Læser teksten fra hjælpe-appen: "id;taget-ms;bredde;længde" pr. linje, log-linjer med "#". */
@@ -28,13 +32,15 @@ export function parsePayload(text: string): Payload {
   const photos: PhonePhoto[] = [];
   const thumbs: Payload['thumbs'] = [];
   let next: string | undefined;
+  let size: number | undefined;
   for (const raw of lines.slice(1)) {
     const line = raw.trim();
     if (!line) continue;
     if (line.startsWith('#')) {
       const l = line.slice(1).trim();
       const m = /^næste (\d{4}-\d{2}-\d{2})$/.exec(l);
-      if (m) next = m[1]; else log.push(l);
+      const sz = /^størrelse (\d+)$/.exec(l);
+      if (m) next = m[1]; else if (sz) size = Number(sz[1]); else log.push(l);
       continue;
     }
     if (line.startsWith('B;')) {
@@ -50,7 +56,7 @@ export function parsePayload(text: string): Payload {
     if (lat && lng && Number.isFinite(la) && Number.isFinite(lo) && !(la === 0 && lo === 0)) { p.lat = la; p.lng = lo; }
     photos.push(p);
   }
-  return { log, photos, thumbs, next };
+  return { log, photos, thumbs, next, size };
 }
 
 interface City { name: string; cc: string; lat: number; lng: number }
@@ -141,7 +147,8 @@ export function mergeMonths(old: Record<string, PhotoMonth>, photos: PhonePhoto[
       const before = have.get(k);
       if (!before) { added++; changed = true; have.set(k, p); }
       else {
-        const merged = { ...p, thumb: p.thumb ?? before.thumb };
+        // Billedet og Claudes beskrivelse bevares, når dato og sted sendes igen
+        const merged = { ...p, thumb: p.thumb ?? before.thumb, desc: p.desc ?? before.desc };
         if ((before.city ?? '') !== (merged.city ?? '') || before.lat !== merged.lat || before.thumb !== merged.thumb) { changed = true; have.set(k, merged); }
       }
     }
