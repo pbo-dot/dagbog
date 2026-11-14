@@ -2,7 +2,7 @@
 // og Dagbog giver dem et bynavn på telefonen (uden net) ud fra byer.txt (GeoNames, CC BY 4.0).
 import { toISO } from './dates';
 import { addDays } from './dates';
-import type { PhonePhoto, PhotoMonth, Visit, VisitMonth } from './types';
+import type { FixedPlace, PhonePhoto, PhotoMonth, Visit, VisitMonth } from './types';
 
 export const PAYLOAD_HEAD = 'DAGBOG-BILLEDER v1';
 /** Hjælpe-appen åbnes fra Dagbog med denne adresse (Chrome på Android); mangler den, hentes APK'en. */
@@ -129,7 +129,7 @@ export function mergeMonths(old: Record<string, PhotoMonth>, photos: PhonePhoto[
   return { months, added };
 }
 
-export interface Stay { city: string; cc: string; from: number; to: number; count: number }
+export interface Stay { city: string; cc: string; from: number; to: number; count: number; lat?: number; lng?: number }
 
 /** "55.6789°, 12.3456°" → [55.6789, 12.3456] */
 function latLng(v: unknown): [number, number] | null {
@@ -201,7 +201,11 @@ export const stayTime = (s: Stay) => (s.count === 1 || hm(s.from) === hm(s.to) ?
  * Stederne på en dag i rækkefølge. Fra Tidslinjen, hvis den har dagen (tiderne klippes til dagen);
  * ellers fra billederne, hvor billeder i træk fra samme by bliver ét ophold.
  */
-export function dayStays(months: Record<string, PhotoMonth>, date: string, visits: Record<string, VisitMonth> = {}): Stay[] {
+export function dayStays(months: Record<string, PhotoMonth>, date: string, visits: Record<string, VisitMonth> = {}, fixed: FixedPlace[] = []): Stay[] {
+  return named(rawDayStays(months, date, visits), fixed);
+}
+
+function rawDayStays(months: Record<string, PhotoMonth>, date: string, visits: Record<string, VisitMonth>): Stay[] {
   const out: Stay[] = [];
   const from = dayStart(date);
   const to = dayStart(addDays(date, 1)) - 60_000;
@@ -211,14 +215,14 @@ export function dayStays(months: Record<string, PhotoMonth>, date: string, visit
     const e = Math.min(v.e, to);
     const last = out[out.length - 1];
     if (last && last.city === v.city && last.cc === v.cc) { last.to = e; last.count++; }
-    else out.push({ city: v.city, cc: v.cc ?? '', from: s, to: e, count: 2 });
+    else out.push({ city: v.city, cc: v.cc ?? '', from: s, to: e, count: 2, lat: v.lat, lng: v.lng });
   }
   if (out.length) return out;
   for (const p of months[date.slice(0, 7)]?.photos ?? []) {
     if (!p.city || toISO(new Date(p.t)) !== date) continue;
     const last = out[out.length - 1];
     if (last && last.city === p.city && last.cc === p.cc) { last.to = p.t; last.count++; }
-    else out.push({ city: p.city, cc: p.cc ?? '', from: p.t, to: p.t, count: 1 });
+    else out.push({ city: p.city, cc: p.cc ?? '', from: p.t, to: p.t, count: 1, lat: p.lat, lng: p.lng });
   }
   return out;
 }
@@ -229,6 +233,29 @@ export function dayPhotoCount(months: Record<string, PhotoMonth>, date: string):
 }
 
 interface DayPoint { city: string; cc: string; lat: number; lng: number }
+
+/** Alt inden for så mange km fra et fast sted regnes som stedet (fx stranden ved sommerhuset). */
+export const FIXED_KM = 8;
+
+/** Det faste sted, punktet ligger ved, hvis nogen. */
+export function fixedAt(p: { lat?: number; lng?: number }, fixed: FixedPlace[]): FixedPlace | undefined {
+  if (p.lat === undefined || p.lng === undefined) return undefined;
+  return fixed.find((f) => km(f, { lat: p.lat!, lng: p.lng! }) <= FIXED_KM);
+}
+
+/** Ophold ved et fast sted får stedets navn (fx "Sommerhuset"), og ophold i træk lægges sammen. */
+function named(stays: Stay[], fixed: FixedPlace[]): Stay[] {
+  if (!fixed.length) return stays;
+  const out: Stay[] = [];
+  for (const st of stays) {
+    const f = fixedAt(st, fixed);
+    const x = f ? { ...st, city: f.name, cc: 'DK' } : st;
+    const last = out[out.length - 1];
+    if (last && last.city === x.city) { last.to = x.to; last.count += x.count; }
+    else out.push({ ...x });
+  }
+  return out;
+}
 
 /** Afstand i km (god nok på korte og mellemlange afstande). */
 function km(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -260,7 +287,7 @@ function placesByDay(months: Record<string, PhotoMonth>, visits: Record<string, 
  * Rejser: dage i træk, hvor et sted ligger mere end 50 km fra hjemmet (det seneste sted,
  * Google har mærket som hjemme). Fx "2025-05-02 – 2025-05-06: Rome, Ostia (Italien)".
  */
-export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
+export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[] = []): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
   const { days, homes } = placesByDay(months, visits);
   const out: Array<{ from: string; to: string; cities: string[]; countries: string[] }> = [];
   let h = 0;
@@ -270,7 +297,7 @@ export function trips(months: Record<string, PhotoMonth>, visits: Record<string,
     while (h < homes.length && homes[h].t < end) home = homes[h++];
     const pts = days.get(date)!;
     const base = home ?? pts[0];
-    const far = pts.filter((p) => km(p, base) > 50);
+    const far = pts.filter((p) => km(p, base) > 50 && !fixedAt(p, fixed));
     if (!far.length) continue;
     const last = out[out.length - 1];
     const trip = last && addDays(last.to, 1) >= date ? last : null;
@@ -285,6 +312,65 @@ export function trips(months: Record<string, PhotoMonth>, visits: Record<string,
   return out;
 }
 
+/** Hvornår man var ved hvert fast sted: dage i træk bliver ét ophold. */
+export function fixedStays(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[]): Array<{ place: FixedPlace; stays: Array<{ from: string; to: string }> }> {
+  if (!fixed.length) return [];
+  const { days } = placesByDay(months, visits);
+  const sorted = [...days.keys()].sort();
+  return fixed.map((place) => {
+    const stays: Array<{ from: string; to: string }> = [];
+    for (const d of sorted) {
+      if (!days.get(d)!.some((p) => km(p, place) <= FIXED_KM)) continue;
+      const last = stays[stays.length - 1];
+      if (last && addDays(last.to, 1) >= d) last.to = d;
+      else stays.push({ from: d, to: d });
+    }
+    return { place, stays };
+  });
+}
+
+/**
+ * Forslag til faste steder: byer, der optræder i mindst 6 rejser, og som ikke allerede er
+ * faste steder eller afvist. Stedet er det punkt i byen, man oftest har været.
+ */
+export function suggestFixed(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[], notFixed: string[]): Array<{ city: string; trips: number; lat: number; lng: number }> {
+  const list = trips(months, visits, fixed);
+  const count = new Map<string, number>();
+  for (const t of list) for (const c of t.cities) count.set(c, (count.get(c) ?? 0) + 1);
+  const { days } = placesByDay(months, visits);
+  const out: Array<{ city: string; trips: number; lat: number; lng: number }> = [];
+  for (const [city, n] of count) {
+    if (n < 6 || notFixed.includes(city) || fixed.some((f) => f.city === city)) continue;
+    const spots = new Map<string, { lat: number; lng: number; n: number }>();
+    for (const pts of days.values()) {
+      for (const p of pts) {
+        if (p.city !== city) continue;
+        const k = `${p.lat.toFixed(2)}:${p.lng.toFixed(2)}`;
+        const sp = spots.get(k) ?? { lat: p.lat, lng: p.lng, n: 0 };
+        sp.n++;
+        spots.set(k, sp);
+      }
+    }
+    const best = [...spots.values()].sort((a, b) => b.n - a.n)[0];
+    if (best) out.push({ city, trips: n, lat: best.lat, lng: best.lng });
+  }
+  return out.sort((a, b) => b.trips - a.trips);
+}
+
+/** "Sommerhuset (Nykøbing Sjælland): 2023: 14.–15. okt., 23.–24. sep. …" én linje pr. år. */
+export function fixedLines(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[]): string[] {
+  const short = (d: string) => new Date(`${d}T12:00:00`).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' });
+  const out: string[] = [];
+  for (const { place, stays } of fixedStays(months, visits, fixed)) {
+    const years = new Map<string, Array<{ from: string; to: string }>>();
+    for (const st of stays) { const y = st.from.slice(0, 4); const l = years.get(y); if (l) l.push(st); else years.set(y, [st]); }
+    for (const [y, ss] of years) {
+      out.push(`- ${place.name} (${place.city}) ${y}: ${ss.length} ophold · ${ss.map((x) => (x.from === x.to ? short(x.from) : `${short(x.from)}–${short(x.to)}`)).join(', ')}`);
+    }
+  }
+  return out;
+}
+
 /** "2025-05-02 – 2025-05-06: Rome, Ostia (Italien)" */
 export function tripLine(t: { from: string; to: string; cities: string[]; countries: string[] }): string {
   return `- ${t.from}${t.to !== t.from ? ` – ${t.to}` : ''}: ${t.cities.slice(0, 6).join(', ')}${t.cities.length > 6 ? ' m.fl.' : ''}${t.countries.length ? ` (${t.countries.map(countryName).join(', ')})` : ''}`;
@@ -294,11 +380,11 @@ export function tripLine(t: { from: string; to: string; cities: string[]; countr
  * Til Spørg. I en periode: én linje pr. dag med stederne (Tidslinjen og billederne).
  * Ellers: rejserne (over 50 km hjemmefra), så materialet holdes kort over mange år.
  */
-export function placeLines(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth> = {}, inside?: (d: string) => boolean): string[] {
-  if (!inside) return trips(months, visits).map(tripLine);
+export function placeLines(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth> = {}, inside?: (d: string) => boolean, fixed: FixedPlace[] = []): string[] {
+  if (!inside) return [...trips(months, visits, fixed).map(tripLine), ...fixedLines(months, visits, fixed)];
   const { days } = placesByDay(months, visits);
   return [...days.keys()].filter(inside).sort().map((d) => {
-    const stays = dayStays(months, d, visits);
+    const stays = dayStays(months, d, visits, fixed);
     const n = dayPhotoCount(months, d);
     const ccs = [...new Set(stays.map((x) => x.cc))].filter((c) => c && c !== 'DK');
     return `- ${d}: ${stays.map((x) => `${x.city} ${stayTime(x)}`).join(', ') || 'sted ukendt'}${ccs.length ? ` (${ccs.map(countryName).join(', ')})` : ''}${n ? ` · ${n} billeder` : ''}`;

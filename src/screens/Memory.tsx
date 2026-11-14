@@ -256,7 +256,7 @@ function DayConversations({ date }: { date: string }) {
 /** "Her var du": stederne fra Google Maps-tidslinjen og dagens billeder (hjælpe-appen "Dagbog Billeder"). */
 function DayPlaces({ date }: { date: string }) {
   const { data } = useStore();
-  const stays = dayStays(data.phonePhotos, date, data.visits);
+  const stays = dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed);
   const n = dayPhotoCount(data.phonePhotos, date);
   if (!n && !stays.length) return null;
   const home = 'DK';

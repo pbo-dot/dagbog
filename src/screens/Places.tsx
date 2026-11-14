@@ -2,10 +2,11 @@
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
 import { useMemo, useRef, useState } from 'react';
 import { formatMonth, toISO } from '../lib/dates';
-import { countryName, OPEN_APP_URL, tripLine, trips } from '../lib/places';
+import { countryName, fixedStays, OPEN_APP_URL, suggestFixed, tripLine, trips } from '../lib/places';
+import type { FixedPlace } from '../lib/types';
 import { importTimeline, useImportState } from '../lib/placesImport';
 import { useStore } from '../lib/store';
-import { go, Header } from '../ui';
+import { go, Header, uid } from '../ui';
 
 /** "2.–6. maj 2025" eller "30. apr.–2. maj 2025" */
 function tripDates(from: string, to: string): string {
@@ -26,7 +27,28 @@ export function PlacesScreen() {
   const fileInput = useRef<HTMLInputElement>(null);
   const visits = Object.values(data.visits).flatMap((m) => m.visits);
   const visitYears = visits.length ? [new Date(visits[0].s).getFullYear(), new Date(visits[visits.length - 1].s).getFullYear()] : [];
-  const tripList = useMemo(() => trips(data.phonePhotos, data.visits).reverse(), [data.phonePhotos, data.visits]);
+  const fixed = useMemo(() => data.settings.places?.fixed ?? [], [data.settings.places]);
+  const notFixed = data.settings.places?.notFixed ?? [];
+  // Rejser og de faste steder (én linje pr. sted og år), nyeste først
+  const tripList = useMemo(() => {
+    const items: Array<{ key: string; to: string; title: string; sub: string; day: string }> = trips(data.phonePhotos, data.visits, fixed).map((t) => ({
+      key: `t${t.from}`, to: t.to, day: t.from,
+      title: tripLine(t).replace(/^- [^:]+: /, '').replace(/ \(.*\)$/, ''),
+      sub: `${tripDates(t.from, t.to)}${t.countries.length ? ` · ${t.countries.map(countryName).join(', ')}` : ''}`,
+    }));
+    for (const { place, stays } of fixedStays(data.phonePhotos, data.visits, fixed)) {
+      const years = new Map<string, Array<{ from: string; to: string }>>();
+      for (const st of stays) { const y = st.from.slice(0, 4); const l = years.get(y); if (l) l.push(st); else years.set(y, [st]); }
+      for (const [y, ss] of years) {
+        const last = ss[ss.length - 1];
+        items.push({ key: `f${place.id}${y}`, to: last.to, day: last.from, title: place.name, sub: `${ss.length} ${ss.length === 1 ? 'ophold' : 'ophold'} i ${y} · ${place.city}` });
+      }
+    }
+    return items.sort((a, b) => b.to.localeCompare(a.to));
+  }, [data.phonePhotos, data.visits, fixed]);
+  const suggestions = useMemo(() => suggestFixed(data.phonePhotos, data.visits, fixed, notFixed).slice(0, 2), [data.phonePhotos, data.visits, fixed, notFixed]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [names, setNames] = useState<Record<string, string>>({});
+  const savePlaces = (next: { fixed: FixedPlace[]; notFixed: string[] }) => store.saveSettings({ ...data.settings, places: next });
   const months = Object.values(data.phonePhotos).sort((a, b) => b.id.localeCompare(a.id));
   const photos = months.flatMap((m) => m.photos);
   const days = new Set(photos.map((p) => toISO(new Date(p.t)))).size;
@@ -82,15 +104,47 @@ export function PlacesScreen() {
         </section>
       )}
 
+      {suggestions.map((sg) => (
+        <section key={sg.city} className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
+          <strong>Er {sg.city} et fast sted for dig?</strong>
+          <span className="small">Du har været der på {sg.trips} rejser. Et fast sted, fx et sommerhus, samles til én linje pr. år.</span>
+          <input type="text" value={names[sg.city] ?? ''} placeholder="Fx Sommerhuset" aria-label={`Navn til ${sg.city}`}
+            onChange={(e) => setNames({ ...names, [sg.city]: e.target.value })} />
+          <div className="row wrap">
+            <button className="btn primary" disabled={!(names[sg.city] ?? '').trim()} onClick={() => savePlaces({
+              fixed: [...fixed, { id: uid(), name: names[sg.city].trim(), city: sg.city, lat: sg.lat, lng: sg.lng }], notFixed,
+            })}>Gem som fast sted</button>
+            <button className="btn ghost" onClick={() => savePlaces({ fixed, notFixed: [...notFixed, sg.city] })}>Nej</button>
+          </div>
+        </section>
+      ))}
+
+      {fixed.length > 0 && (
+        <section className="stack-sm">
+          <h3>Faste steder</h3>
+          <div className="card list" style={{ padding: '2px 16px' }}>
+            {fixed.map((f) => (
+              <div key={f.id} className="list-item">
+                <span className="grow" style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <strong>🏡 {f.name}</strong>
+                  <span className="small muted">{f.city}</span>
+                </span>
+                <button className="btn ghost small" onClick={() => savePlaces({ fixed: fixed.filter((x) => x.id !== f.id), notFixed })}>Fjern</button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {tripList.length > 0 && (
         <section className="stack-sm">
           <h3>Rejser · {tripList.length}</h3>
           <div className="card list" style={{ padding: '2px 16px' }}>
             {(allTrips ? tripList : tripList.slice(0, 12)).map((t) => (
-              <button key={t.from} className="list-item" onClick={() => go(`husk/dag/${t.from}`)}>
+              <button key={t.key} className="list-item" onClick={() => go(`husk/dag/${t.day}`)}>
                 <span className="grow" style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <strong>{tripLine(t).replace(/^- [^:]+: /, '').replace(/ \(.*\)$/, '')}</strong>
-                  <span className="small muted">{tripDates(t.from, t.to)}{t.countries.length ? ` · ${t.countries.map(countryName).join(', ')}` : ''}</span>
+                  <strong>{t.key.startsWith('f') ? `🏡 ${t.title}` : t.title}</strong>
+                  <span className="small muted">{t.sub}</span>
                 </span>
               </button>
             ))}

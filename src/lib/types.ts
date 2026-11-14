@@ -149,6 +149,15 @@ export interface Visit {
   home?: boolean; // Google har mærket stedet som hjemme
 }
 
+/** Et sted, man ofte er, fx sommerhuset. Alt inden for FIXED_KM regnes som stedet. */
+export interface FixedPlace {
+  id: string;
+  name: string; // fx "Sommerhuset"
+  city: string; // fx "Nykøbing Sjælland"
+  lat: number;
+  lng: number;
+}
+
 /** Opholdene, der begynder i én måned (nøgle YYYY-MM). */
 export interface VisitMonth {
   id: string;
@@ -295,6 +304,10 @@ export interface Settings {
     // "skriv i dagbogen" (`write`) og fødselsdage (`birthdays`). Kalender '' = samme som aftaler.
     remind?: { on: boolean; time: string; cal?: string; write?: boolean; birthdays?: boolean };
     todoEvents?: Record<string, TodoEvent>; // påmindelserne i Google: huskepunkt-id, "r:<fast ting>", "w" (skriv) eller "b:<person>"
+  };
+  places?: {
+    fixed: FixedPlace[]; // faste steder, fx sommerhuset (tæller ikke som rejser)
+    notFixed: string[]; // byer, der ikke skal foreslås som faste steder igen
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag
