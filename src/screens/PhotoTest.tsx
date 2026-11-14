@@ -65,6 +65,55 @@ async function report(method: string, items: Picked[], listMs: number): Promise<
   return [...lines, ...shown].join('\n');
 }
 
+/** Runder koordinater af (ca. 10 km) og forkorter lange tekster, så rapporten ikke røber præcise steder. */
+function blur(v: unknown): string {
+  const t = String(v).replace(/(-?\d+\.\d)\d+/g, '$1');
+  return t.length > 48 ? `${t.slice(0, 48)}…` : t;
+}
+
+/** Opbygningen af et stykke JSON: nøgler, typer og et eksempel på hver værdi (højst 4 lag). */
+function shape(v: unknown, depth = 0, pad = '  '): string[] {
+  if (Array.isArray(v)) return [`${pad}[liste med ${v.length}]`, ...(v.length && depth < 4 ? shape(v[0], depth + 1, `${pad}  `) : [])];
+  if (v && typeof v === 'object') {
+    if (depth >= 4) return [`${pad}{…}`];
+    return Object.entries(v as Record<string, unknown>).flatMap(([k, x]) =>
+      x && typeof x === 'object' ? [`${pad}${k}:`, ...shape(x, depth + 1, `${pad}  `)] : [`${pad}${k}: ${/placeId|Id$/.test(k) ? '(skjult)' : blur(x)}`]);
+  }
+  return [`${pad}${blur(v)}`];
+}
+
+/** Læser Google Maps-tidslinjen på telefonen og beskriver, hvad filen indeholder. Intet sendes. */
+async function timelineReport(file: File): Promise<string> {
+  const lines = ['== Tidslinje ==', `${file.name} · ${(file.size / 1_048_576).toFixed(1)} MB`];
+  const t0 = performance.now();
+  const data = JSON.parse(await file.text()) as Record<string, unknown>;
+  lines.push(`Læst på ${Math.round(performance.now() - t0)} ms`);
+  for (const [k, v] of Object.entries(Array.isArray(data) ? { '(listen selv)': data } : data)) {
+    lines.push(`${k}: ${Array.isArray(v) ? `liste med ${v.length}` : typeof v}`);
+  }
+  const segs = (Array.isArray(data) ? data : (data.semanticSegments ?? data.timelineObjects ?? [])) as Array<Record<string, unknown>>;
+  if (Array.isArray(segs) && segs.length) {
+    const kinds: Record<string, number> = {};
+    const years: Record<string, number> = {};
+    const firstOf: Record<string, Record<string, unknown>> = {};
+    for (const s of segs) {
+      const kind = Object.keys(s).filter((k) => !/^(start|end)Time/.test(k)).join('+') || '(kun tid)';
+      kinds[kind] = (kinds[kind] ?? 0) + 1;
+      firstOf[kind] ??= s;
+      const y = String(s.startTime ?? s.endTime ?? '').slice(0, 4);
+      if (y) years[y] = (years[y] ?? 0) + 1;
+    }
+    lines.push(`Slags: ${Object.entries(kinds).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    lines.push(`Pr. år: ${Object.entries(years).sort().map(([y, n]) => `${y}: ${n}`).join(' · ')}`);
+    for (const [kind, s] of Object.entries(firstOf).slice(0, 5)) lines.push(`-- eksempel: ${kind} --`, ...shape(s));
+    const last = segs[segs.length - 1];
+    lines.push(`Første: ${blur(segs[0].startTime)} · sidste: ${blur(last.endTime ?? last.startTime)}`);
+  } else {
+    lines.push('Ukendt opbygning. Sådan ser begyndelsen ud:', ...shape(data).slice(0, 60));
+  }
+  return lines.join('\n');
+}
+
 export function PhotoTestScreen() {
   const [out, setOut] = useState<string[]>([]);
   const [busy, setBusy] = useState('');
@@ -72,6 +121,7 @@ export function PhotoTestScreen() {
   const dirInput = useRef<HTMLInputElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const photoInput = useRef<HTMLInputElement>(null);
+  const timeInput = useRef<HTMLInputElement>(null);
   const w = window as PickerWindow;
   const head = `Dagbog billedtest · ${new Date().toISOString().slice(0, 16)}\n${navigator.userAgent}\nMappe-adgang (showDirectoryPicker): ${w.showDirectoryPicker ? 'findes' : 'findes IKKE'} · mappe-upload (webkitdirectory): ${'webkitdirectory' in document.createElement('input') ? 'findes' : 'findes IKKE'}`;
   const all = [head, ...out].join('\n\n');
@@ -111,11 +161,22 @@ export function PhotoTestScreen() {
         <button className="btn block" disabled={!!busy} onClick={() => dirInput.current?.click()}>2. Vælg en mappe</button>
         <button className="btn block" disabled={!!busy} onClick={() => fileInput.current?.click()}>3. Vælg filer i Filer</button>
         <button className="btn block" disabled={!!busy} onClick={() => photoInput.current?.click()}>4. Vælg billeder i billedvælgeren</button>
+        <button className="btn primary block" disabled={!!busy} onClick={() => timeInput.current?.click()}>5. Vælg Tidslinje.json</button>
       </div>
       {/* @ts-expect-error webkitdirectory er ikke med i Reacts typer */}
       <input ref={dirInput} type="file" webkitdirectory="" multiple hidden onChange={fromInput('2. Vælg en mappe')} />
       <input ref={fileInput} type="file" multiple hidden onChange={fromInput('3. Filer')} />
       <input ref={photoInput} type="file" accept="image/*" multiple hidden onChange={fromInput('4. Billedvælgeren')} />
+      <input ref={timeInput} type="file" hidden onChange={async (e) => {
+        const f = e.target.files?.[0];
+        e.target.value = '';
+        if (!f) return;
+        setBusy('Tidslinje');
+        let text: string;
+        try { text = await timelineReport(f); } catch (err) { text = `== Tidslinje ==\nFEJL: ${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}`; }
+        setOut((o) => [...o, text]);
+        setBusy('');
+      }} />
       {busy && <p className="small muted">Arbejder: {busy} …</p>}
       <textarea className="grow" readOnly rows={14} value={all} aria-label="Resultat" style={{ fontSize: '.8rem', fontFamily: 'monospace' }} />
       <div className="row wrap">
