@@ -129,6 +129,7 @@ export interface PhonePhoto {
   lng?: number;
   city?: string; // nærmeste by (regnet på telefonen ud fra GeoNames)
   cc?: string; // land (ISO, fx "PT")
+  thumb?: string; // lille udgave i Dagbogs billedlager ("tel-<id>"), op til 5 pr. dag
 }
 
 /** Billederne fra én måned (nøgle YYYY-MM). */
@@ -308,6 +309,7 @@ export interface Settings {
   places?: {
     fixed: FixedPlace[]; // faste steder, fx sommerhuset (tæller ikke som rejser)
     notFixed: string[]; // byer, der ikke skal foreslås som faste steder igen
+    thumbFrom?: string; // dagen, hjælpe-appen skal sende små billeder fra næste gang (ÅÅÅÅ-MM-DD)
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag

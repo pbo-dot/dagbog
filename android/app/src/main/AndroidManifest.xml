@@ -35,5 +35,11 @@
                 <data android:scheme="dagbogbilleder" />
             </intent-filter>
         </activity>
+        <!-- Filen med billederne til Dagbog (ligger i cache/share). -->
+        <provider
+            android:name=".ShareProvider"
+            android:authorities="dk.dagbog.billeder.share"
+            android:exported="false"
+            android:grantUriPermissions="true" />
     </application>
 </manifest>

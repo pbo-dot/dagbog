@@ -49,7 +49,9 @@ export async function makeBackup(dek: CryptoKey): Promise<BackupFile> {
   } catch {
     /* ikke afgørende */
   }
-  const inner: Inner = { records: await recordAll(), vault, theme };
+  // Små billeder fra telefonen ("photo:tel-…") kommer ikke med: de kan altid hentes igen fra telefonen med "Hent billeder"
+  const records = (await recordAll()).filter(([k]) => !k.startsWith('photo:tel-'));
+  const inner: Inner = { records, vault, theme };
   return {
     app: 'dagbog-kopi',
     version: 1,

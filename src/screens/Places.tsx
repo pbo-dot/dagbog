@@ -2,7 +2,7 @@
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
 import { useMemo, useRef, useState } from 'react';
 import { formatMonth, toISO } from '../lib/dates';
-import { countryName, fixedStays, OPEN_APP_URL, suggestFixed, tripLine, trips } from '../lib/places';
+import { countryName, fixedStays, openAppUrl, suggestFixed, tripLine, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
 import { importTimeline, useImportState } from '../lib/placesImport';
 import { useStore } from '../lib/store';
@@ -53,6 +53,7 @@ export function PlacesScreen() {
   const photos = months.flatMap((m) => m.photos);
   const days = new Set(photos.map((p) => toISO(new Date(p.t)))).size;
   const placed = photos.filter((p) => p.city).length;
+  const thumbs = photos.filter((p) => p.thumb).length;
   const last = Math.max(0, ...months.map((m) => m.importedAt));
   const home = 'DK'; // andre lande nævnes ved måneden
 
@@ -75,8 +76,9 @@ export function PlacesScreen() {
       <section className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
         <strong>{photos.length ? 'Hent nye billeder' : 'Hent dine billeder'}</strong>
         <span className="small">Åbner hjælpe-appen "Dagbog Billeder", som læser dato og sted og sender dem tilbage hertil.</span>
+        {thumbs > 0 && <span className="small">{thumbs} små billeder på dagene (op til 5 pr. dag).</span>}
         {last > 0 && <span className="small muted">Sidst hentet {new Date(last).toLocaleString('da-DK', { dateStyle: 'medium', timeStyle: 'short' })}</span>}
-        <button className="btn primary block" disabled={imp.busy} onClick={() => { location.href = OPEN_APP_URL; }}>
+        <button className="btn primary block" disabled={imp.busy} onClick={() => { location.href = openAppUrl(data.settings.places?.thumbFrom); }}>
           {imp.busy ? 'Indlæser …' : 'Hent billeder'}
         </button>
       </section>

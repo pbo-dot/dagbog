@@ -178,6 +178,12 @@ function Unlocked() {
     // Et delt Word-dokument eller en tekstfil bliver til en note med hele teksten
     takeSharedDoc().then(async (doc) => {
       if (!doc) return;
+      // Filen fra hjælpe-appen "Dagbog Billeder" (dato, sted og små billeder)
+      if ((await doc.blob.slice(0, 20).text()).startsWith('DAGBOG-BILLEDER')) {
+        go('billeder');
+        await importPlaces(store, await doc.blob.text());
+        return;
+      }
       try {
         const note = await noteFromFile(doc.blob, doc.name);
         await store.put('notes', note.id, note);

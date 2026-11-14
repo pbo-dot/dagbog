@@ -2,6 +2,7 @@
 // Hvert trin skrives også i den lille log (Sikkerhedskopi › "Seneste forsøg").
 import { useSyncExternalStore } from 'react';
 import { noteAuto } from './google';
+import { toISO } from './dates';
 import { addCities, mergeMonths, mergeVisits, parsePayload, parseTimeline } from './places';
 import type { useStore } from './store';
 
@@ -26,8 +27,26 @@ export async function importPlaces(store: Store, text: string): Promise<void> {
   set({ busy: true, lines: [], error: '' });
   try {
     say(`Modtog ${Math.round(text.length / 1024)} kB fra Dagbog Billeder`);
-    const { log, photos } = parsePayload(text);
+    const { log, photos, thumbs, next } = parsePayload(text);
     for (const l of log) say(`app: ${l}`);
+    // Små billeder: gemmes krypteret i billedlageret som "tel-<id>" og knyttes til billedet
+    if (thumbs.length) {
+      const t0 = performance.now();
+      const byKey = new Map(photos.map((p) => [`${p.id}:${p.t}`, p]));
+      let saved = 0;
+      for (const th of thumbs) {
+        const id = `tel-${th.id}`;
+        await store.putPhoto({ id, date: toISO(new Date(th.t)), mime: 'image/jpeg', data: th.data, width: 0, height: 0, createdAt: Date.now() });
+        const p = byKey.get(`${th.id}:${th.t}`);
+        if (p) p.thumb = id;
+        saved++;
+      }
+      say(`${saved} små billeder gemt på ${Math.round((performance.now() - t0) / 1000)} s`);
+    }
+    const places = store.data.settings.places ?? { fixed: [], notFixed: [] };
+    const thumbFrom = next ?? (thumbs.length ? toISO(new Date(Math.max(...thumbs.map((x) => x.t)))) : places.thumbFrom);
+    if (thumbFrom !== places.thumbFrom) await store.saveSettings({ ...store.data.settings, places: { ...places, thumbFrom } });
+    if (next) say(`Der mangler flere små billeder. Tryk "Hent billeder" igen (fra ${next}).`);
     const withPlace = photos.filter((p) => p.lat !== undefined).length;
     say(`${photos.length} billeder, ${withPlace} med sted`);
     const t0 = performance.now();

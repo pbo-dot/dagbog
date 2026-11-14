@@ -4,7 +4,7 @@ import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prev
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
 import { excerpt, highlight, localSearch, rankByTerms, tokenize } from '../lib/search';
 import { waiting } from '../lib/device';
-import { countryName, dayPhotoCount, dayStays, stayTime } from '../lib/places';
+import { countryName, dayPhotoCount, dayStays, dayThumbs, stayTime } from '../lib/places';
 import { useStore } from '../lib/store';
 import { MOODS } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery } from '../ui';
@@ -258,6 +258,7 @@ function DayPlaces({ date }: { date: string }) {
   const { data } = useStore();
   const stays = dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed);
   const n = dayPhotoCount(data.phonePhotos, date);
+  const thumbs = dayThumbs(data.phonePhotos, date);
   if (!n && !stays.length) return null;
   const home = 'DK';
   return (
@@ -269,6 +270,7 @@ function DayPlaces({ date }: { date: string }) {
           <span className="small muted">{stayTime(s)}</span>
         </div>
       )) : <span className="small muted">Billederne har intet sted.</span>}
+      {thumbs.length > 0 && <div className="day-thumbs"><PhotoGallery ids={thumbs} /></div>}
     </section>
   );
 }

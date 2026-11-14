@@ -4,26 +4,44 @@ import { toISO } from './dates';
 import { addDays } from './dates';
 import type { FixedPlace, PhonePhoto, PhotoMonth, Visit, VisitMonth } from './types';
 
-export const PAYLOAD_HEAD = 'DAGBOG-BILLEDER v1';
+/** Første linje fra hjælpe-appen: v1 = kun dato og sted, v2 = også små billeder ("B;id;taget-ms;base64"). */
+export const PAYLOAD_HEADS = ['DAGBOG-BILLEDER v1', 'DAGBOG-BILLEDER v2'];
 /** Hjælpe-appen åbnes fra Dagbog med denne adresse (Chrome på Android); mangler den, hentes APK'en. */
 export const APK_URL = 'https://github.com/pbo-dot/dagbog/releases/download/billeder/dagbog-billeder.apk';
-export const OPEN_APP_URL = `intent://hent#Intent;scheme=dagbogbilleder;package=dk.dagbog.billeder;S.browser_fallback_url=${encodeURIComponent(APK_URL)};end`;
+/** Adressen, der åbner hjælpe-appen; `fra` = dagen, den skal sende små billeder fra. */
+export function openAppUrl(fra?: string): string {
+  return `intent://hent${fra ? `?fra=${fra}` : ''}#Intent;scheme=dagbogbilleder;package=dk.dagbog.billeder;S.browser_fallback_url=${encodeURIComponent(APK_URL)};end`;
+}
 
 export interface Payload {
   log: string[]; // linjer, der starter med "#" (appens log)
   photos: PhonePhoto[];
+  thumbs: Array<{ id: number; t: number; data: string }>; // små billeder (base64 JPEG)
+  next?: string; // hjælpe-appen havde flere små billeder: næste gang fra denne dag
 }
 
 /** Læser teksten fra hjælpe-appen: "id;taget-ms;bredde;længde" pr. linje, log-linjer med "#". */
 export function parsePayload(text: string): Payload {
   const lines = text.split(/\r?\n/);
-  if (lines[0]?.trim() !== PAYLOAD_HEAD) throw new Error('Det er ikke en liste fra Dagbog Billeder.');
+  if (!PAYLOAD_HEADS.includes(lines[0]?.trim() ?? '')) throw new Error('Det er ikke en liste fra Dagbog Billeder.');
   const log: string[] = [];
   const photos: PhonePhoto[] = [];
+  const thumbs: Payload['thumbs'] = [];
+  let next: string | undefined;
   for (const raw of lines.slice(1)) {
     const line = raw.trim();
     if (!line) continue;
-    if (line.startsWith('#')) { log.push(line.slice(1).trim()); continue; }
+    if (line.startsWith('#')) {
+      const l = line.slice(1).trim();
+      const m = /^næste (\d{4}-\d{2}-\d{2})$/.exec(l);
+      if (m) next = m[1]; else log.push(l);
+      continue;
+    }
+    if (line.startsWith('B;')) {
+      const [, id, t, data] = line.split(';');
+      if (Number.isFinite(Number(id)) && Number(t) > 0 && data) thumbs.push({ id: Number(id), t: Number(t), data });
+      continue;
+    }
     const [id, t, lat, lng] = line.split(';');
     const p: PhonePhoto = { id: Number(id), t: Number(t) };
     if (!Number.isFinite(p.id) || !Number.isFinite(p.t) || p.t <= 0) continue;
@@ -32,7 +50,7 @@ export function parsePayload(text: string): Payload {
     if (lat && lng && Number.isFinite(la) && Number.isFinite(lo) && !(la === 0 && lo === 0)) { p.lat = la; p.lng = lo; }
     photos.push(p);
   }
-  return { log, photos };
+  return { log, photos, thumbs, next };
 }
 
 interface City { name: string; cc: string; lat: number; lng: number }
@@ -122,7 +140,10 @@ export function mergeMonths(old: Record<string, PhotoMonth>, photos: PhonePhoto[
       const k = `${p.id}:${p.t}`;
       const before = have.get(k);
       if (!before) { added++; changed = true; have.set(k, p); }
-      else if ((before.city ?? '') !== (p.city ?? '') || before.lat !== p.lat) { changed = true; have.set(k, p); }
+      else {
+        const merged = { ...p, thumb: p.thumb ?? before.thumb };
+        if ((before.city ?? '') !== (merged.city ?? '') || before.lat !== merged.lat || before.thumb !== merged.thumb) { changed = true; have.set(k, merged); }
+      }
     }
     if (changed) months.push({ id, photos: [...have.values()].sort((a, b) => a.t - b.t), importedAt: now });
   }
@@ -389,4 +410,9 @@ export function placeLines(months: Record<string, PhotoMonth>, visits: Record<st
     const ccs = [...new Set(stays.map((x) => x.cc))].filter((c) => c && c !== 'DK');
     return `- ${d}: ${stays.map((x) => `${x.city} ${stayTime(x)}`).join(', ') || 'sted ukendt'}${ccs.length ? ` (${ccs.map(countryName).join(', ')})` : ''}${n ? ` · ${n} billeder` : ''}`;
   });
+}
+
+/** Id'erne på dagens små billeder (i Dagbogs billedlager), i tidsorden. */
+export function dayThumbs(months: Record<string, PhotoMonth>, date: string): string[] {
+  return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => p.thumb && toISO(new Date(p.t)) === date).map((p) => p.thumb!);
 }

@@ -8,7 +8,9 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.media.ExifInterface
@@ -16,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.MediaStore
+import android.util.Base64
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -23,6 +26,8 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -89,14 +94,22 @@ class MainActivity : Activity() {
             addView(col)
         })
         say("Tryk \"Send billederne til Dagbog\", og vælg \"Tillad alle\", når telefonen spørger.")
-        if (intent?.data?.scheme == "dagbogbilleder") start(send = true)
+        if (intent?.data?.scheme == "dagbogbilleder") fromDagbog(intent)
+    }
+
+    /** Dagbog fortæller med "?fra=ÅÅÅÅ-MM-DD", fra hvilken dag den mangler små billeder. */
+    private var fromDay: String? = null
+
+    private fun fromDagbog(i: Intent) {
+        fromDay = i.data?.getQueryParameter("fra")
+        start(send = true)
     }
 
     // Åbnet igen fra Dagbog, mens appen stadig kører
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        if (intent.data?.scheme == "dagbogbilleder") start(send = true)
+        if (intent.data?.scheme == "dagbogbilleder") fromDagbog(intent)
     }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
@@ -150,7 +163,10 @@ class MainActivity : Activity() {
         thread {
             try {
                 val lines = read(everyPhoto = sendAfter)
-                if (sendAfter && lines != null) runOnUiThread { sendToDagbog(lines) }
+                if (sendAfter && lines != null) {
+                    val file = writeFile(lines)
+                    runOnUiThread { sendToDagbog(file) }
+                }
             } catch (e: Exception) {
                 say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
             }
@@ -190,7 +206,7 @@ class MainActivity : Activity() {
         val days = camera.groupingBy { day.format(Date(it.taken)) }.eachCount()
         say("Dage med billeder: ${days.size} · flest på én dag: ${days.values.max()} · dage med over 3: ${days.values.count { it > 3 }}")
 
-        if (everyPhoto) return readAll(camera, base)
+        if (everyPhoto) return readAll(camera, base) + thumbs(camera, base)
 
         // Sted og dato for et udvalg (jævnt fordelt), og hvor længe det tager
         val n = minOf(60, camera.size)
@@ -265,20 +281,97 @@ class MainActivity : Activity() {
         say("(kopieret)")
     }
 
+    /** Så mange små billeder sendes højst ad gangen (ca. 15 MB); resten hentes næste gang. */
+    private val maxThumbs = 300
+
     /**
-     * Sender teksten til Dagbog. Findes Dagbog blandt de apps, der kan modtage tekst, åbnes den
+     * Op til 5 billeder pr. dag, fordelt over dagen: dagen deles i lige store stykker, og i hvert
+     * stykke vælges billedet nærmest midten. Billeder taget under 2 minutter fra et valgt springes
+     * over (serier af næsten ens billeder). Små udgaver (640 px) som "B;id;taget-ms;base64".
+     */
+    private fun thumbs(camera: List<Pic>, base: android.net.Uri): List<String> {
+        val day = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+        val byDay = camera.groupBy { day.format(Date(it.taken)) }.toSortedMap()
+        val from = fromDay
+        val days = byDay.keys.filter { from == null || it >= from }
+        val out = ArrayList<String>()
+        val t0 = SystemClock.elapsedRealtime()
+        var failed = 0
+        var next: String? = null
+        for (d in days) {
+            val chosen = pick(byDay[d]!!)
+            if (out.isNotEmpty() && out.size + chosen.size > maxThumbs) { next = d; break }
+            for (p in chosen) {
+                try {
+                    out.add("B;${p.id};${p.taken};${small(ContentUris.withAppendedId(base, p.id))}")
+                } catch (e: Exception) {
+                    failed++
+                    if (failed <= 3) say("Lille billede fejlede (${p.name}): ${e.javaClass.simpleName}: ${e.message}")
+                }
+            }
+        }
+        say("Små billeder: ${out.size} fra ${days.size} dage${if (from != null) " (fra $from)" else ""} på ${(SystemClock.elapsedRealtime() - t0) / 1000} s · fejl: $failed")
+        if (next != null) {
+            say("Flere mangler: næste gang fra $next")
+            out.add(0, "# næste $next")
+        }
+        return out
+    }
+
+    private fun pick(list: List<Pic>): List<Pic> {
+        val sorted = list.sortedBy { it.taken }
+        if (sorted.size <= 5) return sorted
+        val first = sorted.first().taken
+        val span = sorted.last().taken - first
+        val chosen = ArrayList<Pic>()
+        for (i in 0 until 5) {
+            val target = first + span * (2 * i + 1) / 10
+            val near = sorted.filter { p -> p !in chosen && chosen.none { kotlin.math.abs(it.taken - p.taken) < 120_000 } }
+            val best = near.minByOrNull { kotlin.math.abs(it.taken - target) } ?: continue
+            chosen.add(best)
+        }
+        return chosen.sortedBy { it.taken }
+    }
+
+    private fun small(uri: android.net.Uri): String {
+        val bmp = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri)) { dec, info, _ ->
+            val w = info.size.width
+            val h = info.size.height
+            val scale = 640.0 / maxOf(w, h)
+            if (scale < 1) dec.setTargetSize((w * scale).toInt().coerceAtLeast(1), (h * scale).toInt().coerceAtLeast(1))
+            dec.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+        }
+        val bytes = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.JPEG, 72, bytes)
+        bmp.recycle()
+        return Base64.encodeToString(bytes.toByteArray(), Base64.NO_WRAP)
+    }
+
+    /** Skriver alt til én tekstfil: første linje fortæller Dagbog, hvad det er; "#" er appens log. */
+    private fun writeFile(lines: List<String>): File {
+        val f = File(ShareProvider.dir(this), "dagbog-billeder.txt")
+        f.bufferedWriter().use { w ->
+            w.write("DAGBOG-BILLEDER v2\n# app ${appVersion()}\n")
+            for (l in report.lines()) if (l.isNotBlank()) w.write("# $l\n")
+            for (l in lines) { w.write(l); w.write("\n") }
+        }
+        say("Fil: ${f.length() / 1024} kB")
+        return f
+    }
+
+    /**
+     * Sender filen til Dagbog. Findes Dagbog blandt de apps, der kan modtage tekst, åbnes den
      * direkte (uden Del-menuen); ellers vises Del-menuen.
      */
-    private fun sendToDagbog(lines: List<String>) {
+    private fun sendToDagbog(file: File) {
+        val uri = ShareProvider.uri(file.name)
         val send = Intent(Intent.ACTION_SEND).setType("text/plain")
         val targets = packageManager.queryIntentActivities(send, 0)
         val hit = targets.firstOrNull { it.loadLabel(packageManager).toString().trim().equals("Dagbog", ignoreCase = true) }
-        say("Dagbog fundet: ${hit?.activityInfo?.packageName ?: "NEJ"} · sender ${lines.size} billeder")
-        // Første linje fortæller Dagbog, hvad det er; linjer med "#" er appens log
-        val log = report.lines().filter { it.isNotBlank() }.joinToString("\n") { "# $it" }
-        val body = "DAGBOG-BILLEDER v1\n# app ${appVersion()}\n$log\n${lines.joinToString("\n")}"
-        say("Størrelse: ${body.length / 1024} kB")
-        send.putExtra(Intent.EXTRA_TEXT, body)
+        say("Dagbog fundet: ${hit?.activityInfo?.packageName ?: "NEJ"}")
+        send.putExtra(Intent.EXTRA_STREAM, uri)
+        send.clipData = ClipData.newRawUri(file.name, uri)
+        send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         try {
             if (hit != null) {
                 startActivity(send.setClassName(hit.activityInfo.packageName, hit.activityInfo.name))
