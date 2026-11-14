@@ -25,6 +25,7 @@ import { TalkScreen } from './screens/Talk';
 import { ClarityScreen } from './screens/Clarity';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
+import { PhotoTestScreen } from './screens/PhotoTest';
 import { SettingsScreen } from './screens/Settings';
 import { UsageScreen } from './screens/Usage';
 import { TodoEditScreen, TodosScreen } from './screens/Todos';
@@ -229,6 +230,7 @@ function Unlocked() {
     case 'noter': screen = a === 'keep' ? <KeepImportScreen /> : a === 'ryd' ? <TidyScreen /> : a ? <NoteScreen key={`${a}/${b ?? ''}`} id={a} mode={b} /> : <NotesScreen />; break;
     case 'indstillinger': screen = <SettingsScreen key={a ?? ''} page={a} />; break;
     case 'forbrug': screen = <UsageScreen />; break;
+    case 'billedtest': screen = <PhotoTestScreen />; break;
     case 'kopi':
       screen = a === 'hent'
         ? <div className="stack" style={{ alignItems: 'center' }}><RestoreFlow back="#/kopi/hent" replacing onCancel={() => go('kopi')} /></div>
@@ -240,7 +242,7 @@ function Unlocked() {
   const dots: Record<string, boolean> = { skriv: w.today || w.due > 0, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
     : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
-    : ['indstillinger', 'kopi', 'forbrug'].includes(tab) ? 'mere'
+    : ['indstillinger', 'kopi', 'forbrug', 'billedtest'].includes(tab) ? 'mere'
     : tab === 'tal' || tab === 'overblik' ? 'skriv' : tab;
 
   return (
