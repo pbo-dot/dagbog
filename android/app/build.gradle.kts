@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "dk.dagbog.billeder"
-        minSdk = 34
+        minSdk = 29
         targetSdk = 35
         versionCode = build
         versionName = "1.0.$build"

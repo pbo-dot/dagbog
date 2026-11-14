@@ -46,11 +46,14 @@ class MainActivity : Activity() {
     private val report = StringBuilder()
     private var busy = false
 
-    private val wanted = arrayOf(
-        Manifest.permission.READ_MEDIA_IMAGES,
-        Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+    /** Lov til at se billederne: Android 13+ har sin egen tilladelse, ældre telefoner bruger lager-tilladelsen. */
+    private val readPerm = if (Build.VERSION.SDK_INT >= 33) Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
+
+    private val wanted = listOfNotNull(
+        readPerm,
+        if (Build.VERSION.SDK_INT >= 34) Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED else null,
         Manifest.permission.ACCESS_MEDIA_LOCATION,
-    )
+    ).toTypedArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,7 +156,7 @@ class MainActivity : Activity() {
         if (!driveMode) idBase = 0L
         if (busy) return
         sendAfter = send
-        if (!granted(Manifest.permission.READ_MEDIA_IMAGES) || !granted(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
+        if (!granted(readPerm) || !granted(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
             requestPermissions(wanted, 1)
             return
         }
@@ -172,7 +175,7 @@ class MainActivity : Activity() {
         report.setLength(0)
         say("Dagbog Billeder prøve · ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(Date())}")
         say("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
-        say("Tilladelser: alle billeder ${ja(granted(wanted[0]))} · kun udvalgte ${ja(granted(wanted[1]))} · sted ${ja(granted(wanted[2]))}")
+        say("Tilladelser: billeder ${ja(granted(readPerm))} · sted ${ja(granted(Manifest.permission.ACCESS_MEDIA_LOCATION))}")
         thread {
             try {
                 if (driveMode) {
