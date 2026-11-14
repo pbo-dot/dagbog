@@ -24,41 +24,61 @@ export function useImportState(): ImportState {
   return useSyncExternalStore((l) => (listeners.add(l), () => listeners.delete(l)), () => state);
 }
 
-export async function importPlaces(store: Store, text: string): Promise<void> {
-  set({ busy: true, lines: [], error: '' });
+/**
+ * `known` er billederne, Dagbog kender (pr. måned). Ved flere filer i træk sendes den samme med,
+ * så den næste fil bygger videre på den forrige (skærmens data er først opdateret senere).
+ */
+export async function importPlaces(store: Store, text: string, known: Store['data']['phonePhotos'] = { ...store.data.phonePhotos }, keepLog = false): Promise<void> {
+  set({ busy: true, lines: keepLog ? state.lines : [], error: '' });
   try {
     say(`Modtog ${Math.round(text.length / 1024)} kB fra Dagbog Billeder`);
-    const { log, photos, thumbs, next, size } = parsePayload(text);
+    const { log, photos, thumbs, next, size, other } = parsePayload(text);
     for (const l of log) say(`app: ${l}`);
     // Små billeder: gemmes krypteret i billedlageret som "tel-<id>" og knyttes til billedet
     if (thumbs.length) {
       const t0 = performance.now();
       const byKey = new Map(photos.map((p) => [`${p.id}:${p.t}`, p]));
+      const loose: Array<{ t: number; id: string }> = [];
       let saved = 0;
       for (const th of thumbs) {
         const id = `tel-${th.id}`;
         await store.putPhoto({ id, date: toISO(new Date(th.t)), mime: 'image/jpeg', data: th.data, width: 0, height: 0, createdAt: Date.now() });
         const p = byKey.get(`${th.id}:${th.t}`);
         if (p) p.thumb = id;
+        else if (other) loose.push({ t: th.t, id });
         saved++;
       }
       say(`${saved} små billeder gemt på ${Math.round((performance.now() - t0) / 1000)} s`);
+      // Filer fra den gamle telefon efter den første har kun billederne: knyt dem til de billeder, Dagbog allerede kender
+      if (loose.length) {
+        const byT = new Map(loose.map((x) => [x.t, x.id]));
+        for (const m of Object.values(known)) {
+          let hit = false;
+          const ps = m.photos.map((p) => { const id = byT.get(p.t); if (id && p.thumb !== id) { hit = true; return { ...p, thumb: id }; } return p; });
+          if (hit) { known[m.id] = { ...m, photos: ps, importedAt: Date.now() }; await store.put('phonePhotos', m.id, known[m.id]); }
+        }
+      }
     }
     const places = store.data.settings.places ?? { fixed: [], notFixed: [] };
+    if (other) {
+      // Fra den gamle telefon: rør ikke ved, hvor den nye telefon er nået til
+      if (next) say('Der er flere filer fra den gamle telefon.');
+    } else {
     const thumbFrom = next ?? (thumbs.length ? toISO(new Date(Math.max(...thumbs.map((x) => x.t)))) : places.thumbFrom);
     // En hel runde er færdig (ingen "næste"): så har alle gemte billeder denne størrelse
     const done = !next && thumbs.length > 0 && (!places.thumbRedo || !!size);
     const nextPlaces = { ...places, thumbFrom, ...(done && size ? { thumbPx: size, thumbRedo: false } : {}) };
     if (JSON.stringify(nextPlaces) !== JSON.stringify(places)) await store.saveSettings({ ...store.data.settings, places: nextPlaces });
     if (next) say(`Der mangler flere små billeder. Tryk "Hent billeder" igen (fra ${next}).`);
+    }
     const withPlace = photos.filter((p) => p.lat !== undefined).length;
-    say(`${photos.length} billeder, ${withPlace} med sted`);
+    if (photos.length) say(`${photos.length} billeder, ${withPlace} med sted`);
     const t0 = performance.now();
     const found = await addCities(photos);
-    say(`Bynavne fundet for ${found} billeder på ${Math.round(performance.now() - t0)} ms`);
-    const { months, added } = mergeMonths(store.data.phonePhotos, photos);
-    for (const m of months) await store.put('phonePhotos', m.id, m);
-    say(`${added} nye billeder, ${months.length} måneder gemt`);
+    if (photos.length) say(`Bynavne fundet for ${found} billeder på ${Math.round(performance.now() - t0)} ms`);
+    const { months, added } = mergeMonths(known, photos);
+    for (const m of months) { known[m.id] = m; await store.put('phonePhotos', m.id, m); }
+    if (photos.length) say(`${added} nye billeder, ${months.length} måneder gemt`);
     void noteAuto(`Billeder: ${photos.length} modtaget, ${added} nye, ${withPlace} med sted`);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -159,4 +179,17 @@ export async function describeAll(store: Store): Promise<void> {
   } finally {
     dset({ busy: false });
   }
+}
+
+/** Filerne fra den gamle telefon (gemt på Drev med "Gem på Drev" i hjælpe-appen), én ad gangen. */
+export async function importFiles(store: Store, files: File[]): Promise<void> {
+  const sorted = [...files].sort((a, b) => a.name.localeCompare(b.name, 'da', { numeric: true }));
+  const known = { ...store.data.phonePhotos };
+  set({ lines: [] });
+  for (const [i, f] of sorted.entries()) {
+    say(`Fil ${i + 1} af ${sorted.length}: ${f.name} (${(f.size / 1_048_576).toFixed(1)} MB)`);
+    await importPlaces(store, await f.text(), known, true);
+    if (state.error) return;
+  }
+  say('Færdig med alle filer.')
 }

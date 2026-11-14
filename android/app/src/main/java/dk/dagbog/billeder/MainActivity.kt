@@ -80,7 +80,8 @@ class MainActivity : Activity() {
             setTextColor(text)
             setPadding(0, dp(6), 0, dp(18))
         })
-        col.addView(button("Send billederne til Dagbog", accent, onAccent) { start(send = true) })
+        col.addView(button("Send billederne til Dagbog", accent, onAccent) { driveMode = false; start(send = true) })
+        col.addView(button("Gem på Drev (til en anden telefon)", tonal, text) { driveMode = true; start(send = true) })
         col.addView(button("Prøve: læs uden at sende", tonal, text) { start(send = false) })
         col.addView(button("Kopiér loggen", tonal, text) { copy() })
         out = TextView(this).apply {
@@ -105,6 +106,7 @@ class MainActivity : Activity() {
 
     private fun fromDagbog(i: Intent) {
         fromDay = i.data?.getQueryParameter("fra")
+        driveMode = false
         start(send = true)
     }
 
@@ -140,7 +142,15 @@ class MainActivity : Activity() {
 
     private var sendAfter = false
 
+    /** "Gem på Drev": billederne fra denne (gamle) telefon gemmes i filer, som Dagbog på den nye telefon læser. */
+    private var driveMode = false
+
+    /** Lægges til billedernes nummer, når de gemmes på Drev, så de ikke blandes med den nye telefons. */
+    private var idBase = 0L
+
     private fun start(send: Boolean) {
+        if (!send) driveMode = false
+        if (!driveMode) idBase = 0L
         if (busy) return
         sendAfter = send
         if (!granted(Manifest.permission.READ_MEDIA_IMAGES) || !granted(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
@@ -165,6 +175,11 @@ class MainActivity : Activity() {
         say("Tilladelser: alle billeder ${ja(granted(wanted[0]))} · kun udvalgte ${ja(granted(wanted[1]))} · sted ${ja(granted(wanted[2]))}")
         thread {
             try {
+                if (driveMode) {
+                    driveRound()
+                    busy = false
+                    return@thread
+                }
                 val lines = read(everyPhoto = sendAfter)
                 if (sendAfter && lines != null) {
                     val file = writeFile(lines)
@@ -266,7 +281,7 @@ class MainActivity : Activity() {
                 failed++
                 if (failed <= 3) say("Fejl ved ${p.name}: ${e.javaClass.simpleName}: ${e.message}")
             }
-            out.add("${p.id};${p.taken};$place")
+            out.add("${p.id + idBase};${p.taken};$place")
             if (i % 100 == 99) say("… ${i + 1} af ${camera.size}")
         }
         say("Læst: ${camera.size} på ${(SystemClock.elapsedRealtime() - t0) / 1000} s · med sted: $withPlace · fejl: $failed")
@@ -306,7 +321,7 @@ class MainActivity : Activity() {
             if (out.isNotEmpty() && out.size + chosen.size > maxThumbs) { next = d; break }
             for (p in chosen) {
                 try {
-                    out.add("B;${p.id};${p.taken};${small(ContentUris.withAppendedId(base, p.id))}")
+                    out.add("B;${p.id + idBase};${p.taken};${small(ContentUris.withAppendedId(base, p.id))}")
                 } catch (e: Exception) {
                     failed++
                     if (failed <= 3) say("Lille billede fejlede (${p.name}): ${e.javaClass.simpleName}: ${e.message}")
@@ -319,6 +334,67 @@ class MainActivity : Activity() {
             out.add(0, "# næste $next")
         }
         return out
+    }
+
+    /**
+     * Én runde "Gem på Drev": op til 5 filer á 120 billeder (ca. 100 MB), som deles på én gang (vælg Drev).
+     * Appen husker selv, hvor langt den er nået; tryk igen, til den skriver "Færdig".
+     */
+    private fun driveRound() {
+        val prefs = getSharedPreferences("billeder", 0)
+        var from = prefs.getString("driveFrom", null)
+        var part = prefs.getInt("drivePart", 0)
+        if (from == "done") { from = null; part = 0 }
+        idBase = 1_000_000_000_000L
+        val base = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val cols = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATE_TAKEN,
+            MediaStore.Images.Media.RELATIVE_PATH, MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DATE_MODIFIED)
+        val camera = ArrayList<Pic>()
+        contentResolver.query(base, cols, null, null, null)?.use { c ->
+            while (c.moveToNext()) {
+                val taken = if (c.isNull(2) || c.getLong(2) == 0L) c.getLong(5) * 1000 else c.getLong(2)
+                val pic = Pic(c.getLong(0), c.getString(1) ?: "", taken, c.getString(3) ?: "", c.getLong(4))
+                if (pic.path.startsWith("DCIM/")) camera.add(pic)
+            }
+        }
+        camera.sortBy { it.taken }
+        if (camera.isEmpty()) { say("Ingen billeder i DCIM. Har appen fået lov til alle billeder?"); return }
+        val day = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+        say("Gem på Drev: ${camera.size} kamera-billeder fra ${day.format(Date(camera.first().taken))} til ${day.format(Date(camera.last().taken))}${if (from != null) " · fortsætter fra $from" else ""}")
+        val files = ArrayList<File>()
+        // Dato og sted for alle billeder kommer med i den første fil
+        var places: List<String> = if (from == null) readAll(camera, base) else emptyList()
+        for (i in 0 until 5) {
+            fromDay = from
+            val t = thumbs(camera, base)
+            val next = t.firstOrNull { it.startsWith("# næste ") }?.removePrefix("# næste ")
+            part++
+            val f = File(ShareProvider.dir(this), "dagbog-billeder-del-$part.txt")
+            f.bufferedWriter().use { w ->
+                w.write("DAGBOG-BILLEDER v2\n# app ${appVersion()}\n# størrelse $THUMB_PX\n# kilde anden telefon (${Build.MODEL}) del $part\n")
+                for (l in places) { w.write(l); w.write("\n") }
+                for (l in t) if (!l.startsWith("# næste ")) { w.write(l); w.write("\n") }
+            }
+            places = emptyList()
+            files.add(f)
+            say("Del $part: ${f.length() / 1_048_576} MB")
+            from = next
+            if (next == null) break
+        }
+        prefs.edit().putString("driveFrom", from ?: "done").putInt("drivePart", part).apply()
+        say(if (from == null) "Færdig: alle billeder er med. Gem filerne på Drev." else "Gem filerne på Drev, og tryk så \"Gem på Drev\" igen (fortsætter fra $from).")
+        val uris = ArrayList(files.map { ShareProvider.uri(it.name) })
+        val send = Intent(Intent.ACTION_SEND_MULTIPLE).setType("text/plain")
+        send.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+        send.clipData = ClipData.newRawUri(files.first().name, uris.first()).apply { uris.drop(1).forEach { addItem(ClipData.Item(it)) } }
+        send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        runOnUiThread {
+            try {
+                startActivity(Intent.createChooser(send, "Gem på Drev").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+            } catch (e: Exception) {
+                say("FEJL ved deling: ${e.javaClass.simpleName}: ${e.message}")
+            }
+        }
     }
 
     private fun pick(list: List<Pic>): List<Pic> {

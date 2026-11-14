@@ -22,6 +22,7 @@ export interface Payload {
   thumbs: Array<{ id: number; t: number; data: string }>; // små billeder (base64 JPEG)
   next?: string; // hjælpe-appen havde flere små billeder: næste gang fra denne dag
   size?: number; // billedernes størrelse (px på den lange led)
+  other?: boolean; // fra en anden (gammel) telefon via Drev
 }
 
 /** Læser teksten fra hjælpe-appen: "id;taget-ms;bredde;længde" pr. linje, log-linjer med "#". */
@@ -33,6 +34,7 @@ export function parsePayload(text: string): Payload {
   const thumbs: Payload['thumbs'] = [];
   let next: string | undefined;
   let size: number | undefined;
+  let other = false;
   for (const raw of lines.slice(1)) {
     const line = raw.trim();
     if (!line) continue;
@@ -40,7 +42,7 @@ export function parsePayload(text: string): Payload {
       const l = line.slice(1).trim();
       const m = /^næste (\d{4}-\d{2}-\d{2})$/.exec(l);
       const sz = /^størrelse (\d+)$/.exec(l);
-      if (m) next = m[1]; else if (sz) size = Number(sz[1]); else log.push(l);
+      if (m) next = m[1]; else if (sz) size = Number(sz[1]); else { if (l.startsWith('kilde anden telefon')) other = true; log.push(l); }
       continue;
     }
     if (line.startsWith('B;')) {
@@ -56,7 +58,7 @@ export function parsePayload(text: string): Payload {
     if (lat && lng && Number.isFinite(la) && Number.isFinite(lo) && !(la === 0 && lo === 0)) { p.lat = la; p.lng = lo; }
     photos.push(p);
   }
-  return { log, photos, thumbs, next, size };
+  return { log, photos, thumbs, next, size, other };
 }
 
 interface City { name: string; cc: string; lat: number; lng: number }
@@ -140,10 +142,11 @@ export function mergeMonths(old: Record<string, PhotoMonth>, photos: PhonePhoto[
   const months: PhotoMonth[] = [];
   let added = 0;
   for (const [id, fresh] of by) {
-    const have = new Map((old[id]?.photos ?? []).map((p) => [`${p.id}:${p.t}`, p]));
+    // Nøglen er tidspunktet, så et billede, der ligger på begge telefoner, kun kommer med én gang
+    const have = new Map((old[id]?.photos ?? []).map((p) => [`${p.t}`, p]));
     let changed = false;
     for (const p of fresh) {
-      const k = `${p.id}:${p.t}`;
+      const k = `${p.t}`;
       const before = have.get(k);
       if (!before) { added++; changed = true; have.set(k, p); }
       else {

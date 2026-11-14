@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import { addDays, formatMonth, toISO } from '../lib/dates';
 import { countryName, dayPhotoCount, fixedStays, openAppUrl, THUMB_PX, suggestFixed, tripLine, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
-import { describeAll, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
+import { describeAll, importFiles, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
 import { costUsd, krText } from '../lib/usage';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
@@ -28,6 +28,7 @@ export function PlacesScreen() {
   const [copied, setCopied] = useState(false);
   const [allTrips, setAllTrips] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const oldInput = useRef<HTMLInputElement>(null);
   const visits = Object.values(data.visits).flatMap((m) => m.visits);
   const visitYears = visits.length ? [new Date(visits[0].s).getFullYear(), new Date(visits[visits.length - 1].s).getFullYear()] : [];
   const fixed = useMemo(() => data.settings.places?.fixed ?? [], [data.settings.places]);
@@ -116,6 +117,17 @@ export function PlacesScreen() {
         </section>
       )}
       {described > 0 && !desc.busy && missing === 0 && <p className="small muted">{described} billeder er beskrevet af Claude.</p>}
+
+      <section className="card stack-sm">
+        <strong>Billeder fra en gammel telefon</strong>
+        <span className="small">På den gamle telefon: åbn "Dagbog Billeder", tryk "Gem på Drev", og gem filerne på Drev. Vælg dem så her, gerne alle på én gang.</span>
+        <button className="btn block" disabled={imp.busy} onClick={() => oldInput.current?.click()}>Vælg filer fra den gamle telefon</button>
+        <input ref={oldInput} type="file" multiple accept=".txt,text/plain" hidden onChange={(e) => {
+          const fs = [...(e.target.files ?? [])];
+          e.target.value = '';
+          if (fs.length) void importFiles(store, fs);
+        }} />
+      </section>
 
       <section className="card stack-sm">
         <strong>Tidslinje fra Google Maps</strong>
