@@ -1,8 +1,8 @@
 // "Billeder og steder" (under Mere): hjælpe-appen "Dagbog Billeder" sender dato og sted for
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
 import { useMemo, useRef, useState } from 'react';
-import { formatMonth, toISO } from '../lib/dates';
-import { countryName, fixedStays, openAppUrl, suggestFixed, tripLine, trips } from '../lib/places';
+import { addDays, formatMonth, toISO } from '../lib/dates';
+import { countryName, dayPhotoCount, fixedStays, openAppUrl, suggestFixed, tripLine, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
 import { importTimeline, useImportState } from '../lib/placesImport';
 import { useStore } from '../lib/store';
@@ -31,8 +31,13 @@ export function PlacesScreen() {
   const notFixed = data.settings.places?.notFixed ?? [];
   // Rejser og de faste steder (én linje pr. sted og år), nyeste først
   const tripList = useMemo(() => {
+    // Et tryk åbner den første dag med billeder (ellers den første dag)
+    const photoDay = (from: string, to: string) => {
+      for (let d = from; d <= to; d = addDays(d, 1)) if (dayPhotoCount(data.phonePhotos, d)) return d;
+      return from;
+    };
     const items: Array<{ key: string; to: string; title: string; sub: string; day: string }> = trips(data.phonePhotos, data.visits, fixed).map((t) => ({
-      key: `t${t.from}`, to: t.to, day: t.from,
+      key: `t${t.from}`, to: t.to, day: photoDay(t.from, t.to),
       title: tripLine(t).replace(/^- [^:]+: /, '').replace(/ \(.*\)$/, ''),
       sub: `${tripDates(t.from, t.to)}${t.countries.length ? ` · ${t.countries.map(countryName).join(', ')}` : ''}`,
     }));
@@ -41,7 +46,7 @@ export function PlacesScreen() {
       for (const st of stays) { const y = st.from.slice(0, 4); const l = years.get(y); if (l) l.push(st); else years.set(y, [st]); }
       for (const [y, ss] of years) {
         const last = ss[ss.length - 1];
-        items.push({ key: `f${place.id}${y}`, to: last.to, day: last.from, title: place.name, sub: `${ss.length} ${ss.length === 1 ? 'ophold' : 'ophold'} i ${y} · ${place.city}` });
+        items.push({ key: `f${place.id}${y}`, to: last.to, day: [...ss].reverse().map((x) => photoDay(x.from, x.to)).find((d) => dayPhotoCount(data.phonePhotos, d)) ?? last.from, title: place.name, sub: `${ss.length} ${ss.length === 1 ? 'ophold' : 'ophold'} i ${y} · ${place.city}` });
       }
     }
     return items.sort((a, b) => b.to.localeCompare(a.to));
