@@ -39,6 +39,7 @@ async function report(method: string, items: Picked[], listMs: number): Promise<
   const sample = spread(sorted, SAMPLE);
   let dates = 0;
   let places = 0;
+  let blanked = 0; // stedet står i filen, men er nulstillet (fjernet af Android)
   const shown: string[] = [];
   const t0 = performance.now();
   for (const [i, it] of sample.entries()) {
@@ -47,7 +48,10 @@ async function report(method: string, items: Picked[], listMs: number): Promise<
       const f = await it.file();
       const x = (await exifr.parse(f, { gps: true, pick: ['DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef'] })) as { DateTimeOriginal?: Date; latitude?: number; longitude?: number } | undefined;
       const date = x?.DateTimeOriginal instanceof Date ? x.DateTimeOriginal.toISOString().slice(0, 16).replace('T', ' ') : '';
-      const place = typeof x?.latitude === 'number' && typeof x?.longitude === 'number' ? `${x.latitude.toFixed(1)}, ${x.longitude.toFixed(1)}` : '';
+      // Android fjerner stedet ved at nulstille tallene: så findes feltet, men er ikke et tal
+      const hasGps = x?.latitude !== undefined || x?.longitude !== undefined;
+      const place = Number.isFinite(x?.latitude) && Number.isFinite(x?.longitude) ? `${x!.latitude!.toFixed(1)}, ${x!.longitude!.toFixed(1)}` : '';
+      if (hasGps && !place) blanked++;
       if (date) dates++;
       if (place) places++;
       text = `${it.name} · ${Math.round(f.size / 1024)} kB · fil-dato ${new Date(f.lastModified).toISOString().slice(0, 10)} · taget ${date || 'MANGLER'} · sted ${place || 'MANGLER'}`;
@@ -56,7 +60,7 @@ async function report(method: string, items: Picked[], listMs: number): Promise<
     }
     if (shown.length < SHOWN && i % Math.max(1, Math.floor(sample.length / SHOWN)) === 0) shown.push(text);
   }
-  lines.push(`Undersøgt: ${sample.length} på ${Math.round(performance.now() - t0)} ms · med dato: ${dates} · med sted: ${places}`);
+  lines.push(`Undersøgt: ${sample.length} på ${Math.round(performance.now() - t0)} ms · med dato: ${dates} · med sted: ${places} · sted fjernet af Android: ${blanked}`);
   lines.push(`Ældste navn: ${sorted[0].name} · nyeste navn: ${sorted[sorted.length - 1].name}`);
   return [...lines, ...shown].join('\n');
 }
