@@ -19,12 +19,31 @@ export interface Hit {
   terms: string[]; // ord/fraser der skal fremhæves
 }
 
+// Ordene i hver dag og hver tekst huskes, så søgefeltet ikke skal dele hele dagbogen op i ord ved hvert tastetryk
+const entryCache = new WeakMap<Entry, string[]>();
+function entryWords(e: Entry): string[] {
+  let w = entryCache.get(e);
+  if (!w) { w = tokenize(`${e.text} ${e.good.join(' ')}`); entryCache.set(e, w); }
+  return w;
+}
+
+const textCache = new Map<string, Set<string>>();
+function textWords(text: string): Set<string> {
+  let w = textCache.get(text);
+  if (!w) {
+    w = new Set(tokenize(text));
+    if (textCache.size > 6000) textCache.clear();
+    textCache.set(text, w);
+  }
+  return w;
+}
+
 export function localSearch(query: string, entries: Entry[]): Hit[] {
   const q = tokenize(query);
   if (!q.length) return [];
   const hits: Hit[] = [];
   for (const e of entries) {
-    const words = tokenize(`${e.text} ${e.good.join(' ')}`);
+    const words = entryWords(e);
     const tags = e.tags.map((t) => t.toLowerCase());
     const mood = moodLabel(e.mood).toLowerCase();
     let score = 0;
@@ -90,7 +109,7 @@ function wordMatch(term: string, word: string): boolean {
 /** Hvor mange af søgeordene findes i teksten? */
 export function termHits(terms: string[], text: string): number {
   if (!terms.length) return 0;
-  const words = new Set(tokenize(text));
+  const words = textWords(text);
   let n = 0;
   for (const t of terms) {
     for (const w of words) if (wordMatch(t, w)) { n++; break; }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AIError } from '../lib/ai';
 import { addMonths, formatFull, formatMonth, formatShort, fromISO, monthId, prevMonthId, toISO, today, WEEKDAYS } from '../lib/dates';
 import { aiReady, generateMonth, monthEntries } from '../lib/generate';
@@ -17,34 +17,37 @@ function Highlighted({ text, terms }: { text: string; terms: string[] }) {
 /** Ét søgefelt for det hele: dage, noter, mennesker og huskeliste, og "Spørg Claude" med samme ord. */
 function Search() {
   const data = useStore().data;
-  const [q, setQ] = useState('');
+  const [typed, setQ] = useState('');
+  // Feltet følger fingrene med det samme; søgningen kommer lige efter (og springes over, mens man skriver hurtigt)
+  const deferred = useDeferredValue(typed);
+  const q = deferred.trim().length >= 2 ? deferred : '';
   const [allDays, setAllDays] = useState(false);
   const entries = useMemo(() => Object.values(data.entries), [data.entries]);
   const local = useMemo(() => localSearch(q, entries), [q, entries]);
   const canAI = aiReady(data);
-  const terms = tokenize(q);
+  const terms = useMemo(() => tokenize(q), [q]);
   const notes = useMemo(() => rankByTerms(Object.values(data.notes), terms, (n) => n.title, (n) => `${n.text}\n${(n.labels ?? []).join(' ')}`).slice(0, 5), [data.notes, q]); // eslint-disable-line react-hooks/exhaustive-deps
   const people = useMemo(() => rankByTerms(Object.values(data.people), terms, (p) => p.name, (p) => `${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`).slice(0, 5), [data.people, q]); // eslint-disable-line react-hooks/exhaustive-deps
-  const todos = rankByTerms(Object.values(data.todos).filter((t) => !t.doneAt), terms, (t) => t.text, () => '').slice(0, 5);
+  const todos = useMemo(() => rankByTerms(Object.values(data.todos).filter((t) => !t.doneAt), terms, (t) => t.text, () => '').slice(0, 5), [data.todos, terms]);
   const days = allDays ? local : local.slice(0, 5);
   const nothing = q.trim() && !local.length && !notes.length && !people.length && !todos.length;
 
   return (
     <div className="stack-sm">
-      <form className="search-bar" role="search" onSubmit={(e) => { e.preventDefault(); if (canAI && q.trim()) askSoon(q.trim()); }}>
+      <form className="search-bar" role="search" onSubmit={(e) => { e.preventDefault(); if (canAI && typed.trim()) askSoon(typed.trim()); }}>
         <span className="search-ico" aria-hidden="true">{Icon.search}</span>
-        <input type="search" className="grow" value={q} onChange={(e) => { setQ(e.target.value); setAllDays(false); }}
+        <input type="search" className="grow" value={typed} onChange={(e) => { setQ(e.target.value); setAllDays(false); }}
           placeholder={canAI ? 'Søg eller spørg …' : 'Søg i dagbogen …'} aria-label="Søg eller spørg" enterKeyHint={canAI ? 'send' : 'search'} />
-        {canAI && !q.trim() && (
+        {canAI && !typed.trim() && (
           <button type="button" className="search-ask" onClick={() => go('spoerg')} aria-label="Spørg dagbogen">
             <span style={{ width: 20, height: 20, display: 'inline-flex' }}>{Icon.sparkle}</span>
           </button>
         )}
       </form>
-      {canAI && q.trim() && (
-        <button className="ask-row" onClick={() => askSoon(q.trim())}>
+      {canAI && typed.trim() && (
+        <button className="ask-row" onClick={() => askSoon(typed.trim())}>
           <span style={{ width: 20, height: 20, display: 'inline-flex', flex: 'none' }}>{Icon.sparkle}</span>
-          <span className="grow">Spørg Claude: <strong>"{q.trim()}"</strong></span>
+          <span className="grow">Spørg Claude: <strong>"{typed.trim()}"</strong></span>
           <span aria-hidden="true">›</span>
         </button>
       )}

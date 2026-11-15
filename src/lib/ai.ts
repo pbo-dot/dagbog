@@ -31,7 +31,11 @@ function explain(e: unknown): never {
   if (e instanceof Anthropic.NotFoundError) throw new AIError('Modellen findes ikke. Tjek modelnavnet under Indstillinger.');
   if (e instanceof Anthropic.RateLimitError) throw new AIError('For mange forespørgsler lige nu. Prøv igen om lidt.');
   if (e instanceof Anthropic.APIConnectionError) throw new AIError('Ingen forbindelse til Claude. Er du online?');
-  if (e instanceof Anthropic.APIError) throw new AIError(`Claude svarede med en fejl (${e.status}).`);
+  if (e instanceof Anthropic.APIError) {
+    const raw = (e.error as { error?: { message?: string } } | undefined)?.error?.message ?? e.message ?? '';
+    if (/too long|too many tokens|context/i.test(raw)) throw new AIError('Materialet er for stort til Claude. Spørg om en bestemt periode (fx "i 2023"), så sendes mindre med.');
+    throw new AIError(`Claude svarede med en fejl (${e.status})${raw ? `: ${raw.slice(0, 200)}` : ''}`);
+  }
   throw new AIError('Noget gik galt med AI-analysen.');
 }
 
@@ -596,11 +600,12 @@ export function focusScope(data: AskData, words: string, today: string): AskScop
     ['AFTALER I KALENDEREN', cal],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['HUSKELISTE', todoLines(data)],
-  ].filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n\n${(xs as string[]).join('\n\n')}`).join('\n\n');
+    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+  ].filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n\n${(xs as string[]).join((h as string).startsWith('REJSER') ? '\n' : '\n\n')}`).join('\n\n');
   const count = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : '');
   return {
     corpus,
-    note: 'Materialet er kun de noter, mennesker, samtaler og dage, der passer til ordene i spørgsmålet (plus huskeliste og faste ting). Står svaret ikke her, så sig det kort og foreslå at trykke "Søg i hele dagbogen". Gæt ikke.',
+    note: 'Materialet er kun de noter, mennesker, samtaler og dage, der passer til ordene i spørgsmålet (plus huskeliste, faste ting og alle rejser fra Tidslinjen; byerne er nærmeste by, så fx Sønderho og Nordby betyder Fanø). Står svaret ikke her, så sig det kort og foreslå at trykke "Søg i hele dagbogen". Gæt ikke.',
     shown: [count(hitNotes.length, 'note', 'noter'), count(hitPeople.length, 'menneske', 'mennesker'), count(talks.length, 'samtale', 'samtaler'), count(days.length, 'dag', 'dage')].filter(Boolean).join(', '),
   };
 }
