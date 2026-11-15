@@ -5,8 +5,6 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.SystemClock
 import android.provider.OpenableColumns
-import android.system.Os
-import android.system.OsConstants
 import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
@@ -59,17 +57,24 @@ class Takeout(private val resolver: ContentResolver, private val say: (String) -
         say("== Takeout: $name · ${mb(size)} ==")
         say("Kilde: ${uri.authority} · type: ${try { resolver.getType(uri) } catch (e: Exception) { "?" }}")
 
-        // Kan filen læses på kryds og tværs (så en senere udgave kan nøjes med at læse den én gang)?
-        try {
-            resolver.openFileDescriptor(uri, "r")?.use { pfd ->
-                val seek = try { Os.lseek(pfd.fileDescriptor, 1024, OsConstants.SEEK_SET); "JA" } catch (e: Exception) { "NEJ (${e.message})" }
-                say("Filbeskrivelse: størrelse ${mb(pfd.statSize)} · kan springe i filen: $seek · åbnet på ${SystemClock.elapsedRealtime() - t0} ms")
+        // Drev kan hente hele filen ned, før den kan læses: sig til hvert 10. sekund, mens der ventes
+        say("Åbner filen …")
+        val opened = java.util.concurrent.atomic.AtomicBoolean(false)
+        kotlin.concurrent.thread {
+            var s = 0
+            while (!opened.get()) {
+                Thread.sleep(1000)
+                s++
+                if (!opened.get() && s % 10 == 0) say("… venter stadig på filen fra Drev ($s s)")
             }
-        } catch (e: Exception) {
-            say("Filbeskrivelse: FEJL ${e.javaClass.simpleName}: ${e.message}")
         }
-
-        val raw = resolver.openInputStream(uri) ?: run { say("Kunne ikke åbne filen."); return }
+        val raw = try {
+            resolver.openInputStream(uri)
+        } finally {
+            opened.set(true)
+        }
+        if (raw == null) { say("Kunne ikke åbne filen."); return }
+        say("Filen er åben efter ${(SystemClock.elapsedRealtime() - t0) / 1000} s. Læser …")
         val counting = Counting(BufferedInputStream(raw, 1 shl 16))
         val zip = ZipInputStream(counting)
 
