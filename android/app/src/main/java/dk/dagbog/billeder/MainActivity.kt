@@ -89,7 +89,7 @@ class MainActivity : Activity() {
         col.addView(button("Send billederne til Dagbog", accent, onAccent) { driveMode = false; start(send = true) })
         col.addView(button("Gem på Drev (til en anden telefon)", tonal, text) { driveMode = true; start(send = true) })
         col.addView(button("Prøve: læs uden at sende", tonal, text) { start(send = false) })
-        col.addView(button("Læs Google Takeout (zip) · prøve", tonal, text) { pickTakeout() })
+        col.addView(button("Hent fra Google Takeout (zip-filer)", tonal, text) { pickTakeout() })
         col.addView(button("Kopiér loggen", tonal, text) { copy() })
         col.addView(button("Del loggen med Claude", tonal, text) { shareLog() })
         out = TextView(this).apply {
@@ -322,21 +322,18 @@ class MainActivity : Activity() {
         if (uris.isEmpty() || busy) return
         busy = true
         report.setLength(0)
-        say("Dagbog Billeder ${appVersion()} · Takeout-prøve · ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(Date())}")
+        say("Dagbog Billeder ${appVersion()} · Google Takeout · ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(Date())}")
         say("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
-        say("Valgte filer: ${uris.size}")
+        say("Valgte filer: ${uris.size}. Hold appen fremme; skærmen holdes tændt.")
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         thread {
-            val t = Takeout(contentResolver) { say(it) }
-            for (u in uris) {
-                try {
-                    t.probe(u)
-                } catch (e: Throwable) {
-                    say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
-                }
+            try {
+                TakeoutImport(contentResolver, cacheDir, { say(it) }, appVersion()).run(uris)
+            } catch (e: Throwable) {
+                say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
             }
-            say("")
-            say("Færdig. Tryk \"Del loggen med Claude\", og gem filen på Drev.")
             busy = false
+            runOnUiThread { window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
         }
     }
 
