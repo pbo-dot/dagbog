@@ -58,7 +58,7 @@ function DayPhotos({ date }: { date: string }) {
           {descs.map((x, i) => <li key={i}><span className="muted">{x.time}</span> {x.text}</li>)}
         </ul>
       )}
-      {open && <PhotoViewer id={open} onClose={() => setOpen(null)} />}
+      {open && <PhotoViewer id={open} ids={ids} onClose={() => setOpen(null)} />}
     </section>
   );
 }

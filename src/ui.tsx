@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePhotoUrl } from './lib/photos';
 import { useStore } from './lib/store';
 import { MOODS, type MoodId } from './lib/types';
@@ -187,18 +187,47 @@ export function PhotoGallery({ ids }: { ids: string[] }) {
       <div className="photo-gallery">
         {ids.map((id) => <PhotoImg key={id} id={id} className="photo-large" onClick={() => setOpen(id)} alt="Foto fra dagen" />)}
       </div>
-      {open && <PhotoViewer id={open} onClose={() => setOpen(null)} />}
+      {open && <PhotoViewer id={open} ids={ids} onClose={() => setOpen(null)} />}
     </>
   );
 }
 
-/** Et billede i fuld skærm. Knib for at zoome; tryk ved siden af billedet eller på × for at lukke. */
-export function PhotoViewer({ id, onClose }: { id: string; onClose: () => void }) {
+/**
+ * Et billede i fuld skærm. Knib for at zoome; tryk ved siden af billedet eller på × for at lukke.
+ * Med `ids` kan man swipe (eller trykke ‹ ›) til de andre billeder fra samme dag.
+ */
+export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; onClose: () => void }) {
+  const list = ids?.length ? ids : [id];
+  const [i, setI] = useState(() => Math.max(0, list.indexOf(id)));
+  const start = useRef<{ x: number; y: number } | null>(null);
+  const go2 = (d: number) => setI((n) => Math.min(list.length - 1, Math.max(0, n + d)));
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => { if (e.key === 'ArrowRight') go2(1); else if (e.key === 'ArrowLeft') go2(-1); else if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const zoomed = () => (window.visualViewport?.scale ?? 1) > 1.05;
   return (
-    <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={onClose}>
+    <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={onClose}
+      onTouchStart={(e) => { start.current = e.touches.length === 1 && !zoomed() ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }}
+      onTouchEnd={(e) => {
+        const s0 = start.current;
+        start.current = null;
+        if (!s0 || list.length < 2) return;
+        const dx = e.changedTouches[0].clientX - s0.x;
+        const dy = e.changedTouches[0].clientY - s0.y;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go2(dx < 0 ? 1 : -1);
+      }}>
       <div className="photo-viewer-img" onClick={(e) => e.stopPropagation()}>
-        <PhotoImg id={id} alt="Foto" />
+        <PhotoImg key={list[i]} id={list[i]} alt="Foto" />
       </div>
+      {list.length > 1 && (
+        <>
+          <button className="photo-nav prev" aria-label="Forrige billede" disabled={i === 0} onClick={(e) => { e.stopPropagation(); go2(-1); }}>{Icon.chevronLeft}</button>
+          <button className="photo-nav next" aria-label="Næste billede" disabled={i === list.length - 1} onClick={(e) => { e.stopPropagation(); go2(1); }}>{Icon.chevronRight}</button>
+          <span className="photo-count">{i + 1} / {list.length}</span>
+        </>
+      )}
       <button className="photo-close" aria-label="Luk" onClick={onClose}>×</button>
     </div>
   );

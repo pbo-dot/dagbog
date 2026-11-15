@@ -693,3 +693,10 @@ label.btn { cursor: pointer; }
 .dg-text, .dg-photo { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
 .dg-photo { border-radius: 2px; background: var(--clarity); }
 .dg-day.on .dg-text, .dg-day.on .dg-photo { background: var(--accent-text); }
+
+/* Bladr mellem dagens billeder i fuld skærm */
+.photo-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; display: inline-flex; align-items: center; justify-content: center; padding: 11px; }
+.photo-nav.prev { left: 10px; }
+.photo-nav.next { right: 10px; }
+.photo-nav:disabled { opacity: 0.25; }
+.photo-count { position: absolute; bottom: calc(env(safe-area-inset-bottom) + 18px); left: 50%; transform: translateX(-50%); color: #fff; font-size: .9rem; background: rgba(0,0,0,0.4); border-radius: 999px; padding: 4px 12px; }
