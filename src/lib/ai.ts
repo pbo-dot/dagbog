@@ -541,7 +541,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
-    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed, data.settings?.places?.notTrip)],
     ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
@@ -569,7 +569,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['MENNESKER', people.map((p) => personBlock(p))],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['AFTALER I KALENDEREN', calendarLines(data)],
-    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed, data.settings?.places?.notTrip)],
     ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
@@ -615,7 +615,7 @@ export function focusScope(data: AskData, words: string, today: string): AskScop
     ['AFTALER I KALENDEREN', cal],
     ['FASTE TING', Object.values(data.routines).map((r) => routineBlock(r))],
     ['HUSKELISTE', todoLines(data)],
-    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed)],
+    ['REJSER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, undefined, data.settings?.places?.fixed, data.settings?.places?.notTrip)],
   ].filter(([, xs]) => xs.length).map(([h, xs]) => `## ${h}\n\n${(xs as string[]).join((h as string).startsWith('REJSER') ? '\n' : '\n\n')}`).join('\n\n');
   const count = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : '');
   return {

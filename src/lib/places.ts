@@ -332,13 +332,15 @@ function placesByDayRaw(months: Record<string, PhotoMonth>, visits: Record<strin
  * Google har mærket som hjemme). Fx "2025-05-02 – 2025-05-06: Rome, Ostia (Italien)".
  */
 const NO_FIXED: FixedPlace[] = [];
+const NO_CITIES: string[] = [];
 const tripsMemo = memoLast(tripsRaw);
 
-export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[] = NO_FIXED): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
-  return tripsMemo(months, visits, fixed.length ? fixed : NO_FIXED);
+/** `notTrip`: byer, der aldrig tæller som rejser ("Ikke en rejse"). */
+export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[] = NO_FIXED, notTrip: string[] = NO_CITIES): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
+  return tripsMemo(months, visits, fixed.length ? fixed : NO_FIXED, notTrip.length ? notTrip : NO_CITIES);
 }
 
-function tripsRaw(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[]): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
+function tripsRaw(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[], notTrip: string[]): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
   const { days, homes } = placesByDay(months, visits);
   const out: Array<{ from: string; to: string; cities: string[]; countries: string[] }> = [];
   let h = 0;
@@ -348,7 +350,7 @@ function tripsRaw(months: Record<string, PhotoMonth>, visits: Record<string, Vis
     while (h < homes.length && homes[h].t < end) home = homes[h++];
     const pts = days.get(date)!;
     const base = home ?? pts[0];
-    const far = pts.filter((p) => km(p, base) > 50 && !fixedAt(p, fixed));
+    const far = pts.filter((p) => km(p, base) > 50 && !fixedAt(p, fixed) && !notTrip.includes(p.city));
     if (!far.length) continue;
     const last = out[out.length - 1];
     const trip = last && addDays(last.to, 1) >= date ? last : null;
@@ -431,8 +433,8 @@ export function tripLine(t: { from: string; to: string; cities: string[]; countr
  * Til Spørg. I en periode: én linje pr. dag med stederne (Tidslinjen og billederne).
  * Ellers: rejserne (over 50 km hjemmefra), så materialet holdes kort over mange år.
  */
-export function placeLines(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth> = {}, inside?: (d: string) => boolean, fixed: FixedPlace[] = []): string[] {
-  if (!inside) return [...trips(months, visits, fixed).map(tripLine), ...fixedLines(months, visits, fixed)];
+export function placeLines(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth> = {}, inside?: (d: string) => boolean, fixed: FixedPlace[] = [], notTrip?: string[]): string[] {
+  if (!inside) return [...trips(months, visits, fixed, notTrip).map(tripLine), ...fixedLines(months, visits, fixed)];
   const { days } = placesByDay(months, visits);
   return [...days.keys()].filter(inside).sort().map((d) => {
     const stays = dayStays(months, d, visits, fixed);

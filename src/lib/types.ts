@@ -314,6 +314,7 @@ export interface Settings {
     thumbFrom?: string; // dagen, hjælpe-appen skal sende små billeder fra næste gang (ÅÅÅÅ-MM-DD)
     thumbPx?: number; // størrelsen på alle gemte billeder (sættes, når en hel runde er hentet)
     thumbRedo?: boolean; // ved at hente alle billeder igen i bedre kvalitet
+    notTrip?: string[]; // byer, der aldrig tæller som rejser (ejeren har trykket "Ikke en rejse")
   };
   backup: {
     auto: boolean; // gem kopi på Google Drev hver dag

@@ -6,7 +6,7 @@ import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, stayTime, trips
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { useStore } from '../lib/store';
 import type { FixedPlace } from '../lib/types';
-import { go, Header, PhotoImg, PhotoViewer } from '../ui';
+import { DoubleConfirm, go, Header, PhotoImg, PhotoViewer } from '../ui';
 
 const NONE: FixedPlace[] = [];
 
@@ -33,12 +33,12 @@ export function useTrips(): Trip[] {
   const { data } = useStore();
   const fixed = data.settings.places?.fixed ?? NONE;
   return useMemo(() => {
-    const list: Trip[] = [...trips(data.phonePhotos, data.visits, fixed)]; // kopi: listen fra trips() huskes og må ikke ændres
+    const list: Trip[] = [...trips(data.phonePhotos, data.visits, fixed, data.settings.places?.notTrip)]; // kopi: listen fra trips() huskes og må ikke ændres
     for (const { place, stays } of fixedStays(data.phonePhotos, data.visits, fixed)) {
       for (const st of stays) list.push({ from: st.from, to: st.to, cities: [place.name], countries: [], fixed: place.name });
     }
     return list.sort((a, b) => b.to.localeCompare(a.to));
-  }, [data.phonePhotos, data.visits, fixed]);
+  }, [data.phonePhotos, data.visits, fixed, data.settings.places?.notTrip]);
 }
 
 function tripPhotos(months: Parameters<typeof dayThumbs>[0], t: Trip): string[] {
@@ -107,7 +107,8 @@ export function TripsScreen() {
 }
 
 export function TripScreen({ id }: { id: string }) {
-  const { data } = useStore();
+  const store = useStore();
+  const { data } = store;
   const [from, to, fixedRaw] = id.split('_');
   const fixedName = fixedRaw ? decodeURIComponent(fixedRaw) : '';
   const all = useTrips();
@@ -160,6 +161,15 @@ export function TripScreen({ id }: { id: string }) {
           </section>
         );
       })}
+      {!trip.fixed && trip.cities.length > 0 && (
+        <DoubleConfirm className="btn" label="Ikke en rejse" first={`${trip.cities.join(', ')} tæller aldrig mere som rejse. Fortsæt?`} second="Er du sikker?"
+          onConfirm={async () => {
+            const places = data.settings.places ?? { fixed: [], notFixed: [] };
+            const notTrip = [...new Set([...(places.notTrip ?? []), ...trip.cities])];
+            await store.saveSettings({ ...data.settings, places: { ...places, notTrip } });
+            go('husk/rejser');
+          }} />
+      )}
       {open && <PhotoViewer id={open.id} ids={open.ids} onClose={() => setOpen(null)} />}
     </div>
   );

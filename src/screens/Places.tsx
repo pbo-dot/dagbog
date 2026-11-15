@@ -22,10 +22,11 @@ export function PlacesScreen() {
   const fixed = useMemo(() => data.settings.places?.fixed ?? [], [data.settings.places]);
   const notFixed = data.settings.places?.notFixed ?? [];
   const hidden = useMemo(() => hiddenThumbs(data.phonePhotos), [data.phonePhotos]);
-  const tripCount = useMemo(() => trips(data.phonePhotos, data.visits, fixed).length, [data.phonePhotos, data.visits, fixed]);
+  const tripCount = useMemo(() => trips(data.phonePhotos, data.visits, fixed, data.settings.places?.notTrip).length, [data.phonePhotos, data.visits, fixed, data.settings.places?.notTrip]);
   const suggestions = useMemo(() => suggestFixed(data.phonePhotos, data.visits, fixed, notFixed).slice(0, 2), [data.phonePhotos, data.visits, fixed, notFixed]); // eslint-disable-line react-hooks/exhaustive-deps
   const [names, setNames] = useState<Record<string, string>>({});
-  const savePlaces = (next: { fixed: FixedPlace[]; notFixed: string[] }) => store.saveSettings({ ...data.settings, places: next });
+  // Kun faste steder ændres; resten (hvor langt hentningen er nået, "Ikke en rejse" …) bevares
+  const savePlaces = (next: { fixed: FixedPlace[]; notFixed: string[] }) => store.saveSettings({ ...data.settings, places: { ...data.settings.places, ...next } });
   const months = Object.values(data.phonePhotos).sort((a, b) => b.id.localeCompare(a.id));
   const photos = months.flatMap((m) => m.photos);
   const thumbs = photos.filter((p) => p.thumb).length;
@@ -124,6 +125,23 @@ export function PlacesScreen() {
         </section>
       )}
 
+
+      {(data.settings.places?.notTrip ?? []).length > 0 && (
+        <section className="stack-sm">
+          <h3>Tæller ikke som rejser</h3>
+          <div className="card list" style={{ padding: '2px 16px' }}>
+            {(data.settings.places?.notTrip ?? []).map((c) => (
+              <div key={c} className="list-item">
+                <span className="grow">{c}</span>
+                <button className="btn ghost small" onClick={() => {
+                  const places = data.settings.places ?? { fixed: [], notFixed: [] };
+                  void store.saveSettings({ ...data.settings, places: { ...places, notTrip: (places.notTrip ?? []).filter((x) => x !== c) } });
+                }}>Fjern</button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {hidden.length > 0 && (
         <details className="card more-fold">
