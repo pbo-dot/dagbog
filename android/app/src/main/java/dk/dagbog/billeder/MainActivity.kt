@@ -300,8 +300,8 @@ class MainActivity : Activity() {
     /** Vælg en eller flere Takeout-zip-filer (også direkte fra Drev). */
     private fun pickTakeout() {
         if (busy) return
+        // Ingen filtyper: Drev kalder zip-filerne forskellige ting, og ellers bliver de grå og kan ikke vælges
         val i = Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*")
-            .putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream"))
             .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         try {
             @Suppress("DEPRECATION")

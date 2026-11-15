@@ -57,7 +57,7 @@ class Takeout(private val resolver: ContentResolver, private val say: (String) -
         }
         say("")
         say("== Takeout: $name · ${mb(size)} ==")
-        say("Kilde: ${uri.authority}")
+        say("Kilde: ${uri.authority} · type: ${try { resolver.getType(uri) } catch (e: Exception) { "?" }}")
 
         // Kan filen læses på kryds og tværs (så en senere udgave kan nøjes med at læse den én gang)?
         try {
