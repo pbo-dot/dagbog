@@ -70,10 +70,15 @@ class TakeoutImport(
             val (uri, info) = pair
             say("")
             say("== Fil ${k + 1} af ${named.size}: ${info.second} · ${mb(info.first)} ==")
-            try {
-                readZip(uri)
-            } catch (e: Throwable) {
-                say("FEJL i ${info.second}: ${e.javaClass.simpleName}: ${e.message}")
+            // Drev giver nogle gange op ("Cello error"): vent lidt, og prøv igen op til 2 gange
+            for (attempt in 1..3) {
+                try {
+                    readZip(uri)
+                    break
+                } catch (e: Throwable) {
+                    say("FEJL i ${info.second} (forsøg $attempt af 3): ${e.javaClass.simpleName}: ${e.message}")
+                    if (attempt < 3) { say("Venter 30 s og prøver igen …"); Thread.sleep(30_000) }
+                }
             }
             say("Indtil nu: ${pics.size} billeder · json med dato ${metaByDir.size} · ${(SystemClock.elapsedRealtime() - t0) / 60000} min")
         }
