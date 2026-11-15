@@ -41,6 +41,9 @@ import kotlin.concurrent.thread
 /** Billedernes størrelse på den lange led (Dagbog henter alle igen, når den ændres). */
 private const val THUMB_PX = 1080
 
+/** Svar fra filvælgeren til Google Takeout. */
+private const val TAKEOUT = 7
+
 class MainActivity : Activity() {
     private lateinit var out: TextView
     private val report = StringBuilder()
@@ -86,7 +89,9 @@ class MainActivity : Activity() {
         col.addView(button("Send billederne til Dagbog", accent, onAccent) { driveMode = false; start(send = true) })
         col.addView(button("Gem på Drev (til en anden telefon)", tonal, text) { driveMode = true; start(send = true) })
         col.addView(button("Prøve: læs uden at sende", tonal, text) { start(send = false) })
+        col.addView(button("Læs Google Takeout (zip) · prøve", tonal, text) { pickTakeout() })
         col.addView(button("Kopiér loggen", tonal, text) { copy() })
+        col.addView(button("Del loggen med Claude", tonal, text) { shareLog() })
         out = TextView(this).apply {
             textSize = 13f
             typeface = Typeface.MONOSPACE
@@ -290,6 +295,66 @@ class MainActivity : Activity() {
         }
         say("Læst: ${camera.size} på ${(SystemClock.elapsedRealtime() - t0) / 1000} s · med sted: $withPlace · fejl: $failed")
         return out
+    }
+
+    /** Vælg en eller flere Takeout-zip-filer (også direkte fra Drev). */
+    private fun pickTakeout() {
+        if (busy) return
+        val i = Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*")
+            .putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream"))
+            .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        try {
+            @Suppress("DEPRECATION")
+            startActivityForResult(i, TAKEOUT)
+        } catch (e: Exception) {
+            say("Kunne ikke åbne filvælgeren: ${e.javaClass.simpleName}: ${e.message}")
+        }
+    }
+
+    @Deprecated("Activity-API")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != TAKEOUT || resultCode != RESULT_OK || data == null) return
+        val uris = ArrayList<android.net.Uri>()
+        data.clipData?.let { c -> for (k in 0 until c.itemCount) uris.add(c.getItemAt(k).uri) }
+        if (uris.isEmpty()) data.data?.let { uris.add(it) }
+        if (uris.isEmpty() || busy) return
+        busy = true
+        report.setLength(0)
+        say("Dagbog Billeder ${appVersion()} · Takeout-prøve · ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).format(Date())}")
+        say("${Build.MANUFACTURER} ${Build.MODEL} · Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
+        say("Valgte filer: ${uris.size}")
+        thread {
+            val t = Takeout(contentResolver) { say(it) }
+            for (u in uris) {
+                try {
+                    t.probe(u)
+                } catch (e: Throwable) {
+                    say("FEJL: ${e.javaClass.simpleName}: ${e.message}")
+                }
+            }
+            say("")
+            say("Færdig. Tryk \"Del loggen med Claude\", og gem filen på Drev.")
+            busy = false
+        }
+    }
+
+    /** Loggen som én fil, der kan gemmes på Drev, så Claude kan læse den. */
+    private fun shareLog() {
+        try {
+            val name = "dagbog-billeder-log-${SimpleDateFormat("yyyy-MM-dd-HHmm", Locale.ROOT).format(Date())}.txt"
+            val f = File(ShareProvider.dir(this), name)
+            f.writeText(report.toString())
+            val uri = ShareProvider.uri(f.name)
+            val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_STREAM, uri)
+                .putExtra(Intent.EXTRA_SUBJECT, name)
+            send.clipData = ClipData.newRawUri(f.name, uri)
+            send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(send, "Del loggen").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))
+        } catch (e: Exception) {
+            say("FEJL ved deling: ${e.javaClass.simpleName}: ${e.message}")
+        }
     }
 
     private fun appVersion(): String = try {
