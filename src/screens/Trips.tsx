@@ -2,7 +2,8 @@
 // dag for dag med steder, billeder og egen tekst (ellers Claudes beskrivelser af billederne).
 import { useMemo, useState } from 'react';
 import { addDays, addMonths, formatLong, today } from '../lib/dates';
-import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, trips } from '../lib/places';
+import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, stayTime, trips } from '../lib/places';
+import { PlacesMap, stayPoints } from './PlacesMap';
 import { useStore } from '../lib/store';
 import type { FixedPlace } from '../lib/types';
 import { go, Header, PhotoImg, PhotoViewer } from '../ui';
@@ -129,6 +130,7 @@ export function TripScreen({ id }: { id: string }) {
           <span>{tripDates(from, to)} · {days.length} {days.length === 1 ? 'dag' : 'dage'}{trip.countries.length ? ` · ${trip.countries.map(countryName).join(', ')}` : ''}</span>
         </span>
       </div>
+      <PlacesMap points={days.flatMap((d) => stayPoints(dayStays(data.phonePhotos, d, data.visits, fixed), stayTime, `${Number(d.slice(8))}/${Number(d.slice(5, 7))} · `))} fixed={fixed} height={260} />
       <div className="stat-row">
         <div className="card"><b>{ids.length}</b><span className="small muted">billeder</span></div>
         <div className="card"><b>{cities.length}</b><span className="small muted">{cities.length === 1 ? 'by' : 'byer'}</span></div>

@@ -10,6 +10,7 @@ import { MOODS } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 import { askSoon } from './Ask';
 import { LatestTripCard, useTripCountText, YearAgoCard } from './Trips';
+import { PlacesMap, stayPoints } from './PlacesMap';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -313,6 +314,7 @@ function DayPlaces({ date }: { date: string }) {
           <span className="small muted">{stayTime(s)}</span>
         </div>
       )) : <span className="small muted">Billederne har intet sted.</span>}
+      <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} />
       {thumbs.length > 0 && <div className="day-thumbs"><PhotoGallery ids={thumbs} /></div>}
       {descs.length > 0 && (
         <p className="small serif" style={{ margin: 0 }}>

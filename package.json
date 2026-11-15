@@ -13,12 +13,14 @@
     "@anthropic-ai/sdk": "^0.135.0",
     "exifr": "^7.1.3",
     "fflate": "^0.8.2",
+    "leaflet": "^1.9.4",
     "offline-geocode-city": "^1.0.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.12",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

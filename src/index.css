@@ -770,3 +770,12 @@ label.btn { cursor: pointer; }
 .dg-month:disabled { opacity: .3; }
 .dg-month.on { background: var(--accent); color: var(--accent-text); }
 .dg-month.on .dg-text, .dg-month.on .dg-photo { background: var(--accent-text); }
+
+/* Kort med steder (Leaflet) */
+.places-map, .places-map.leaflet-container { width: 100%; border-radius: 22px; overflow: hidden; background: var(--surface-2); z-index: 0; isolation: isolate; font: inherit; }
+.places-map .leaflet-control-attribution { font-size: 10px; }
+@media (prefers-color-scheme: dark) {
+  .places-map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9); }
+}
+:root[data-theme="dark"] .places-map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9); }
+:root[data-theme="light"] .places-map .leaflet-tile-pane { filter: none; }

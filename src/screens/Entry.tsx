@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { agenda } from '../lib/agenda';
+import { PlacesMap, stayPoints } from './PlacesMap';
 import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
@@ -30,6 +31,7 @@ function DayPhotos({ date }: { date: string }) {
   const { data } = useStore();
   const [open, setOpen] = useState<string | null>(null);
   const [showText, setShowText] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const ids = dayThumbs(data.phonePhotos, date);
   // Stederne fra Google Maps-tidslinjen (eller billederne), også på dage uden billeder
   const stays = dayStays(data.phonePhotos, date, data.visits, data.settings.places?.fixed);
@@ -43,6 +45,12 @@ function DayPhotos({ date }: { date: string }) {
           {stays.length > 5 ? ' …' : ''}
         </span>
       )}
+      {stays.some((x) => x.lat !== undefined) && (
+        <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setShowMap((v) => !v)} aria-expanded={showMap}>
+          {showMap ? 'Skjul kortet' : 'Vis på kort'}
+        </button>
+      )}
+      {showMap && <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} height={220} />}
       {ids.length > 0 && (
         <div className="photo-strip">
           {ids.map((id) => (
