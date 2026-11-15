@@ -27,6 +27,7 @@ import { ClarityScreen } from './screens/Clarity';
 import { NoteScreen, NotesScreen } from './screens/Notes';
 import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { PhotoTestScreen } from './screens/PhotoTest';
+import { TripScreen, TripsScreen } from './screens/Trips';
 import { PlacesScreen } from './screens/Places';
 import { SettingsScreen } from './screens/Settings';
 import { UsageScreen } from './screens/Usage';
@@ -227,6 +228,8 @@ function Unlocked() {
       if (a === 'maaned' && b) screen = <MonthScreen id={b} />;
       else if (a === 'overblik') screen = <OverviewScreen year={b} />;
       else if (a === 'dag' && b) screen = <DayScreen date={b} />;
+      else if (a === 'rejser') screen = <TripsScreen />;
+      else if (a === 'rejse' && b) screen = <TripScreen key={b} id={b} />;
       else screen = <MemoryScreen />;
       break;
     case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;

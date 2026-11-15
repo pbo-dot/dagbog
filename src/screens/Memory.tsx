@@ -127,6 +127,7 @@ export function MemoryScreen() {
         <HubRow icon={Icon.grid} title="Månedens kapitel" text={w.month ? `Nyt: ${formatMonth(chapterId).toLowerCase()}` : `Seneste: ${formatMonth(latestChapter).toLowerCase()}`} onClick={() => go(`husk/maaned/${w.month ? chapterId : latestChapter}`)} dot={w.month} />
         <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />
         <HubRow icon={Icon.chat} title="Samtaler" text={inboxCount > 0 ? `${inboxCount} ${inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}` : 'Resuméer med aftaler og ting at huske'} onClick={() => go('samtale')} dot={inboxCount > 0} />
+        {(Object.keys(data.visits).length > 0 || Object.keys(data.phonePhotos).length > 0) && <HubRow icon={Icon.pin} title="Rejser" text="Hvor du har været, med billeder" onClick={() => go('husk/rejser')} />}
         <HubRow icon={Icon.people} title="Mennesker" text="Familie, venner og hvad der er vigtigt for dem" onClick={() => go('mennesker')} />
         <HubRow icon={Icon.patterns} title="Mønstre" text="Tanker og mønstre, der går igen" onClick={() => go('moenstre')} />
       </div>
