@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePhotoUrl } from './lib/photos';
-import { thumbCaption } from './lib/places';
+import { setHidden, thumbCaption } from './lib/places';
 import { useStore } from './lib/store';
 import { MOODS, type MoodId } from './lib/types';
 
@@ -33,6 +33,7 @@ const P = (d: ReactNode) => (
 );
 
 export const Icon = {
+  trash: P(<><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13" /><path d="M10 11v5.5M14 11v5.5" /></>),
   pen: P(<><path d="M4 20h4L19 9l-4-4L4 16v4z" /><path d="M13.5 6.5l4 4" /></>),
   week: P(<><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>),
   memory: P(<><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></>),
@@ -210,7 +211,10 @@ export function PhotoGallery({ ids }: { ids: string[] }) {
  * Med `ids` kan man swipe (eller trykke ‹ ›) til de andre billeder fra samme dag.
  */
 export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; onClose: () => void }) {
-  const list = ids?.length ? ids : [id];
+  // Billeder, der fjernes, mens viseren er åben, tages ud af listen med det samme
+  const [gone, setGone] = useState<string[]>([]);
+  const all = ids?.length ? ids : [id];
+  const list = all.filter((x) => !gone.includes(x));
   const [i, setI] = useState(() => Math.max(0, list.indexOf(id)));
   const start = useRef<{ x: number; y: number } | null>(null);
   const go2 = (d: number) => setI((n) => Math.min(list.length - 1, Math.max(0, n + d)));
@@ -221,8 +225,20 @@ export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; 
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const zoomed = () => (window.visualViewport?.scale ?? 1) > 1.05;
   // Telefonens billeder: hvornår og hvor det er taget
-  const { data } = useStore();
-  const caption = thumbCaption(data.phonePhotos, list[i]);
+  const store = useStore();
+  const { data } = store;
+  const cur = list[Math.min(i, list.length - 1)];
+  const caption = cur ? thumbCaption(data.phonePhotos, cur) : '';
+  const [asking, setAsking] = useState(false);
+  const remove = async () => {
+    const m = setHidden(data.phonePhotos, cur, true);
+    setAsking(false);
+    if (!m) return;
+    await store.put('phonePhotos', m.id, m);
+    if (list.length <= 1) { onClose(); return; }
+    setGone((g) => [...g, cur]);
+    setI((n) => Math.min(n, list.length - 2));
+  };
   return (
     <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={onClose}
       onTouchStart={(e) => { start.current = e.touches.length === 1 && !zoomed() ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }}
@@ -235,7 +251,7 @@ export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; 
         if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go2(dx < 0 ? 1 : -1);
       }}>
       <div className="photo-viewer-img" onClick={(e) => e.stopPropagation()}>
-        <PhotoImg key={list[i]} id={list[i]} alt="Foto" />
+        {cur && <PhotoImg key={cur} id={cur} alt="Foto" />}
       </div>
       {list.length > 1 && (
         <>
@@ -245,6 +261,18 @@ export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; 
         </>
       )}
       {caption && <span className="photo-caption">{caption}</span>}
+      {caption && !asking && (
+        <button className="photo-remove" aria-label="Fjern billedet fra Dagbog" onClick={(e) => { e.stopPropagation(); setAsking(true); }}>{Icon.trash}</button>
+      )}
+      {asking && (
+        <div className="photo-confirm" onClick={(e) => e.stopPropagation()}>
+          <span>Fjern billedet fra Dagbog?<small>Det bliver på telefonen og i Google Fotos.</small></span>
+          <div className="row">
+            <button className="btn ghost" onClick={() => setAsking(false)}>Annullér</button>
+            <button className="btn danger" onClick={() => void remove()}>Fjern</button>
+          </div>
+        </div>
+      )}
       <button className="photo-close" aria-label="Luk" onClick={onClose}>×</button>
     </div>
   );

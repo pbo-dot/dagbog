@@ -134,7 +134,7 @@ export function stopDescribing() { dset({ stop: true }); }
 /** Billeder med et lille billede, men uden beskrivelse. */
 export function undescribed(months: Store['data']['phonePhotos']): number {
   let n = 0;
-  for (const m of Object.values(months)) for (const p of m.photos) if (p.thumb && p.desc === undefined) n++;
+  for (const m of Object.values(months)) for (const p of m.photos) if (p.thumb && !p.hidden && p.desc === undefined) n++;
   return n;
 }
 
@@ -146,7 +146,7 @@ export async function describeAll(store: Store): Promise<void> {
   if (dstate.busy) return;
   const todo: Array<{ month: string; t: number; id: number; thumb: string; where: string }> = [];
   for (const m of Object.values(store.data.phonePhotos)) {
-    for (const p of m.photos) if (p.thumb && p.desc === undefined) todo.push({ month: m.id, t: p.t, id: p.id, thumb: p.thumb, where: [p.city, p.cc && p.cc !== 'DK' ? countryName(p.cc) : ''].filter(Boolean).join(', ') });
+    for (const p of m.photos) if (p.thumb && !p.hidden && p.desc === undefined) todo.push({ month: m.id, t: p.t, id: p.id, thumb: p.thumb, where: [p.city, p.cc && p.cc !== 'DK' ? countryName(p.cc) : ''].filter(Boolean).join(', ') });
   }
   todo.sort((a, b) => b.t - a.t);
   dset({ busy: true, done: 0, total: todo.length, error: '', stop: false });

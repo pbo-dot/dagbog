@@ -180,7 +180,7 @@ export function MonthScreen({ id }: { id: string }) {
   // Man kan bladre tilbage til den første måned med noget skrevet
   const firstMonth = [...Object.keys(data.entries).map((d) => d.slice(0, 7)), ...Object.keys(data.months), ...Object.keys(data.phonePhotos)].sort()[0] ?? id;
   // Dage med billeder fra telefonen, som ikke er skrevet (de skrevne viser antal billeder i rækken)
-  const photoDays = [...new Set((data.phonePhotos[id]?.photos ?? []).map((p) => toISO(new Date(p.t))))].filter((d) => !data.entries[d]).sort().reverse();
+  const photoDays = [...new Set((data.phonePhotos[id]?.photos ?? []).filter((p) => !p.hidden).map((p) => toISO(new Date(p.t))))].filter((d) => !data.entries[d]).sort().reverse();
 
   return (
     <div className="stack" style={{ gap: 20 }}>

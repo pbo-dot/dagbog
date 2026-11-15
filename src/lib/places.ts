@@ -151,7 +151,7 @@ export function mergeMonths(old: Record<string, PhotoMonth>, photos: PhonePhoto[
       if (!before) { added++; changed = true; have.set(k, p); }
       else {
         // Billedet og Claudes beskrivelse bevares, når dato og sted sendes igen
-        const merged = { ...p, thumb: p.thumb ?? before.thumb, desc: p.desc ?? before.desc };
+        const merged = { ...p, thumb: p.thumb ?? before.thumb, desc: p.desc ?? before.desc, ...(before.hidden ? { hidden: true } : {}) };
         if ((before.city ?? '') !== (merged.city ?? '') || before.lat !== merged.lat || before.thumb !== merged.thumb) { changed = true; have.set(k, merged); }
       }
     }
@@ -260,7 +260,7 @@ function rawDayStays(months: Record<string, PhotoMonth>, date: string, visits: R
 
 /** Hvor mange billeder der er på dagen (også dem uden sted). */
 export function dayPhotoCount(months: Record<string, PhotoMonth>, date: string): number {
-  return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => toISO(new Date(p.t)) === date).length;
+  return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => !p.hidden && toISO(new Date(p.t)) === date).length;
 }
 
 interface DayPoint { city: string; cc: string; lat: number; lng: number }
@@ -445,13 +445,13 @@ export function placeLines(months: Record<string, PhotoMonth>, visits: Record<st
 
 /** Id'erne på dagens små billeder (i Dagbogs billedlager), i tidsorden. */
 export function dayThumbs(months: Record<string, PhotoMonth>, date: string): string[] {
-  return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => p.thumb && toISO(new Date(p.t)) === date).map((p) => p.thumb!);
+  return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => p.thumb && !p.hidden && toISO(new Date(p.t)) === date).map((p) => p.thumb!);
 }
 
 /** Claudes beskrivelser af dagens billeder: [{time: "11.02", text: "Strand ved Faro i sol"}]. */
 export function dayDescs(months: Record<string, PhotoMonth>, date: string): Array<{ time: string; text: string }> {
   return (months[date.slice(0, 7)]?.photos ?? [])
-    .filter((p) => p.desc && toISO(new Date(p.t)) === date)
+    .filter((p) => p.desc && !p.hidden && toISO(new Date(p.t)) === date)
     .map((p) => ({ time: hm(p.t), text: p.desc! }));
 }
 
@@ -459,7 +459,7 @@ export function dayDescs(months: Record<string, PhotoMonth>, date: string): Arra
 export function photoLines(months: Record<string, PhotoMonth>, max = 1500): string[] {
   const all: Array<{ t: number; line: string }> = [];
   for (const m of Object.values(months)) {
-    for (const p of m.photos) if (p.desc) all.push({ t: p.t, line: `- ${toISO(new Date(p.t))} ${hm(p.t)}${p.city ? ` ${p.city}` : ''}: ${p.desc}` });
+    for (const p of m.photos) if (p.desc && !p.hidden) all.push({ t: p.t, line: `- ${toISO(new Date(p.t))} ${hm(p.t)}${p.city ? ` ${p.city}` : ''}: ${p.desc}` });
   }
   return all.sort((a, b) => b.t - a.t).slice(0, max).sort((a, b) => a.t - b.t).map((x) => x.line);
 }
@@ -483,4 +483,18 @@ export function thumbCaption(months: Record<string, PhotoMonth>, thumb: string, 
 export function thumbTime(months: Record<string, PhotoMonth>, thumb: string): string {
   const p = thumbIndexMemo(months).get(thumb);
   return p ? hm(p.t) : '';
+}
+
+/** Fjern et billede fra Dagbog (eller læg det tilbage). Det lille billede bliver liggende, så det kan fortrydes. */
+export function setHidden(months: Record<string, PhotoMonth>, thumb: string, hidden: boolean): PhotoMonth | null {
+  for (const m of Object.values(months)) {
+    if (!m.photos.some((p) => p.thumb === thumb)) continue;
+    return { ...m, photos: m.photos.map((p) => (p.thumb === thumb ? { ...p, hidden: hidden || undefined } : p)) };
+  }
+  return null;
+}
+
+/** Billeder, ejeren har fjernet, nyeste først. */
+export function hiddenThumbs(months: Record<string, PhotoMonth>): string[] {
+  return Object.values(months).flatMap((m) => m.photos).filter((p) => p.hidden && p.thumb).sort((a, b) => b.t - a.t).map((p) => p.thumb!);
 }

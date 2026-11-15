@@ -750,3 +750,14 @@ label.btn { cursor: pointer; }
 .strip-item { position: relative; flex: none; scroll-snap-align: start; }
 .strip-time { position: absolute; left: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; font-size: .78rem; font-weight: 600; pointer-events: none; }
 .photo-caption { position: absolute; top: calc(env(safe-area-inset-top) + 22px); left: 16px; right: 64px; color: #fff; font-size: .92rem; text-shadow: 0 1px 3px rgba(0,0,0,.6); pointer-events: none; }
+
+/* Fjern et billede fra Dagbog (i fuld skærm) */
+.photo-remove { position: absolute; bottom: calc(env(safe-area-inset-bottom) + 10px); right: 12px; width: 48px; height: 48px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; display: inline-flex; align-items: center; justify-content: center; padding: 12px; }
+.photo-confirm { position: absolute; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 12px); display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 26px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.photo-confirm > span { font-weight: 700; display: flex; flex-direction: column; gap: 2px; }
+.photo-confirm small { font-weight: 400; color: var(--muted); font-size: .88rem; }
+.photo-confirm .row { justify-content: flex-end; gap: 8px; }
+.hidden-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.hidden-item { display: flex; flex-direction: column; gap: 6px; }
+.hidden-img { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: cover; background: var(--surface-2); }
+.hidden-item .btn { min-height: 40px; padding: 0 8px; font-size: .82rem; }

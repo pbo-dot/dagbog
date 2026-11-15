@@ -1,13 +1,13 @@
 // "Billeder og steder" (under Mere): hjælpe-appen "Dagbog Billeder" sender dato og sted for
 // kamera-billederne, og Dagbog viser, hvor du har været. Selve billederne bliver på telefonen.
 import { useMemo, useRef, useState } from 'react';
-import { openAppUrl, THUMB_PX, suggestFixed, trips } from '../lib/places';
+import { hiddenThumbs, openAppUrl, setHidden, THUMB_PX, suggestFixed, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
 import { describeAll, importFiles, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
 import { costUsd, krText } from '../lib/usage';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
-import { go, Header, uid } from '../ui';
+import { go, Header, PhotoImg, uid } from '../ui';
 
 export function PlacesScreen() {
   const store = useStore();
@@ -21,6 +21,7 @@ export function PlacesScreen() {
   const visitYears = visits.length ? [new Date(visits[0].s).getFullYear(), new Date(visits[visits.length - 1].s).getFullYear()] : [];
   const fixed = useMemo(() => data.settings.places?.fixed ?? [], [data.settings.places]);
   const notFixed = data.settings.places?.notFixed ?? [];
+  const hidden = useMemo(() => hiddenThumbs(data.phonePhotos), [data.phonePhotos]);
   const tripCount = useMemo(() => trips(data.phonePhotos, data.visits, fixed).length, [data.phonePhotos, data.visits, fixed]);
   const suggestions = useMemo(() => suggestFixed(data.phonePhotos, data.visits, fixed, notFixed).slice(0, 2), [data.phonePhotos, data.visits, fixed, notFixed]); // eslint-disable-line react-hooks/exhaustive-deps
   const [names, setNames] = useState<Record<string, string>>({});
@@ -123,6 +124,20 @@ export function PlacesScreen() {
         </section>
       )}
 
+
+      {hidden.length > 0 && (
+        <details className="card more-fold">
+          <summary><strong>Fjernede billeder · {hidden.length}</strong></summary>
+          <div className="hidden-grid">
+            {hidden.slice(0, 60).map((id) => (
+              <span key={id} className="hidden-item">
+                <PhotoImg id={id} className="hidden-img" alt="" />
+                <button className="btn small" onClick={() => { const m = setHidden(data.phonePhotos, id, false); if (m) void store.put('phonePhotos', m.id, m); }}>Læg tilbage</button>
+              </span>
+            ))}
+          </div>
+        </details>
+      )}
 
       <details className="card more-fold">
         <summary><strong>Flere måder at hente</strong></summary>
