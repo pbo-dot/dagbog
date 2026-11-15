@@ -11,6 +11,7 @@ import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from
 import { askSoon } from './Ask';
 import { LatestTripCard, useTripCountText, YearAgoCard } from './Trips';
 import { PlacesMap, stayPoints } from './PlacesMap';
+import { PhonePhotos } from './PhonePhotos';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -315,7 +316,7 @@ function DayPlaces({ date }: { date: string }) {
         </div>
       )) : <span className="small muted">Billederne har intet sted.</span>}
       <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} />
-      {thumbs.length > 0 && <div className="day-thumbs"><PhotoGallery ids={thumbs} /></div>}
+      <PhonePhotos ids={thumbs} grid />
       {descs.length > 0 && (
         <p className="small serif" style={{ margin: 0 }}>
           {descs.map((x, i) => <span key={i}>{i ? ' ' : ''}<span className="muted">{x.time}</span> {x.text.replace(/\.?$/, '.')}</span>)}

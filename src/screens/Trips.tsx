@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { addDays, addMonths, formatLong, today } from '../lib/dates';
 import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, stayTime, trips } from '../lib/places';
 import { PlacesMap, stayPoints } from './PlacesMap';
+import { PhonePhotos } from './PhonePhotos';
 import { useStore } from '../lib/store';
 import type { FixedPlace } from '../lib/types';
 import { DoubleConfirm, go, Header, PhotoImg, PhotoViewer } from '../ui';
@@ -148,11 +149,7 @@ export function TripScreen({ id }: { id: string }) {
               <strong>{formatLong(d)}</strong>
               <span className="small muted">{stays.slice(0, 3).join(' · ')}</span>
             </button>
-            {dayIds.length > 0 && (
-              <div className="photo-strip">
-                {dayIds.map((pid) => <PhotoImg key={pid} id={pid} className="strip-img small" onClick={() => setOpen({ id: pid, ids: dayIds })} alt="Billede fra dagen" />)}
-              </div>
-            )}
+            <PhonePhotos ids={dayIds} small />
             {entry ? (
               <p className="serif trip-day-text">{entry.text.length > 220 ? `${entry.text.slice(0, 220).trimEnd()} …` : entry.text} <span className="tiny muted">· din tekst</span></p>
             ) : descs.length > 0 ? (

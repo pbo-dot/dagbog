@@ -779,3 +779,17 @@ label.btn { cursor: pointer; }
 }
 :root[data-theme="dark"] .places-map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9); }
 :root[data-theme="light"] .places-map .leaflet-tile-pane { filter: none; }
+
+/* Vælg og fjern flere billeder */
+.phone-photos { display: flex; flex-direction: column; gap: 6px; }
+.photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.photo-grid .strip-item { min-width: 0; }
+.grid-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; display: block; cursor: zoom-in; background: var(--surface-2); }
+.strip-item.picking img { cursor: pointer; transition: transform .15s, opacity .15s; }
+.strip-item.picking:not(.chosen) img { opacity: .75; }
+.strip-item.chosen img { transform: scale(.92); outline: 3px solid var(--danger); outline-offset: -3px; }
+.pick-mark { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; background: rgba(0,0,0,.35); color: #fff; font-size: .85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.strip-item.chosen .pick-mark { background: var(--danger); }
+.pick-bar { align-items: center; flex-wrap: wrap; gap: 8px; }
+.card.pick-confirm { display: flex; flex-direction: column; gap: 8px; }
+@media (prefers-reduced-motion: reduce) { .strip-item.picking img { transition: none; } }

@@ -500,3 +500,14 @@ export function setHidden(months: Record<string, PhotoMonth>, thumb: string, hid
 export function hiddenThumbs(months: Record<string, PhotoMonth>): string[] {
   return Object.values(months).flatMap((m) => m.photos).filter((p) => p.hidden && p.thumb).sort((a, b) => b.t - a.t).map((p) => p.thumb!);
 }
+
+/** Fjern (eller læg tilbage) flere billeder på én gang; giver de ændrede måneder. */
+export function setHiddenMany(months: Record<string, PhotoMonth>, thumbs: string[], hidden: boolean): PhotoMonth[] {
+  const want = new Set(thumbs);
+  const out: PhotoMonth[] = [];
+  for (const m of Object.values(months)) {
+    if (!m.photos.some((p) => p.thumb && want.has(p.thumb))) continue;
+    out.push({ ...m, photos: m.photos.map((p) => (p.thumb && want.has(p.thumb) ? { ...p, hidden: hidden || undefined } : p)) });
+  }
+  return out;
+}

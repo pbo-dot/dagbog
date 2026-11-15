@@ -1,12 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { agenda } from '../lib/agenda';
 import { PlacesMap, stayPoints } from './PlacesMap';
+import { PhonePhotos } from './PhonePhotos';
 import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
-import { dayDescs, dayStays, dayThumbs, stayTime, thumbTime } from '../lib/places';
+import { dayDescs, dayStays, dayThumbs, stayTime } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
 import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
@@ -29,7 +30,6 @@ function nowHM(): string {
  */
 function DayPhotos({ date }: { date: string }) {
   const { data } = useStore();
-  const [open, setOpen] = useState<string | null>(null);
   const [showText, setShowText] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const ids = dayThumbs(data.phonePhotos, date);
@@ -51,16 +51,7 @@ function DayPhotos({ date }: { date: string }) {
         </button>
       )}
       {showMap && <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} height={220} />}
-      {ids.length > 0 && (
-        <div className="photo-strip">
-          {ids.map((id) => (
-            <span key={id} className="strip-item">
-              <PhotoImg id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />
-              <span className="strip-time">{thumbTime(data.phonePhotos, id)}</span>
-            </span>
-          ))}
-        </div>
-      )}
+      <PhonePhotos ids={ids} />
       {descs.length > 0 && (
         <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setShowText((v) => !v)} aria-expanded={showText}>
           {showText ? 'Skjul Claudes beskrivelser' : 'Vis Claudes beskrivelser'}
@@ -71,7 +62,6 @@ function DayPhotos({ date }: { date: string }) {
           {descs.map((x, i) => <li key={i}><span className="muted">{x.time}</span> {x.text}</li>)}
         </ul>
       )}
-      {open && <PhotoViewer id={open} ids={ids} onClose={() => setOpen(null)} />}
     </section>
   );
 }
