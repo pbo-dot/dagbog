@@ -205,7 +205,7 @@ export async function searchDiary(settings: Settings, query: string, entries: En
   const sorted = [...entries].sort((a, b) => a.date.localeCompare(b.date));
   // Groft loft, så vi holder os langt under modellens kontekstvindue.
   let corpus = sorted.map((e) => entryBlock(e)).join('\n\n');
-  if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
+
 
   try {
     const res = await client(settings).beta.messages.parse({
@@ -459,10 +459,24 @@ function todoLines(data: AskData): string[] {
 }
 
 /** Faste noter uden dato (regler, lister, gode råd). */
+/** Højst så mange tegn pr. note til Claude. */
+const NOTE_MAX = 30_000;
+/** Højst så mange tegn i alt til Claude (ca. 600.000 tokens; grænsen er 1 mio.). */
+const CORPUS_MAX = 2_000_000;
+
+/**
+ * Notens tekst uden billeddata (lange stykker base64, fx fra en delt
+ * billedfil, der blev til en note) og højst NOTE_MAX tegn.
+ */
+export function noteText(text: string): string {
+  const clean = text.replace(/(?:data:[\w/+.-]+;base64,)?[A-Za-z0-9+/=]{200,}/g, '[billeddata udeladt]');
+  return clean.length > NOTE_MAX ? `${clean.slice(0, NOTE_MAX)} … [resten af noten er udeladt, ${clean.length - NOTE_MAX} tegn]` : clean;
+}
+
 function noteBlocks(data: AskData): string[] {
   return Object.values(data.notes ?? {}).sort((a, b) => a.title.localeCompare(b.title, 'da')).map((n) => [
     `### ${n.title} [id: ${n.id}]${n.labels?.length ? ` (etiketter: ${n.labels.join(', ')})` : ''}`,
-    n.text,
+    noteText(n.text),
     ...(n.links ?? []).map((l) => `Link: ${l.title} – ${l.url}`),
   ].filter(Boolean).join('\n'));
 }
@@ -548,7 +562,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     else if (ws.length) older.push(...ws.map(weekBlock));
     else older.push(...entries.filter((e) => e.date.slice(0, 7) === id && e.date < recentFrom).map((e) => entryBlock(e, 600)));
   }
-  let corpus = build([
+  const corpus = build([
     ['ÆLDRE PERIODER (opsummeret)', older],
     ['DAGBOG (det seneste halve år)', recent.map((e) => entryBlock(e))],
     ['SAMTALER', talks.map((c) => conversationBlock(c, data.people, c.date >= recentFrom))],
@@ -560,7 +574,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['NOTER', noteBlocks(data)],
     ['HUSKELISTE', todoLines(data)],
   ]);
-  if (corpus.length > 2_000_000) corpus = corpus.slice(corpus.length - 2_000_000);
+
   return {
     corpus,
     note: 'Det seneste halve år er med dag for dag. Ældre perioder er med som månedskapitler og ugeopsummeringer, så detaljer derfra kan mangle; foreslå i så fald at spørge om den periode (fx "i marts 2025"), så kommer dagene med.',
@@ -580,14 +594,14 @@ export function focusScope(data: AskData, words: string, today: string): AskScop
   if (!terms.length) return null;
   const notes = Object.values(data.notes ?? {});
   const people = Object.values(data.people);
-  const noteText = (n: Note) => `${n.title}\n${n.text}\n${(n.labels ?? []).join(' ')}`;
+  const noteHay = (n: Note) => `${n.title}\n${n.text}\n${(n.labels ?? []).join(' ')}`;
   const personText = (p: Person) => `${p.name}\n${p.relation ?? ''}\n${p.important}\n${p.notes.map((x) => x.text).join('\n')}`;
   const sharp = terms.filter((t) => {
-    const n = notes.filter((x) => termHits([t], noteText(x))).length + people.filter((x) => termHits([t], personText(x))).length;
+    const n = notes.filter((x) => termHits([t], noteHay(x))).length + people.filter((x) => termHits([t], personText(x))).length;
     return n > 0 && n <= 5;
   });
   if (!sharp.length) return null;
-  const hitNotes = rankByTerms(notes, sharp, (n) => n.title, noteText).slice(0, 8);
+  const hitNotes = rankByTerms(notes, sharp, (n) => n.title, noteHay).slice(0, 8);
   const hitPeople = rankByTerms(people, sharp, (p) => p.name, personText).slice(0, 5);
   const talks = rankByTerms(Object.values(data.conversations), sharp, (c) => c.title, (c) => `${c.summary}\n${c.remember.join('\n')}\n${c.transcript}`).slice(0, 5);
   const days = localSearch(words, Object.values(data.entries)).slice(0, 15).map((h) => h.entry).sort((a, b) => a.date.localeCompare(b.date));
@@ -679,7 +693,7 @@ export async function askDiary(settings: Settings, scope: AskScope, today: strin
       output_config: { effort: mode === 'fast' ? 'low' : 'medium', format: betaZodOutputFormat(AskSchema) },
       system: [
         { type: 'text', text: `${FRIEND}\n\n${ASK}\n\nI dag er det ${formatFull(today)} (${today}).\n${scope.note}` },
-        { type: 'text', text: scope.corpus || '(Der er ikke skrevet noget endnu.)', cache_control: { type: 'ephemeral' } },
+        { type: 'text', text: (scope.corpus.length > CORPUS_MAX ? `${scope.corpus.slice(0, CORPUS_MAX)}\n\n[Resten af materialet er udeladt, fordi det er for stort.]` : scope.corpus) || '(Der er ikke skrevet noget endnu.)', cache_control: { type: 'ephemeral' } },
       ],
       messages,
       ...fallbackFor(model),
