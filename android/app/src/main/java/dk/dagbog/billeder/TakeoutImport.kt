@@ -66,27 +66,40 @@ class TakeoutImport(
         val t0 = SystemClock.elapsedRealtime()
         // Filerne i navneorden (…-1-001, …-1-002 …), så fremdriften er til at følge
         val named = uris.map { it to name(it) }.sortedBy { it.second.second }
+        val saved = ArrayList<String>()
         for ((k, pair) in named.withIndex()) {
             val (uri, info) = pair
             say("")
             say("== Fil ${k + 1} af ${named.size}: ${info.second} · ${mb(info.first)} ==")
+            // Hver zip-fil gemmes for sig, så intet går tabt, hvis appen eller Drev stopper undervejs
+            pics.clear()
+            thumbDir.listFiles()?.forEach { it.delete() }
+            var ok = false
             // Drev giver nogle gange op ("Cello error"): vent lidt, og prøv igen op til 2 gange
             for (attempt in 1..3) {
                 try {
                     readZip(uri)
+                    ok = true
                     break
                 } catch (e: Throwable) {
                     say("FEJL i ${info.second} (forsøg $attempt af 3): ${e.javaClass.simpleName}: ${e.message}")
+                    pics.clear()
+                    thumbDir.listFiles()?.forEach { it.delete() }
                     if (attempt < 3) { say("Venter 30 s og prøver igen …"); Thread.sleep(30_000) }
                 }
             }
-            say("Indtil nu: ${pics.size} billeder · json med dato ${metaByDir.size} · ${(SystemClock.elapsedRealtime() - t0) / 60000} min")
+            if (!ok) { say("⚠ ${info.second} blev ikke læst. Prøv den igen senere (gerne fra Downloads)."); continue }
+            val tag = Regex("(\\d+-\\d+)\\.zip$").find(info.second)?.groupValues?.get(1) ?: String.format(Locale.ROOT, "%02d", k + 1)
+            saved += finish(tag)
+            say("Tid indtil nu: ${(SystemClock.elapsedRealtime() - t0) / 60000} min")
         }
         say("")
         say("Sprunget over: skærmbilleder $skippedShots · video $skippedVideo · samme billede i flere mapper $skippedDup · fejl $failed")
-        finish()
         say("Tid i alt: ${(SystemClock.elapsedRealtime() - t0) / 60000} min")
         thumbDir.deleteRecursively()
+        say("")
+        if (saved.isEmpty()) say("Ingen filer gemt.")
+        else say("FÆRDIG. ${saved.size} filer i Download/Dagbog-Takeout. Åbn Dagbog → Mere → Billeder og steder → Flere måder at hente → \"Vælg filer\", og vælg dem alle (du kan også hente dem ind løbende, mens appen arbejder).")
     }
 
     private fun name(uri: Uri): Pair<Long, String> {
@@ -223,7 +236,8 @@ class TakeoutImport(
 
     private data class Done(val id: Long, val t: Long, val lat: Double?, val lng: Double?)
 
-    private fun finish() {
+    /** Gemmer billederne fra én zip-fil; giver navnene på de gemte filer. */
+    private fun finish(tag: String): List<String> {
         var fromJson = 0
         var fromExif = 0
         var fromName = 0
@@ -243,7 +257,7 @@ class TakeoutImport(
         }
         say("Dato fra: Googles json $fromJson · billedets EXIF $fromExif · filnavnet $fromName · uden dato $noDate")
         say("Med sted: ${done.count { it.lat != null }} af ${done.size}")
-        if (done.isEmpty()) { say("Ingen billeder at sende."); return }
+        if (done.isEmpty()) { say("Ingen billeder at sende."); return emptyList() }
         done.sortBy { it.t }
         say("Fra ${day.format(Date(done.first().t))} til ${day.format(Date(done.last().t))}")
 
@@ -253,15 +267,16 @@ class TakeoutImport(
 
         // Filer á 120 billeder i Download/Dagbog-Takeout; dato og sted for alle i den første
         val parts = chosen.chunked(120).ifEmpty { listOf(emptyList()) }
+        val names = ArrayList<String>()
         for ((k, part) in parts.withIndex()) {
-            val name = "dagbog-takeout-del-${String.format(Locale.ROOT, "%02d", k + 1)}.txt"
+            val name = "dagbog-takeout-$tag-del-${String.format(Locale.ROOT, "%02d", k + 1)}.txt"
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, name)
                 put(MediaStore.Downloads.MIME_TYPE, "text/plain")
                 put(MediaStore.Downloads.RELATIVE_PATH, "Download/Dagbog-Takeout")
             }
             val out = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-            if (out == null) { say("FEJL: kunne ikke gemme $name i Download"); return }
+            if (out == null) { say("FEJL: kunne ikke gemme $name i Download"); return names }
             resolver.openOutputStream(out)?.bufferedWriter()?.use { w ->
                 w.write("DAGBOG-BILLEDER v2\n# app $version\n# størrelse $THUMB\n# kilde anden telefon (Google Takeout) del ${k + 1}\n")
                 if (k == 0) for (d in done) {
@@ -276,9 +291,9 @@ class TakeoutImport(
                 }
             }
             say("Gemt: Download/Dagbog-Takeout/$name (${part.size} billeder)")
+            names += name
         }
-        say("")
-        say("FÆRDIG. Åbn Dagbog → Mere → Billeder og steder → Flere måder at hente → \"Vælg filer\", gå til Download/Dagbog-Takeout, og vælg alle ${parts.size} filer.")
+        return names
     }
 
     private fun pick(list: List<Done>): List<Done> {
