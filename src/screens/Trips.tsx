@@ -1,7 +1,7 @@
 // Rejser under Husk: alle rejser (fra Tidslinjen og billederne) med forsidebilleder, og en side pr. rejse
 // dag for dag med steder, billeder og egen tekst (ellers Claudes beskrivelser af billederne).
 import { useMemo, useState } from 'react';
-import { addDays, formatLong } from '../lib/dates';
+import { addDays, addMonths, formatLong, today } from '../lib/dates';
 import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, trips } from '../lib/places';
 import { useStore } from '../lib/store';
 import type { FixedPlace } from '../lib/types';
@@ -28,11 +28,11 @@ export function tripDates(from: string, to: string): string {
 }
 
 /** Alle rejser og ophold ved faste steder, nyeste først. */
-function useTrips(): Trip[] {
+export function useTrips(): Trip[] {
   const { data } = useStore();
   const fixed = data.settings.places?.fixed ?? NONE;
   return useMemo(() => {
-    const list: Trip[] = trips(data.phonePhotos, data.visits, fixed);
+    const list: Trip[] = [...trips(data.phonePhotos, data.visits, fixed)]; // kopi: listen fra trips() huskes og må ikke ændres
     for (const { place, stays } of fixedStays(data.phonePhotos, data.visits, fixed)) {
       for (const st of stays) list.push({ from: st.from, to: st.to, cities: [place.name], countries: [], fixed: place.name });
     }
@@ -161,4 +161,60 @@ export function TripScreen({ id }: { id: string }) {
       {open && <PhotoViewer id={open.id} ids={open.ids} onClose={() => setOpen(null)} />}
     </div>
   );
+}
+
+/** Husk: den seneste rejse med billeder (ellers den seneste rejse) som stort kort. */
+export function LatestTripCard() {
+  const { data } = useStore();
+  const all = useTrips();
+  const real = all.filter((t) => !t.fixed);
+  const t = real.find((x) => tripPhotos(data.phonePhotos, x).length > 0) ?? real[0];
+  if (!t) return null;
+  const ids = tripPhotos(data.phonePhotos, t);
+  const c = cover(ids);
+  const title = t.cities.slice(0, 3).join(', ');
+  return (
+    <button className="latest-trip" onClick={() => go(`husk/rejse/${t.from}_${t.to}`)}>
+      {c.length > 0 && <span className={`trip-cover n${c.length}`}>{c.map((id) => <PhotoImg key={id} id={id} className="trip-cover-img" alt="" />)}</span>}
+      <span className="trip-hero-text">
+        <small>Seneste rejse</small>
+        <b>{title}</b>
+        <span>{tripDates(t.from, t.to)}{t.countries.length ? ` · ${t.countries.map(countryName).join(', ')}` : ''}{ids.length ? ` · ${ids.length} billeder` : ''}</span>
+      </span>
+    </button>
+  );
+}
+
+/** Husk: samme dag sidste år (eller en dag tæt på) med billede og sted. */
+export function YearAgoCard() {
+  const { data } = useStore();
+  const fixed = data.settings.places?.fixed;
+  const base = addMonths(today(), -12);
+  const tries = [0, -1, 1, -2, 2, -3, 3].map((n) => addDays(base, n));
+  const day = tries.find((d) => dayThumbs(data.phonePhotos, d).length > 0)
+    ?? tries.find((d) => data.entries[d] || dayStays(data.phonePhotos, d, data.visits, fixed).length > 0);
+  if (!day) return null;
+  const ids = dayThumbs(data.phonePhotos, day);
+  const stays = [...new Set(dayStays(data.phonePhotos, day, data.visits, fixed).map((x) => x.city))];
+  const entry = data.entries[day];
+  const title = stays.slice(0, 2).join(', ') || entry?.text.split('\n')[0].slice(0, 60) || 'Sted ukendt';
+  return (
+    <button className="card tappable year-ago" onClick={() => go(`husk/dag/${day}`)}>
+      {ids[0]
+        ? <PhotoImg id={ids[0]} className="year-ago-img" alt="" />
+        : <span className="year-ago-img year-ago-ico" aria-hidden="true">📍</span>}
+      <span className="grow" style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left' }}>
+        <span className="overline">For et år siden</span>
+        <strong style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</strong>
+        <span className="small muted">{formatLong(day)}{ids.length ? ` · ${ids.length} ${ids.length === 1 ? 'billede' : 'billeder'}` : ''}</span>
+      </span>
+    </button>
+  );
+}
+
+/** "189 rejser siden 2014" til rækken på Husk. */
+export function useTripCountText(): string {
+  const real = useTrips().filter((t) => !t.fixed);
+  if (!real.length) return 'Hvor du har været, med billeder';
+  return `${real.length} ${real.length === 1 ? 'rejse' : 'rejser'} siden ${real[real.length - 1].from.slice(0, 4)}`;
 }

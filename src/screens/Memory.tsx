@@ -9,6 +9,7 @@ import { useStore } from '../lib/store';
 import { MOODS } from '../lib/types';
 import { DoubleConfirm, go, Header, Icon, MoodTag, PhotoGallery, PhotoImg } from '../ui';
 import { askSoon } from './Ask';
+import { LatestTripCard, useTripCountText, YearAgoCard } from './Trips';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -109,12 +110,16 @@ export function MemoryScreen() {
   // Det nyeste kapitel, der findes (ellers sidste måned)
   const latestChapter = Object.keys(data.months).filter((k) => data.months[k].text?.trim()).sort().pop() ?? chapterId;
   const written = Object.keys(data.entries).sort();
+  const hasPlaces = Object.keys(data.visits).length > 0 || Object.keys(data.phonePhotos).length > 0;
+  const tripText = useTripCountText();
   const years = written.length ? [...new Set([written[0].slice(0, 4), written[written.length - 1].slice(0, 4)])].join('–') : '';
   return (
     <div className="stack" style={{ gap: 24 }}>
       <Header title="Husk" />
       <Search />
-      {empty && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
+      {hasPlaces && <LatestTripCard />}
+      <YearAgoCard />
+      {empty && !hasPlaces && <p className="muted">Her samles dine minder, når du er begyndt at skrive.</p>}
       {!empty && (
         <button className="card tappable overview-card" onClick={() => go('husk/overblik')}>
           <span className="note-ico" style={{ background: 'var(--surface)' }}>
@@ -128,9 +133,9 @@ export function MemoryScreen() {
       )}
       <div className="card list hub">
         <HubRow icon={Icon.grid} title="Månedens kapitel" text={w.month ? `Nyt: ${formatMonth(chapterId).toLowerCase()}` : `Seneste: ${formatMonth(latestChapter).toLowerCase()}`} onClick={() => go(`husk/maaned/${w.month ? chapterId : latestChapter}`)} dot={w.month} />
+        {hasPlaces && <HubRow icon={Icon.pin} title="Rejser" text={tripText} onClick={() => go('husk/rejser')} />}
         <HubRow icon={Icon.week} title="Ugen" text="Ugeopsummering og tre ord" onClick={() => go('uge')} dot={weekDot} />
         <HubRow icon={Icon.chat} title="Samtaler" text={inboxCount > 0 ? `${inboxCount} ${inboxCount === 1 ? 'ny optagelse venter' : 'nye optagelser venter'}` : 'Resuméer med aftaler og ting at huske'} onClick={() => go('samtale')} dot={inboxCount > 0} />
-        {(Object.keys(data.visits).length > 0 || Object.keys(data.phonePhotos).length > 0) && <HubRow icon={Icon.pin} title="Rejser" text="Hvor du har været, med billeder" onClick={() => go('husk/rejser')} />}
         <HubRow icon={Icon.people} title="Mennesker" text="Familie, venner og hvad der er vigtigt for dem" onClick={() => go('mennesker')} />
         <HubRow icon={Icon.patterns} title="Mønstre" text="Tanker og mønstre, der går igen" onClick={() => go('moenstre')} />
       </div>
