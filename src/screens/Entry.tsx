@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { agenda } from '../lib/agenda';
 import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
@@ -72,6 +72,8 @@ function DayPhotos({ date }: { date: string }) {
  * Månedskalender til at vælge dag på Skriv: en prik for skrevne dage og et billede-mærke for dage
  * med billeder fra telefonen, så man kan se, hvor der er noget.
  */
+const MONTH_SHORT = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+
 function DateGrid({ date, onPick }: { date: string; onPick: (d: string) => void }) {
   const { data } = useStore();
   const [month, setMonth] = useState(monthId(date));
@@ -81,11 +83,46 @@ function DateGrid({ date, onPick }: { date: string; onPick: (d: string) => void 
   const days = new Date(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0).getDate();
   const photoDays = new Set((data.phonePhotos[month]?.photos ?? []).map((p) => toISO(new Date(p.t))));
   const cells: Array<string | null> = [...Array(lead).fill(null), ...Array.from({ length: days }, (_, i) => `${month}-${String(i + 1).padStart(2, '0')}`)];
+  // Tryk på måneden: vælg år og måned, og bladr så videre derfra
+  const [year, setYear] = useState<number | null>(null);
+  const marks = useMemo(() => {
+    const text = new Set(Object.keys(data.entries).map((d) => d.slice(0, 7)));
+    const photos = new Set(Object.values(data.phonePhotos).filter((m) => m.photos.some((p) => !p.hidden)).map((m) => m.id));
+    const firstYear = Math.min(Number(t.slice(0, 4)), ...[...text, ...photos, ...Object.keys(data.visits)].map((m) => Number(m.slice(0, 4))));
+    return { text, photos, firstYear };
+  }, [data.entries, data.phonePhotos, data.visits, t]);
+  if (year !== null) {
+    const nowM = monthId(t);
+    return (
+      <section className="card date-grid" aria-label="Vælg måned">
+        <div className="row between" style={{ alignItems: 'center' }}>
+          <button className="day-arrow" disabled={year <= marks.firstYear} onClick={() => setYear(year - 1)} aria-label="Året før">{Icon.chevronLeft}</button>
+          <button className="dg-title" onClick={() => setYear(null)}>{year}</button>
+          <button className="day-arrow" disabled={year >= Number(t.slice(0, 4))} onClick={() => setYear(year + 1)} aria-label="Året efter">{Icon.chevronRight}</button>
+        </div>
+        <div className="dg-months">
+          {MONTH_SHORT.map((name, i) => {
+            const id = `${year}-${String(i + 1).padStart(2, '0')}`;
+            return (
+              <button key={id} className={`dg-month${id === month ? ' on' : ''}`} disabled={id > nowM} onClick={() => { setMonth(id); setYear(null); }}
+                aria-label={`${formatMonth(id)}${marks.text.has(id) ? ', skrevet' : ''}${marks.photos.has(id) ? ', billeder' : ''}`}>
+                <span>{name}</span>
+                <span className="dg-marks">
+                  {marks.text.has(id) && <i className="dg-text" />}
+                  {marks.photos.has(id) && <i className="dg-photo" />}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="card date-grid" aria-label="Vælg dag">
       <div className="row between" style={{ alignItems: 'center' }}>
         <button className="day-arrow" onClick={() => setMonth(monthId(addMonths(first, -1)))} aria-label="Måneden før">{Icon.chevronLeft}</button>
-        <strong>{formatMonth(month)}</strong>
+        <button className="dg-title" onClick={() => setYear(Number(month.slice(0, 4)))} aria-label="Vælg år og måned">{formatMonth(month)} ▾</button>
         <button className="day-arrow" disabled={month >= monthId(t)} onClick={() => setMonth(monthId(addMonths(first, 1)))} aria-label="Måneden efter">{Icon.chevronRight}</button>
       </div>
       <div className="dg-cells">

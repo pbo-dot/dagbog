@@ -761,3 +761,12 @@ label.btn { cursor: pointer; }
 .hidden-item { display: flex; flex-direction: column; gap: 6px; }
 .hidden-img { width: 100%; aspect-ratio: 1; border-radius: 14px; object-fit: cover; background: var(--surface-2); }
 .hidden-item .btn { min-height: 40px; padding: 0 8px; font-size: .82rem; }
+
+/* Kalenderen på Skriv: vælg år og måned */
+.dg-title { border: none; background: none; color: var(--text); font: inherit; font-weight: 700; font-size: 1rem; min-height: 44px; padding: 0 14px; border-radius: 999px; }
+.dg-title:active { background: var(--surface-2); }
+.dg-months { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.dg-month { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; border: none; border-radius: 16px; background: var(--surface-2); color: var(--text); font: inherit; font-size: .95rem; }
+.dg-month:disabled { opacity: .3; }
+.dg-month.on { background: var(--accent); color: var(--accent-text); }
+.dg-month.on .dg-text, .dg-month.on .dg-photo { background: var(--accent-text); }
