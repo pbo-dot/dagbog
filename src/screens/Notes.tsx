@@ -368,9 +368,13 @@ export function NoteScreen({ id, mode }: { id: string; mode?: string }) {
 
   const n = existing;
   const save = (patch: Partial<Note>) => store.put('notes', n.id, { ...n, ...patch, updatedAt: Date.now() });
-  const lines = n.text.split('\n');
+  // Meget lange noter (fx en delt billedfil) vises kun i begyndelsen, så "Slet note" kan nås
+  const SHOW_MAX = 20_000;
+  const long = n.text.length > SHOW_MAX;
+  const lines = (long ? n.text.slice(0, SHOW_MAX) : n.text).split('\n');
   const hasChecks = lines.some((l) => CHECK.test(l));
   const toggle = (i: number) => {
+    if (long) return;
     const next = lines.map((l, j) => (j === i ? l.replace(/\[( |x|X)\]/, (_m, c: string) => (c === ' ' ? '[x]' : '[ ]')) : l));
     save({ text: next.join('\n') });
   };
@@ -401,6 +405,7 @@ export function NoteScreen({ id, mode }: { id: string; mode?: string }) {
           })}
         </div>
       )}
+      {long && <p className="tiny muted">Noten er meget lang ({Math.round(n.text.length / 1000).toLocaleString('da-DK')}.000 tegn), så kun begyndelsen vises.</p>}
       {hasChecks && <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} onClick={() => save({ text: n.text.replace(/\[(x|X)\]/g, '[ ]') })}>Nulstil afkrydsning</button>}
       {n.photos && n.photos.length > 0 && <PhotoGallery ids={n.photos} />}
       {n.links?.map((l) => (
