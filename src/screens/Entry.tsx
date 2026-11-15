@@ -5,7 +5,7 @@ import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
-import { dayDescs, dayStays, dayThumbs, stayTime } from '../lib/places';
+import { dayDescs, dayStays, dayThumbs, stayTime, thumbTime } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
 import { upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
@@ -45,7 +45,12 @@ function DayPhotos({ date }: { date: string }) {
       )}
       {ids.length > 0 && (
         <div className="photo-strip">
-          {ids.map((id) => <PhotoImg key={id} id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />)}
+          {ids.map((id) => (
+            <span key={id} className="strip-item">
+              <PhotoImg id={id} className="strip-img" onClick={() => setOpen(id)} alt="Billede fra dagen" />
+              <span className="strip-time">{thumbTime(data.phonePhotos, id)}</span>
+            </span>
+          ))}
         </div>
       )}
       {descs.length > 0 && (

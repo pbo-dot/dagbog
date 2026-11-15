@@ -463,3 +463,24 @@ export function photoLines(months: Record<string, PhotoMonth>, max = 1500): stri
   }
   return all.sort((a, b) => b.t - a.t).slice(0, max).sort((a, b) => a.t - b.t).map((x) => x.line);
 }
+
+const thumbIndexMemo = memoLast((months: Record<string, PhotoMonth>) => {
+  const m = new Map<string, PhonePhoto>();
+  for (const pm of Object.values(months)) for (const p of pm.photos) if (p.thumb) m.set(p.thumb, p);
+  return m;
+});
+
+/** Hvornår og hvor et lille billede er taget: "Mandag 3. juli 2023 · kl. 11.02 · Rønne". */
+export function thumbCaption(months: Record<string, PhotoMonth>, thumb: string, withDate = true): string {
+  const p = thumbIndexMemo(months).get(thumb);
+  if (!p) return '';
+  const d = new Date(p.t);
+  const date = d.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).replace(' den ', ' ');
+  return [withDate ? date.charAt(0).toUpperCase() + date.slice(1) : '', `kl. ${hm(p.t)}`, p.city ?? ''].filter(Boolean).join(' · ');
+}
+
+/** Klokkeslæt for et lille billede, fx "11.02". */
+export function thumbTime(months: Record<string, PhotoMonth>, thumb: string): string {
+  const p = thumbIndexMemo(months).get(thumb);
+  return p ? hm(p.t) : '';
+}

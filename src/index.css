@@ -745,3 +745,8 @@ label.btn { cursor: pointer; }
 .card.link-card { display: flex; align-items: center; justify-content: space-between; min-height: 56px; text-align: left; }
 .card.link-card span { font-size: 1.4rem; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .more-fold > summary::after { transition: none; } }
+
+/* Klokkeslæt på dagens billeder og tekst under billedet i fuld skærm */
+.strip-item { position: relative; flex: none; scroll-snap-align: start; }
+.strip-time { position: absolute; left: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; font-size: .78rem; font-weight: 600; pointer-events: none; }
+.photo-caption { position: absolute; top: calc(env(safe-area-inset-top) + 22px); left: 16px; right: 64px; color: #fff; font-size: .92rem; text-shadow: 0 1px 3px rgba(0,0,0,.6); pointer-events: none; }

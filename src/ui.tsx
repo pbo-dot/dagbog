@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePhotoUrl } from './lib/photos';
+import { thumbCaption } from './lib/places';
 import { useStore } from './lib/store';
 import { MOODS, type MoodId } from './lib/types';
 
@@ -219,6 +220,9 @@ export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; 
     return () => window.removeEventListener('keydown', key);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const zoomed = () => (window.visualViewport?.scale ?? 1) > 1.05;
+  // Telefonens billeder: hvornår og hvor det er taget
+  const { data } = useStore();
+  const caption = thumbCaption(data.phonePhotos, list[i]);
   return (
     <div className="photo-viewer" role="dialog" aria-label="Foto" onClick={onClose}
       onTouchStart={(e) => { start.current = e.touches.length === 1 && !zoomed() ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }}
@@ -240,6 +244,7 @@ export function PhotoViewer({ id, ids, onClose }: { id: string; ids?: string[]; 
           <span className="photo-count">{i + 1} / {list.length}</span>
         </>
       )}
+      {caption && <span className="photo-caption">{caption}</span>}
       <button className="photo-close" aria-label="Luk" onClick={onClose}>×</button>
     </div>
   );
