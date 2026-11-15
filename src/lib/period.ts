@@ -83,7 +83,7 @@ export function findPeriod(question: string, todayIso: string): Period | null {
       yy = m >= a ? y : y - 1;
       if (b < a && m <= b) yy = y - 1;
     }
-    return { ...monthRange(yy, a, b), label: `${word.replace(/ferien$/, 'ferie').replace(/(?<!ferie)(en|et)$/, '')}${b < a ? `${yy}/${yy + 1}` : yy}` };
+    return { ...monthRange(yy, a, b), label: `${word.replace(/ferien$/, 'ferie').replace(/(?<!ferie)(en|et)$/, '')} ${b < a ? `${yy}/${yy + 1}` : yy}` };
   }
 
   // "i år", "sidste år", "i fjor", "i 2025"
