@@ -295,7 +295,20 @@ function km(a: { lat: number; lng: number }, b: { lat: number; lng: number }): n
 }
 
 /** Alle steder pr. dag fra både Tidslinjen og billederne, og hjemmet (Googles HOME) pr. dag. */
-function placesByDay(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>) {
+/** Husker det seneste resultat, så længe data er de samme (flere skærme og Spørg beder om det samme). */
+function memoLast<A extends unknown[], R>(fn: (...a: A) => R): (...a: A) => R {
+  let last: { args: A; out: R } | null = null;
+  return (...args: A) => {
+    if (last && last.args.length === args.length && last.args.every((x, i) => x === args[i])) return last.out;
+    const out = fn(...args);
+    last = { args, out };
+    return out;
+  };
+}
+
+const placesByDay = memoLast(placesByDayRaw);
+
+function placesByDayRaw(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>) {
   const days = new Map<string, DayPoint[]>();
   const add = (date: string, p: DayPoint) => { const l = days.get(date); if (l) l.push(p); else days.set(date, [p]); };
   const homes: Array<{ t: number; lat: number; lng: number }> = [];
@@ -318,7 +331,14 @@ function placesByDay(months: Record<string, PhotoMonth>, visits: Record<string, 
  * Rejser: dage i træk, hvor et sted ligger mere end 50 km fra hjemmet (det seneste sted,
  * Google har mærket som hjemme). Fx "2025-05-02 – 2025-05-06: Rome, Ostia (Italien)".
  */
-export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[] = []): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
+const NO_FIXED: FixedPlace[] = [];
+const tripsMemo = memoLast(tripsRaw);
+
+export function trips(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[] = NO_FIXED): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
+  return tripsMemo(months, visits, fixed.length ? fixed : NO_FIXED);
+}
+
+function tripsRaw(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[]): Array<{ from: string; to: string; cities: string[]; countries: string[] }> {
   const { days, homes } = placesByDay(months, visits);
   const out: Array<{ from: string; to: string; cities: string[]; countries: string[] }> = [];
   let h = 0;

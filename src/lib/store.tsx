@@ -66,6 +66,8 @@ interface StoreApi {
   enableBio(): Promise<void>;
   disableBio(): Promise<void>;
   put<C extends Collection>(c: C, id: string, value: Data[C][string]): Promise<void>;
+  /** Flere poster i samme samling på én gang (skærmen tegnes kun om én gang). */
+  putMany<C extends Collection>(c: C, items: Data[C]): Promise<void>;
   remove(c: Collection, id: string): Promise<void>;
   saveSettings(s: Settings): Promise<void>;
   saveMeta(m: Meta): Promise<void>;
@@ -301,6 +303,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     async put(c, id, value) {
       await write(`${c}:${id}`, value);
       setData((d) => ({ ...d, [c]: { ...d[c], [id]: value } }));
+    },
+
+    async putMany(c, items) {
+      for (const [id, value] of Object.entries(items)) await write(`${c}:${id}`, value);
+      setData((d) => ({ ...d, [c]: { ...d[c], ...items } }));
     },
 
     async remove(c, id) {

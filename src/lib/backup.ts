@@ -3,7 +3,7 @@
 // hverken Google eller andre kan se noget, heller ikke hvilke dage der er skrevet.
 // Den åbnes med den kode, der gjaldt, da kopien blev taget.
 import { openJSON, sealJSON, unwrapWithPin, type PinWrap, type Sealed } from './crypto';
-import { recordAll, recordPut, vaultGet, vaultKeysWithPrefix, vaultSet, wipeEverything } from './db';
+import { recordAllExcept, recordPut, vaultGet, vaultKeysWithPrefix, vaultSet, wipeEverything } from './db';
 import type { PinKind } from './store';
 
 export interface BackupFile {
@@ -50,7 +50,8 @@ export async function makeBackup(dek: CryptoKey): Promise<BackupFile> {
     /* ikke afgørende */
   }
   // Små billeder fra telefonen ("photo:tel-…") kommer ikke med: de kan altid hentes igen fra telefonen med "Hent billeder"
-  const records = (await recordAll()).filter(([k]) => !k.startsWith('photo:tel-'));
+  // (læses slet ikke, så kopien ikke skal hente flere hundrede MB billeder ind i hukommelsen)
+  const records = await recordAllExcept('photo:tel-');
   const inner: Inner = { records, vault, theme };
   return {
     app: 'dagbog-kopi',

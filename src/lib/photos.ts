@@ -35,11 +35,19 @@ function toBlob(p: Photo): Blob {
 
 const cache = new Map<string, string>();
 
+/** Så mange åbnede billeder huskes; de ældste slippes, så hukommelsen ikke vokser, når man bladrer i mange. */
+const MAX_CACHED = 150;
+
 export function cachePhoto(p: Photo): string {
   let url = cache.get(p.id);
   if (!url) {
     url = URL.createObjectURL(toBlob(p));
     cache.set(p.id, url);
+    if (cache.size > MAX_CACHED) {
+      const [oldId, oldUrl] = cache.entries().next().value!;
+      URL.revokeObjectURL(oldUrl);
+      cache.delete(oldId);
+    }
   }
   return url;
 }
@@ -56,15 +64,16 @@ export function clearPhotoCache() {
   cache.clear();
 }
 
-export function usePhotoUrl(id: string, getPhoto: (id: string) => Promise<Photo | undefined>): string | null {
+/** Med `enabled` = false ventes der med at hente og låse billedet op (fx til det er tæt på skærmen). */
+export function usePhotoUrl(id: string, getPhoto: (id: string) => Promise<Photo | undefined>, enabled = true): string | null {
   const [url, setUrl] = useState<string | null>(() => cache.get(id) ?? null);
   useEffect(() => {
     let alive = true;
     if (cache.has(id)) setUrl(cache.get(id)!);
-    else getPhoto(id).then((p) => alive && p && setUrl(cachePhoto(p))).catch(() => {});
+    else if (enabled) getPhoto(id).then((p) => alive && p && setUrl(cachePhoto(p))).catch(() => {});
     return () => {
       alive = false;
     };
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, enabled]); // eslint-disable-line react-hooks/exhaustive-deps
   return url;
 }

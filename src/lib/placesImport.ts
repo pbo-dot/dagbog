@@ -77,7 +77,8 @@ export async function importPlaces(store: Store, text: string, known: Store['dat
     const found = await addCities(photos);
     if (photos.length) say(`Bynavne fundet for ${found} billeder på ${Math.round(performance.now() - t0)} ms`);
     const { months, added } = mergeMonths(known, photos);
-    for (const m of months) { known[m.id] = m; await store.put('phonePhotos', m.id, m); }
+    for (const m of months) known[m.id] = m;
+    if (months.length) await store.putMany('phonePhotos', Object.fromEntries(months.map((m) => [m.id, m])));
     if (photos.length) say(`${added} nye billeder, ${months.length} måneder gemt`);
     void noteAuto(`Billeder: ${photos.length} modtaget, ${added} nye, ${withPlace} med sted`);
   } catch (e) {
@@ -106,7 +107,7 @@ export async function importTimeline(store: Store, file: File): Promise<void> {
     const found = await addCities(visits);
     say(`Bynavne fundet for ${found} ophold på ${Math.round(performance.now() - t1)} ms`);
     const { months, added } = mergeVisits(store.data.visits, visits);
-    for (const m of months) await store.put('visits', m.id, m);
+    await store.putMany('visits', Object.fromEntries(months.map((m) => [m.id, m])));
     say(`${added} nye ophold, ${months.length} måneder gemt`);
     void noteAuto(`Tidslinje: ${visits.length} ophold, ${added} nye`);
   } catch (e) {

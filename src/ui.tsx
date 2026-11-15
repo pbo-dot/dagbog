@@ -174,8 +174,19 @@ export function uid(): string {
 
 export function PhotoImg({ id, className, onClick, alt = '' }: { id: string; className?: string; onClick?: () => void; alt?: string }) {
   const { getPhoto } = useStore();
-  const url = usePhotoUrl(id, getPhoto);
-  if (!url) return <div className={`${className ?? ''} photo-loading`} />;
+  // Billedet hentes og låses først op, når det er tæt på skærmen (lange lister med mange billeder)
+  const holder = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = holder.current;
+    if (near || !el) return;
+    if (!('IntersectionObserver' in window)) { setNear(true); return; }
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) setNear(true); }, { rootMargin: '400px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  const url = usePhotoUrl(id, getPhoto, near);
+  if (!url) return <div ref={holder} className={`${className ?? ''} photo-loading`} />;
   return <img src={url} className={className} alt={alt} onClick={onClick} loading="lazy" decoding="async" />;
 }
 

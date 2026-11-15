@@ -4,7 +4,10 @@ import { useMemo, useState } from 'react';
 import { addDays, formatLong } from '../lib/dates';
 import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, trips } from '../lib/places';
 import { useStore } from '../lib/store';
+import type { FixedPlace } from '../lib/types';
 import { go, Header, PhotoImg, PhotoViewer } from '../ui';
+
+const NONE: FixedPlace[] = [];
 
 interface Trip { from: string; to: string; cities: string[]; countries: string[]; fixed?: string }
 
@@ -27,7 +30,7 @@ export function tripDates(from: string, to: string): string {
 /** Alle rejser og ophold ved faste steder, nyeste først. */
 function useTrips(): Trip[] {
   const { data } = useStore();
-  const fixed = data.settings.places?.fixed ?? [];
+  const fixed = data.settings.places?.fixed ?? NONE;
   return useMemo(() => {
     const list: Trip[] = trips(data.phonePhotos, data.visits, fixed);
     for (const { place, stays } of fixedStays(data.phonePhotos, data.visits, fixed)) {
