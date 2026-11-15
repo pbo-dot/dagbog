@@ -33,7 +33,8 @@ function explain(e: unknown): never {
   if (e instanceof Anthropic.APIConnectionError) throw new AIError('Ingen forbindelse til Claude. Er du online?');
   if (e instanceof Anthropic.APIError) {
     const raw = (e.error as { error?: { message?: string } } | undefined)?.error?.message ?? e.message ?? '';
-    if (/too long|too many tokens|context/i.test(raw)) throw new AIError('Materialet er for stort til Claude. Spørg om en bestemt periode (fx "i 2023"), så sendes mindre med.');
+    // Kun den rigtige "for langt"-fejl; ellers vises Claudes egen tekst (den brede regel gemte andre fejl).
+    if (/prompt is too long|exceeds? the (maximum )?context window/i.test(raw)) throw new AIError(`Materialet er for stort til Claude. Spørg om en kortere periode (fx "i juli 2023"), så sendes mindre med. (${raw.slice(0, 120)})`);
     throw new AIError(`Claude svarede med en fejl (${e.status})${raw ? `: ${raw.slice(0, 200)}` : ''}`);
   }
   throw new AIError('Noget gik galt med AI-analysen.');
