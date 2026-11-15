@@ -128,9 +128,9 @@ export function PlacesScreen() {
         <summary><strong>Flere måder at hente</strong></summary>
         <div className="stack" style={{ gap: 14, marginTop: 12 }}>
           <section className="card stack-sm">
-            <strong>Billeder fra en gammel telefon</strong>
-            <span className="small">På den gamle telefon: åbn "Dagbog Billeder", tryk "Gem på Drev", og gem filerne på Drev. Vælg dem så her, gerne alle på én gang.</span>
-            <button className="btn block" disabled={imp.busy} onClick={() => oldInput.current?.click()}>Vælg filer fra den gamle telefon</button>
+            <strong>Fra en gammel telefon eller Google Fotos</strong>
+            <span className="small">Filer fra "Dagbog Billeder" ("Gem på Drev" eller "Hent fra Google Takeout"). Vælg dem alle på én gang.</span>
+            <button className="btn block" disabled={imp.busy} onClick={() => oldInput.current?.click()}>Vælg filer</button>
             <input ref={oldInput} type="file" multiple accept=".txt,text/plain" hidden onChange={(e) => {
               const fs = [...(e.target.files ?? [])];
               e.target.value = '';
