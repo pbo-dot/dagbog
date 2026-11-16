@@ -47,6 +47,10 @@ class TakeoutImport(
     /** Json-filer med feltet "people" (navne, ejeren har sat på ansigter i Google Fotos). */
     private var jsonWithPeopleField = 0
 
+    /** Alle felter i Googles json-filer (med antal) og de første filer i fuld tekst, til loggen. */
+    private val jsonKeys = HashMap<String, Int>()
+    private var jsonShown = 0
+
     private val pics = ArrayList<Pic>()
     private val metaByDir = HashMap<String, Meta>() // "mappe/titel" → dato og sted
     private val metaByName = HashMap<String, Meta>() // "titel" → dato og sted (json i en anden mappe/zip)
@@ -172,7 +176,11 @@ class TakeoutImport(
     /** Googles json: "IMG_1.jpg.supplemental-metadata(1).json" hører til billedet "IMG_1(1).jpg". */
     private fun json(dir: String, file: String, bytes: ByteArray) {
         try {
-            val o = JSONObject(String(bytes, Charsets.UTF_8))
+            val text = String(bytes, Charsets.UTF_8)
+            val o = JSONObject(text)
+            // Hvilke felter Google skriver (også dem, appen ikke bruger), og de første 3 filer i fuld tekst
+            collectKeys(o, "")
+            if (jsonShown < 3 && o.has("photoTakenTime")) { jsonShown++; say("Googles fil $file:"); say(text.replace(Regex("\\s+"), " ").take(1500)) }
             val ts = o.optJSONObject("photoTakenTime")?.optString("timestamp")?.toLongOrNull() ?: return
             val title = o.optString("title").ifEmpty { return }
             val g = o.optJSONObject("geoData")
@@ -190,6 +198,16 @@ class TakeoutImport(
             metaByDir["$dir/$key"] = m
             metaByName.putIfAbsent(key, m)
         } catch (_: Exception) {}
+    }
+
+    private fun collectKeys(o: JSONObject, prefix: String) {
+        for (k in o.keys()) {
+            val path = prefix + k
+            jsonKeys[path] = (jsonKeys[path] ?: 0) + 1
+            val v = o.opt(k)
+            if (v is JSONObject && prefix.count { it == '.' } < 2) collectKeys(v, "$path.")
+            if (v is org.json.JSONArray && v.length() > 0 && v.opt(0) is JSONObject) collectKeys(v.getJSONObject(0), "$path[].")
+        }
     }
 
     private fun withSuffix(name: String, suffix: String): String {
@@ -267,6 +285,7 @@ class TakeoutImport(
         // Navne fra Google Fotos: hvor mange billeder, og hvem
         val named = done.filter { it.names.isNotEmpty() }
         val byName = named.flatMap { it.names }.groupingBy { it }.eachCount().entries.sortedByDescending { it.value }
+        say("Felter i Googles filer: " + jsonKeys.entries.sortedBy { it.key }.joinToString(" · ") { "${it.key} ${it.value}" })
         say("Navne fra Google Fotos: ${named.size} af ${done.size} billeder har navne (json med \"people\"-felt indtil nu: $jsonWithPeopleField)")
         if (byName.isNotEmpty()) say("  " + byName.take(20).joinToString(" · ") { "${it.key} ${it.value}" })
         if (done.isEmpty()) { say("Ingen billeder at sende."); return emptyList() }
