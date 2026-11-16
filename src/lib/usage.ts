@@ -21,7 +21,7 @@ const PRICES: Array<{ match: RegExp; input: number; output: number; cacheRead: n
 const PER_SEARCH = 0.01;
 
 /** Det, Dagbog bruger Claude til. */
-export type Feature = 'ask' | 'web' | 'talk' | 'clarity' | 'week' | 'month' | 'search' | 'tidy' | 'photos' | 'test';
+export type Feature = 'ask' | 'web' | 'talk' | 'clarity' | 'week' | 'month' | 'search' | 'tidy' | 'photos' | 'stories' | 'test';
 
 export const FEATURE_GROUPS: Array<{ label: string; features: Feature[] }> = [
   { label: 'Spørg dagbogen', features: ['ask', 'web', 'search'] },
@@ -29,7 +29,7 @@ export const FEATURE_GROUPS: Array<{ label: string; features: Feature[] }> = [
   { label: 'Få overblik', features: ['clarity'] },
   { label: 'Uge og måned', features: ['week', 'month'] },
   { label: 'Ryd op i noter', features: ['tidy'] },
-  { label: 'Beskriv billeder', features: ['photos'] },
+  { label: 'Billeder (historier og beskrivelser)', features: ['stories', 'photos'] },
   { label: 'Andet', features: ['test'] },
 ];
 

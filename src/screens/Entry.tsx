@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { agenda } from '../lib/agenda';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
+import { DayStoryCard } from './DayStory';
 import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
@@ -51,8 +52,9 @@ function DayPhotos({ date }: { date: string }) {
         </button>
       )}
       {showMap && <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} height={220} />}
+      <DayStoryCard date={date} compact />
       <PhonePhotos ids={ids} />
-      {descs.length > 0 && (
+      {descs.length > 0 && !data.stories[date]?.text && (
         <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setShowText((v) => !v)} aria-expanded={showText}>
           {showText ? 'Skjul Claudes beskrivelser' : 'Vis Claudes beskrivelser'}
         </button>

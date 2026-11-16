@@ -793,3 +793,15 @@ label.btn { cursor: pointer; }
 .pick-bar { align-items: center; flex-wrap: wrap; gap: 8px; }
 .card.pick-confirm { display: flex; flex-direction: column; gap: 8px; }
 @media (prefers-reduced-motion: reduce) { .strip-item.picking img { transition: none; } }
+
+/* Dagens historie */
+.story-card { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 24px; background: var(--accent-soft); }
+.story-text { font-family: var(--serif); font-size: 1.1rem; line-height: 1.45; margin: 0; color: var(--text); }
+.story-text.small { font-size: .98rem; }
+.story-edit { width: 100%; font: inherit; font-family: var(--serif); font-size: 1.05rem; line-height: 1.45; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 10px 12px; resize: vertical; }
+.story-people { display: flex; flex-direction: column; gap: 4px; background: var(--surface); border-radius: 18px; padding: 10px 14px; max-height: 320px; overflow-y: auto; }
+.story-line { display: flex; flex-direction: column; gap: 4px; width: 100%; text-align: left; border: none; border-radius: 18px; background: var(--accent-soft); color: inherit; font: inherit; padding: 12px 14px; }
+.progress { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.progress > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s; }
+@media (prefers-reduced-motion: reduce) { .progress > i { transition: none; } }
+.story-card .btn { white-space: nowrap; }

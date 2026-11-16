@@ -8,7 +8,7 @@ import { deleteInbox, loadInboxKey, readInbox, type InboxItem } from './inbox';
 import { clearPhotoCache } from './photos';
 import { recordAllExcept, recordDelete, recordGet, recordKeysWithPrefix, recordPut, requestPersistence, vaultDelete, vaultGet, vaultSet, wipeEverything } from './db';
 import {
-  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type Todo, type Usage, type GoogleMonth, type Meta, type Note, type MonthChapter, type Pattern, type Person, type Photo, type PhotoMonth, type Settings, type VisitMonth, type WeekSummary,
+  DEFAULT_SETTINGS, type Appointment, type Conversation, type Draft, type Routine, type Entry, type Todo, type Usage, type DayStory, type GoogleMonth, type Meta, type Note, type MonthChapter, type Pattern, type Person, type Photo, type PhotoMonth, type Settings, type VisitMonth, type WeekSummary,
 } from './types';
 
 export interface Data {
@@ -26,16 +26,17 @@ export interface Data {
   usage: Record<string, Usage>;
   phonePhotos: Record<string, PhotoMonth>;
   visits: Record<string, VisitMonth>;
+  stories: Record<string, DayStory>;
   settings: Settings;
   meta: Meta;
   draft: Draft | null;
 }
 
-type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google' | 'notes' | 'todos' | 'usage' | 'phonePhotos' | 'visits';
-const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes', 'todos', 'usage', 'phonePhotos', 'visits'];
+type Collection = 'entries' | 'weeks' | 'months' | 'people' | 'patterns' | 'conversations' | 'routines' | 'appointments' | 'google' | 'notes' | 'todos' | 'usage' | 'phonePhotos' | 'visits' | 'stories';
+const COLLECTIONS: Collection[] = ['entries', 'weeks', 'months', 'people', 'patterns', 'conversations', 'routines', 'appointments', 'google', 'notes', 'todos', 'usage', 'phonePhotos', 'visits', 'stories'];
 
 const emptyData = (): Data => ({
-  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {}, notes: {}, todos: {}, usage: {}, phonePhotos: {}, visits: {},
+  entries: {}, weeks: {}, months: {}, people: {}, patterns: {}, conversations: {}, routines: {}, appointments: {}, google: {}, notes: {}, todos: {}, usage: {}, phonePhotos: {}, visits: {}, stories: {},
   settings: structuredClone(DEFAULT_SETTINGS),
   meta: { skipped: [] },
   draft: null,

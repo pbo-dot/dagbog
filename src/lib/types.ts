@@ -134,6 +134,16 @@ export interface PhonePhoto {
   hidden?: boolean; // fjernet fra Dagbog af ejeren (vises ikke og hentes ikke igen; kan lægges tilbage)
 }
 
+/** Claudes korte historie om en dag med billeder (nøgle YYYY-MM-DD). */
+export interface DayStory {
+  date: string;
+  text: string; // 1–2 sætninger; '' hvis kun "Hvem var med?" er sat
+  edited?: boolean; // rettet af ejeren: Claude skriver den ikke om af sig selv
+  with?: string[]; // id'er fra Mennesker, valgt under "Hvem var med?"
+  photos?: number; // hvor mange billeder historien bygger på
+  at: number;
+}
+
 /** Billederne fra én måned (nøgle YYYY-MM). */
 export interface PhotoMonth {
   id: string;

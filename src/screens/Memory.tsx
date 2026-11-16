@@ -12,6 +12,7 @@ import { askSoon } from './Ask';
 import { LatestTripCard, useTripCountText, YearAgoCard } from './Trips';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
+import { DayStoryCard } from './DayStory';
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   return <>{highlight(text, terms).map((p, i) => (p.hit ? <mark key={i}>{p.t}</mark> : <span key={i}>{p.t}</span>))}</>;
@@ -317,7 +318,7 @@ function DayPlaces({ date }: { date: string }) {
       )) : <span className="small muted">Billederne har intet sted.</span>}
       <PlacesMap points={stayPoints(stays, stayTime)} fixed={data.settings.places?.fixed} />
       <PhonePhotos ids={thumbs} grid />
-      {descs.length > 0 && (
+      {descs.length > 0 && !data.stories[date]?.text && (
         <p className="small serif" style={{ margin: 0 }}>
           {descs.map((x, i) => <span key={i}>{i ? ' ' : ''}<span className="muted">{x.time}</span> {x.text.replace(/\.?$/, '.')}</span>)}
         </p>
@@ -334,6 +335,7 @@ export function DayScreen({ date }: { date: string }) {
       <div className="stack">
         <Header back="husk" />
         <h1>{formatFull(date)}</h1>
+        <DayStoryCard date={date} />
         <DayPlaces date={date} />
         <p className="muted">Der er ikke skrevet noget denne dag.</p>
         <button className="btn" onClick={() => go(date === today() ? 'skriv' : `skriv/${date}`)}>Skriv om dagen</button>
@@ -351,6 +353,7 @@ export function DayScreen({ date }: { date: string }) {
           {e.tags.map((t) => <span key={t} className="label-chip">{t}</span>)}
         </div>
       </div>
+      <DayStoryCard date={date} />
       {e.question && <p className="small muted serif" style={{ fontStyle: 'italic' }}>{e.question}</p>}
       <p className="prose">{e.text}</p>
       <PhotoGallery ids={e.photos ?? []} />

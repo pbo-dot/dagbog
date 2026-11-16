@@ -3,8 +3,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { hiddenThumbs, openAppUrl, setHidden, THUMB_PX, suggestFixed, trips } from '../lib/places';
 import type { FixedPlace } from '../lib/types';
-import { describeAll, importFiles, importTimeline, stopDescribing, undescribed, useDescribeState, useImportState } from '../lib/placesImport';
-import { costUsd, krText } from '../lib/usage';
+import { importFiles, importTimeline, useImportState } from '../lib/placesImport';
+import { daysWithoutStory, stopTelling, storyEstimate, tellAll, useStoryState } from '../lib/dayStory';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import { go, Header, PhotoImg, uid } from '../ui';
@@ -13,7 +13,7 @@ export function PlacesScreen() {
   const store = useStore();
   const { data } = store;
   const imp = useImportState();
-  const desc = useDescribeState();
+  const story = useStoryState();
   const [copied, setCopied] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const oldInput = useRef<HTMLInputElement>(null);
@@ -30,10 +30,7 @@ export function PlacesScreen() {
   const months = Object.values(data.phonePhotos).sort((a, b) => b.id.localeCompare(a.id));
   const photos = months.flatMap((m) => m.photos);
   const thumbs = photos.filter((p) => p.thumb).length;
-  const missing = undescribed(data.phonePhotos);
-  const described = photos.filter((p) => p.desc).length;
-  // Overslag: ca. 480 tokens pr. lille billede ind og 45 ud, plus lidt pr. kald
-  const estimate = krText(costUsd(data.settings.ai.searchModel, { input_tokens: missing * 480 + Math.ceil(missing / 10) * 400, output_tokens: missing * 45 }));
+  const untold = useMemo(() => daysWithoutStory(data), [data.phonePhotos, data.stories]); // eslint-disable-line react-hooks/exhaustive-deps
   const last = Math.max(0, ...months.map((m) => m.importedAt));
 
   return (
@@ -69,19 +66,23 @@ export function PlacesScreen() {
         {data.settings.places?.thumbRedo && <span className="small">Henter i bedre kvalitet. Tryk "Hent billeder", til der ikke står "Der mangler flere".</span>}
       </section>
 
-      {thumbs > 0 && aiReady(data) && (missing > 0 || desc.busy || desc.error) && (
+      {thumbs > 0 && aiReady(data) && (untold.length > 0 || story.busy || story.error) && (
         <section className="card stack-sm">
-          <strong>Claude beskriver billederne</strong>
-          {desc.busy
-            ? <span className="small">Beskriver {desc.done} af {desc.total} …</span>
-            : <span className="small">{missing} billeder mangler en beskrivelse. Ca. {estimate}, én gang. Så kan du spørge fx "hvornår var vi sidst på stranden?".</span>}
-          {desc.error && <span className="small error">{desc.error}</span>}
-          {desc.busy
-            ? <button className="btn block" onClick={stopDescribing}>Stop</button>
-            : <button className="btn primary block" onClick={() => void describeAll(store)}>Beskriv {missing} billeder</button>}
+          <strong>Claude fortæller dagene</strong>
+          {story.busy ? (
+            <>
+              <div className="progress"><i style={{ width: `${story.total ? Math.round((story.done / story.total) * 100) : 0}%` }} /></div>
+              <span className="small">{story.done} af {story.total} dage · kan stoppes og fortsættes</span>
+            </>
+          ) : (
+            <span className="small">{untold.length} {untold.length === 1 ? 'dag' : 'dage'} med billeder · {storyEstimate(data, untold.length).replace(/^(\d)/, 'ca. $1')}, én gang</span>
+          )}
+          {story.error && <span className="small error">{story.error}</span>}
+          {story.busy
+            ? <button className="btn block" onClick={stopTelling}>Stop</button>
+            : <button className="btn primary block" onClick={() => void tellAll(store)}>Fortæl {untold.length} {untold.length === 1 ? 'dag' : 'dage'}</button>}
         </section>
       )}
-      {described > 0 && !desc.busy && missing === 0 && <p className="small muted">{described} billeder er beskrevet af Claude.</p>}
 
       {suggestions.map((sg) => (
         <section key={sg.city} className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
