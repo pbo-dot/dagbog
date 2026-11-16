@@ -114,10 +114,10 @@ export function stopTelling(): void {
   sset({ stop: true });
 }
 
-/** Fortæller alle dage med billeder, der mangler en historie (nyeste først, et par ad gangen). */
-export async function tellAll(store: Store): Promise<void> {
+/** Fortæller alle dage med billeder, der mangler en historie (nyeste først, et par ad gangen); `only`: kun disse dage (fx en rejse). */
+export async function tellAll(store: Store, only?: string[]): Promise<void> {
   if (sstate.busy) return;
-  const todo = daysWithoutStory(store.data);
+  const todo = daysWithoutStory(store.data).filter((d) => !only || only.includes(d));
   sset({ busy: true, done: 0, total: todo.length, error: '', stop: false });
   let next = 0;
   const worker = async () => {

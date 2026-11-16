@@ -5,6 +5,8 @@ import { addDays, addMonths, formatLong, today } from '../lib/dates';
 import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, stayTime, trips } from '../lib/places';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
+import { daysWithoutStory, stopTelling, storyEstimate, tellAll, useStoryState } from '../lib/dayStory';
+import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
 import type { FixedPlace } from '../lib/types';
 import { DoubleConfirm, go, Header, PhotoImg, PhotoViewer } from '../ui';
@@ -133,6 +135,7 @@ export function TripScreen({ id }: { id: string }) {
         </span>
       </div>
       <PlacesMap points={days.flatMap((d) => stayPoints(dayStays(data.phonePhotos, d, data.visits, fixed), stayTime, `${Number(d.slice(8))}/${Number(d.slice(5, 7))} · `))} fixed={fixed} height={260} />
+      <TripStoriesButton days={days} />
       <div className="stat-row">
         <div className="card"><b>{ids.length}</b><span className="small muted">billeder</span></div>
         <div className="card"><b>{cities.length}</b><span className="small muted">{cities.length === 1 ? 'by' : 'byer'}</span></div>
@@ -228,4 +231,31 @@ export function useTripCountText(): string {
   const real = useTrips().filter((t) => !t.fixed);
   if (!real.length) return 'Hvor du har været, med billeder';
   return `${real.length} ${real.length === 1 ? 'rejse' : 'rejser'} siden ${real[real.length - 1].from.slice(0, 4)}`;
+}
+
+/** "Fortæl rejsens dage": Dagens historie for alle rejsens dage med billeder på én gang. */
+function TripStoriesButton({ days }: { days: string[] }) {
+  const store = useStore();
+  const { data } = store;
+  const st = useStoryState();
+  const untold = daysWithoutStory(data).filter((d) => days.includes(d));
+  if (!aiReady(data) || (!untold.length && !st.busy)) return null;
+  if (st.busy) {
+    return (
+      <section className="card stack-sm">
+        <strong>Claude fortæller dagene …</strong>
+        <div className="progress"><i style={{ width: `${st.total ? Math.round((st.done / st.total) * 100) : 0}%` }} /></div>
+        <span className="small">{st.done} af {st.total} dage</span>
+        <button className="btn block" onClick={stopTelling}>Stop</button>
+      </section>
+    );
+  }
+  const n = untold.length;
+  return (
+    <section className="card stack-sm">
+      <button className="btn primary block" onClick={() => void tellAll(store, untold)}>✦ Fortæl rejsens {n === 1 ? 'dag' : `${n} dage`}</button>
+      <span className="tiny muted" style={{ textAlign: 'center' }}>Dagens historie ud fra billeder, steder og kalender · {storyEstimate(data, n).replace(/^(\d)/, 'ca. $1')}</span>
+      {st.error && <span className="small error">{st.error}</span>}
+    </section>
+  );
 }
