@@ -306,7 +306,7 @@ export async function dayStoryAI(settings: Settings, context: string, images: Ar
 - Personers navne må kun komme fra "Hvem var med", kalenderen eller dagbogsteksten. Gæt aldrig, hvem nogen på billederne er, og skriv intet om, hvordan personer ser ud.
 - Er du i tvivl, så skriv forsigtigt ("ser ud til"). Find ikke på noget, der ikke kan ses eller står i materialet.
 - Er billederne tilfældige (fx en kvittering eller et skilt), så skriv kort, hvad dagen ellers bød på ud fra stederne.
-- Skriv i du-form eller uden person (fx "Tur til …"), ikke "personen".`,
+- Skriv i du-form eller uden person (fx "Tur til …"), ikke "personen". Står der, at personen selv IKKE var med, så skriv om de andre (fx "Birgitte i Paris …") og ikke i du-form.`,
       }],
       messages: [{ role: 'user', content }],
     });

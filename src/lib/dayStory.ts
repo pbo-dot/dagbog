@@ -40,7 +40,7 @@ export function storyEstimate(data: Data, days: number): string {
 }
 
 /** Teksten til Claude om dagen (alt undtagen billederne). */
-function dayContext(data: Data, date: string, thumbs: string[], withIds?: string[]): string {
+function dayContext(data: Data, date: string, thumbs: string[], withIds?: string[], notMe?: boolean): string {
   const fixed = data.settings.places?.fixed;
   const stays = dayStays(data.phonePhotos, date, data.visits, fixed);
   const abroad = [...new Set(stays.map((s) => s.cc).filter((c) => c && c !== 'DK'))].map(countryName);
@@ -54,6 +54,7 @@ function dayContext(data: Data, date: string, thumbs: string[], withIds?: string
     trip ? `Rejse: ${trip.from === trip.to ? 'en dag' : `dag ${Math.round((Date.parse(date) - Date.parse(trip.from)) / 864e5) + 1} af en rejse`} til ${trip.cities.slice(0, 4).join(', ')}` : '',
     cal.length ? `Kalenderen: ${cal.join('; ')}` : '',
     people.length ? `Hvem var med (valgt af personen): ${people.join(', ')}` : '',
+    (notMe ?? data.stories[date]?.notMe) ? 'Personen selv var IKKE med denne dag (billederne er taget eller delt af andre). Skriv om de andre, ikke i du-form.' : '',
     entry ? `Fra dagbogen (personens egne ord, kun til at forstå dagen):\n${entry.slice(0, 800)}` : '',
     `Billeder: ${thumbs.map((id, i) => `${i + 1} kl. ${thumbTime(data.phonePhotos, id)}`).join(' · ')}`,
   ];
@@ -74,7 +75,7 @@ async function shrink(base64: string): Promise<string> {
 }
 
 /** Skriver historien for én dag (henter billederne, spørger Claude) og giver den nye post. */
-async function makeStory(store: Store, date: string, withIds?: string[]): Promise<DayStory | null> {
+async function makeStory(store: Store, date: string, withIds?: string[], notMe?: boolean): Promise<DayStory | null> {
   const data = store.data;
   const thumbs = dayThumbs(data.phonePhotos, date).slice(0, 5);
   if (!thumbs.length) return null;
@@ -84,14 +85,15 @@ async function makeStory(store: Store, date: string, withIds?: string[]): Promis
     if (ph) images.push({ data: await shrink(ph.data), label: `Billede ${i + 1} (kl. ${thumbTime(data.phonePhotos, id)}):` });
   }
   if (!images.length) return null;
-  const text = await dayStoryAI(data.settings, dayContext(data, date, thumbs, withIds), images);
-  return { date, text, with: withIds ?? data.stories[date]?.with, photos: images.length, at: Date.now() };
+  const text = await dayStoryAI(data.settings, dayContext(data, date, thumbs, withIds, notMe), images);
+  const me = notMe ?? data.stories[date]?.notMe;
+  return { date, text, with: withIds ?? data.stories[date]?.with, ...(me ? { notMe: true } : {}), photos: images.length, at: Date.now() };
 }
 
 /** Én dag (fx efter "Hvem var med?" eller "Skriv igen"). */
 /** `withIds`: "Hvem var med?" lige valgt (store.data kan være fra før valget blev gemt). */
-export async function tellDay(store: Store, date: string, withIds?: string[]): Promise<void> {
-  const s = await makeStory(store, date, withIds);
+export async function tellDay(store: Store, date: string, withIds?: string[], notMe?: boolean): Promise<void> {
+  const s = await makeStory(store, date, withIds, notMe);
   if (s) await store.put('stories', date, s);
 }
 
@@ -148,6 +150,6 @@ export function storyLines(stories: Record<string, DayStory> | undefined, people
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((s) => {
       const names = (s.with ?? []).map((id) => people[id]?.name).filter(Boolean);
-      return `- ${s.date}: ${s.text}${names.length ? ` (med ${names.join(', ')})` : ''}`;
+      return `- ${s.date}: ${s.text}${names.length ? ` (med ${names.join(', ')})` : ''}${s.notMe ? ' (personen selv var ikke med)' : ''}`;
     });
 }

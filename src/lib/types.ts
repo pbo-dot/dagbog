@@ -140,6 +140,7 @@ export interface DayStory {
   text: string; // 1–2 sætninger; '' hvis kun "Hvem var med?" er sat
   edited?: boolean; // rettet af ejeren: Claude skriver den ikke om af sig selv
   with?: string[]; // id'er fra Mennesker, valgt under "Hvem var med?"
+  notMe?: boolean; // ejeren var ikke selv med (fx billeder, andre har taget): historien skrives om de andre
   photos?: number; // hvor mange billeder historien bygger på
   at: number;
 }

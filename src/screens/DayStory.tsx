@@ -16,6 +16,7 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
   const thumbs = dayThumbs(data.phonePhotos, date);
   const [editing, setEditing] = useState<string | null>(null);
   const [picking, setPicking] = useState<string[] | null>(null);
+  const [me, setMe] = useState(true); // "Mig selv" i valget af hvem der var med
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const canAI = aiReady(data);
@@ -32,22 +33,22 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
   }
   if (!thumbs.length && !story?.text) return null;
 
-  const run = async (withIds?: string[]) => {
+  const run = async (withIds?: string[], notMe?: boolean) => {
     setBusy(true);
     setError('');
     try {
-      await tellDay(store, date, withIds);
+      await tellDay(store, date, withIds, notMe);
     } catch (e) {
       setError(e instanceof AIError ? e.message : 'Noget gik galt.');
     } finally {
       setBusy(false);
     }
   };
-  const savePeople = async (ids: string[]) => {
+  const savePeople = async (ids: string[], withMe: boolean) => {
     setPicking(null);
-    await saveStory(store, date, { with: ids });
+    await saveStory(store, date, { with: ids, notMe: withMe ? undefined : true });
     // Navnene kommer med i historien, medmindre ejeren selv har rettet den
-    if (story?.text && !story.edited && canAI && thumbs.length) await run(ids);
+    if (story?.text && !story.edited && canAI && thumbs.length) await run(ids, !withMe);
   };
   const people = Object.values(data.people).sort((a, b) => a.name.localeCompare(b.name, 'da'));
 
@@ -70,12 +71,17 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
 
       {picking === null && (
         <div className="row wrap" style={{ gap: 6, alignItems: 'center' }}>
+          {story?.notMe && <span className="label-chip">Uden mig</span>}
           {names.map((n) => <span key={n} className="label-chip">{n}</span>)}
-          <button className="link small" onClick={() => setPicking(story?.with ?? [])}>{names.length ? 'Ret hvem' : '+ Hvem var med?'}</button>
+          <button className="link small" onClick={() => { setPicking(story?.with ?? []); setMe(!story?.notMe); }}>{names.length || story?.notMe ? 'Ret hvem' : '+ Hvem var med?'}</button>
         </div>
       )}
       {picking !== null && (
         <div className="story-people">
+          <label className="check-line">
+            <input type="checkbox" checked={me} onChange={() => setMe(!me)} />
+            <span>Mig selv</span>
+          </label>
           {people.length === 0 && <span className="small muted">Tilføj mennesker under Husk → Mennesker først.</span>}
           {people.map((p) => (
             <label key={p.id} className="check-line">
@@ -85,7 +91,7 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
           ))}
           <div className="row" style={{ justifyContent: 'flex-end', gap: 8 }}>
             <button className="btn ghost small" onClick={() => setPicking(null)}>Annullér</button>
-            <button className="btn primary small" onClick={() => void savePeople(picking)}>Gem</button>
+            <button className="btn primary small" onClick={() => void savePeople(picking, me)}>Gem</button>
           </div>
         </div>
       )}
