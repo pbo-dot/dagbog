@@ -1,9 +1,8 @@
-// "Dagens historie": Claude ser en dags billeder sammen med stederne fra Tidslinjen, kalenderen,
+// "Dagens historie": Claude ser en dags billeder sammen med stederne fra Tidslinjen,
 // hvem der var med (valgt af ejeren) og evt. dagbogsteksten og skriver 1–2 sætninger om dagen.
 // Billederne sendes i en lille udgave (STORY_PX), så det er billigt. Historien skrives aldrig ind
 // i ejerens egen tekst, og en historie, ejeren selv har rettet, skrives ikke om af sig selv.
 import { useSyncExternalStore } from 'react';
-import { agenda } from './agenda';
 import { dayStoryAI } from './ai';
 import { formatFull, toISO } from './dates';
 import { noteAuto } from './google';
@@ -29,9 +28,18 @@ export function photoDays(data: Data): string[] {
   return [...days].sort().reverse();
 }
 
-/** Dage med billeder, der endnu ikke har en historie. */
+/**
+ * Udgaven af reglerne for historierne. 2 (16. nov.): uden kalenderen (ejeren: påmindelser og betalinger
+ * fyldte). Historier skrevet efter en ældre udgave tæller som ufortalte, medmindre ejeren har rettet dem.
+ */
+export const STORY_V = 2;
+
+/** Dage med billeder, der endnu ikke har en historie (eller kun en efter ældre regler). */
 export function daysWithoutStory(data: Data): string[] {
-  return photoDays(data).filter((d) => !data.stories[d]?.text);
+  return photoDays(data).filter((d) => {
+    const s = data.stories[d];
+    return !s?.text || (!s.edited && (s.v ?? 1) < STORY_V);
+  });
 }
 
 /** Overslag i kroner for at fortælle så mange dage (ca. 5 små billeder + tekst pr. dag). */
@@ -45,14 +53,12 @@ function dayContext(data: Data, date: string, thumbs: string[], withIds?: string
   const stays = dayStays(data.phonePhotos, date, data.visits, fixed);
   const abroad = [...new Set(stays.map((s) => s.cc).filter((c) => c && c !== 'DK'))].map(countryName);
   const trip = trips(data.phonePhotos, data.visits, fixed ?? [], data.settings.places?.notTrip).find((t) => t.from <= date && t.to >= date);
-  const cal = agenda(data, date, date).filter((a) => a.kind !== 'routine').map((a) => `${a.time ? `kl. ${a.time} ` : ''}${a.title}`);
   const people = (withIds ?? data.stories[date]?.with ?? []).map((id) => data.people[id]?.name).filter(Boolean);
   const entry = data.entries[date]?.text.trim();
   const lines = [
     `Dag: ${formatFull(date)}`,
     `Steder (Tidslinjen og billederne): ${stays.length ? stays.map((s) => `${s.city} ${stayTime(s)}`).join('; ') : 'ukendt'}${abroad.length ? ` (${abroad.join(', ')})` : ''}`,
     trip ? `Rejse: ${trip.from === trip.to ? 'en dag' : `dag ${Math.round((Date.parse(date) - Date.parse(trip.from)) / 864e5) + 1} af en rejse`} til ${trip.cities.slice(0, 4).join(', ')}` : '',
-    cal.length ? `Kalenderen: ${cal.join('; ')}` : '',
     people.length ? `Hvem var med (valgt af personen): ${people.join(', ')}` : '',
     (notMe ?? data.stories[date]?.notMe) ? 'Personen selv var IKKE med denne dag (billederne er taget eller delt af andre). Skriv om de andre, ikke i du-form.' : '',
     entry ? `Fra dagbogen (personens egne ord, kun til at forstå dagen):\n${entry.slice(0, 800)}` : '',
@@ -87,7 +93,7 @@ async function makeStory(store: Store, date: string, withIds?: string[], notMe?:
   if (!images.length) return null;
   const text = await dayStoryAI(data.settings, dayContext(data, date, thumbs, withIds, notMe), images);
   const me = notMe ?? data.stories[date]?.notMe;
-  return { date, text, with: withIds ?? data.stories[date]?.with, ...(me ? { notMe: true } : {}), photos: images.length, at: Date.now() };
+  return { date, text, with: withIds ?? data.stories[date]?.with, ...(me ? { notMe: true } : {}), photos: images.length, v: STORY_V, at: Date.now() };
 }
 
 /** Én dag (fx efter "Hvem var med?" eller "Skriv igen"). */

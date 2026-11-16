@@ -254,7 +254,7 @@ function TripStoriesButton({ days }: { days: string[] }) {
   return (
     <section className="card stack-sm">
       <button className="btn primary block" onClick={() => void tellAll(store, untold)}>✦ Fortæl rejsens {n === 1 ? 'dag' : `${n} dage`}</button>
-      <span className="tiny muted" style={{ textAlign: 'center' }}>Dagens historie ud fra billeder, steder og kalender · {storyEstimate(data, n).replace(/^(\d)/, 'ca. $1')}</span>
+      <span className="tiny muted" style={{ textAlign: 'center' }}>Dagens historie ud fra billeder og steder · {storyEstimate(data, n).replace(/^(\d)/, 'ca. $1')}</span>
       {st.error && <span className="small error">{st.error}</span>}
     </section>
   );

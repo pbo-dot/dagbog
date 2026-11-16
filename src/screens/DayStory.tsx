@@ -66,7 +66,7 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
       ) : story?.text ? (
         <p className="story-text">{busy ? 'Claude skriver …' : story.text}</p>
       ) : (
-        <p className="small muted" style={{ margin: 0 }}>{busy ? 'Claude skriver …' : 'Claude kan skrive et par linjer om dagen ud fra billederne, stederne og kalenderen.'}</p>
+        <p className="small muted" style={{ margin: 0 }}>{busy ? 'Claude skriver …' : 'Claude kan skrive et par linjer om dagen ud fra billederne og stederne.'}</p>
       )}
 
       {picking === null && (
@@ -99,7 +99,7 @@ export function DayStoryCard({ date, compact = false }: { date: string; compact?
       {editing === null && picking === null && (
         <div className="row between" style={{ alignItems: 'center', gap: 8 }}>
           <span className="tiny muted">
-            {story?.text ? (story.edited ? 'Rettet af dig' : `Ud fra ${story.photos ?? thumbs.length} billeder, Tidslinjen og kalenderen`) : ''}
+            {story?.text ? (story.edited ? 'Rettet af dig' : `Ud fra ${story.photos ?? thumbs.length} billeder og Tidslinjen`) : ''}
           </span>
           <div className="row" style={{ gap: 4 }}>
             {story?.text && <button className="btn ghost small" onClick={() => setEditing(story.text)}>Ret</button>}

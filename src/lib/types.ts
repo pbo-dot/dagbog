@@ -142,6 +142,7 @@ export interface DayStory {
   with?: string[]; // id'er fra Mennesker, valgt under "Hvem var med?"
   notMe?: boolean; // ejeren var ikke selv med (fx billeder, andre har taget): historien skrives om de andre
   photos?: number; // hvor mange billeder historien bygger på
+  v?: number; // hvilken udgave af reglerne historien er skrevet efter (STORY_V); ældre skrives om ved "Fortæl"
   at: number;
 }
 
