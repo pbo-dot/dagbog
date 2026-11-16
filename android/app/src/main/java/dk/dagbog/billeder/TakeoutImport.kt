@@ -42,7 +42,10 @@ class TakeoutImport(
         val id: Long, val dir: String, val file: String, val size: Long,
         val exifT: Long?, val nameT: Long?, val lat: Double?, val lng: Double?,
     )
-    private data class Meta(val taken: Long, val lat: Double?, val lng: Double?)
+    private data class Meta(val taken: Long, val lat: Double?, val lng: Double?, val names: List<String> = emptyList())
+
+    /** Json-filer med feltet "people" (navne, ejeren har sat på ansigter i Google Fotos). */
+    private var jsonWithPeopleField = 0
 
     private val pics = ArrayList<Pic>()
     private val metaByDir = HashMap<String, Meta>() // "mappe/titel" → dato og sted
@@ -177,7 +180,11 @@ class TakeoutImport(
             var lat = g?.optDouble("latitude") ?: 0.0
             var lng = g?.optDouble("longitude") ?: 0.0
             if (lat == 0.0 && lng == 0.0) { lat = gx?.optDouble("latitude") ?: 0.0; lng = gx?.optDouble("longitude") ?: 0.0 }
-            val m = Meta(ts * 1000, if (lat != 0.0 || lng != 0.0) lat else null, if (lat != 0.0 || lng != 0.0) lng else null)
+            // Navne fra Google Fotos' "Personer" (kun ansigter, ejeren selv har givet navn)
+            val ppl = o.optJSONArray("people")
+            if (ppl != null) jsonWithPeopleField++
+            val names = if (ppl == null) emptyList() else (0 until ppl.length()).mapNotNull { ppl.optJSONObject(it)?.optString("name")?.trim()?.takeIf { n -> n.isNotEmpty() } }.distinct()
+            val m = Meta(ts * 1000, if (lat != 0.0 || lng != 0.0) lat else null, if (lat != 0.0 || lng != 0.0) lng else null, names)
             val n = Regex("\\((\\d+)\\)\\.json$").find(file)?.groupValues?.get(1)
             val key = if (n != null) withSuffix(title, "($n)") else title
             metaByDir["$dir/$key"] = m
@@ -234,7 +241,7 @@ class TakeoutImport(
         return null
     }
 
-    private data class Done(val id: Long, val t: Long, val lat: Double?, val lng: Double?)
+    private data class Done(val id: Long, val t: Long, val lat: Double?, val lng: Double?, val names: List<String> = emptyList())
 
     /** Gemmer billederne fra én zip-fil; giver navnene på de gemte filer. */
     private fun finish(tag: String): List<String> {
@@ -253,10 +260,15 @@ class TakeoutImport(
                 else -> { noDate++; null }
             } ?: continue
             if (!dupTime.add("$t|${p.size}")) continue // samme billede to gange (fx original og kopi)
-            done.add(Done(p.id, t, m?.lat ?: p.lat, m?.lng ?: p.lng))
+            done.add(Done(p.id, t, m?.lat ?: p.lat, m?.lng ?: p.lng, m?.names ?: emptyList()))
         }
         say("Dato fra: Googles json $fromJson · billedets EXIF $fromExif · filnavnet $fromName · uden dato $noDate")
         say("Med sted: ${done.count { it.lat != null }} af ${done.size}")
+        // Navne fra Google Fotos: hvor mange billeder, og hvem
+        val named = done.filter { it.names.isNotEmpty() }
+        val byName = named.flatMap { it.names }.groupingBy { it }.eachCount().entries.sortedByDescending { it.value }
+        say("Navne fra Google Fotos: ${named.size} af ${done.size} billeder har navne (json med \"people\"-felt indtil nu: $jsonWithPeopleField)")
+        if (byName.isNotEmpty()) say("  " + byName.take(20).joinToString(" · ") { "${it.key} ${it.value}" })
         if (done.isEmpty()) { say("Ingen billeder at sende."); return emptyList() }
         done.sortBy { it.t }
         say("Fra ${day.format(Date(done.first().t))} til ${day.format(Date(done.last().t))}")
@@ -281,6 +293,8 @@ class TakeoutImport(
                 w.write("DAGBOG-BILLEDER v2\n# app $version\n# størrelse $THUMB\n# kilde anden telefon (Google Takeout) del ${k + 1}\n")
                 if (k == 0) for (d in done) {
                     w.write("${d.id};${d.t};${if (d.lat != null) String.format(Locale.ROOT, "%.5f;%.5f", d.lat, d.lng) else ";"}\n")
+                    // Navne fra Google Fotos (Dagbog bruger dem ikke endnu; ældre Dagbog springer linjen over)
+                    if (d.names.isNotEmpty()) w.write("P;${d.id};${d.t};${d.names.joinToString("|") { it.replace(";", ",").replace("|", "/") }}\n")
                 }
                 for (d in part) {
                     val f = File(thumbDir, "${d.id}.jpg")
