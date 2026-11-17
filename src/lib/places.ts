@@ -263,13 +263,14 @@ export function dayPhotoCount(months: Record<string, PhotoMonth>, date: string):
   return (months[date.slice(0, 7)]?.photos ?? []).filter((p) => !p.hidden && toISO(new Date(p.t)) === date).length;
 }
 
-interface DayPoint { city: string; cc: string; lat: number; lng: number }
+interface DayPoint { city: string; cc: string; lat: number; lng: number; src?: 'tl' | 'foto' }
 
 /** Alt inden for så mange km fra et fast sted regnes som stedet (fx stranden ved sommerhuset). */
 export const FIXED_KM = 8;
 
 /** Det faste sted, punktet ligger ved, hvis nogen. */
-export function fixedAt(p: { lat?: number; lng?: number }, fixed: FixedPlace[]): FixedPlace | undefined {
+export function fixedAt(p: { lat?: number; lng?: number; city?: string }, fixed: FixedPlace[]): FixedPlace | undefined {
+  if (p.city) { const f = fixed.find((x) => x.also?.includes(p.city!)); if (f) return f; }
   if (p.lat === undefined || p.lng === undefined) return undefined;
   return fixed.find((f) => km(f, { lat: p.lat!, lng: p.lng! }) <= FIXED_KM);
 }
@@ -317,11 +318,11 @@ function placesByDayRaw(months: Record<string, PhotoMonth>, visits: Record<strin
       if (v.home) homes.push({ t: v.s, lat: v.lat, lng: v.lng });
       if (!v.city) continue;
       // Et ophold over flere dage tæller på hver dag (højst 60 dage)
-      for (let d = toISO(new Date(v.s)), n = 0; d <= toISO(new Date(v.e)) && n < 60; d = addDays(d, 1), n++) add(d, { city: v.city, cc: v.cc ?? '', lat: v.lat, lng: v.lng });
+      for (let d = toISO(new Date(v.s)), n = 0; d <= toISO(new Date(v.e)) && n < 60; d = addDays(d, 1), n++) add(d, { city: v.city, cc: v.cc ?? '', lat: v.lat, lng: v.lng, src: 'tl' });
     }
   }
   for (const m of Object.values(months)) {
-    for (const p of m.photos) if (p.city && p.lat !== undefined && p.lng !== undefined) add(toISO(new Date(p.t)), { city: p.city, cc: p.cc ?? '', lat: p.lat, lng: p.lng });
+    for (const p of m.photos) if (p.city && p.lat !== undefined && p.lng !== undefined) add(toISO(new Date(p.t)), { city: p.city, cc: p.cc ?? '', lat: p.lat, lng: p.lng, src: 'foto' });
   }
   homes.sort((a, b) => a.t - b.t);
   return { days, homes };
@@ -365,6 +366,40 @@ function tripsRaw(months: Record<string, PhotoMonth>, visits: Record<string, Vis
   return out;
 }
 
+export interface TripWhy {
+  city: string;
+  km: number; // længst væk fra hjemmet (eller dagens første sted)
+  homeKnown: boolean; // hjemmet fra Tidslinjen; ellers målt fra dagens første sted
+  fixed?: { name: string; km: number }; // nærmeste faste sted og afstanden dertil
+  tl: number; // ophold fra Tidslinjen
+  foto: number; // billeder med sted
+}
+
+/** "Hvorfor en rejse?": for hver by på rejsen, hvor langt fra hjemmet, nærmeste faste sted og hvad der viser det. */
+export function tripWhy(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[], notTrip: string[], from: string, to: string): TripWhy[] {
+  const { days, homes } = placesByDay(months, visits);
+  const out = new Map<string, TripWhy>();
+  for (let date = from; date <= to; date = addDays(date, 1)) {
+    const pts = days.get(date);
+    if (!pts) continue;
+    const end = dayStart(addDays(date, 1));
+    let home: { lat: number; lng: number } | undefined;
+    for (const x of homes) { if (x.t < end) home = x; else break; }
+    const base = home ?? pts[0];
+    for (const p of pts) {
+      const d = km(p, base);
+      if (d <= 50 || fixedAt(p, fixed) || notTrip.includes(p.city)) continue;
+      const w = out.get(p.city) ?? { city: p.city, km: 0, homeKnown: !!home, tl: 0, foto: 0 };
+      w.km = Math.max(w.km, d);
+      if (p.src === 'tl') w.tl++; else w.foto++;
+      const near = fixed.map((f) => ({ name: f.name, km: km(f, p) })).sort((a, b) => a.km - b.km)[0];
+      if (near && (!w.fixed || near.km < w.fixed.km)) w.fixed = near;
+      out.set(p.city, w);
+    }
+  }
+  return [...out.values()].sort((a, b) => b.tl + b.foto - (a.tl + a.foto));
+}
+
 /** Hvornår man var ved hvert fast sted: dage i træk bliver ét ophold. */
 export function fixedStays(months: Record<string, PhotoMonth>, visits: Record<string, VisitMonth>, fixed: FixedPlace[]): Array<{ place: FixedPlace; stays: Array<{ from: string; to: string }> }> {
   if (!fixed.length) return [];
@@ -373,7 +408,7 @@ export function fixedStays(months: Record<string, PhotoMonth>, visits: Record<st
   return fixed.map((place) => {
     const stays: Array<{ from: string; to: string }> = [];
     for (const d of sorted) {
-      if (!days.get(d)!.some((p) => km(p, place) <= FIXED_KM)) continue;
+      if (!days.get(d)!.some((p) => km(p, place) <= FIXED_KM || place.also?.includes(p.city))) continue;
       const last = stays[stays.length - 1];
       if (last && addDays(last.to, 1) >= d) last.to = d;
       else stays.push({ from: d, to: d });

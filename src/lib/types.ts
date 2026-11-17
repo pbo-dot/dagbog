@@ -172,6 +172,7 @@ export interface FixedPlace {
   city: string; // fx "Nykøbing Sjælland"
   lat: number;
   lng: number;
+  also?: string[]; // byer uden for ringen, der også hører til stedet ("Hører til Sommerhuset", fx Asnæs)
 }
 
 /** Opholdene, der begynder i én måned (nøgle YYYY-MM). */

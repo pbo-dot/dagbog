@@ -2,7 +2,7 @@
 // dag for dag med steder, billeder og egen tekst (ellers Claudes beskrivelser af billederne).
 import { useMemo, useState } from 'react';
 import { addDays, addMonths, formatLong, today } from '../lib/dates';
-import { countryName, dayDescs, dayStays, dayThumbs, fixedStays, stayTime, trips } from '../lib/places';
+import { countryName, dayDescs, dayStays, dayThumbs, FIXED_KM, fixedStays, stayTime, trips, tripWhy } from '../lib/places';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
 import { daysWithoutStory, stopTelling, storyEstimate, tellAll, useStoryState } from '../lib/dayStory';
@@ -75,7 +75,7 @@ export function TripsScreen() {
       <Header back="husk" />
       <div className="stack-sm">
         <h1>Rejser</h1>
-        <p className="small muted">{real.length} rejser{first ? ` siden ${first}` : ''} · {real.filter((t) => withPhotos.get(key(t))!.length).length} med billeder</p>
+        <p className="small muted">{real.length} {real.length === 1 ? 'rejse' : 'rejser'}{first ? ` siden ${first}` : ''} · {real.filter((t) => withPhotos.get(key(t))!.length).length} med billeder</p>
       </div>
       <div className="chips">
         {chips.map(([id, label]) => <button key={id} className={`chip ${filter === id ? 'on' : ''}`} onClick={() => { setFilter(id); setShown(20); }}>{label}</button>)}
@@ -136,6 +136,7 @@ export function TripScreen({ id }: { id: string }) {
       </div>
       <PlacesMap points={days.flatMap((d) => stayPoints(dayStays(data.phonePhotos, d, data.visits, fixed), stayTime, `${Number(d.slice(8))}/${Number(d.slice(5, 7))} · `))} fixed={fixed} height={260} />
       <TripStoriesButton days={days} />
+      {!trip.fixed && <TripWhyCard from={from} to={to} />}
       <div className="stat-row">
         <div className="card"><b>{ids.length}</b><span className="small muted">billeder</span></div>
         <div className="card"><b>{cities.length}</b><span className="small muted">{cities.length === 1 ? 'by' : 'byer'}</span></div>
@@ -164,7 +165,7 @@ export function TripScreen({ id }: { id: string }) {
         );
       })}
       {!trip.fixed && trip.cities.length > 0 && (
-        <DoubleConfirm className="btn" label="Ikke en rejse" first={`${trip.cities.join(', ')} tæller aldrig mere som rejse. Fortsæt?`} second="Er du sikker?"
+        <DoubleConfirm className="btn" label="Ikke en rejse" first={`${trip.cities.join(', ')} tæller aldrig mere som rejse. Fortsæt?`} second="Er du sikker?" yes="Ja, ikke en rejse"
           onConfirm={async () => {
             const places = data.settings.places ?? { fixed: [], notFixed: [] };
             const notTrip = [...new Set([...(places.notTrip ?? []), ...trip.cities])];
@@ -172,8 +173,43 @@ export function TripScreen({ id }: { id: string }) {
             go('husk/rejser');
           }} />
       )}
+      {!trip.fixed && trip.cities.length > 0 && (fixed ?? []).map((f) => (
+        <DoubleConfirm key={f.id} className="btn" label={`Hører til ${f.name}`} first={`${trip.cities.join(', ')} tæller fremover som ${f.name}. Fortsæt?`} second="Er du sikker?" yes={`Ja, hører til ${f.name}`}
+          onConfirm={async () => {
+            const places = data.settings.places ?? { fixed: [], notFixed: [] };
+            const next = places.fixed.map((x) => (x.id === f.id ? { ...x, also: [...new Set([...(x.also ?? []), ...trip.cities])] } : x));
+            await store.saveSettings({ ...data.settings, places: { ...places, fixed: next } });
+            go('husk/rejser');
+          }} />
+      ))}
       {open && <PhotoViewer id={open.id} ids={open.ids} onClose={() => setOpen(null)} />}
     </div>
+  );
+}
+
+/** "Hvorfor en rejse?": byerne på rejsen, hvor langt fra hjemmet og det faste sted, og hvad der viser det. */
+function TripWhyCard({ from, to }: { from: string; to: string }) {
+  const { data } = useStore();
+  const places = data.settings.places;
+  const why = useMemo(() => tripWhy(data.phonePhotos, data.visits, places?.fixed ?? NONE, places?.notTrip ?? [], from, to),
+    [data.phonePhotos, data.visits, places, from, to]);
+  if (!why.length) return null;
+  const n = (k: number, one: string, many: string) => (k ? `${k} ${k === 1 ? one : many}` : '');
+  return (
+    <section className="card why-card" aria-label="Hvorfor en rejse?">
+      <span className="overline">Hvorfor en rejse?</span>
+      {why.slice(0, 5).map((w) => (
+        <div key={w.city} className="why-row">
+          <strong>{w.city}</strong>
+          <span className="small">
+            {Math.round(w.km)} km fra {w.homeKnown ? 'hjemmet' : 'dagens første sted (hjemmet kendes ikke)'}
+            {w.fixed ? ` · ${Math.round(w.fixed.km)} km fra ${w.fixed.name}` : ''}
+          </span>
+          <span className="small muted">{[n(w.tl, 'ophold i Tidslinjen', 'ophold i Tidslinjen'), n(w.foto, 'billede', 'billeder')].filter(Boolean).join(' · ')}</span>
+        </div>
+      ))}
+      <span className="tiny muted">En rejse er over 50 km fra hjemmet{places?.fixed?.length ? ` og over ${FIXED_KM} km fra et fast sted` : ''}.</span>
+    </section>
   );
 }
 

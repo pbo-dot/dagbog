@@ -150,8 +150,8 @@ export function PlanTabs({ active, right }: { active: 'kalender' | 'huskeliste' 
 }
 
 /** Knap der kræver to bekræftelser */
-export function DoubleConfirm({ label, first, second, onConfirm, className = 'btn danger' }: {
-  label: string; first: string; second: string; onConfirm: () => void | Promise<void>; className?: string;
+export function DoubleConfirm({ label, first, second, onConfirm, className = 'btn danger', yes = 'Ja, slet for altid' }: {
+  label: string; first: string; second: string; onConfirm: () => void | Promise<void>; className?: string; yes?: string;
 }) {
   const [step, setStep] = useState(0);
   if (step === 0) return <button className={className} onClick={() => setStep(1)}>{label}</button>;
@@ -160,7 +160,7 @@ export function DoubleConfirm({ label, first, second, onConfirm, className = 'bt
       <p className="small">{step === 1 ? first : second}</p>
       <div className="row">
         <button className="btn danger" onClick={async () => (step === 1 ? setStep(2) : (await onConfirm(), setStep(0)))}>
-          {step === 1 ? 'Ja, fortsæt' : 'Ja, slet for altid'}
+          {step === 1 ? 'Ja, fortsæt' : yes}
         </button>
         <button className="btn ghost" onClick={() => setStep(0)}>Fortryd</button>
       </div>

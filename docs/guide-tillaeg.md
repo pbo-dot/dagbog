@@ -55,3 +55,9 @@ Under **Husk → Mennesker** står **"N fødselsdage i din kalender"**, når Dag
 ## Påmindelse om billeder
 
 Er det en uge eller mere siden, du sidst hentede billeder, står der **"Billeder: N dage siden sidst · Hent nu"** øverst på Skriv. Tryk, så åbner hjælpe-appen og henter de nye.
+
+## Hvorfor en rejse?
+
+Øverst på en rejse (Husk → Rejser) står **"Hvorfor en rejse?"**: for hver by, hvor langt den er fra dit hjem og fra Sommerhuset, og om Dagbog ved det fra Tidslinjen eller fra billederne. En rejse er over 50 km fra hjemmet og over 8 km fra et fast sted.
+
+Nederst på rejsen kan du vælge **"Ikke en rejse"** (byerne tæller aldrig mere) eller **"Hører til Sommerhuset"** (byerne regnes fremover som Sommerhuset, fx Asnæs).
