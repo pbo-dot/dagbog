@@ -67,7 +67,7 @@ export async function importPlaces(store: Store, text: string, known: Store['dat
     const thumbFrom = next ?? (thumbs.length ? toISO(new Date(Math.max(...thumbs.map((x) => x.t)))) : places.thumbFrom);
     // En hel runde er færdig (ingen "næste"): så har alle gemte billeder denne størrelse
     const done = !next && thumbs.length > 0 && (!places.thumbRedo || !!size);
-    const nextPlaces = { ...places, thumbFrom, ...(done && size ? { thumbPx: size, thumbRedo: false } : {}) };
+    const nextPlaces = { ...places, thumbFrom, fetchedAt: Date.now(), ...(done && size ? { thumbPx: size, thumbRedo: false } : {}) };
     if (JSON.stringify(nextPlaces) !== JSON.stringify(places)) await store.saveSettings({ ...store.data.settings, places: nextPlaces });
     if (next) say(`Der mangler flere små billeder. Tryk "Hent billeder" igen (fra ${next}).`);
     }

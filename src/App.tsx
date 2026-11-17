@@ -25,7 +25,7 @@ import { TidyScreen } from './screens/Tidy';
 import { TalkScreen } from './screens/Talk';
 import { ClarityScreen } from './screens/Clarity';
 import { NoteScreen, NotesScreen } from './screens/Notes';
-import { PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
+import { BirthdayImportScreen, PatternsScreen, PeopleScreen, PersonScreen } from './screens/People';
 import { TripScreen, TripsScreen } from './screens/Trips';
 import { PlacesScreen } from './screens/Places';
 import { SettingsScreen } from './screens/Settings';
@@ -231,7 +231,7 @@ function Unlocked() {
       else if (a === 'rejse' && b) screen = <TripScreen key={b} id={b} />;
       else screen = <MemoryScreen />;
       break;
-    case 'mennesker': screen = a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
+    case 'mennesker': screen = a === 'fra-kalender' ? <BirthdayImportScreen /> : a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
     case 'moenstre': screen = <PatternsScreen />; break;
     case 'spoerg': screen = <AskScreen />; break;
     case 'kalender': screen = a === 'ny' ? <CalendarScreen startAdding /> : <CalendarScreen month={a} />; break;

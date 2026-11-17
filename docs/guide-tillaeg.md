@@ -47,3 +47,11 @@ Når du opretter eller retter en **aftale** (Plan → Kalender → + Aftale, ell
 ## De næste 3 dage på Skriv
 
 Under linjen "I dag" på Skriv står **"De næste 3 dage"** med aftaler, fødselsdage, faste ting og huskepunkter med frist. Tryk på linjen for at folde den ud eller ind; Dagbog husker, hvad du valgte. Tryk på en aftale eller et punkt for at åbne det.
+
+## Fødselsdage fra kalenderen
+
+Under **Husk → Mennesker** står **"N fødselsdage i din kalender"**, når Dagbog har fundet fødselsdage i din Google Kalender (fx "Birgittes fødselsdag"). Tryk på kortet, ret navnene, hvis de er forkerte, fjern flueben ved dem, du ikke vil have med, og tryk **"Tilføj"**. Så bliver de til personer under Mennesker med fødselsdag, og fødselsdagen står kun én gang på Skriv.
+
+## Påmindelse om billeder
+
+Er det en uge eller mere siden, du sidst hentede billeder, står der **"Billeder: N dage siden sidst · Hent nu"** øverst på Skriv. Tryk, så åbner hjælpe-appen og henter de nye.

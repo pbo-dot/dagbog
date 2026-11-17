@@ -8,9 +8,9 @@ import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
-import { dayDescs, dayStays, dayThumbs, stayTime } from '../lib/places';
+import { dayDescs, dayStays, dayThumbs, openAppUrl, stayTime } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
-import { nextBirthday, upcomingBirthdays } from '../lib/people';
+import { isPersonBirthday, nextBirthday, upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
@@ -197,7 +197,7 @@ function TodayFold() {
   const { data } = useStore();
   const [open, setOpen] = useState(() => { try { return localStorage.getItem(FOLD_KEY) === '1'; } catch { return false; } });
   const t = today();
-  const plans = agenda(data, t, t).filter((i) => i.kind !== 'routine').length;
+  const plans = agenda(data, t, t).filter((i) => i.kind !== 'routine' && !isPersonBirthday(i.title, i.date, Object.values(data.people))).length;
   const routines = Object.values(data.routines).filter((r) => routineStatus(r, t).kind === 'due').length;
   const bdays = upcomingBirthdays(Object.values(data.people), t, 0).length;
   const g = groupTodos(data.todos, t);
@@ -219,6 +219,25 @@ function TodayFold() {
   );
 }
 
+/** Så mange dage efter sidste hentning minder Skriv om at hente nye billeder. */
+const PHOTO_NUDGE_DAYS = 7;
+
+/** "Billeder: 9 dage siden sidst · Hent nu" (kun på Android, og kun når hjælpe-appen har været brugt). */
+function PhotoNudge() {
+  const { data } = useStore();
+  const p = data.settings.places;
+  if (!p?.thumbFrom || !/Android/i.test(navigator.userAgent)) return null;
+  const last = p.fetchedAt ?? Date.parse(p.thumbFrom);
+  const days = Math.floor((Date.now() - last) / 864e5);
+  if (!(days >= PHOTO_NUDGE_DAYS)) return null;
+  return (
+    <button className="backup-nudge photo-nudge" onClick={() => { location.href = openAppUrl(p.thumbFrom); }}>
+      <span className="grow"><strong>Billeder: {days} dage siden sidst</strong><span className="small muted">Tryk for at hente de nye</span></span>
+      <span className="btn small">Hent nu</span>
+    </button>
+  );
+}
+
 const AHEAD_KEY = 'dagbog-frem-aaben';
 const AHEAD_DAYS = 3;
 const WEEKDAYS = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
@@ -234,7 +253,9 @@ function AheadFold() {
   const to = addDays(t, AHEAD_DAYS);
   const rows: AheadRow[] = [];
   let plans = 0, routines = 0;
+  const people = Object.values(data.people);
   for (const i of agenda(data, from, to)) {
+    if (i.kind !== 'routine' && isPersonBirthday(i.title, i.date, people)) continue; // står allerede som fødselsdag
     if (i.kind === 'routine') {
       const r = data.routines[i.ref];
       if (!r || (!r.monthly && (r.everyDays ?? 0) <= 1)) continue; // daglige fylder kun
@@ -552,6 +573,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           </div>
         )}
         {isToday && <BackupNudge />}
+        {isToday && <PhotoNudge />}
         {isToday && <TodayFold />}
         {isToday && <AheadFold />}
         {isToday && <MeetCards />}

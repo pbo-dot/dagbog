@@ -48,3 +48,57 @@ export function inDays(days: number): string {
 
 export const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() ?? '').join('');
 
+
+/**
+ * Navnet i en fødselsdag fra kalenderen, fx "Birgittes fødselsdag", "Hans' fødselsdag", "Fødselsdag: Mor",
+ * "Birgitte's birthday" eller "Birgitte fylder 50" (så kendes året også). Ellers null.
+ */
+export function birthdayFromTitle(title: string): { name: string; age?: number } | null {
+  const t = title.replace(/[\p{Extended_Pictographic}️]/gu, '').replace(/\s+/g, ' ').trim();
+  const pats: RegExp[] = [
+    /^(.+?)(?:['’]s|['’]|s) (?:fødselsdag|birthday)$/i,
+    /^(.+?) (?:har )?fødselsdag$/i,
+    /^(?:fødselsdag|birthday)(?: ?[:\-–] ?| )(.+)$/i,
+  ];
+  const age = t.match(/^(.+?) fylder (\d{1,3})(?: år)?$/i);
+  if (age) return { name: age[1].trim(), age: Number(age[2]) };
+  for (const p of pats) {
+    const m = t.match(p);
+    if (m && m[1].trim().length >= 2 && !/^(hos|for|i|til|med|fest)\b/i.test(m[1].trim())) return { name: m[1].trim() };
+  }
+  return null;
+}
+
+/** Er denne kalender-aftale fødselsdagen for en person under Mennesker (samme navn og dag)? Så vises den kun én gang. */
+export function isPersonBirthday(title: string, date: string, people: Person[]): boolean {
+  const b = birthdayFromTitle(title);
+  if (!b) return false;
+  const n = b.name.toLowerCase();
+  return people.some((p) => p.birthday?.slice(-5) === date.slice(-5) && p.name.toLowerCase() === n);
+}
+
+export interface CalendarBirthday {
+  name: string;
+  birthday: string; // YYYY-MM-DD, eller --MM-DD når året ikke kendes
+  person?: Person; // findes allerede under Mennesker (uden fødselsdag)
+}
+
+/** Fødselsdage i de hentede Google-aftaler, som ikke allerede står under Mennesker. Én pr. navn. */
+export function calendarBirthdays(events: Array<{ title: string; date: string }>, people: Person[], todayIso = new Date().toISOString().slice(0, 10)): CalendarBirthday[] {
+  const byName = new Map(people.map((p) => [p.name.toLowerCase(), p]));
+  const found = new Map<string, CalendarBirthday>();
+  for (const e of events) {
+    const b = birthdayFromTitle(e.title);
+    if (!b) continue;
+    const key = b.name.toLowerCase();
+    const person = byName.get(key);
+    if (person?.birthday) continue;
+    const year = b.age !== undefined ? Number(e.date.slice(0, 4)) - b.age : null;
+    const birthday = year ? `${year}${e.date.slice(4)}` : `--${e.date.slice(5)}`;
+    const before = found.get(key);
+    if (!before || (before.birthday.startsWith('--') && year)) found.set(key, { name: b.name, birthday, person });
+  }
+  // Den næste først
+  const days = (b: CalendarBirthday) => nextBirthday(b, todayIso)?.days ?? 400;
+  return [...found.values()].sort((a, b) => days(a) - days(b));
+}

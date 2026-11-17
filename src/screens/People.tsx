@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { formatShort, today } from '../lib/dates';
 import { excerpt } from '../lib/search';
 import { useStore } from '../lib/store';
-import { currentAge, initials, inDays, nextBirthday, upcomingBirthdays } from '../lib/people';
+import { calendarBirthdays, currentAge, initials, inDays, nextBirthday, upcomingBirthdays, type CalendarBirthday } from '../lib/people';
 import { MONTHS } from '../lib/dates';
 import { PERSON_GROUPS, type Pattern, type Person, type PersonGroup } from '../lib/types';
 
@@ -20,6 +20,7 @@ export function PeopleScreen() {
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState('');
   const soon = upcomingBirthdays(all, t, 60)[0];
+  const fromCal = useMemo(() => calendarBirthdays(Object.values(store.data.google).flatMap((m) => m.events), all), [store.data.google, store.data.people]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const add = async () => {
     const n = name.trim();
@@ -45,6 +46,15 @@ export function PeopleScreen() {
           <span className="grow">
             <strong style={{ display: 'block' }}>{soon.person.name} {soon.next.days === 0 ? 'har fødselsdag i dag' : 'fylder år'}{soon.next.age ? ` (${soon.next.age})` : ''}</strong>
             <span className="small muted">{inDays(soon.next.days)} · {formatDayMonth(soon.next.date)}</span>
+          </span>
+        </button>
+      )}
+      {fromCal.length > 0 && (
+        <button className="card tappable birthday" onClick={() => go('mennesker/fra-kalender')}>
+          <span className="avatar">📅</span>
+          <span className="grow">
+            <strong style={{ display: 'block' }}>{fromCal.length === 1 ? '1 fødselsdag' : `${fromCal.length} fødselsdage`} i din kalender</strong>
+            <span className="small muted">Tryk for at hente dem hertil</span>
           </span>
         </button>
       )}
@@ -264,6 +274,65 @@ export function PatternsScreen() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/** Mennesker › fødselsdage fra Google Kalender: vælg hvem der skal med (navnet kan rettes), og læg dem ind som personer. */
+export function BirthdayImportScreen() {
+  const store = useStore();
+  const people = Object.values(store.data.people);
+  const [rows] = useState<CalendarBirthday[]>(() => calendarBirthdays(Object.values(store.data.google).flatMap((m) => m.events), people));
+  const [names, setNames] = useState<string[]>(() => rows.map((r) => r.name));
+  const [on, setOn] = useState<boolean[]>(() => rows.map(() => true));
+  const [busy, setBusy] = useState(false);
+  const count = on.filter(Boolean).length;
+
+  const save = async () => {
+    setBusy(true);
+    const now = Date.now();
+    const items: Record<string, Person> = {};
+    rows.forEach((r, i) => {
+      if (!on[i] || !names[i].trim()) return;
+      const name = names[i].trim();
+      const existing = r.person ?? people.find((p) => p.name.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        if (!existing.birthday) items[existing.id] = { ...existing, birthday: r.birthday, updatedAt: now };
+      } else {
+        const id = uid();
+        items[id] = { id, name, important: '', notes: [], updatedAt: now, birthday: r.birthday };
+      }
+    });
+    if (Object.keys(items).length) await store.putMany('people', items);
+    go('mennesker');
+  };
+
+  return (
+    <div className="stack" style={{ gap: 16 }}>
+      <Header back="mennesker" />
+      <h1>Fødselsdage fra kalenderen</h1>
+      {rows.length === 0 ? (
+        <p className="muted">Der er ingen nye fødselsdage i kalenderen.</p>
+      ) : (
+        <>
+          <div className="row between" style={{ alignItems: 'center' }}>
+            <span className="small muted">Ret navnet, hvis det er forkert.</span>
+            <button className="link small" onClick={() => setOn(rows.map(() => count < rows.length))}>{count < rows.length ? 'Vælg alle' : 'Vælg ingen'}</button>
+          </div>
+          <div className="card list" style={{ padding: '4px 12px' }}>
+            {rows.map((r, i) => (
+              <div key={i} className="bday-row">
+                <input type="checkbox" checked={on[i]} aria-label={`Tag ${names[i]} med`} onChange={() => setOn(on.map((v, j) => (j === i ? !v : v)))} />
+                <span className="grow stack-xs">
+                  <input type="text" className="bday-name" value={names[i]} aria-label="Navn" onChange={(e) => setNames(names.map((v, j) => (j === i ? e.target.value : v)))} />
+                  <span className="small muted">{formatBirthday(r.birthday)}{r.person ? ' · findes allerede, får fødselsdagen' : ''}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+          <button className="btn primary block" disabled={!count || busy} onClick={save}>{busy ? 'Gemmer …' : `Tilføj ${count}`}</button>
+        </>
+      )}
     </div>
   );
 }

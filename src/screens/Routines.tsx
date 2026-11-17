@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { agenda, at } from '../lib/agenda';
+import { agenda, at, type AgendaItem } from '../lib/agenda';
 import { addDays, formatLong, formatShort, today } from '../lib/dates';
 import { dueTomorrow, everyText, markTaken, routineStatus } from '../lib/routines';
-import { upcomingBirthdays } from '../lib/people';
+import { isPersonBirthday, upcomingBirthdays } from '../lib/people';
 import { askSoon } from './Ask';
 import { useStore } from '../lib/store';
 import type { Routine } from '../lib/types';
@@ -25,13 +25,15 @@ export function RoutineCards() {
   const t = today();
   const routines = Object.values(data.routines).sort((a, b) => a.createdAt - b.createdAt);
   const due = routines.map((r) => ({ r, s: routineStatus(r, t) })).filter(({ s }) => s.kind !== 'none');
-  const plans = agenda(data, t, t).filter((i) => i.kind !== 'routine');
   const people = Object.values(data.people);
+  // En fødselsdag fra kalenderen for en person under Mennesker vises kun én gang (som fødselsdag)
+  const own = (i: AgendaItem) => i.kind !== 'routine' && !isPersonBirthday(i.title, i.date, people);
+  const plans = agenda(data, t, t).filter(own);
   const birthdays = upcomingBirthdays(people, t, 14);
   // I dag og den kommende uge (med gaveidéer); senere fødselsdage som en linje nederst
   const todayBdays = birthdays.filter((b) => b.next.days <= 7);
   const soonBday = birthdays.find((b) => b.next.days > 7);
-  const tomorrowPlan = agenda(data, addDays(t, 1), addDays(t, 1)).find((i) => i.kind !== 'routine');
+  const tomorrowPlan = agenda(data, addDays(t, 1), addDays(t, 1)).find(own);
   const tomorrowRoutine = routines.map((r) => ({ r, d: dueTomorrow(r, t) })).find(({ d }) => d);
   const save = (r: Routine) => store.put('routines', r.id, r);
   const later = [
