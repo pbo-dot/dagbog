@@ -43,3 +43,7 @@ Hvis et sted ikke skal tælle som en rejse, fx Asnæs ved sommerhuset, så åbn 
 ## Billeder ved aftaler og huskepunkter
 
 Når du opretter eller retter en **aftale** (Plan → Kalender → + Aftale, eller Ret) eller et **huskepunkt** (Plan → Huskeliste), kan du trykke **"📷 Tag billede"** eller **"🖼 Vælg billede"**. Fx et billede af en indkaldelse, en kvittering eller den pære, der skal købes. Billedet ses på aftalen i kalenderen; tryk på det for fuld skærm. På huskelisten står der "📷 1 billede". × fjerner et billede igen.
+
+## De næste 3 dage på Skriv
+
+Under linjen "I dag" på Skriv står **"De næste 3 dage"** med aftaler, fødselsdage, faste ting og huskepunkter med frist. Tryk på linjen for at folde den ud eller ind; Dagbog husker, hvad du valgte. Tryk på en aftale eller et punkt for at åbne det.

@@ -3,14 +3,14 @@ import { agenda } from '../lib/agenda';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
 import { DayStoryCard } from './DayStory';
-import { addDays, addMonths, formatLong, formatMonth, monthId, today, toISO, weekId } from '../lib/dates';
+import { addDays, addMonths, formatLong, formatMonth, fromISO, monthId, today, toISO, weekId } from '../lib/dates';
 import { speechInputAvailable, startDictation } from '../lib/device';
 import { aiReady } from '../lib/generate';
 import { routineStatus } from '../lib/routines';
 import { dayQuestion, meetPreps } from '../lib/meet';
 import { dayDescs, dayStays, dayThumbs, stayTime } from '../lib/places';
 import { groupTodos, shortDate } from '../lib/todos';
-import { upcomingBirthdays } from '../lib/people';
+import { nextBirthday, upcomingBirthdays } from '../lib/people';
 import { cachePhoto, compressImage, forgetPhoto } from '../lib/photos';
 import { useStore } from '../lib/store';
 import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
@@ -215,6 +215,79 @@ function TodayFold() {
         <span className="fold-chev" aria-hidden="true">{open ? '▾' : '›'}</span>
       </button>
       {open && <><RoutineCards /><TodoCard /></>}
+    </div>
+  );
+}
+
+const AHEAD_KEY = 'dagbog-frem-aaben';
+const AHEAD_DAYS = 3;
+const WEEKDAYS = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+
+interface AheadRow { date: string; time: string; icon: string; title: string; detail: string; to: string }
+
+/** "De næste 3 dage": aftaler, fødselsdage, faste ting (ikke de daglige) og frister fra i morgen, foldet ind som "I dag". */
+function AheadFold() {
+  const { data } = useStore();
+  const [open, setOpen] = useState(() => { try { return localStorage.getItem(AHEAD_KEY) === '1'; } catch { return false; } });
+  const t = today();
+  const from = addDays(t, 1);
+  const to = addDays(t, AHEAD_DAYS);
+  const rows: AheadRow[] = [];
+  let plans = 0, routines = 0;
+  for (const i of agenda(data, from, to)) {
+    if (i.kind === 'routine') {
+      const r = data.routines[i.ref];
+      if (!r || (!r.monthly && (r.everyDays ?? 0) <= 1)) continue; // daglige fylder kun
+      routines++;
+    } else plans++;
+    rows.push({
+      date: i.date, time: i.time, icon: i.kind === 'google' ? '🗓' : i.icon || '🗓', title: i.title,
+      detail: i.detail ?? '', to: i.kind === 'routine' ? `faste/${i.ref}` : i.kind === 'event' ? `samtale/${i.ref}` : 'kalender',
+    });
+  }
+  let bdays = 0;
+  for (const p of Object.values(data.people)) {
+    const b = nextBirthday(p, t);
+    if (b && b.days >= 1 && b.days <= AHEAD_DAYS) {
+      bdays++;
+      rows.push({ date: b.date, time: '', icon: '🎂', title: `${p.name} har fødselsdag`, detail: b.age ? `${b.age} år` : '', to: `mennesker/${p.id}` });
+    }
+  }
+  let dues = 0;
+  for (const x of Object.values(data.todos)) {
+    if (!x.doneAt && x.due && x.due >= from && x.due <= to) {
+      dues++;
+      rows.push({ date: x.due, time: '', icon: '☑', title: x.text, detail: 'frist', to: `huskeliste/${x.id}` });
+    }
+  }
+  const n = (k: number, one: string, many: string) => (k ? `${k} ${k === 1 ? one : many}` : '');
+  const parts = [n(plans, 'aftale', 'aftaler'), n(bdays, 'fødselsdag', 'fødselsdage'), n(routines, 'fast ting', 'faste ting'), n(dues, 'frist', 'frister')].filter(Boolean);
+  if (!parts.length) return null;
+  rows.sort((a, b) => a.date.localeCompare(b.date) || (a.time || '99').localeCompare(b.time || '99'));
+  const flip = () => setOpen((v) => { try { localStorage.setItem(AHEAD_KEY, v ? '0' : '1'); } catch { /* ikke afgørende */ } return !v; });
+  const dayName = (d: string) => (d === from ? 'I morgen' : WEEKDAYS[fromISO(d).getDay()]);
+  return (
+    <div className="stack-sm">
+      <button className="today-fold" onClick={flip} aria-expanded={open}>
+        <span className="grow"><strong>De næste {AHEAD_DAYS} dage</strong><span>{parts.join(' · ')}</span></span>
+        <span className="fold-chev" aria-hidden="true">{open ? '▾' : '›'}</span>
+      </button>
+      {open && (
+        <div className="card ahead">
+          {rows.map((r, k) => (
+            <div key={k}>
+              {(k === 0 || rows[k - 1].date !== r.date) && <span className="overline ahead-day">{dayName(r.date)} {fromISO(r.date).getDate()}.</span>}
+              <button className="ahead-row" onClick={() => go(r.to)}>
+                <span className="ahead-icon" aria-hidden="true">{r.icon}</span>
+                <span className="grow">
+                  <strong>{r.title}</strong>
+                  {(r.time || r.detail) && <span className="small muted">{[r.time ? `kl. ${r.time.replace(':', '.')}` : '', r.detail].filter(Boolean).join(' · ')}</span>}
+                </span>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -480,6 +553,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         )}
         {isToday && <BackupNudge />}
         {isToday && <TodayFold />}
+        {isToday && <AheadFold />}
         {isToday && <MeetCards />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? dayQuestion(data, date, today(), nowHM())}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}
