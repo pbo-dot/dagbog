@@ -5,6 +5,7 @@ import { useStore } from '../lib/store';
 import { REPEATS, TODAY_MAX, dueSoon, dueText, groupTodos, nextTodo, postponeChoices, shortDate } from '../lib/todos';
 import type { Todo } from '../lib/types';
 import { go, Header, Icon, PlanTabs, uid } from '../ui';
+import { AttachPhotos, dropPhotos } from './AttachPhotos';
 
 /** Afkrydsning med ét tryk. Et klaret punkt kan fortrydes med et tryk mere. */
 function TodoRow({ todo, onMenu, dim }: { todo: Todo; onMenu: (t: Todo) => void; dim?: boolean }) {
@@ -29,6 +30,7 @@ function TodoRow({ todo, onMenu, dim }: { todo: Todo; onMenu: (t: Todo) => void;
     todo.due && !done ? dueText(todo.due, t) : '',
     todo.showFrom && todo.showFrom > t && !todo.someday && !done ? `vises fra ${shortDate(todo.showFrom)}` : '',
     todo.from ?? '',
+    todo.photos?.length ? `📷 ${todo.photos.length === 1 ? '1 billede' : `${todo.photos.length} billeder`}` : '',
   ].filter(Boolean);
   return (
     <div className={`todo-row${done ? ' done' : ''}`}>
@@ -87,7 +89,7 @@ function TodoSheet({ todo, onClose }: { todo: Todo; onClose: () => void }) {
         <button className="sheet-item" onClick={() => { onClose(); go(`huskeliste/${todo.id}`); }}>
           <span className="sheet-ico">✎</span><span>Ret eller sæt frist</span>
         </button>
-        <button className="sheet-item danger" onClick={async () => { await store.remove('todos', todo.id); onClose(); }}>
+        <button className="sheet-item danger" onClick={async () => { await store.remove('todos', todo.id); dropPhotos(store, todo.photos); onClose(); }}>
           <span className="sheet-ico">🗑</span><span>Slet</span>
         </button>
       </div>
@@ -171,6 +173,13 @@ export function TodoEditScreen({ id }: { id?: string }) {
   const [when, setWhen] = useState<When>(old?.someday ? 'someday' : old?.showFrom && old.showFrom > t ? 'date' : 'now');
   const [showFrom, setShowFrom] = useState(old?.showFrom && old.showFrom > t ? old.showFrom : addDays(t, 1));
   const [repeat, setRepeat] = useState<Todo['repeat']>(old?.repeat);
+  const [photos, setPhotos] = useState<string[]>(old?.photos ?? []);
+  // Nye billeder, der ikke blev gemt (fx tilbage uden Gem), slettes igen
+  const unsaved = useRef<string[]>([]);
+  unsaved.current = photos.filter((p) => !old?.photos?.includes(p));
+  const storeRef = useRef(store);
+  storeRef.current = store;
+  useEffect(() => () => dropPhotos(storeRef.current, unsaved.current), []);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState('');
   const stopMic = useRef<(() => void) | null>(null);
@@ -204,7 +213,10 @@ export function TodoEditScreen({ id }: { id?: string }) {
       someday: when === 'someday' || undefined,
       showFrom: when === 'date' ? showFrom : undefined,
       repeat,
+      photos: photos.length ? photos : undefined,
     };
+    dropPhotos(store, old?.photos, photos);
+    unsaved.current = [];
     await store.put('todos', todo.id, todo);
     go('huskeliste');
   };
@@ -254,10 +266,14 @@ export function TodoEditScreen({ id }: { id?: string }) {
         </div>
         {repeat && <p className="small muted">Når du klarer det, kommer det igen{due ? ' med ny frist' : ' om en ' + (repeat === 'week' ? 'uge' : repeat === 'month' ? 'måned' : 'år')}.</p>}
       </section>
+      <section className="stack-sm">
+        <h3>Billeder</h3>
+        <AttachPhotos ids={photos} onChange={setPhotos} />
+      </section>
       {error && <p className="error">{error}</p>}
       <button className="btn primary block" onClick={save}>Gem</button>
       {old && (
-        <button className="btn danger" onClick={async () => { await store.remove('todos', old.id); go('huskeliste'); }}>Slet</button>
+        <button className="btn danger" onClick={async () => { await store.remove('todos', old.id); dropPhotos(store, old.photos); go('huskeliste'); }}>Slet</button>
       )}
     </div>
   );

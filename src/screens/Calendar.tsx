@@ -8,6 +8,7 @@ import { currentToken } from '../lib/google';
 import { needsPush } from '../lib/gcalWrite';
 import { pushAppointments, pushCalendar, syncGoogle, useGoogleState } from '../lib/googleSync';
 import { AgendaIcon, go, Icon, PlanTabs, Switch, uid } from '../ui';
+import { AttachedPhotos, AttachPhotos, dropPhotos } from './AttachPhotos';
 
 const DAYS = ['ma', 'ti', 'on', 'to', 'fr', 'lø', 'sø'];
 
@@ -101,6 +102,8 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
     // Skal den ikke længere ligge i Google, slettes den dér
     const removed = !saved.toGoogle && saved.google ? { cal: saved.google.cal, id: saved.google.id, ref: saved.id } : undefined;
     if (removed) delete saved.google;
+    if (!saved.photos?.length) delete saved.photos;
+    dropPhotos(store, data.appointments[saved.id]?.photos, saved.photos);
     await store.put('appointments', saved.id, saved);
     pushAppointments(store, [saved], removed);
     setSelected(adding.date);
@@ -178,6 +181,7 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
               return (
                 <>
                   {a.note && <span className="small">{a.note}</span>}
+                  <AttachedPhotos ids={a.photos} />
                   {a.google && !needsPush(a) ? <span className="g-badge">✓ I Google</span>
                     : a.toGoogle ? <span className="tiny muted">Sendes til Google, når der er forbindelse</span> : null}
                   <div className="row wrap" style={{ gap: 6 }}>
@@ -188,6 +192,7 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
                     <button className="btn ghost small" onClick={() => setAdding({ ...a })}>Ret</button>
                     <button className="btn ghost small" onClick={async () => {
                       await store.remove('appointments', a.id);
+                      dropPhotos(store, a.photos);
                       if (a.google) pushAppointments(store, [], { cal: a.google.cal, id: a.google.id, ref: a.id });
                     }}>Slet</button>
                   </div>
@@ -230,6 +235,9 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
           <label className="field">Note (valgfrit)
             <input type="text" value={adding.note ?? ''} placeholder="Fx Birgitte kommer" onChange={(e) => setAdding({ ...adding, note: e.target.value })} />
           </label>
+          <div className="field">Billeder (valgfrit)
+            <AttachPhotos ids={adding.photos ?? []} onChange={(photos) => setAdding((cur) => cur && { ...cur, photos })} />
+          </div>
           {connected && (
             <div className="g-push">
               <span className="grow">
@@ -241,7 +249,7 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
           )}
           <div className="row">
             <button className="btn primary" disabled={!adding.title.trim()} onClick={saveAppointment}>Gem</button>
-            <button className="btn ghost" onClick={() => setAdding(null)}>Fortryd</button>
+            <button className="btn ghost" onClick={() => { dropPhotos(store, adding.photos, data.appointments[adding.id]?.photos); setAdding(null); }}>Fortryd</button>
           </div>
         </section>
       )}

@@ -111,6 +111,7 @@ export interface Todo {
   from?: string; // hvor det kom fra, fx "fra samtalen tirsdag"
   repeat?: 'week' | 'month' | 'year'; // kommer igen, når det er klaret
   nextId?: string; // det næste punkt, der blev lavet, da dette blev klaret (så det kan fortrydes)
+  photos?: string[]; // vedhæftede billeder (id'er i billedlageret)
   createdAt: number;
 }
 
@@ -203,6 +204,7 @@ export interface Appointment {
   fromTalk?: string; // samtalen, aftalen kom fra
   minutes?: number; // varighed i Google (standard 60)
   note?: string; // ekstra oplysninger, fx "Birgitte kommer"
+  photos?: string[]; // vedhæftede billeder (id'er i billedlageret)
 }
 
 /** Markering af, at en fast ting er taget/gjort. */

@@ -39,3 +39,7 @@ Fjernede billeder kan lægges tilbage under **Mere → Billeder og steder → Fj
 ## Rejser, der ikke er rejser
 
 Hvis et sted ikke skal tælle som en rejse, fx Asnæs ved sommerhuset, så åbn rejsen og tryk **"Ikke en rejse"** to gange. Stedet tæller ikke som rejse mere, også ikke i Spørg. Det kan fjernes igen under **Mere → Billeder og steder → Tæller ikke som rejser**.
+
+## Billeder ved aftaler og huskepunkter
+
+Når du opretter eller retter en **aftale** (Plan → Kalender → + Aftale, eller Ret) eller et **huskepunkt** (Plan → Huskeliste), kan du trykke **"📷 Tag billede"** eller **"🖼 Vælg billede"**. Fx et billede af en indkaldelse, en kvittering eller den pære, der skal købes. Billedet ses på aftalen i kalenderen; tryk på det for fuld skærm. På huskelisten står der "📷 1 billede". × fjerner et billede igen.
