@@ -222,12 +222,23 @@ function TodayFold() {
 /** Så mange dage efter sidste hentning minder Skriv om at hente nye billeder. */
 const PHOTO_NUDGE_DAYS = 7;
 
+/** Det nyeste billede fra denne telefon (ms), eller 0. */
+function newestOwnPhoto(months: ReturnType<typeof useStore>['data']['phonePhotos']): number {
+  let max = 0;
+  for (const m of Object.values(months)) for (const ph of m.photos) if (ph.id < 1e12 && ph.t > max) max = ph.t;
+  return max;
+}
+
 /** "Billeder: 9 dage siden sidst · Hent nu" (kun på Android, og kun når hjælpe-appen har været brugt). */
 function PhotoNudge() {
   const { data } = useStore();
   const p = data.settings.places;
   if (!p?.thumbFrom || !/Android/i.test(navigator.userAgent)) return null;
-  const last = p.fetchedAt ?? Date.parse(p.thumbFrom);
+  // Før 17. nov. blev hentningen ikke gemt: brug så det nyeste billede fra denne telefon
+  // (numre under 1.000.000.000.000; den gamle telefon og Takeout ligger over). thumbFrom er
+  // dagen, appen skal fortsætte fra, og kan ligge langt tilbage.
+  const last = p.fetchedAt ?? newestOwnPhoto(data.phonePhotos);
+  if (!last) return null;
   const days = Math.floor((Date.now() - last) / 864e5);
   if (!(days >= PHOTO_NUDGE_DAYS)) return null;
   return (
