@@ -228,7 +228,7 @@ export function CalendarScreen({ month: routeMonth, startAdding }: { month?: str
             <input type="text" value={adding.place} onChange={(e) => setAdding({ ...adding, place: e.target.value })} />
           </label>
           <label className="field">Note (valgfrit)
-            <input type="text" value={adding.note ?? ''} placeholder="Fx Camilla kommer" onChange={(e) => setAdding({ ...adding, note: e.target.value })} />
+            <input type="text" value={adding.note ?? ''} placeholder="Fx Birgitte kommer" onChange={(e) => setAdding({ ...adding, note: e.target.value })} />
           </label>
           {connected && (
             <div className="g-push">
