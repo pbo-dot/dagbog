@@ -30,7 +30,6 @@ export function MoreScreen() {
         <Row icon={Icon.cloud} title="Sikkerhedskopi" text={b.last ? `Gemt på Drev · ${whenText(b.last).toLowerCase()}` : 'Gem en låst kopi på Google Drev'} onClick={() => go('kopi')} />
         <Row icon={Icon.gear} title="Indstillinger" text="Låsning, AI, påmindelser og sikkerhedskopi" onClick={() => go('indstillinger')} />
         <Row icon={Icon.image} title="Billeder og steder" text="Hvor du har været, ud fra dine billeder" onClick={() => go('billeder')} />
-        <Row icon={Icon.image} title="Billedtest" text="Prøve: kan Dagbog læse dato og sted fra dine billeder?" onClick={() => go('billedtest')} />
         <Row icon={Icon.lock} title="Lås nu" text="Dagbogen låses straks" onClick={store.lock} />
       </div>
       <p className="tiny muted" style={{ textAlign: 'center' }}>Version {__BUILD__}</p>
