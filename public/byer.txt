@@ -8047,333 +8047,6 @@ Obock|DJ|11.967|43.288|17776
 Djibouti|DJ|11.589|43.145|623891
 Dikhil|DJ|11.105|42.370|12043
 'Ali Sabieh|DJ|11.156|42.712|55000
-Vrå|DK|57.354|9.942|2273
-Vordingborg|DK|55.008|11.911|12014
-Vojens|DK|55.246|9.306|8019
-Vodskov|DK|57.109|10.022|4406
-Vissenbjerg|DK|55.385|10.138|3055
-Virklund|DK|56.132|9.556|3113
-Vipperød|DK|55.668|11.740|2345
-Vindinge|DK|55.623|12.139|2045
-Vinderup|DK|56.482|8.780|2991
-Vindeby|DK|55.045|10.613|2144
-Vildbjerg|DK|56.200|8.767|3773
-Videbæk|DK|56.088|8.629|4052
-Viby|DK|55.549|12.024|4505
-Viborg|DK|56.453|9.402|34831
-Vester-Skerninge|DK|55.073|10.455|1315
-Vester Hassing|DK|57.068|10.126|2298
-Vestbjerg|DK|57.132|9.959|2251
-Veksø|DK|55.755|12.238|1921
-Vejle|DK|55.709|9.536|51177
-Vejen|DK|55.481|9.138|8525
-Varde|DK|55.621|8.481|12735
-Vamdrup|DK|55.428|9.284|4685
-Vallensbæk|DK|55.622|12.385|13500
-Vadum|DK|57.118|9.857|1978
-Ulstrup|DK|56.390|9.794|1963
-Ullerslev|DK|55.362|10.652|2962
-Ulfborg|DK|56.267|8.322|1994
-Tune|DK|55.593|12.170|5168
-Trørød|DK|55.839|12.544|8576
-Trige|DK|56.253|10.148|2475
-Tranbjerg|DK|56.095|10.136|7307
-Tørring|DK|55.850|9.483|2370
-Tønder|DK|54.933|8.867|7841
-Tølløse|DK|55.612|11.770|3457
-Tommerup Stationsby|DK|55.345|10.176|2401
-Tommerup|DK|55.320|10.207|2072
-Toftlund|DK|55.189|9.069|3438
-Tjæreborg|DK|55.465|8.580|2146
-Tinglev|DK|54.938|9.255|2829
-Thyborøn|DK|56.698|8.212|2587
-Thurø By|DK|55.047|10.664|3350
-Thisted|DK|56.955|8.695|13020
-Taulov|DK|55.546|9.616|2898
-Taastrup|DK|55.650|12.302|30977
-Tårs|DK|57.383|10.117|1856
-Tårnby|DK|55.630|12.600|10000
-Tarm|DK|55.909|8.530|4080
-Svogerslev|DK|55.634|12.015|4355
-Svinninge|DK|55.721|11.465|2376
-Svenstrup|DK|56.972|9.848|4550
-Svendborg|DK|55.060|10.607|27553
-Svejbæk|DK|56.133|9.633|3743
-Svebølle|DK|55.652|11.287|2186
-Sunds|DK|56.207|9.014|3525
-Stubbekøbing|DK|54.889|12.041|2301
-Struer|DK|56.492|8.594|11317
-Strøby Egede|DK|55.414|12.245|2700
-Strib|DK|55.540|9.767|4339
-Strandby|DK|57.492|10.496|2518
-Storvorde|DK|57.004|10.101|2796
-Store Heddinge|DK|55.310|12.389|3679
-Støvring|DK|56.885|9.838|6239
-Stoholm|DK|56.485|9.146|2202
-Stilling|DK|56.062|9.988|3655
-Stige|DK|55.439|10.409|2182
-Stenløse|DK|55.768|12.197|19998
-Stenlille|DK|55.539|11.591|1905
-Stege|DK|54.987|12.285|3881
-Stavtrup|DK|56.131|10.120|3519
-Stavnsholt|DK|55.815|12.405|5658
-Starup|DK|55.241|9.535|2091
-Spentrup|DK|56.537|10.038|2155
-Sorø|DK|55.432|11.555|7167
-Søndersø|DK|55.485|10.255|2850
-Sønderborg|DK|54.909|9.789|27033
-Sønder Bjert|DK|55.453|9.567|1815
-Søften|DK|56.238|10.085|2030
-Solrød|DK|55.536|12.183|2000
-Solbjerg|DK|56.043|10.086|2964
-Snoghøj|DK|55.523|9.721|2371
-Snejbjerg|DK|56.133|8.904|3513
-Smørumnedre|DK|55.742|12.303|9507
-Slangerup|DK|55.850|12.183|6829
-Slagelse|DK|55.403|11.355|31896
-Skævinge|DK|55.908|12.150|2555
-Skaerbaek|DK|55.157|8.769|3174
-Skovby|DK|56.157|9.945|2489
-Skørping|DK|56.836|9.893|2722
-Skælskør|DK|55.251|11.294|6455
-Skjern|DK|55.950|8.500|7145
-Skive|DK|56.567|9.027|20815
-Skibby|DK|55.751|11.961|2661
-Skanderborg|DK|56.034|9.932|13543
-Skagen|DK|57.721|10.584|9747
-Sindal|DK|57.471|10.203|2898
-Silkeborg|DK|56.170|9.545|41674
-Seden|DK|55.426|10.443|3350
-Sæby|DK|57.332|10.523|8435
-Sakskøbing|DK|54.800|11.626|4928
-Sabro|DK|56.213|10.034|1977
-Ryomgård|DK|56.384|10.503|1952
-Ry|DK|56.090|9.765|4909
-Rudkøbing|DK|54.936|10.710|4666
-Roskilde|DK|55.642|12.080|44285
-Rønnede|DK|55.257|12.021|2395
-Rønne|DK|55.101|14.707|13890
-Rønde|DK|56.301|10.475|2213
-Rødvig|DK|55.255|12.379|1783
-Rødovre|DK|55.681|12.454|30000
-Rødekro|DK|55.071|9.335|5452
-Rødding|DK|55.366|9.063|2769
-Rødbyhavn|DK|54.659|11.355|2145
-Rødby|DK|54.695|11.389|2379
-Ringsted|DK|55.443|11.790|20188
-Ringkøbing|DK|56.090|8.244|9315
-Ringe|DK|55.238|10.479|4849
-Ribe|DK|55.331|8.770|7983
-Randers|DK|56.461|10.036|55780
-Præstø|DK|55.124|12.045|3695
-Pandrup|DK|57.221|9.676|2942
-Padborg|DK|54.827|9.362|4684
-Otterup|DK|55.515|10.398|4522
-Osted|DK|55.562|11.958|2122
-Ørslev|DK|55.044|11.968|1801
-Ølstykke|DK|55.796|12.155|5348
-Ølgod|DK|55.807|8.629|3891
-Oksbøl|DK|55.627|8.288|2845
-Odense|DK|55.396|10.388|145931
-Odder|DK|55.973|10.153|11009
-Nyråd|DK|55.005|11.961|2224
-Nykøbing Falster|DK|54.769|11.874|16807
-Nykøbing Sjælland|DK|55.925|11.671|5596
-Nykøbing Mors|DK|56.793|8.853|9326
-Nyborg|DK|55.313|10.790|15826
-Næstved|DK|55.230|11.761|40660
-Nordby|DK|55.446|8.398|2512
-Nordborg|DK|55.057|9.741|7406
-Nørresundby|DK|57.059|9.923|22083
-Nørre Alslev|DK|54.898|11.884|2128
-Nørre Åby|DK|55.461|9.879|2678
-Nødebo|DK|55.979|12.347|1875
-Nivå|DK|55.934|12.505|8035
-Nibe|DK|56.981|9.639|4376
-Nexø|DK|55.061|15.131|3841
-Neder Vindinge|DK|55.032|11.884|1900
-Neder Holluf|DK|55.365|10.448|5612
-Nakskov|DK|54.830|11.136|14081
-Munkebo|DK|55.456|10.554|5225
-Middelfart|DK|55.506|9.731|13596
-Marstal|DK|54.856|10.517|2265
-Mårslet|DK|56.067|10.161|2698
-Maribo|DK|54.777|11.500|5349
-Mariager|DK|56.650|9.975|2433
-Måløv|DK|55.755|12.323|8513
-Malling|DK|56.036|10.196|3339
-Lystrup|DK|56.237|10.238|9107
-Lynge|DK|55.839|12.277|4284
-Lunderskov|DK|55.484|9.299|2687
-Løkken|DK|57.370|9.715|8828
-Løjt Kirkeby|DK|55.090|9.461|1975
-Løgumkloster|DK|55.059|8.955|3056
-Løgten|DK|56.275|10.312|5048
-Løgstør|DK|56.962|9.258|4469
-Liseleje|DK|56.013|11.965|2906
-Lind|DK|56.106|8.979|3777
-Værløse|DK|55.783|12.369|13024
-Lillerød|DK|55.875|12.346|15359
-Lemvig|DK|56.549|8.310|7330
-Lejre|DK|55.605|11.975|2036
-Langeskov|DK|55.357|10.584|3713
-Langå|DK|56.390|9.895|2710
-Kruså|DK|54.851|9.401|1694
-Korsør|DK|55.330|11.139|15029
-Køge|DK|55.458|12.182|33885
-Copenhagen|DK|55.676|12.566|1153615
-Kongens Lyngby|DK|55.770|12.504|10600
-Kolt|DK|56.108|10.070|5061
-Kolding|DK|55.490|9.472|55363
-Klarup|DK|57.012|10.056|3352
-Kjellerup|DK|56.286|9.435|4514
-Kirke Hvalsø|DK|55.592|11.863|4086
-Kibæk|DK|56.032|8.857|2656
-Kerteminde|DK|55.449|10.658|5748
-Kås|DK|57.198|9.672|1990
-Karup|DK|56.307|9.168|2176
-Kalundborg|DK|55.680|11.089|15939
-Jyllinge|DK|55.753|12.103|9981
-Jyderup|DK|55.664|11.420|3984
-Juelsminde|DK|55.709|10.017|3667
-Jægerspris|DK|55.852|11.986|3805
-Jelling|DK|55.756|9.426|3059
-Ishøj|DK|55.615|12.352|19453
-Ikast|DK|56.139|9.158|14692
-Hvidovre|DK|55.657|12.474|49380
-Hvide Sande|DK|55.999|8.126|3291
-Hurup|DK|56.749|8.420|2769
-Hundested|DK|55.964|11.850|8615
-Humlebæk|DK|55.962|12.534|8965
-Horsens|DK|55.861|9.850|58646
-Hornsyld|DK|55.756|9.856|1619
-Hornslet|DK|56.316|10.320|4906
-Hornbæk|DK|56.090|12.457|3223
-Hørve|DK|55.753|11.453|2382
-Høruphav|DK|54.910|9.899|2514
-Hørsholm|DK|55.881|12.501|36670
-Hørning|DK|56.087|10.037|6085
-Høng|DK|55.507|11.289|3789
-Højby|DK|55.332|10.437|4406
-Holsted|DK|55.511|8.919|3096
-Holstebro|DK|56.360|8.616|32072
-Holeby|DK|54.711|11.464|1844
-Holbæk|DK|55.718|11.713|24544
-Hobro|DK|56.643|9.790|11064
-Hjortshøj|DK|56.248|10.265|2515
-Hjørring|DK|57.464|9.982|24634
-Hjallerup|DK|57.165|10.146|3320
-Hirtshals|DK|57.588|9.959|6653
-Hinnerup|DK|56.266|10.063|7055
-Hillerød|DK|55.928|12.301|30853
-Herning|DK|56.136|8.977|44763
-Helsingør|DK|56.036|12.614|35048
-Helsinge|DK|56.023|12.198|7354
-Hellebæk|DK|56.068|12.558|5243
-Hedensted|DK|55.770|9.701|10048
-Havdrup|DK|55.545|12.124|3828
-Haslev|DK|55.323|11.964|10588
-Hårlev|DK|55.349|12.234|2423
-Hårby|DK|55.224|10.123|2400
-Harboøre|DK|56.618|8.181|1745
-Hanstholm|DK|57.115|8.617|2418
-Hammerum|DK|56.134|9.061|3025
-Hammel|DK|56.258|9.863|6138
-Hals|DK|56.996|10.308|2388
-Hadsund|DK|56.715|10.117|5066
-Hadsten|DK|56.328|10.049|7020
-Haderslev|DK|55.249|9.488|20825
-Gundsømagle|DK|55.736|12.152|2149
-Guderup|DK|54.990|9.872|2424
-Græsted|DK|56.066|12.285|3310
-Grindsted|DK|55.757|8.928|9414
-Greve|DK|55.583|12.300|47671
-Grenaa|DK|56.416|10.878|14317
-Gråsten|DK|54.919|9.595|4022
-Gram|DK|55.289|9.049|2548
-Gørlev|DK|55.539|11.227|2269
-Glostrup|DK|55.667|12.404|20673
-Glamsbjerg|DK|55.272|10.105|3099
-Gjellerup|DK|56.146|9.055|3731
-Give|DK|55.845|9.238|4240
-Gistrup|DK|56.994|9.991|3622
-Gilleleje|DK|56.122|12.311|5799
-Ganløse|DK|55.791|12.264|2843
-Galten|DK|56.159|9.917|4895
-Fuglebjerg|DK|55.306|11.548|1985
-Frejlev|DK|57.006|9.817|2286
-Frederiksværk|DK|55.971|12.023|12176
-Frederikssund|DK|55.840|12.069|14564
-Frederikshavn|DK|57.441|10.537|24103
-Frederiksberg|DK|55.679|12.535|95029
-Frederiksberg|DK|55.416|11.569|3142
-Fredericia|DK|55.566|9.753|36946
-Fredensborg|DK|55.976|12.403|8249
-Framlev|DK|56.157|10.013|3067
-Forlev|DK|55.374|11.260|2058
-Fløng|DK|55.662|12.187|11108
-Fjerritslev|DK|57.088|9.266|3441
-Fensmark|DK|55.279|11.804|4203
-Farum|DK|55.809|12.361|18376
-Farsø|DK|56.773|9.339|3271
-Faxe Ladeplads|DK|55.220|12.170|2837
-Faxe|DK|55.256|12.119|3747
-Faaborg|DK|55.095|10.242|7239
-Espergærde|DK|55.995|12.547|11358
-Esbjerg|DK|55.470|8.452|72205
-Ejby|DK|55.689|11.847|1987
-Ejby|DK|55.486|12.082|2692
-Ejby|DK|55.430|9.930|1996
-Egtved|DK|55.616|9.308|2151
-Ebeltoft|DK|56.194|10.682|7501
-Dybbøl|DK|54.911|9.736|2303
-Dronninglund|DK|57.160|10.293|3084
-Dragør|DK|55.593|12.672|11045
-Dianalund|DK|55.531|11.492|3605
-Christianshavn|DK|55.674|12.595|10140
-Christiansfeld|DK|55.358|9.487|2709
-Charlottenlund|DK|55.752|12.575|40000
-Bullerup|DK|55.427|10.471|2982
-Brovst|DK|57.097|9.523|2710
-Brørup|DK|55.482|9.018|4233
-Brønderslev|DK|57.270|9.941|11671
-Broager|DK|54.889|9.675|3376
-Brenderup|DK|55.484|9.979|1366
-Brejning|DK|55.666|9.672|2220
-Brædstrup|DK|55.972|9.611|3130
-Brande|DK|55.943|9.128|6357
-Bramming|DK|55.469|8.700|6726
-Borup|DK|55.495|11.976|3120
-Bording Kirkeby|DK|56.169|9.244|2104
-Børkop|DK|55.642|9.650|3561
-Bogense|DK|55.567|10.089|3410
-Blovstrød|DK|55.870|12.386|2137
-Bjæverskov|DK|55.458|12.037|2618
-Bjerringbro|DK|56.378|9.661|7390
-Birkerød|DK|55.848|12.428|18901
-Billund|DK|55.733|9.108|6160
-Bellinge|DK|55.335|10.320|4129
-Beder|DK|56.060|10.212|4214
-Ballerup|DK|55.732|12.363|40000
-Avlum|DK|56.265|8.793|2875
-Auning|DK|56.431|10.378|2509
-Augustenborg|DK|54.952|9.872|3132
-Assentoft|DK|56.442|10.152|2432
-Assens|DK|55.270|9.901|6053
-Asnæs|DK|55.812|11.501|2441
-Årup|DK|55.373|10.041|2592
-Årslev|DK|55.304|10.464|3228
-Aars|DK|56.804|9.514|7771
-Århus|DK|56.157|10.211|237551
-Arden|DK|56.769|9.862|2516
-Allingåbro|DK|56.464|10.320|1842
-Ålestrup|DK|56.695|9.493|2787
-Aalborg|DK|57.048|9.919|122219
-Albertslund|DK|55.657|12.364|30000
-Åkirkeby|DK|55.071|14.920|2195
-Åbybro|DK|57.162|9.730|4849
-Aabenraa|DK|55.044|9.417|16344
-Sundby|DK|54.767|11.850|2843
 Roseau|DM|15.302|-61.388|16571
 Yamasá|DO|18.773|-70.026|11595
 Villa Vásquez|DO|19.741|-71.446|11642
@@ -32260,3 +31933,6449 @@ Bulawayo|ZW|-20.150|28.583|699385
 Bindura|ZW|-17.302|31.331|37423
 Beitbridge|ZW|-22.217|30.000|26459
 Chitungwiza|ZW|-18.013|31.076|340360
+Yttrup|DK|56.723|8.997|0
+Yppenbjerg|DK|55.617|11.183|0
+Ypnested|DK|55.158|15.060|0
+Yding|DK|56.001|9.769|0
+Yderby|DK|55.977|11.346|0
+Ydby|DK|56.710|8.408|0
+Vysteby|DK|55.201|14.729|0
+Vust Holme|DK|57.091|9.088|0
+Vust|DK|57.112|9.070|0
+Væth|DK|56.401|9.941|0
+Værum|DK|56.404|9.990|0
+Værslev|DK|55.656|11.211|0
+Vroue|DK|56.440|9.033|0
+Vrønding|DK|55.867|9.717|0
+Vrold|DK|56.028|9.888|0
+Værmelandshuse|DK|55.046|14.840|0
+Værløse|DK|55.276|12.145|0
+Vrist|DK|56.602|8.149|0
+Vrinners|DK|56.244|10.493|389
+Vringelby|DK|57.348|9.762|0
+Vriet|DK|54.828|11.455|0
+Vridsted|DK|56.443|9.006|0
+Vridsløsemagle|DK|55.686|12.293|0
+Vridsløselille|DK|55.659|12.333|0
+Vridsløse|DK|55.264|11.777|0
+Vrensted|DK|57.339|9.775|0
+Vrenderup|DK|55.616|8.726|0
+Vranum|DK|56.388|9.385|0
+Vrannerup|DK|55.496|9.388|0
+Vrangstrup|DK|56.317|9.886|0
+Vrangstrup|DK|55.400|11.726|0
+Vrangbæk|DK|57.401|10.475|0
+Vrågård|DK|55.004|8.722|0
+Vrads|DK|56.041|9.449|0
+Vråby|DK|55.345|12.161|0
+Vråby|DK|55.097|8.532|0
+Vrå|DK|57.354|9.942|2662
+Vrå|DK|56.728|9.979|0
+Vrå|DK|56.533|9.600|0
+Vrå|DK|56.173|9.011|0
+Vrå|DK|55.527|9.345|0
+Vostrup|DK|55.892|8.415|0
+Vorup|DK|56.445|10.040|0
+Vorre|DK|56.279|10.295|0
+Vornæs|DK|55.000|10.550|0
+Vorning|DK|56.528|9.727|0
+Vormark|DK|55.188|10.754|0
+Vork|DK|55.658|9.332|0
+Vorgod|DK|56.086|8.699|0
+Vor Frue|DK|55.612|12.097|0
+Vordingborg|DK|55.008|11.911|17868
+Vorde|DK|56.531|9.342|0
+Vorbjerg|DK|55.948|9.709|0
+Vorbasse|DK|55.630|9.082|1275
+Vøjstrup|DK|55.248|10.212|0
+Vonsild|DK|55.455|9.476|0
+Vonsbæk|DK|55.284|9.601|0
+Vonge|DK|55.860|9.419|0
+Volstrup|DK|57.315|10.438|0
+Volstrup|DK|56.956|9.776|0
+Volstrup|DK|55.197|10.494|0
+Volsted|DK|56.909|9.902|0
+Volshave|DK|54.802|11.229|0
+Volling|DK|56.600|8.883|0
+Vollerup|DK|55.723|11.066|0
+Vollerup|DK|55.341|11.425|0
+Vollerup|DK|54.997|9.201|0
+Vollerup|DK|54.909|12.173|0
+Vollerup|DK|54.926|9.855|0
+Vollerslev|DK|55.420|12.005|0
+Voldum|DK|56.366|10.172|0
+Voldtofte|DK|55.239|10.072|0
+Volderslev|DK|55.333|10.397|0
+Voldby|DK|56.462|10.869|0
+Voldby|DK|56.236|9.884|0
+Voldby|DK|55.495|9.836|0
+Voldbro|DK|55.273|9.979|0
+Vokslev|DK|56.966|9.680|0
+Vojens|DK|55.246|9.306|7475
+Vognstrup|DK|56.396|8.540|0
+Vognsild|DK|56.757|9.421|240
+Vogn|DK|57.503|10.320|0
+Voervadsbro|DK|56.014|9.701|0
+Voerså|DK|57.208|10.487|532
+Voerladegård|DK|56.025|9.733|0
+Voerbjerg|DK|57.084|9.900|0
+Voer|DK|56.521|10.272|0
+Voel|DK|56.191|9.694|0
+Vodstrup|DK|56.813|8.827|0
+Vodskov|DK|57.109|10.022|4822
+Vodrup|DK|54.868|10.343|0
+Vodder|DK|55.221|8.844|0
+Vængemose|DK|55.075|10.745|0
+Vivild|DK|56.484|10.445|788
+Vivild|DK|56.316|10.016|0
+Viverup|DK|55.303|12.096|0
+Vivede|DK|55.255|12.177|0
+Vive|DK|56.706|10.039|0
+Vium|DK|56.532|8.445|0
+Vium|DK|56.328|9.378|0
+Viuf|DK|55.585|9.492|0
+Vitved|DK|56.047|10.040|0
+Vittrup|DK|57.394|9.783|0
+Vittrup|DK|55.571|9.063|0
+Vittinge|DK|55.278|10.265|0
+Vitten|DK|56.293|9.995|0
+Vittarp|DK|55.695|8.373|0
+Vistorp|DK|55.293|10.023|0
+Vistoft|DK|56.196|10.510|0
+Vissing|DK|56.364|10.013|0
+Vissenbjerg|DK|55.385|10.138|3265
+Visse|DK|56.992|9.930|0
+Viskinge|DK|55.662|11.269|0
+Visby|DK|56.794|8.463|0
+Visby|DK|55.010|8.780|0
+Visborg|DK|56.737|10.149|417
+Visbjerg|DK|55.081|9.027|0
+Virum|DK|55.795|12.451|15200
+Virring|DK|56.434|10.245|0
+Virring|DK|56.031|10.036|0
+Virklund|DK|56.132|9.556|3113
+Virket|DK|54.835|11.975|0
+Vipperød|DK|55.668|11.740|2345
+Vippel|DK|54.934|9.224|0
+Vinum|DK|55.128|8.814|0
+Vintre Møller|DK|55.650|11.810|0
+Vinterslev|DK|56.335|10.052|0
+Vintersbølle|DK|55.001|11.976|0
+Vinten|DK|55.901|9.750|0
+Vinstrup|DK|56.612|10.182|0
+Vinstrup|DK|55.648|11.694|0
+Vinstrup|DK|55.352|11.578|0
+Vinkel|DK|56.554|9.144|0
+Vinkel|DK|56.417|9.501|0
+Vingsted|DK|55.667|9.367|0
+Vindum|DK|56.374|9.581|0
+Vindinge|DK|55.623|12.139|3219
+Vindinge|DK|55.307|10.729|0
+Vinding|DK|56.023|9.567|0
+Vinding|DK|55.673|9.575|0
+Vinderup|DK|56.482|8.780|3103
+Vinderup|DK|55.357|11.737|0
+Vinderslev|DK|56.255|9.429|0
+Vinderød|DK|55.988|12.028|0
+Vindelev|DK|55.796|9.491|0
+Vindekilde|DK|55.782|11.408|0
+Vinde-Helsinge|DK|55.529|11.197|0
+Vindebyskov|DK|54.940|11.125|0
+Vindeby|DK|55.045|10.613|2355
+Vindeby|DK|54.923|11.156|0
+Vindeby|DK|54.864|10.752|0
+Vindebæk|DK|54.888|12.194|0
+Vinde|DK|56.580|9.009|0
+Vindbyholt|DK|55.193|12.072|0
+Vindblæs|DK|56.928|9.349|0
+Vind|DK|56.256|8.564|0
+Vimtrup|DK|55.399|9.012|0
+Vilsund Vest|DK|56.881|8.626|0
+Vilsted|DK|56.904|9.286|0
+Vilslev|DK|55.398|8.700|438
+Vilsbæk|DK|54.916|9.399|0
+Vils|DK|56.763|8.729|0
+Villumstrup|DK|55.289|10.646|0
+Villingerød|DK|56.071|12.387|0
+Villingebæk|DK|56.096|12.411|0
+Villestoft|DK|55.416|10.304|0
+Villersø|DK|56.447|10.814|0
+Villerslev|DK|56.819|8.487|0
+Villendrup|DK|56.333|10.204|0
+Villebøl|DK|55.406|8.881|0
+Vilgestrup|DK|55.521|12.106|0
+Vile|DK|56.720|8.865|0
+Vildbjerg|DK|56.200|8.767|3773
+Vigsø|DK|57.096|8.718|0
+Vigsnæs|DK|54.889|11.657|0
+Vigersted|DK|55.483|11.887|0
+Vigerslev|DK|55.474|10.218|0
+Vigen|DK|55.730|12.123|0
+Vig|DK|55.851|11.586|0
+Viet|DK|54.723|11.348|0
+Vierne|DK|55.472|10.115|0
+Viemose|DK|55.020|12.132|0
+Vielsted|DK|55.527|11.648|0
+Vidstrup|DK|57.503|9.947|0
+Vidstrup|DK|56.336|9.768|0
+Viderup|DK|56.197|10.519|0
+Videbæk|DK|56.088|8.629|4299
+Viby|DK|56.123|10.151|31756
+Viby|DK|55.549|12.024|5227
+Viby|DK|55.497|10.686|0
+Viby|DK|55.454|9.842|0
+Viborg|DK|56.453|9.402|41239
+Vibøge|DK|54.897|9.969|0
+Vibæk|DK|55.598|8.395|0
+Viberup|DK|55.595|12.584|0
+Vibberstoft|DK|56.830|8.516|0
+Væggerløse|DK|54.712|11.925|1292
+Vetterslev|DK|55.388|11.766|0
+Vestrup|DK|56.749|9.446|0
+Vestrup|DK|56.480|10.138|0
+Vestervig|DK|56.763|8.319|555
+Vester Velling|DK|56.433|9.837|0
+Vester Vedsted|DK|55.291|8.681|317
+Vester Vandet|DK|57.011|8.583|0
+Vester Vamdrup|DK|55.434|9.263|0
+Vester Ulslev|DK|54.692|11.573|0
+Vester Tostrup|DK|56.620|9.466|0
+Vester Torup|DK|57.101|9.124|0
+Vester Torsted|DK|55.609|9.208|0
+Vester Tørslev|DK|56.598|9.901|0
+Vester Tirsted|DK|54.732|11.351|0
+Vester Terp|DK|55.096|8.900|0
+Vester Svenstrup|DK|57.134|9.371|0
+Vester Sottrup|DK|54.947|9.697|0
+Vester Snogbæk|DK|54.964|9.693|0
+Vester Skovby|DK|54.782|11.116|0
+Vesterskov|DK|57.244|10.269|0
+Vesterskov|DK|54.881|10.473|0
+Vester Skørringe|DK|54.755|11.374|0
+Vester-Skerninge|DK|55.073|10.455|1315
+Vester Såby|DK|55.630|11.837|0
+Vester Rendbæk|DK|57.239|9.708|0
+Vester Rabjerg|DK|56.017|8.420|0
+Vester Ørum|DK|55.824|9.579|0
+Vesterø Havn|DK|57.294|10.925|0
+Vester Nordlunde|DK|54.878|11.216|0
+Vester Nebel|DK|55.566|9.406|0
+Vester Nebel|DK|55.540|8.544|425
+Vester Marup|DK|55.970|8.484|0
+Vestermark|DK|57.514|10.022|0
+Vestermark|DK|54.899|11.649|0
+Vestermark|DK|54.871|9.889|0
+Vestermarie|DK|55.108|14.824|224
+Vester Lyby|DK|56.643|8.994|0
+Vesterlund|DK|55.914|9.326|0
+Vester Lindet|DK|55.313|9.107|0
+Vester Lem|DK|56.584|8.756|0
+Vesterled|DK|55.653|12.391|0
+Vester Kærby|DK|55.434|10.511|0
+Vesterklit|DK|57.600|10.223|0
+Vester Kippinge|DK|54.908|11.773|0
+Vester Karleby|DK|54.865|11.165|0
+Vester Jølby|DK|56.827|8.650|0
+Vester Hvidbjerg|DK|56.746|8.592|0
+Vester Hæsinge|DK|55.196|10.251|0
+Vester Hornum|DK|56.832|9.360|541
+Vester Højst|DK|55.000|9.014|0
+Vester Hjermitslev|DK|57.286|9.758|0
+Vesterhede|DK|55.689|8.918|0
+Vesterhede|DK|55.105|8.533|0
+Vester Hassing|DK|57.068|10.126|2608
+Vester Halne Enge|DK|57.107|9.791|0
+Vester Halne|DK|57.119|9.838|0
+Vester Grønning|DK|56.648|9.049|0
+Vester Gjerndrup|DK|55.517|9.005|0
+Vester Gesten|DK|55.524|9.193|0
+Vester Gasse|DK|55.152|8.802|0
+Vestergård|DK|55.149|8.928|0
+Vestergard|DK|54.850|9.233|0
+Vester Gammelby|DK|55.012|8.705|0
+Vester Gammelby|DK|55.000|8.700|0
+Vesterenge|DK|55.354|8.834|0
+Vester Egesborg|DK|55.155|11.818|0
+Vester Egense|DK|55.570|10.212|0
+Vester Egede|DK|55.266|11.965|0
+Vester Dølby|DK|56.608|8.981|0
+Vester Debel|DK|55.721|8.392|0
+Vesterby|DK|57.057|9.564|0
+Vesterby|DK|56.779|8.305|0
+Vesterby|DK|56.106|8.261|0
+Vesterby|DK|55.716|9.940|0
+Vesterby|DK|55.578|10.244|0
+Vesterby|DK|54.942|11.387|0
+Vesterby|DK|54.898|10.747|0
+Vester Broby|DK|55.381|11.620|0
+Vesterborg|DK|54.857|11.271|0
+Vester Børsting|DK|56.461|9.067|0
+Vester Bølle|DK|56.712|9.365|0
+Vesterbo|DK|54.905|11.111|0
+Vesterbæk|DK|55.264|8.795|0
+Vester Bjerregrav|DK|56.581|9.496|0
+Vesterbjerge|DK|55.927|8.753|0
+Vester Bisholt|DK|55.820|9.980|0
+Vester Åst|DK|55.733|9.200|0
+Vester Assels|DK|56.701|8.644|0
+Vester Alling|DK|56.411|10.276|0
+Vester Åby|DK|55.085|10.381|0
+Vester Åbølling|DK|55.213|8.694|0
+Vestenskov|DK|54.792|11.100|0
+Vestenbæk|DK|54.978|12.010|0
+Vestbjerg|DK|57.132|9.959|3091
+Vestbirk|DK|55.966|9.718|0
+Vesløs|DK|57.038|8.975|0
+Verup|DK|55.561|11.510|0
+Verninge|DK|55.292|10.219|0
+Verjerslev|DK|56.306|9.717|0
+Vented|DK|55.666|11.568|0
+Venslev|DK|55.777|11.905|0
+Venslev|DK|55.255|11.456|0
+Venø By|DK|56.552|8.627|0
+Venning|DK|56.456|9.869|0
+Venner|DK|56.038|8.321|0
+Vennemose|DK|54.979|8.908|0
+Vennebjerg|DK|57.451|9.854|0
+Veng|DK|56.110|9.882|0
+Venemose|DK|55.477|11.183|0
+Vemmingbund|DK|54.894|9.699|0
+Vemmetofte Strand|DK|55.237|12.240|0
+Vemmenæs|DK|54.978|10.663|0
+Vemmeløse|DK|55.299|11.422|0
+Vemmelev|DK|55.355|11.247|0
+Vemmedrup|DK|55.463|12.063|0
+Vemb|DK|56.342|8.337|1224
+Vellinge Huse|DK|55.554|10.364|0
+Vellinge|DK|55.557|10.378|0
+Velling|DK|56.052|8.311|259
+Velling|DK|56.031|9.515|0
+Vellev|DK|56.370|9.821|0
+Vellerup|DK|55.742|11.877|0
+Vellerup|DK|55.102|9.121|0
+Velgårde|DK|55.972|9.465|0
+Velds|DK|56.474|9.616|0
+Veldbæk|DK|55.470|8.519|0
+Veksø|DK|55.755|12.238|1786
+Veksebo|DK|55.983|12.427|0
+Vejstruprød|DK|55.395|9.534|0
+Vejstrup|DK|55.400|9.550|0
+Vejstrup|DK|55.106|10.712|0
+Vejrup|DK|55.807|8.395|0
+Vejrup|DK|55.472|9.954|0
+Vejrup|DK|55.388|10.280|0
+Vejrumstad|DK|56.435|8.584|0
+Vejrum|DK|56.450|8.586|0
+Vejrum|DK|56.433|9.567|0
+Vejrø|DK|55.033|11.367|0
+Vejringe|DK|54.867|12.083|0
+Vejlø|DK|55.178|11.754|0
+Vejleby Holle|DK|54.732|11.331|0
+Vejleby|DK|55.765|11.892|0
+Vejleby|DK|55.748|11.458|0
+Vejleby|DK|54.747|11.326|0
+Vejle|DK|55.709|9.536|60231
+Vejle|DK|55.272|10.313|0
+Vejlby|DK|56.577|8.140|0
+Vejlby|DK|56.466|10.343|0
+Vejlby|DK|56.383|10.815|0
+Vejlby|DK|56.195|10.215|0
+Vejlby|DK|55.607|9.723|0
+Vejlby|DK|55.508|9.817|0
+Vejhuse|DK|56.753|10.263|0
+Vejgård|DK|57.039|9.959|0
+Vejers Strand|DK|55.626|8.124|0
+Vejerslev|DK|56.748|8.720|0
+Vejers|DK|55.620|8.174|0
+Vejenbrød|DK|55.930|12.470|0
+Vejen|DK|55.481|9.138|8525
+Vejby Strand|DK|56.078|12.118|0
+Vejby|DK|57.380|9.874|0
+Vejby|DK|56.605|8.810|0
+Vejby|DK|56.064|12.142|0
+Vejbæk|DK|54.877|9.323|0
+Veggerslev|DK|56.475|10.837|0
+Veggerby|DK|56.897|9.640|0
+Vegger|DK|56.885|9.571|0
+Veflinge|DK|55.475|10.160|0
+Veerst|DK|55.559|9.245|0
+Vedtofte|DK|55.309|10.050|0
+Vedsted|DK|57.167|9.700|0
+Vedsted|DK|55.197|9.365|0
+Vedslet|DK|55.966|10.009|0
+Vedskølle|DK|55.404|12.181|0
+Vedskølle|DK|55.226|11.369|0
+Vedersø Klit|DK|56.254|8.137|0
+Vedersø|DK|56.235|8.198|0
+Vedelshave|DK|55.509|9.947|0
+Veddum|DK|56.775|10.173|0
+Veddinge|DK|55.829|11.453|0
+Veddinge|DK|55.817|11.550|0
+Veddelev|DK|55.679|12.080|0
+Vedde|DK|55.531|11.545|266
+Vedbysønder|DK|55.418|11.442|0
+Vedbynørre|DK|55.436|11.443|0
+Vedby|DK|55.474|10.240|0
+Vedbøl|DK|55.187|9.386|0
+Vedbæk|DK|55.847|12.569|0
+Vebbestrup|DK|56.726|9.824|0
+Væde|DK|55.428|10.151|0
+Vattrup|DK|56.289|9.368|0
+Vassingerød|DK|55.832|12.309|0
+Vasby|DK|55.677|12.205|0
+Vårst|DK|56.937|10.054|0
+Varpelev|DK|55.356|12.280|0
+Vårø|DK|54.960|10.586|0
+Varnæs|DK|55.014|9.569|0
+Varming|DK|55.316|8.856|0
+Varmark|DK|55.447|9.608|0
+Varde|DK|55.621|8.481|14039
+Vantore|DK|54.662|11.785|0
+Vantinge|DK|55.234|10.395|0
+Vansted Mark|DK|57.449|9.956|0
+Vanløse|DK|55.553|11.678|0
+Vangså|DK|57.006|8.461|0
+Vangede|DK|55.750|12.513|0
+Vang|DK|56.986|8.512|0
+Vang|DK|55.247|14.735|0
+Vandsted|DK|56.923|9.238|0
+Vandling|DK|55.227|9.523|0
+Vandflod|DK|55.560|8.121|0
+Vandet|DK|56.351|9.442|0
+Vandel|DK|55.708|9.213|0
+Vandborg|DK|56.547|8.177|0
+Vammen|DK|56.531|9.573|544
+Vamdrup|DK|55.428|9.284|4943
+Valsted|DK|56.976|9.564|0
+Valsømagle|DK|55.491|11.820|0
+Valsølille|DK|55.522|11.834|0
+Valsgård|DK|56.673|9.849|0
+Vålse|DK|54.931|11.778|0
+Valore|DK|55.507|12.034|0
+Valløby|DK|55.398|12.239|0
+Vallestrup|DK|55.675|11.710|0
+Vallerød|DK|55.896|12.517|0
+Vallensved|DK|55.265|11.653|0
+Vallensbæk|DK|55.622|12.385|16515
+Vallekilde|DK|55.743|11.425|0
+Vallebo|DK|55.225|12.129|0
+Valby|DK|56.057|12.206|0
+Vadum|DK|56.632|8.762|0
+Vadsted|DK|56.252|9.827|0
+Vådde|DK|56.133|9.183|0
+Våbensted|DK|54.789|11.586|0
+Uvelse|DK|55.867|12.237|0
+Uve|DK|55.789|9.187|0
+Utterslevmader|DK|54.953|11.172|0
+Utterslev|DK|54.924|11.195|0
+Uth|DK|55.820|9.876|0
+Ustrup|DK|55.204|9.386|0
+Usserød|DK|55.891|12.490|0
+Urup|DK|55.521|11.989|0
+Urup|DK|55.389|10.607|0
+Urlev|DK|55.763|9.780|0
+Urehoved|DK|54.917|10.400|0
+Ure|DK|55.530|9.321|0
+Unnerup|DK|56.071|12.170|0
+Unnerud|DK|55.861|11.687|0
+Ungstrup|DK|56.294|9.361|0
+Undløse|DK|55.605|11.588|1105
+Underup|DK|55.942|9.701|0
+Understed|DK|57.368|10.460|0
+Underbjerg|DK|56.587|8.279|0
+Ulstrup|DK|56.390|9.794|1963
+Ulstrup|DK|55.732|10.960|0
+Ulstrup|DK|55.540|11.255|0
+Ulstrup|DK|55.433|10.233|0
+Ulstrup|DK|55.328|11.676|0
+Ulstrup|DK|55.088|8.943|0
+Ulsted|DK|57.075|10.260|0
+Ulslev|DK|54.740|12.010|0
+Ulse|DK|55.292|12.015|0
+Ulriksdal|DK|54.717|11.583|0
+Ullits|DK|56.727|9.287|0
+Ullerup|DK|57.084|9.142|0
+Ullerup|DK|57.013|9.246|0
+Ullerup|DK|56.768|8.444|0
+Ullerup|DK|55.962|11.887|368
+Ullerup|DK|55.877|9.200|0
+Ullerup|DK|55.582|12.600|0
+Ullerup|DK|55.512|10.252|0
+Ullerup|DK|55.173|8.799|0
+Ullerup|DK|54.966|9.660|0
+Ullerslev|DK|55.362|10.652|2735
+Ullerslev|DK|54.818|11.212|0
+Ullemarke|DK|55.003|12.331|0
+Ulkær|DK|55.783|9.558|0
+Ulkind|DK|55.824|9.127|0
+Ulkestrup|DK|55.610|11.524|0
+Ulkendrup|DK|55.492|10.317|0
+Ulkebøl|DK|54.929|9.821|0
+Ulfborg Kirkeby|DK|56.299|8.342|0
+Ulfborg|DK|56.267|8.322|1994
+Uldum|DK|55.847|9.590|1364
+Uldal|DK|55.242|9.230|0
+Ulbølle|DK|55.074|10.421|0
+Ulbjerg|DK|56.628|9.346|0
+Uhre|DK|55.932|9.051|0
+Uhre|DK|55.724|9.502|0
+Uglev|DK|56.611|8.544|0
+Uglestrup|DK|55.658|11.909|0
+Uglerup|DK|55.760|11.689|0
+Uglerup|DK|55.586|11.369|0
+Ugledige|DK|55.073|12.008|0
+Uglebjerg|DK|55.138|10.947|0
+Ugilt|DK|57.423|10.138|0
+Uggerslev|DK|55.533|10.308|365
+Uggerhalne|DK|57.132|10.067|0
+Uggerby|DK|57.566|10.111|0
+Uggeløse|DK|55.833|12.350|0
+Uggeløse|DK|55.839|12.262|0
+Uggelhuse|DK|56.469|10.218|0
+Ugerløse|DK|55.631|11.160|0
+Ugerløse|DK|55.587|11.654|0
+Ugelbølle|DK|56.305|10.412|0
+Uge|DK|54.965|9.309|0
+Udstrup|DK|55.550|11.750|0
+Udstolpe|DK|54.761|11.612|0
+Udsholt Strand|DK|56.112|12.208|0
+Udsholt|DK|56.095|12.204|0
+Udlejre|DK|55.788|12.139|0
+Udbyover|DK|56.649|10.214|0
+Udbyneder|DK|56.661|10.237|0
+Udbyhøj|DK|56.596|10.314|0
+Udby|DK|56.574|10.296|0
+Udby|DK|55.757|11.710|0
+Udby|DK|55.436|9.856|0
+Udby|DK|55.078|11.949|0
+Udby|DK|55.003|12.314|0
+Ubjerg|DK|54.913|8.856|0
+Ubby|DK|55.619|11.213|0
+Ubberup|DK|55.936|12.077|0
+Ubberup|DK|55.681|11.170|0
+Ubberup|DK|55.587|11.685|0
+Ubberud|DK|55.400|10.267|0
+Tyvse|DK|55.012|8.884|0
+Tyvelse|DK|55.457|11.422|0
+Tyvelse|DK|55.384|11.696|0
+Tystrup|DK|55.568|11.224|0
+Tystrup|DK|55.362|11.565|0
+Tystrup|DK|55.236|12.099|0
+Tystofte|DK|55.254|11.335|0
+Tyrstrup|DK|55.359|9.481|0
+Tyrsting|DK|55.940|9.541|0
+Tyrsted|DK|55.828|9.860|0
+Tylstrup|DK|57.195|9.953|1258
+Tygstrup|DK|56.775|8.335|0
+Tygestrup|DK|55.515|11.622|0
+Tybjerglille|DK|55.327|11.815|0
+Tybjerg|DK|55.349|11.810|0
+Tværskov|DK|55.455|10.227|0
+Tværby|DK|54.892|10.301|0
+Tvolm|DK|56.709|8.414|0
+Tvismark|DK|55.143|8.547|0
+Tvis|DK|56.321|8.709|0
+Tvingstrup|DK|55.912|9.930|0
+Tvindelstrup|DK|55.394|11.854|0
+Tvinde|DK|55.416|10.621|0
+Tvilho|DK|55.564|8.886|0
+Tvile|DK|55.533|8.834|0
+Tveskel|DK|56.339|8.605|0
+Tversted Kirkeby|DK|57.550|10.183|0
+Tversted|DK|57.581|10.185|0
+Tvenstrup|DK|56.000|10.158|0
+Tveje-Merløse|DK|55.693|11.698|0
+Tvedhuse|DK|56.514|10.688|0
+Tvede|DK|56.543|10.175|0
+Tved|DK|56.195|10.440|0
+Tved|DK|55.481|9.508|0
+Tved|DK|55.334|8.803|0
+Tved|DK|55.084|10.622|0
+Tved|DK|54.948|8.852|0
+Tustrup|DK|56.489|10.536|0
+Tuse|DK|55.711|11.625|0
+Turup|DK|55.301|9.996|0
+Tureby|DK|55.373|12.077|0
+Tunø By|DK|55.949|10.444|0
+Tungelund|DK|56.305|9.788|0
+Tune|DK|55.593|12.170|5681
+Tunderup|DK|54.786|12.035|0
+Tumbøl|DK|54.962|9.531|0
+Tulstrup|DK|56.157|9.149|0
+Tulstrup|DK|56.107|9.778|0
+Tulstrup|DK|56.073|12.255|0
+Tulstrup|DK|56.027|10.145|0
+Tulstrup|DK|55.957|12.230|0
+Tullebølle|DK|54.957|10.796|0
+Tuesbøl|DK|55.497|9.006|0
+Tuen|DK|57.588|10.289|0
+Tudved|DK|55.628|9.394|0
+Tryghuse|DK|54.788|11.135|0
+Tryggelev|DK|54.803|10.702|0
+Try|DK|57.310|10.284|0
+Try|DK|57.142|10.227|0
+Truust|DK|56.288|9.678|0
+Trustrup|DK|56.383|10.102|0
+Trustrup|DK|56.349|10.774|0
+Trustrup|DK|55.903|10.038|0
+Trunderup|DK|55.218|10.180|0
+Trunderup|DK|55.189|10.542|0
+Truelstrup|DK|55.531|12.026|0
+Truelstrup|DK|54.840|12.024|0
+True|DK|56.717|9.767|0
+True|DK|56.600|9.933|0
+True|DK|56.176|10.090|0
+Trudsø|DK|56.468|8.588|0
+Trudslev|DK|57.322|9.714|0
+Trøstrup|DK|55.436|10.252|0
+Trørød|DK|55.839|12.544|8576
+Trønninge|DK|55.711|11.575|0
+Trommerebakke|DK|55.005|14.991|0
+Troldhede|DK|55.992|8.745|0
+Troestrup|DK|56.584|9.573|0
+Troense|DK|55.033|10.644|1442
+Troelstrup|DK|56.846|9.535|0
+Troelstrup|DK|56.644|9.481|0
+Troelstrup|DK|56.491|9.134|0
+Troelstrup|DK|55.992|9.622|0
+Troelstrup|DK|55.318|11.938|0
+Troelse|DK|55.402|10.234|0
+Trængstrup|DK|56.841|9.657|0
+Trænge|DK|54.868|9.946|0
+Trælløse|DK|55.318|11.708|0
+Trællerup|DK|55.655|11.966|0
+Trælborg|DK|55.051|8.859|0
+Trige|DK|56.253|10.148|3476
+Tressebølle|DK|55.065|10.897|0
+Trend|DK|56.836|9.213|0
+Trelde|DK|55.620|9.777|0
+Trebjerg|DK|55.889|9.684|0
+Træden|DK|55.970|9.669|0
+Travsted|DK|54.984|8.944|0
+Tråsbøl|DK|54.978|9.552|0
+Trappeskov|DK|54.845|10.480|0
+Trappendal|DK|55.378|9.605|0
+Trappen|DK|54.900|9.600|0
+Tranum Strand|DK|57.166|9.412|0
+Tranum|DK|57.132|9.464|428
+Trans|DK|56.500|8.122|0
+Tranget|DK|57.357|10.137|0
+Tranekær|DK|54.998|10.844|11841
+Tranehuse|DK|56.493|10.650|0
+Tranegilde|DK|55.626|12.348|0
+Tranebjerg|DK|55.833|10.597|839
+Tranderup|DK|55.273|11.271|0
+Tranderup|DK|54.867|10.363|0
+Tranbjerg|DK|56.095|10.136|7307
+Tranbjerg|DK|55.589|8.698|0
+Tradsborg|DK|55.476|8.610|0
+Tradsbjerg|DK|56.399|8.618|0
+Trabjerg|DK|56.400|8.717|0
+Tovstrup|DK|56.175|9.816|0
+Tovstrup|DK|56.118|8.895|0
+Tovrup|DK|54.954|9.956|0
+Tovbro|DK|57.400|9.795|0
+Toustrup|DK|56.728|8.949|0
+Tostrup|DK|56.988|9.775|0
+Tostrup|DK|56.343|9.794|0
+Tostenæs|DK|54.928|12.157|0
+Torup Strand|DK|57.133|9.138|0
+Torup|DK|57.185|10.225|0
+Torup|DK|56.967|8.483|0
+Torup|DK|56.849|8.659|0
+Torup|DK|56.821|9.976|0
+Torup|DK|56.697|9.606|0
+Torup|DK|56.407|9.823|0
+Torup|DK|56.196|10.469|0
+Torup|DK|56.198|9.032|0
+Torup|DK|55.983|11.942|0
+Torup|DK|55.911|10.054|0
+Torup|DK|55.848|10.617|0
+Torup|DK|55.762|9.713|0
+Torup|DK|55.513|10.301|0
+Torup|DK|55.333|9.941|0
+Torup|DK|55.029|9.839|0
+Torup|DK|54.850|10.433|0
+Torum|DK|56.745|9.057|0
+Torstrup|DK|55.677|8.570|0
+Torsthoved|DK|54.888|9.889|0
+Torsted|DK|56.972|8.618|0
+Torsted Mølleby|DK|56.828|9.702|0
+Torsted|DK|56.200|8.417|0
+Torsted|DK|55.832|9.823|0
+Thorsminde|DK|56.373|8.127|314
+Torslunde|DK|55.625|12.254|0
+Torslunde|DK|55.711|11.491|0
+Torslunde|DK|54.923|11.072|0
+Torslunde|DK|54.694|11.490|0
+Torslev|DK|57.074|9.485|0
+Torshøj|DK|57.337|10.308|0
+Torrild|DK|55.981|10.052|0
+Torrig|DK|54.908|11.317|0
+Torpmagle|DK|55.959|11.915|0
+Torpet|DK|57.113|9.886|0
+Torpet|DK|55.443|11.759|0
+Torpe|DK|55.700|11.294|0
+Torpe|DK|55.526|11.279|0
+Torpe|DK|55.335|11.766|0
+Torpe|DK|55.008|12.382|0
+Torpe|DK|54.914|10.758|0
+Torpe|DK|54.809|11.178|0
+Torp|DK|56.956|8.670|0
+Torp|DK|56.761|8.569|0
+Torp|DK|55.947|9.723|0
+Torp|DK|55.564|9.665|0
+Torp|DK|55.033|9.850|0
+Torp|DK|54.982|9.373|0
+Torø Huse|DK|55.244|9.895|0
+Tornved|DK|55.652|11.438|0
+Tornum|DK|55.386|8.980|0
+Thorning|DK|56.284|9.330|0
+Tornemark|DK|55.235|12.049|0
+Tornemark|DK|55.243|11.526|0
+Tornby Strand|DK|57.560|9.914|0
+Torkilstrup|DK|55.652|11.881|0
+Torkilstrup|DK|54.873|11.934|0
+Toreby|DK|54.781|11.299|0
+Toreby|DK|54.754|11.787|611
+Torderup|DK|56.960|10.042|0
+Topshøj|DK|55.400|11.554|0
+Tøving|DK|56.856|8.758|0
+Tøvelde|DK|54.966|12.295|0
+Tøttrup|DK|56.833|9.661|0
+Tøttrup|DK|56.841|8.541|0
+Tøstrup|DK|56.409|10.649|0
+Tøsby|DK|55.755|9.319|0
+Tørslev|DK|56.530|10.345|0
+Tørslev|DK|55.811|12.023|0
+Tørsbøl|DK|54.913|9.494|0
+Tørring Kær|DK|56.586|10.243|0
+Tørring Huse|DK|56.554|8.242|0
+Tørringe|DK|55.221|10.260|0
+Tørring|DK|56.584|10.218|0
+Tørring|DK|56.568|8.259|0
+Tørring|DK|56.111|9.757|0
+Tørring|DK|55.854|9.484|0
+Tørring|DK|55.850|9.483|2370
+Tørresø|DK|55.585|10.390|0
+Tønning|DK|55.990|9.663|0
+Tøndering|DK|56.740|8.980|0
+Tønder|DK|54.933|8.867|16401
+Tømmerup|DK|55.975|11.915|0
+Tømmerup|DK|55.679|11.152|0
+Tømmerup|DK|55.609|12.615|0
+Tømmerup|DK|55.600|11.500|0
+Tømmerby|DK|57.310|9.874|0
+Tømmerby|DK|57.071|8.996|0
+Tømmerby|DK|56.068|9.521|0
+Tømmerby|DK|55.472|8.645|0
+Tølløse|DK|55.612|11.770|4028
+Tøjstrup|DK|56.459|10.378|0
+Tøjsmose|DK|55.132|10.698|0
+Tødsø|DK|56.827|8.809|0
+Tommestrup|DK|55.298|12.437|0
+Tommerup Stationsby|DK|55.345|10.176|2518
+Tommerup|DK|55.320|10.207|1545
+Tolsvad|DK|55.555|10.204|0
+Tolstrup|DK|57.571|10.103|0
+Tolstrup|DK|57.304|9.907|0
+Tolstrup|DK|56.982|9.323|0
+Tolstrup|DK|56.815|9.506|0
+Tolstrup|DK|56.371|10.825|0
+Tolstrup|DK|55.929|9.868|0
+Tolstrup|DK|55.581|9.630|0
+Tolstrup|DK|55.540|11.914|0
+Tolstrup|DK|55.422|11.820|0
+Tolstrup|DK|55.028|12.036|0
+Tolsager|DK|55.806|11.523|0
+Tolne|DK|57.484|10.309|0
+Tollestrup|DK|57.338|10.048|0
+Tollerup|DK|55.992|11.951|0
+Tollerød|DK|55.352|12.046|0
+Tolbøl|DK|56.806|8.285|0
+Toksværd|DK|55.252|11.881|0
+Tokkerup|DK|55.583|11.950|0
+Tokkerup|DK|55.288|12.141|0
+Tokkerup|DK|54.707|11.726|0
+Tokkendrup|DK|55.498|10.381|0
+Tohuse|DK|56.387|9.214|0
+Toghale|DK|54.955|8.801|0
+Toggerbo|DK|56.214|10.544|0
+Togeholt|DK|55.104|12.153|0
+Toftum|DK|55.895|9.990|0
+Toftum|DK|55.165|8.549|0
+Toftnæs|DK|55.599|8.434|0
+Toftlund|DK|55.189|9.069|3438
+Tofthøj|DK|55.780|9.335|0
+Tofterup|DK|55.650|8.822|0
+Toftebjerg|DK|55.879|10.612|0
+Tofte|DK|56.671|9.832|0
+Tofte|DK|55.539|10.099|0
+Tofte|DK|55.165|14.719|0
+Toft|DK|54.956|8.905|0
+Toelt|DK|55.979|12.493|0
+Todsbøl|DK|54.970|9.260|0
+Toderup|DK|55.533|10.155|0
+Todderup|DK|56.184|10.100|0
+Todbjerg|DK|56.268|10.209|0
+Tobøl|DK|55.535|8.380|0
+Tobøl|DK|55.416|8.889|0
+Tobberup|DK|56.663|9.799|0
+Tjæreby|DK|55.935|12.226|0
+Tjæreby|DK|55.601|12.108|0
+Tjæreby|DK|55.367|11.217|0
+Tjæreby|DK|55.358|11.953|0
+Tjæreby|DK|55.246|11.361|0
+Tjæreby|DK|54.733|11.941|0
+Tjæreborg|DK|55.465|8.580|2959
+Tjærby|DK|56.471|10.109|0
+Tjørring|DK|56.167|8.927|0
+Tjørntved|DK|55.534|11.572|0
+Tjørnemarke|DK|54.967|12.233|0
+Tjørnelunde|DK|55.511|11.339|0
+Tjørnehoved|DK|55.088|12.079|0
+Tjørneholm|DK|55.957|11.467|0
+Tjørnede|DK|55.622|11.714|0
+Tjørneby|DK|55.014|15.064|0
+Tjørneby|DK|54.933|11.162|0
+Tjørnebjerg|DK|54.704|11.271|0
+Tjennemarke|DK|54.817|11.350|0
+Tjele|DK|56.512|9.614|0
+Tjebberup|DK|55.706|11.771|0
+Tiufkær|DK|55.619|9.529|0
+Tisvildeleje|DK|56.060|12.074|0
+Tisvilde|DK|56.057|12.098|1341
+Tistrup Stationsby|DK|55.717|8.604|0
+Tistrup|DK|55.724|8.610|1437
+Tisted|DK|56.777|10.031|0
+Tissinghuse|DK|56.718|8.629|0
+Tislund|DK|55.211|9.142|0
+Tislum|DK|57.445|10.268|0
+Tiset|DK|55.275|9.006|0
+Tise|DK|57.297|9.803|0
+Tirstrup|DK|56.303|10.694|484
+Tirslund|DK|55.473|8.941|0
+Tinning|DK|56.264|9.996|0
+Tinkerup|DK|56.121|12.254|0
+Tinkerdal|DK|56.399|8.807|0
+Tingtved|DK|55.694|11.660|0
+Tingstrup|DK|56.966|8.673|0
+Tingsted|DK|54.814|11.904|218
+Tingskovhede|DK|55.387|9.477|0
+Tinglev|DK|54.938|9.255|2761
+Ting Jellinge|DK|55.299|11.465|0
+Tinghøj|DK|55.660|8.470|0
+Tingerup|DK|55.578|11.823|0
+Tindingebanke|DK|55.522|11.365|0
+Tindbæk|DK|56.464|9.741|0
+Tind|DK|56.350|9.633|0
+Timring|DK|56.176|8.737|0
+Tim|DK|56.196|8.308|874
+Tilsted|DK|56.948|8.644|0
+Tilst|DK|56.194|10.113|15617
+Tillitse|DK|54.767|11.152|0
+Tillerup|DK|56.190|10.427|0
+Tikøb|DK|56.021|12.453|701
+Tidselbak|DK|57.379|9.839|0
+Tibirke|DK|56.048|12.109|0
+Tibberup|DK|55.984|12.551|0
+Thyregod|DK|55.909|9.262|0
+Thyborøn|DK|56.698|8.212|1719
+Thurø By|DK|55.047|10.664|3350
+Thorup|DK|57.005|9.240|0
+Thorsø|DK|56.454|10.844|0
+Thorsø|DK|56.300|9.789|1753
+Thorsager|DK|56.345|10.456|0
+Thisted|DK|56.955|8.695|13461
+Thise|DK|56.703|9.126|0
+Them|DK|56.094|9.549|2477
+Tevring|DK|55.139|8.862|0
+Testrup|DK|56.721|9.505|0
+Testrup|DK|56.367|9.333|0
+Testrup|DK|56.068|10.135|0
+Tessebølle|DK|55.395|12.145|0
+Tersløse|DK|55.513|11.489|0
+Terslev|DK|55.375|11.971|0
+Terpling|DK|55.544|8.813|0
+Terpet|DK|57.572|10.190|0
+Terpet|DK|57.350|10.097|0
+Terpager|DK|55.458|8.670|0
+Terp|DK|57.102|9.179|0
+Terp|DK|56.517|9.941|0
+Terp|DK|56.428|9.794|0
+Terndrup|DK|56.814|10.061|0
+Termestrup|DK|56.357|10.339|0
+Terkelsbøl|DK|54.954|9.192|0
+Tengslemark|DK|55.935|11.580|0
+Tendrup|DK|56.312|10.309|0
+Telling|DK|57.106|9.402|0
+Tellerup|DK|55.397|9.922|0
+Tejn|DK|55.247|14.841|753
+Teglstrup|DK|55.080|11.988|0
+Teglkås|DK|55.222|14.712|0
+Teglgård|DK|55.076|8.919|0
+Teestrup|DK|55.329|11.883|0
+Tebstrup|DK|55.971|9.876|0
+Tebbestrup|DK|56.435|10.008|0
+Tæbring|DK|56.790|8.616|0
+Tavlgårde|DK|56.412|9.676|0
+Taulov|DK|55.546|9.616|3593
+Tastum|DK|56.503|9.057|0
+Taastrup Valby|DK|55.633|12.317|0
+Tåstrup|DK|56.291|10.577|0
+Tåstrup|DK|56.298|10.108|0
+Tåstrup|DK|56.128|9.989|0
+Tåstrup|DK|55.700|11.716|0
+Taastrup|DK|55.650|12.302|35238
+Tåstrup|DK|55.525|11.907|0
+Tåstrup|DK|55.480|10.319|0
+Tåstrup|DK|55.335|12.285|0
+Tåstrup|DK|55.236|11.616|0
+Tåstrup|DK|54.976|12.338|0
+Tårup|DK|56.982|9.708|0
+Tårup|DK|56.448|10.380|0
+Tårup|DK|55.554|9.644|0
+Tårup|DK|55.478|10.642|0
+Tarup|DK|55.316|10.530|0
+Tårup|DK|55.236|10.774|0
+Tårup|DK|54.886|11.951|0
+Tårs|DK|57.383|10.117|1825
+Tårs|DK|54.882|11.037|0
+Tårs|DK|54.831|11.642|0
+Tarp|DK|55.955|8.830|0
+Tarp|DK|55.958|8.630|0
+Tarp|DK|55.596|8.322|0
+Tarp|DK|55.525|8.464|1683
+Tårnby|DK|55.630|12.600|10000
+Tarm|DK|55.909|8.530|4113
+Tårbæk|DK|55.788|12.593|0
+Tapsore|DK|55.392|9.455|0
+Taps|DK|55.395|9.477|0
+Tappernøje|DK|55.165|11.979|0
+Tapdrup|DK|56.439|9.483|0
+Tånum|DK|56.461|9.924|0
+Tannisby|DK|57.592|10.186|0
+Tåning|DK|56.012|9.844|0
+Tange|DK|56.352|9.588|0
+Tange|DK|55.448|8.821|0
+Tange|DK|55.159|10.444|0
+Tandsryde|DK|54.932|10.012|0
+Tandslet|DK|54.925|9.984|0
+Tanderupkær|DK|56.099|8.860|0
+Tanderup|DK|57.059|9.392|0
+Tanderup|DK|55.840|10.555|0
+Tanderup|DK|55.366|9.908|0
+Tander|DK|56.044|10.163|0
+Tambohuse|DK|56.635|8.594|0
+Tallerup Huse|DK|55.344|10.187|0
+Tagkær|DK|55.346|9.486|0
+Tagholm|DK|55.120|8.554|0
+Tågeskov|DK|55.208|11.974|0
+Tågerup|DK|56.040|12.143|0
+Tågerup|DK|55.715|12.138|0
+Tågerup|DK|55.553|11.441|0
+Tågerup|DK|55.323|12.099|0
+Tågerup|DK|55.274|12.198|0
+Tågerup|DK|54.677|11.446|0
+Tågerud|DK|55.428|10.185|0
+Tågense|DK|54.656|11.818|0
+Tågelund|DK|55.623|9.246|0
+Tågeby|DK|55.056|12.096|0
+Tåderup|DK|55.510|11.429|0
+Tåbel|DK|56.781|8.259|0
+Syvveje|DK|56.383|10.292|0
+Syvsten|DK|57.307|10.429|0
+Syvendekøb|DK|55.648|11.491|0
+Systofte|DK|54.786|11.925|0
+Synnedrup|DK|56.018|10.216|0
+Sydstranden|DK|55.584|12.649|0
+Sværdborg|DK|55.088|11.870|0
+Svostrup|DK|56.225|9.667|0
+Svoldrup|DK|56.763|9.375|0
+Svogerslev|DK|55.634|12.015|4316
+Svinsbjerg|DK|54.921|11.254|0
+Svinsager|DK|56.016|10.039|0
+Svinøvester|DK|55.114|11.738|0
+Svinø|DK|55.109|11.751|0
+Svinninge|DK|55.883|11.610|2891
+Svinninge|DK|55.721|11.465|6588
+Svingelbjerg|DK|56.741|9.351|0
+Svingel|DK|57.283|9.817|0
+Svindinge|DK|55.216|10.689|0
+Svinding|DK|56.461|9.804|0
+Svinballe|DK|55.909|10.081|0
+Svestrup|DK|55.773|12.131|0
+Sverkilstrup|DK|55.973|11.941|0
+Sverdrup|DK|55.263|9.612|0
+Svenstrup|DK|56.972|9.848|8002
+Svenstrup|DK|56.603|9.944|8002
+Svenstrup|DK|56.591|9.139|0
+Svenstrup|DK|56.467|8.826|0
+Svenstrup|DK|56.408|10.560|0
+Svenstrup|DK|56.241|9.816|0
+Svenstrup|DK|55.727|11.096|0
+Svenstrup|DK|55.522|10.196|0
+Svenstrup|DK|55.482|9.779|0
+Svenstrup|DK|55.365|11.168|0
+Svenstrup|DK|55.336|10.346|0
+Svenstrup|DK|55.172|11.769|0
+Svenstrup|DK|55.027|9.825|0
+Svensmarke|DK|54.977|12.310|0
+Svennum|DK|57.277|10.118|0
+Svennerup|DK|55.238|11.997|0
+Svendborg|DK|55.060|10.607|27300
+Svejstrup|DK|56.486|9.951|0
+Svejstrup|DK|56.344|9.985|0
+Svejstrup|DK|56.069|9.838|0
+Svejrup|DK|54.991|9.550|0
+Svejbæk|DK|56.133|9.633|3743
+Svebølle|DK|55.652|11.287|2186
+Svansbjerg|DK|55.431|12.139|0
+Svanninge|DK|55.126|10.229|0
+Svankær|DK|56.850|8.364|0
+Svanfolk|DK|56.857|10.078|0
+Svaneke|DK|55.136|15.141|1079
+Svallerup|DK|55.608|11.177|0
+Svalebølle|DK|55.051|10.888|0
+Surhave|DK|55.515|8.986|0
+Sundstrup|DK|56.607|9.304|0
+Sundsøre|DK|56.709|9.172|0
+Sundsmark|DK|54.920|9.831|0
+Sunds|DK|56.207|9.014|3525
+Sundhuse|DK|56.250|8.150|0
+Sundbylille|DK|55.836|12.118|0
+Sundby|DK|56.874|8.674|0
+Sundby|DK|56.887|8.590|0
+Sundby|DK|56.385|10.583|0
+Sundby|DK|54.864|11.793|0
+Sulsted Stationsby|DK|57.167|9.950|0
+Sulsted|DK|57.163|9.957|1461
+Sullerup|DK|54.866|11.949|0
+Sulkendrup|DK|55.290|10.719|0
+Suldrup|DK|56.849|9.701|0
+Styrtom|DK|55.022|9.435|0
+Styding|DK|55.254|9.358|0
+Studstrup|DK|56.259|10.342|838
+Studsgård|DK|56.090|8.908|0
+Studsdal|DK|55.531|9.598|0
+Stude|DK|55.331|11.274|0
+Stuby|DK|55.045|11.867|0
+Stubkær|DK|56.195|9.214|0
+Stubdrup|DK|55.531|9.398|0
+Stubbum|DK|55.349|9.554|0
+Stubbæk|DK|54.996|9.430|0
+Stubberup|DK|56.710|9.935|0
+Stubberup|DK|55.796|11.422|0
+Stubberup|DK|55.804|9.706|0
+Stubberup|DK|55.647|9.468|0
+Stubberup|DK|55.533|10.672|0
+Stubberup|DK|55.517|11.917|0
+Stubberup|DK|55.348|9.938|0
+Stubberup|DK|55.285|11.642|0
+Stubberup|DK|55.250|12.142|0
+Stubberup|DK|55.217|11.407|0
+Stubberup|DK|54.994|12.480|0
+Stubberup|DK|54.812|11.872|0
+Stubberup|DK|54.670|11.692|108
+Stubbekøbing|DK|54.889|12.041|2204
+Stubbe|DK|56.251|10.712|0
+Strynø By|DK|54.904|10.612|0
+Struer|DK|56.492|8.594|11317
+Strærup|DK|55.217|10.072|0
+Strømmen|DK|56.451|10.040|0
+Strølille|DK|55.898|12.114|0
+Strøby Ladeplads|DK|55.400|12.300|0
+Strøby Egede|DK|55.414|12.245|2700
+Strøby|DK|55.383|12.281|0
+Strøby|DK|55.062|14.907|0
+Strø|DK|55.894|12.150|0
+Stærmose|DK|55.357|10.213|0
+Stærkende|DK|55.615|12.188|0
+Strib|DK|55.540|9.767|5285
+Strellev|DK|55.794|8.535|0
+Stæreby|DK|55.092|10.429|0
+Strat|DK|55.428|8.755|0
+Strandtved|DK|55.400|10.733|0
+Strands|DK|56.185|10.488|0
+Strandmøllen|DK|55.806|12.582|0
+Strandlyst|DK|55.400|11.233|0
+Strandhuse|DK|55.878|11.669|0
+Strandhuse|DK|55.704|10.018|0
+Strandhuse|DK|55.055|10.390|0
+Strandhuse|DK|54.955|10.732|0
+Strandhuse|DK|54.883|10.370|0
+Strand Esbønderup|DK|56.124|12.263|0
+Stranderød|DK|54.882|9.542|0
+Strandelhjørn|DK|55.158|9.253|0
+Strande|DK|56.569|8.162|0
+Strandby|DK|57.492|10.496|2518
+Strandby|DK|56.789|9.218|0
+Strandby|DK|55.944|8.390|0
+Strandby|DK|55.201|10.116|0
+Strandby|DK|55.000|10.814|0
+Strandby|DK|54.747|11.860|0
+Strammelse|DK|55.007|10.582|200
+Stovstrup|DK|55.919|8.596|0
+Stovstrup|DK|55.568|9.694|0
+Stovby|DK|56.571|10.130|0
+Stovby|DK|54.715|11.940|0
+Stourup|DK|55.791|9.980|0
+Stouby|DK|56.707|9.087|0
+Stouby|DK|55.703|9.794|0
+Storvorde|DK|57.004|10.101|3491
+Storup|DK|56.718|8.733|0
+Storring|DK|56.136|9.944|0
+Store Vorslunde|DK|55.855|9.118|0
+Store Velling|DK|55.624|9.589|0
+Store Valby|DK|55.696|12.137|0
+Store Torup|DK|56.648|9.360|0
+Store Torøje|DK|55.273|12.261|0
+Store Thorlund|DK|55.975|9.332|0
+Store Tåstrup|DK|55.554|11.709|0
+Store Tårnby|DK|55.381|12.258|0
+Store Spjellerup|DK|55.271|12.224|0
+Store Slemminge|DK|54.756|11.626|0
+Store Sjørup|DK|56.538|10.365|0
+Store Salby|DK|55.487|12.118|0
+Store Røttinge|DK|55.154|11.969|0
+Store Rørbæk|DK|56.706|9.714|0
+Store Rørbæk|DK|55.799|12.117|0
+Store Rise|DK|54.851|10.398|0
+Store Restrup|DK|57.008|9.773|0
+Store Ørtoft|DK|57.294|10.452|0
+Store Nustrup|DK|55.271|9.180|0
+Storenor|DK|56.031|10.239|0
+Store Musse|DK|54.718|11.664|0
+Store Merløse|DK|55.544|11.713|1188
+Store Magleby|DK|55.596|12.635|0
+Store Lyngby|DK|55.935|12.122|0
+Store Lindet|DK|54.877|11.312|0
+Store Linde|DK|55.330|12.193|0
+Store Lind|DK|54.951|12.188|0
+Store Lihme|DK|55.695|9.309|0
+Store Langkær|DK|55.919|9.145|0
+Store Ladager|DK|55.516|12.074|0
+Store Kongsmark|DK|55.429|11.210|0
+Store Knivsig|DK|55.027|9.152|0
+Rath|DK|54.733|10.717|0
+Store Karleby|DK|55.692|11.911|0
+Store Jyndevad|DK|54.901|9.151|0
+Store Heddinge|DK|55.310|12.389|3668
+Store Havelse|DK|55.905|12.070|0
+Store Gullestrup|DK|56.167|8.975|0
+Store Grandløse|DK|55.682|11.730|0
+Store Fuglede|DK|55.585|11.245|0
+Store Fjelstervang|DK|56.073|8.815|0
+Store Emmerske|DK|54.960|8.924|0
+Store Elmue|DK|55.197|12.104|0
+Store Ebberup|DK|55.481|11.626|0
+Store Darum|DK|55.426|8.655|929
+Store Damme|DK|54.915|12.163|587
+Store Dalby|DK|55.766|9.744|0
+Store Brøndum|DK|56.846|10.011|0
+Store Bredlund|DK|56.034|9.389|0
+Store Binderup|DK|56.764|9.559|0
+Store Avnede|DK|54.827|11.198|0
+Store Arden|DK|56.761|9.883|0
+Store Anslet|DK|55.346|9.612|0
+Store Andst|DK|55.483|9.232|810
+Store Almstok|DK|55.682|9.140|0
+Store Ajstrup|DK|56.950|9.509|0
+Støvring|DK|56.885|9.838|9089
+Støvring|DK|56.504|10.176|0
+Støttrup|DK|56.805|9.363|0
+Størsbøl|DK|55.509|8.693|0
+Størlinge|DK|55.213|11.917|0
+Stødstrup|DK|54.862|11.865|0
+Stolpehuse|DK|55.372|12.259|0
+Stollig|DK|55.065|9.455|0
+Stolbro|DK|54.986|9.832|0
+Stokkemarke|DK|54.838|11.360|400
+Stokkeby|DK|54.866|10.401|0
+Stokkebro|DK|56.505|10.825|0
+Stokkebro|DK|54.949|8.783|0
+Stokkebjerg|DK|55.678|11.393|0
+Stoholm|DK|56.485|9.146|2544
+Stoense|DK|55.093|10.900|0
+Stjær|DK|56.118|9.955|0
+Stjovl|DK|54.959|10.607|0
+Stinesminde|DK|56.673|9.968|0
+Stillinge Strand|DK|55.438|11.208|0
+Stilling|DK|56.062|9.988|3655
+Stillebæk|DK|55.449|10.140|0
+Stigs-Bjergby|DK|55.672|11.478|0
+Stige Have|DK|55.437|10.403|0
+Stige|DK|55.439|10.409|2182
+Stibanken|DK|54.792|11.360|0
+Stevnstrup|DK|56.434|9.946|0
+Stevning|DK|55.003|9.827|0
+Stevelt|DK|55.275|9.640|0
+Stestrup|DK|55.566|11.793|0
+Sterup|DK|57.310|10.104|0
+Stepping|DK|55.351|9.358|0
+Stenvad|DK|56.462|10.637|0
+Stenum|DK|57.321|9.864|0
+Knappen|DK|55.059|9.461|0
+Stensved|DK|54.997|12.030|1504
+Stenstrup|DK|56.729|9.895|0
+Stenstrup|DK|55.927|11.553|0
+Stenstrup|DK|55.390|11.522|0
+Stenstrup|DK|55.201|11.786|0
+Stenstrup|DK|55.134|10.505|0
+Stenstrup|DK|55.100|12.113|0
+Stenskrog|DK|57.354|10.190|0
+Stensby|DK|55.498|10.289|0
+Stensby|DK|54.980|12.041|0
+Stensballe|DK|55.873|9.911|0
+Stenrøgel|DK|56.240|9.337|0
+Stenrand|DK|55.665|11.327|0
+Stenmose|DK|55.498|11.254|0
+Stenmagle|DK|55.556|11.625|0
+Stenløse|DK|55.768|12.197|19998
+Stenløse|DK|55.340|10.361|0
+Stenlille|DK|55.789|12.206|0
+Stenlille|DK|55.539|11.591|1905
+Stenild|DK|56.673|9.674|0
+Stenild|DK|56.673|9.675|0
+Stenhuse|DK|56.391|9.531|0
+Stenhøj|DK|57.385|10.352|0
+Stengade|DK|54.962|10.828|0
+Stenebjerg|DK|55.050|15.000|0
+Stendis|DK|56.415|8.835|0
+Stenderup|DK|55.792|9.810|0
+Stenderup|DK|55.695|8.841|0
+Stenderup|DK|55.446|8.884|0
+Stenderup|DK|55.347|9.130|0
+Stenderup|DK|55.246|9.613|0
+Stenderup|DK|55.215|9.051|0
+Stenderup|DK|54.930|9.698|0
+Stenbæksholm|DK|55.213|11.711|0
+Stenbjerg|DK|56.920|8.359|0
+Stemmild|DK|54.934|9.038|0
+Stegsted|DK|55.396|10.307|0
+Stege|DK|54.987|12.285|3811
+Stavtrup|DK|56.131|10.120|3519
+Stavsø|DK|55.734|8.268|0
+Stavshede|DK|55.551|9.162|0
+Stavreby|DK|55.085|12.140|0
+Stavreby|DK|54.654|11.893|0
+Stavrby|DK|55.504|9.792|0
+Stavnstrup|DK|55.208|12.004|0
+Stavnsholt|DK|55.815|12.405|5658
+Stavns|DK|55.898|10.611|0
+Stauning|DK|55.965|8.368|0
+Stavn|DK|57.011|9.487|0
+Statene|DK|54.899|10.738|0
+Stårup|DK|56.591|9.112|0
+Stårup|DK|55.903|11.636|0
+Starup|DK|55.645|8.804|0
+Stårup|DK|55.450|8.833|0
+Starup|DK|55.241|9.535|2091
+Starreklinte|DK|55.758|11.379|0
+Stårby|DK|55.043|12.035|0
+Stånum|DK|56.416|10.094|0
+Stanghede|DK|56.388|9.308|0
+Stangerup|DK|54.854|12.039|0
+Stangerum|DK|56.611|10.153|0
+Stallerup|DK|55.591|9.694|0
+Staksrode|DK|55.694|9.858|0
+Stakroge|DK|55.890|8.847|0
+Stagstrup|DK|56.871|8.587|0
+Stagsted|DK|57.272|10.252|0
+Stagsted|DK|57.157|10.190|0
+Stågerup|DK|55.091|10.470|0
+Stae|DK|57.083|10.083|0
+Stadil|DK|56.197|8.213|0
+Stade|DK|54.904|9.124|0
+Staby|DK|56.267|8.242|0
+Ståby|DK|55.258|10.274|0
+Stabrand|DK|56.314|10.619|0
+Stabolt|DK|54.969|10.644|0
+Sæsing|DK|57.365|10.187|0
+Særslev|DK|55.718|11.384|0
+Særslev|DK|55.513|10.176|757
+Særslev|DK|54.833|12.048|0
+Særløse|DK|55.578|11.918|0
+Sprove|DK|54.953|12.157|0
+Sprattenborg Huse|DK|55.425|10.115|0
+Spragelse|DK|55.310|11.785|0
+Spøttrup|DK|55.931|10.238|0
+Spørring|DK|56.299|10.146|0
+Spodsbjerg|DK|54.929|10.828|0
+Spjellerup|DK|55.224|11.555|0
+Spjarup|DK|55.642|9.253|0
+Spjald|DK|56.129|8.508|0
+Spettrup|DK|55.783|9.763|0
+Sperrestrup|DK|55.810|12.181|0
+Spentrup|DK|56.537|10.038|2155
+Spejlsby|DK|55.012|12.327|0
+Sparrehuse|DK|56.598|9.753|0
+Sparkær|DK|56.477|9.229|0
+Spangshuse|DK|56.476|10.322|0
+Spangsbro|DK|55.691|11.149|0
+Spanget|DK|55.145|10.347|0
+Spang|DK|54.933|9.833|0
+Spandet|DK|55.256|8.913|0
+Sottrupskov|DK|54.971|9.744|0
+Sottrup|DK|54.970|9.080|0
+Sortsø|DK|54.917|11.971|0
+Sorterup|DK|55.450|11.438|0
+Sortenshave|DK|54.851|12.114|0
+Sortebro|DK|55.126|10.671|0
+Sorring|DK|56.177|9.776|0
+Sorø|DK|55.432|11.555|7999
+Sorgenfri|DK|55.783|12.470|0
+Søvind|DK|55.892|10.006|0
+Søvang|DK|55.569|12.616|1772
+Søvang|DK|54.978|9.041|0
+Søttrup|DK|56.857|9.421|0
+Søtofte|DK|55.513|11.688|0
+Søsum|DK|55.773|12.232|0
+Søstrup|DK|55.682|11.651|0
+Søster-Svenstrup|DK|55.543|11.988|0
+Søst|DK|55.043|9.346|0
+Sø Søby|DK|55.275|10.019|0
+Sørvad|DK|56.263|8.656|0
+Sørup|DK|56.889|9.787|0
+Sørup|DK|55.972|12.374|0
+Sørup|DK|55.239|11.927|0
+Sørup|DK|55.070|10.572|0
+Sørup|DK|54.842|11.905|0
+Sørup|DK|54.815|11.412|0
+Sørup|DK|54.707|11.582|0
+Sørninge|DK|55.611|11.447|0
+Sørbymagle|DK|55.362|11.441|0
+Sørbylille|DK|55.355|11.411|0
+Sørå|DK|57.167|10.433|0
+Sønder Ydby|DK|56.688|8.407|0
+Sønder Vrå|DK|57.340|9.954|0
+Sønder Vorupør|DK|56.940|8.374|0
+Sønder Vong|DK|55.493|8.662|0
+Sønder Vollum|DK|55.079|8.810|0
+Sønder Vium|DK|55.824|8.413|0
+Sønder Vissing|DK|56.020|9.643|0
+Sønder Vinge|DK|56.411|9.791|0
+Sønder Vilstrup|DK|55.551|9.567|0
+Sønder Vilstrup|DK|55.191|9.518|0
+Søndervig|DK|56.117|8.117|0
+Sønder Vestud|DK|55.000|12.450|0
+Sønder Vejrup|DK|55.509|8.793|0
+Sønder Vedby|DK|54.761|11.927|0
+Sønderupsønder|DK|55.288|11.283|0
+Sønderupnørre|DK|55.462|11.374|0
+Sønderup|DK|56.813|9.650|0
+Sønder Tranders|DK|57.014|9.982|0
+Tornby|DK|57.529|9.950|0
+Sønder Thise|DK|56.700|9.138|0
+Sønder Tåstrup|DK|54.731|11.970|0
+Sønderstrup|DK|55.588|11.767|0
+Sønder Stenderup|DK|55.462|9.612|0
+Søndersted Borup|DK|55.631|11.628|0
+Søndersted|DK|55.628|11.609|0
+Søndersø|DK|55.485|10.255|3360
+Sønderskov|DK|57.454|10.128|0
+Sønderskov|DK|56.076|10.109|0
+Sønder Skast|DK|55.058|8.695|0
+Sønder Sejerslev|DK|54.996|8.699|0
+Sønder Saltum|DK|57.260|9.730|0
+Sønder Rubjerg|DK|57.407|9.808|0
+Sønder Rind|DK|56.393|9.466|0
+Sønder Ørum|DK|56.557|9.218|0
+Sønder Ørslev|DK|54.744|11.976|0
+Sønder Ønlev|DK|55.036|9.284|0
+Sønderøkse|DK|57.096|9.581|0
+Sønderød|DK|55.580|11.386|0
+Sønder Onsild|DK|56.586|9.762|0
+Sønder Omme|DK|55.840|8.897|0
+Søndernæs|DK|55.185|8.704|0
+Sønder Nærå|DK|55.311|10.479|0
+Sønder Nissum|DK|56.306|8.190|0
+Sønder Mern|DK|55.050|12.067|0
+Sønder Lyngvig|DK|56.035|8.121|0
+Sønder Lovrup|DK|55.483|8.867|0
+Sønder Longelse|DK|54.904|10.786|0
+Sønderlev|DK|57.472|9.873|0
+Sønder Lem|DK|56.572|8.787|0
+Sønder Lem|DK|56.050|8.417|0
+Sønder Langelund|DK|55.784|9.083|0
+Sønder Kollemorten|DK|55.857|9.363|0
+Sønderkobbel|DK|54.855|9.965|0
+Sønder Kirkeby|DK|54.770|11.977|0
+Sønder Karstoft|DK|55.937|8.938|0
+Sønder Jernløse|DK|55.652|11.643|0
+Sønder Jellinge|DK|55.290|11.464|0
+Sønder Ingstrup|DK|56.483|9.526|0
+Sønder Hygum|DK|55.352|8.979|0
+Sønder Hurup|DK|56.805|10.256|0
+Sønder Hostrup|DK|54.989|9.452|0
+Sønder Højrup|DK|55.281|10.465|0
+Sønderholm|DK|57.003|9.735|0
+Sønderho|DK|55.349|8.464|299
+Sønder Hjerm|DK|56.417|8.662|0
+Sønderhede|DK|55.203|8.890|0
+Sønderhave|DK|54.681|11.754|0
+Sønderhav|DK|54.861|9.498|0
+Sønder Harritslev|DK|57.434|9.902|0
+Sønder Hadsund|DK|56.705|10.122|441
+Sønderhå|DK|56.869|8.451|0
+Sønder Grimmelstrup|DK|54.821|12.026|0
+Sønder Gravlund|DK|55.053|9.043|0
+Søndergården|DK|55.783|12.367|0
+Søndergårde|DK|56.800|9.000|0
+Søndergårde|DK|56.724|10.123|0
+Sønder Frenderup|DK|54.930|12.241|0
+Sønder Felding|DK|55.938|8.779|0
+Sønder Farup|DK|55.307|8.703|0
+Sønder Esterbølle|DK|55.494|10.153|0
+Sønder Dråby|DK|56.885|8.841|0
+Sønderby Gårde|DK|56.460|8.129|0
+Sønderby|DK|57.050|8.733|0
+Sønderby|DK|56.709|8.575|0
+Sønderby|DK|56.334|8.300|0
+Sønderby|DK|56.217|8.267|0
+Sønderby|DK|56.085|8.278|0
+Sønderby|DK|55.952|8.388|0
+Sønderby|DK|55.783|10.017|0
+Sønderby|DK|55.735|12.032|0
+Sønderby|DK|55.457|8.580|0
+Sønderby|DK|55.242|9.969|0
+Sønderby|DK|55.087|8.549|0
+Sønderby|DK|54.970|11.532|0
+Sønderby|DK|54.868|9.890|0
+Sønder Broby|DK|55.233|10.267|0
+Sønderbro|DK|56.370|9.662|0
+Sønder Borup|DK|56.410|10.069|0
+Sønder Bork|DK|55.809|8.308|0
+Sønderborg|DK|54.909|9.789|27766
+Sønder Bøel|DK|55.456|8.774|0
+Sønderbæk|DK|56.502|9.837|0
+Sønder Bjert|DK|55.453|9.567|2324
+Sønder Bjerre|DK|55.786|9.857|0
+Sønder Bjerge|DK|55.266|11.412|0
+Sønder Bindslev|DK|57.527|10.196|0
+Sønder Balling|DK|56.614|8.883|0
+Sønderballe|DK|55.140|9.485|0
+Sønder Asmindrup|DK|55.662|11.695|0
+Sønder Alslev|DK|54.763|12.003|0
+Sønder Aldum|DK|55.777|9.790|0
+Sønder Åby|DK|55.362|9.874|0
+Søndenbro|DK|54.761|10.713|0
+Søndbjerg|DK|56.615|8.571|0
+Sømose|DK|56.216|9.440|0
+Sømarke|DK|54.993|12.490|0
+Sølyst|DK|57.055|9.969|0
+Sølsted|DK|55.015|8.847|0
+Sølperup|DK|55.180|12.011|0
+Søllinge|DK|55.285|10.538|0
+Søllested|DK|55.292|10.049|0
+Søllested|DK|54.810|11.271|1347
+Søllerup|DK|55.412|12.110|0
+Søllerød|DK|55.810|12.501|0
+Sølager|DK|55.948|11.902|0
+Søhuse|DK|55.367|10.700|0
+Søholt|DK|57.365|10.269|0
+Søholt|DK|54.737|11.540|0
+Søholm|DK|55.965|12.464|0
+Søgård|DK|56.465|8.895|0
+Søgård|DK|54.931|9.446|0
+Søften|DK|56.238|10.085|3169
+Sødring Kær|DK|56.646|10.329|0
+Sødring|DK|56.630|10.312|0
+Sødover|DK|55.724|9.330|0
+Sødinge Hede|DK|55.267|10.499|0
+Sødinge|DK|55.250|10.505|0
+Søderup|DK|55.017|9.282|0
+Søby|DK|56.531|9.113|0
+Søby|DK|56.378|10.695|0
+Søby|DK|56.354|10.239|0
+Søby|DK|55.898|10.203|0
+Søby|DK|54.968|10.568|0
+Søby|DK|54.940|10.256|0
+Søby|DK|54.689|11.728|0
+Søborg|DK|56.085|12.318|238
+Søborg|DK|55.730|12.510|0
+Søballe|DK|56.119|9.916|0
+Sonnerup|DK|55.964|12.058|0
+Sonnerup|DK|55.939|11.557|0
+Sonnerup|DK|55.377|12.095|0
+Sondrup Strand|DK|55.881|10.057|0
+Sondrup|DK|55.896|10.068|0
+Sommersted|DK|55.319|9.296|0
+Sommerlyst|DK|55.361|9.061|0
+Solrød|DK|55.536|12.183|2000
+Solevad|DK|55.304|10.274|0
+Soleskov|DK|55.762|9.628|0
+Solderup|DK|54.961|9.012|0
+Solbjerg|DK|56.849|8.699|0
+Solbjerg|DK|56.809|10.141|0
+Solbjerg|DK|56.043|10.086|4832
+Solbjerg|DK|55.481|11.348|0
+Sofiendal|DK|57.017|9.871|0
+Sofiedal|DK|54.864|9.239|0
+Soesmarke|DK|54.857|11.728|0
+Soderup|DK|55.677|12.190|0
+Soderup|DK|55.606|11.801|0
+Soby Mark|DK|54.928|10.268|0
+Sobjerg|DK|55.520|11.432|0
+Snævre|DK|55.648|11.622|0
+Snostrup|DK|55.804|12.124|0
+Snøde Hesselbjerg|DK|55.068|10.925|0
+Snøde|DK|55.082|10.913|0
+Snoldelev Hastrup|DK|55.564|12.177|0
+Snoldelev|DK|55.569|12.128|0
+Snoghøj|DK|55.523|9.721|3000
+Snogebæk|DK|55.026|15.117|676
+Snevre|DK|57.530|10.001|0
+Sneum|DK|55.450|8.650|0
+Snestrup|DK|55.417|10.333|0
+Sneslev|DK|55.387|11.845|0
+Sneslev|DK|55.299|11.573|0
+Snesere Torp|DK|55.185|11.949|0
+Snesere|DK|55.165|11.933|0
+Snertinge|DK|55.715|11.383|0
+Snertinge|DK|55.075|11.905|0
+Sneptrup|DK|56.254|8.990|0
+Snekkerup|DK|55.503|11.883|0
+Snekkerup|DK|55.318|11.362|0
+Snekkersten|DK|56.009|12.586|0
+Snejstrup|DK|56.939|8.475|0
+Snejbjerg|DK|56.133|8.904|3513
+Sneglerup|DK|55.820|11.573|0
+Snedsted|DK|56.892|8.524|0
+Snæbum|DK|56.646|9.653|0
+Snave|DK|55.212|10.037|0
+Snarup|DK|55.167|10.441|0
+Snaremose|DK|54.893|10.763|0
+Snaptun|DK|55.820|10.051|0
+Smørumovre|DK|55.735|12.273|0
+Smørumnedre|DK|55.742|12.303|9507
+Smørpøt|DK|55.505|8.581|0
+Smørenge|DK|55.082|14.864|0
+Smøl|DK|54.900|9.675|0
+Smollerup|DK|56.472|9.147|0
+Sminge|DK|56.212|9.681|0
+Smidstrup|DK|57.400|9.917|0
+Smidstrup|DK|56.113|12.240|0
+Smidstrup|DK|55.866|12.558|0
+Smidstrup|DK|55.776|9.281|0
+Smidstrup|DK|55.615|9.568|0
+Smidstrup|DK|55.580|11.842|0
+Smidstrup|DK|55.546|10.147|0
+Smidstrup|DK|55.253|11.299|0
+Smidie|DK|56.860|10.140|0
+Smerup|DK|55.283|12.234|0
+Smejrup|DK|55.315|9.941|0
+Smedsholm|DK|55.439|9.968|0
+Smederup|DK|55.932|10.183|0
+Smedeby|DK|54.849|9.383|0
+Smedebæk|DK|56.006|9.261|0
+Smedager|DK|54.975|9.179|0
+Smalby|DK|57.097|9.937|0
+Smalby|DK|54.873|11.769|0
+Smalby|DK|54.785|12.023|0
+Småkær|DK|55.683|9.324|0
+Slyngsten|DK|54.983|9.500|0
+Sælvig|DK|55.861|10.551|0
+Slukefter|DK|55.424|10.265|0
+Sludstrup|DK|55.354|11.374|0
+Slots-Bjergby|DK|55.371|11.332|0
+Sløsserup|DK|54.724|11.758|0
+Sløsse|DK|54.699|11.595|0
+Slipshavn|DK|55.287|10.825|0
+Slimminge|DK|55.447|11.953|0
+Slevstrup|DK|55.534|10.283|0
+Slettingen|DK|57.500|9.917|0
+Slettestrand|DK|57.150|9.367|0
+Sletteskov|DK|54.769|11.597|0
+Sletterød|DK|55.437|10.047|0
+Sletteren|DK|54.946|11.465|0
+Sletten|DK|55.957|12.532|0
+Sletteenge|DK|55.093|14.932|0
+Sletelte|DK|56.039|12.246|0
+Slet|DK|56.104|10.143|0
+Slelde|DK|55.713|9.451|0
+Slæbæk|DK|55.113|10.557|0
+Slangerup|DK|55.850|12.183|6953
+Slagstrup|DK|55.522|10.169|0
+Slagstrup|DK|55.432|11.357|0
+Slagslunde|DK|55.799|12.222|0
+Slaglille|DK|55.442|11.621|0
+Slagelse|DK|55.403|11.355|31896
+Slagballe|DK|56.002|9.571|0
+Skyum|DK|56.837|8.577|0
+Skygge|DK|56.194|9.280|0
+Skydebjerg|DK|55.362|10.053|0
+Skævinge|DK|55.908|12.150|2964
+Skuldelev|DK|55.780|12.018|0
+Skuerup|DK|55.544|11.564|0
+Skudstrup|DK|55.438|9.185|0
+Skuderløse|DK|55.300|11.877|0
+Skrydstrup|DK|55.241|9.252|0
+Skærup|DK|55.639|9.599|0
+Skærum|DK|57.417|10.367|0
+Skrosbjerg|DK|55.358|12.123|0
+Skrødstrup|DK|56.625|10.055|0
+Skærød|DK|56.014|12.161|0
+Skræm|DK|57.069|9.341|0
+Skærlund|DK|55.896|9.058|0
+Skringstrup|DK|56.584|9.443|0
+Skæring|DK|56.230|10.296|0
+Skrillinge|DK|55.493|9.767|0
+Skrejrup|DK|56.312|10.461|0
+Skredtorpe|DK|54.905|11.157|0
+Skærbæk|DK|56.269|8.868|0
+Skærbæk|DK|56.172|9.615|0
+Skærbæk|DK|56.083|8.985|0
+Skærbæk|DK|55.516|9.634|0
+Skaerbaek|DK|55.157|8.769|3062
+Skraverup|DK|55.210|11.685|0
+Skrave By|DK|55.411|9.106|0
+Skræ|DK|56.302|9.304|0
+Skov-Vallenderød|DK|55.591|11.716|0
+Skov-Torup|DK|55.267|12.042|0
+Skovstrup|DK|56.970|10.029|0
+Skovstrup|DK|55.332|10.147|0
+Skovsted|DK|57.003|8.777|0
+Skovshoved|DK|55.761|12.598|0
+Skovs-Højrup|DK|55.494|9.960|0
+Skovs-Hjrup|DK|55.450|10.274|0
+Skovsgårde|DK|55.472|10.064|0
+Skovsgård|DK|57.087|9.485|0
+Skovsgård|DK|57.009|10.322|0
+Skovsende|DK|55.839|8.857|0
+Skovse|DK|55.416|11.407|0
+Skovsby|DK|55.406|10.174|0
+Skovsbo|DK|55.048|10.548|0
+Skovrup|DK|55.383|9.483|0
+Skovmose|DK|54.876|10.020|0
+Skovlunde|DK|55.716|12.398|14757
+Skovlund|DK|55.738|8.710|0
+Skovlænge|DK|54.825|11.248|0
+Skovhuse|DK|56.040|12.343|0
+Skovhuse|DK|55.369|9.550|0
+Skovhuse|DK|55.233|10.314|0
+Skovhuse|DK|55.231|10.091|0
+Skovhuse|DK|55.006|12.063|0
+Skov Hastrup|DK|55.582|11.901|0
+Skovgårde|DK|56.180|10.655|0
+Skoverup|DK|55.274|12.030|0
+Skoven|DK|55.906|11.933|0
+Skove|DK|56.738|9.129|0
+Skovdallund|DK|55.740|9.418|0
+Skovbyballe|DK|54.881|10.006|0
+Skovby|DK|56.157|9.945|2489
+Skovby|DK|55.527|10.078|0
+Skovby|DK|55.170|9.383|0
+Skovby|DK|54.921|11.946|0
+Skovby|DK|54.912|10.300|0
+Skovby|DK|54.876|11.685|0
+Skovby|DK|54.884|9.995|0
+Skovby|DK|54.746|11.576|0
+Skovby|DK|54.661|11.488|0
+Skovbølling|DK|55.308|9.505|0
+Skovbølle|DK|54.905|11.091|0
+Skovballe|DK|55.326|10.649|0
+Skovballe|DK|54.971|10.549|0
+Skotterup|DK|56.002|12.573|0
+Skottemarke|DK|54.702|11.555|0
+Skorup|DK|56.281|9.743|0
+Skøttrup|DK|57.373|9.760|0
+Skørringe|DK|54.850|11.967|0
+Skørring|DK|56.363|10.276|0
+Skjørring|DK|56.181|9.889|0
+Skørpinge|DK|55.340|11.378|0
+Skørpinge|DK|55.269|12.366|0
+Skørping|DK|56.836|9.893|2971
+Skørbæk|DK|56.919|9.551|0
+Skødstrup|DK|56.263|10.304|10000
+Skødstrup|DK|55.613|8.253|0
+Skødshoved Strand|DK|56.187|10.375|0
+Skonager|DK|55.638|8.572|0
+Skodsebølle|DK|54.778|11.266|0
+Skodsborg|DK|55.822|12.573|1229
+Skodsbøl|DK|54.898|9.655|0
+Skodborghus|DK|55.450|9.131|0
+Skodborg|DK|55.419|9.153|0
+Skælskør|DK|55.251|11.294|6334
+Skjød|DK|56.299|9.929|0
+Skjoltrup|DK|54.807|12.101|0
+Skjoldelev|DK|56.231|10.012|0
+Skjoldborg|DK|56.908|8.608|0
+Skjoldbjerg|DK|55.682|9.105|0
+Skjold|DK|55.798|9.941|0
+Skjern|DK|55.950|8.500|7145
+Skjerk|DK|56.271|8.822|0
+Skjellund|DK|56.109|9.089|0
+Skjellerup|DK|56.629|9.865|0
+Skjedsbøl|DK|55.756|8.390|0
+Skivum|DK|56.866|9.590|0
+Skivholme|DK|56.201|9.970|0
+Skive|DK|56.567|9.027|20190
+Skippinge|DK|55.740|11.400|0
+Skinnerup|DK|56.989|8.665|0
+Skindbjerg|DK|56.881|9.920|0
+Skindbjerg|DK|56.450|10.793|0
+Skimmede|DK|55.634|11.749|0
+Skiften|DK|55.134|10.922|0
+Skiffard|DK|56.400|10.674|0
+Skidenstræde|DK|54.799|11.300|0
+Skibstrup|DK|56.072|12.511|0
+Skibsted|DK|56.867|10.070|0
+Skibsby|DK|57.483|10.028|0
+Skibinge|DK|55.105|12.032|0
+Skibhusene|DK|55.428|10.415|0
+Skibet|DK|55.707|9.448|0
+Skibelund|DK|55.266|9.136|0
+Skibby|DK|56.137|10.040|0
+Skibby|DK|55.751|11.961|3217
+Skibbild|DK|56.171|8.847|0
+Skægkær|DK|56.213|9.502|0
+Skerne|DK|54.892|11.910|0
+Skenkelsø|DK|55.809|12.142|0
+Skelund|DK|56.761|10.191|0
+Skelstrup|DK|54.787|11.523|0
+Skelmose|DK|56.200|8.207|0
+Skellingsted|DK|55.590|11.462|0
+Skellet|DK|56.982|10.196|0
+Skellerup Nygårde|DK|56.167|9.657|0
+Skellerup|DK|56.205|10.488|0
+Skellerup|DK|56.175|9.674|0
+Skellerup|DK|55.337|10.659|0
+Skellerød|DK|55.419|11.767|0
+Skellebjerg|DK|55.534|11.445|0
+Skelhøje|DK|56.360|9.297|480
+Skelde Gård|DK|54.850|9.733|0
+Skelde|DK|54.860|9.723|0
+Skelby|DK|55.315|11.679|0
+Skelby|DK|54.635|11.901|0
+Skejby|DK|56.200|10.176|0
+Skee Tåstrup|DK|55.536|11.747|0
+Skeen|DK|57.559|10.104|0
+Skee|DK|55.529|11.781|0
+Skedshale|DK|56.682|9.535|0
+Skeby|DK|55.514|10.446|0
+Skebjerg|DK|54.949|10.799|0
+Skaverup|DK|55.065|11.826|0
+Skave|DK|56.391|8.802|0
+Skattebølle|DK|55.091|10.883|0
+Skåstrup|DK|55.530|10.010|0
+Skast|DK|55.509|8.558|0
+Skårupøre|DK|55.064|10.722|0
+Skårup|DK|57.042|9.021|0
+Skårup|DK|56.767|9.736|0
+Skårup|DK|56.259|10.558|0
+Skårup|DK|56.040|8.515|0
+Skårup|DK|56.017|9.983|0
+Skårup|DK|55.218|10.055|0
+Skårup|DK|55.091|10.690|1924
+Skårup|DK|54.702|11.660|0
+Skarum|DK|56.864|8.820|0
+Skartved|DK|55.460|9.538|0
+Skarrild|DK|55.980|8.897|0
+Skarresø|DK|56.359|10.526|0
+Skarre|DK|55.491|9.607|0
+Skarp-Salling|DK|56.951|9.359|0
+Skarpeskade|DK|55.144|14.819|0
+Skarø By|DK|55.007|10.469|0
+Skannerup|DK|56.210|9.744|0
+Skandia|DK|56.467|10.067|0
+Skanderup|DK|55.463|9.342|0
+Skanderborg|DK|56.034|9.932|13543
+Skamstrup|DK|55.620|11.487|0
+Skamby|DK|55.521|10.275|427
+Skalstrup|DK|56.362|8.271|0
+Skalstrup|DK|55.585|12.101|0
+Skals|DK|56.557|9.404|1759
+Skalmstrup|DK|56.538|10.205|0
+Skalmstrup|DK|56.501|9.163|0
+Skallerup|DK|56.852|8.656|0
+Skallerup|DK|55.068|11.969|0
+Skallegårde|DK|55.200|11.767|0
+Skallebølle|DK|55.390|10.190|0
+Skallebjerg|DK|55.228|10.175|0
+Skalkendrup|DK|55.370|10.733|0
+Skalborg|DK|57.002|9.888|0
+Skalbjerg|DK|55.368|10.147|0
+Skagen|DK|57.721|10.584|7250
+Skafterup|DK|55.223|11.512|0
+Skaftelev|DK|55.471|11.431|0
+Skader|DK|56.355|10.212|0
+Skåde|DK|56.104|10.221|0
+Skade|DK|55.937|9.506|0
+Skadbak|DK|57.195|9.650|0
+Skabohuse|DK|55.349|10.793|0
+Sjunkeby|DK|54.778|11.043|0
+Sjøstrup|DK|56.794|9.566|0
+Sjørup Gårde|DK|56.785|9.264|0
+Sjørup|DK|56.427|9.083|0
+Sjørup|DK|56.342|9.303|0
+Sjørslev|DK|56.326|9.445|0
+Sjørring|DK|56.953|8.589|0
+Sjørring|DK|56.552|9.710|0
+Sjølund|DK|55.402|9.530|0
+Sjolte|DK|55.172|12.009|0
+Sjælstofte|DK|54.653|11.483|0
+Sjælsmark|DK|55.874|12.427|0
+Sjellerup|DK|55.001|9.862|0
+Sjelle|DK|56.185|9.933|0
+Sivested|DK|56.386|10.634|0
+Sir|DK|56.405|8.591|0
+Sinkbæk|DK|56.439|8.287|0
+Sinebjerg|DK|55.083|10.184|0
+Sindrup|DK|56.687|8.377|0
+Sinding|DK|56.208|9.467|0
+Sinding|DK|56.212|8.851|0
+Sindallund|DK|57.477|10.189|0
+Sindal|DK|57.471|10.203|3032
+Simmersted|DK|55.300|9.381|0
+Simmerbølle|DK|54.945|10.764|0
+Simmendrup|DK|55.359|11.916|0
+Simmelkær|DK|56.269|9.000|0
+Simested|DK|56.696|9.557|0
+Silstrup|DK|56.930|8.649|0
+Sillerup|DK|55.300|9.562|0
+Sillerslev|DK|56.693|8.734|0
+Silkeborg|DK|56.170|9.545|49747
+Sildestrup|DK|54.723|11.962|0
+Siim|DK|56.084|9.780|0
+Sigersted|DK|55.429|11.729|0
+Sigerslevvester|DK|55.878|12.094|0
+Sigerslevøster|DK|55.883|12.130|0
+Sigerslev|DK|55.324|12.416|0
+Sig|DK|55.665|8.575|0
+Siem|DK|56.822|10.011|0
+Sidinge|DK|55.837|11.646|0
+Sibberup|DK|55.636|11.599|0
+Sibberup|DK|55.285|11.823|0
+Sibberup|DK|55.219|11.395|0
+Sevel|DK|56.457|8.870|0
+Serup|DK|56.607|8.567|0
+Serup|DK|56.244|9.489|0
+Serup|DK|55.486|10.290|0
+Serritslev|DK|57.314|9.974|0
+Serridslev|DK|55.900|9.895|0
+Sepstrup|DK|56.092|9.447|0
+Sennels|DK|56.964|8.794|0
+Sengeløse|DK|55.681|12.248|0
+Semb|DK|56.654|8.545|0
+Sem|DK|56.626|10.093|0
+Selsinggårde|DK|55.834|10.560|0
+Selling|DK|56.309|10.097|0
+Sellerup|DK|55.665|9.648|0
+Selkær|DK|56.465|10.742|0
+Seldrup|DK|56.068|10.220|0
+Selde|DK|56.780|9.046|0
+Sekshusene|DK|57.470|10.239|0
+Seksgårde|DK|55.882|11.954|0
+Sejstrup|DK|55.435|8.742|0
+Sejs|DK|56.138|9.607|0
+Sejrup|DK|55.883|9.309|0
+Sejlstrup|DK|56.847|9.952|0
+Sejling|DK|56.217|9.518|0
+Sejlflod|DK|56.987|10.101|0
+Sejet|DK|55.818|9.925|0
+Sejerslev|DK|56.923|8.867|0
+Sejerby|DK|55.884|11.143|0
+Segalt|DK|56.283|10.314|0
+Seest|DK|55.486|9.444|0
+Seerdrup|DK|55.341|11.340|0
+Seem|DK|55.312|8.821|593
+Seden Strand|DK|55.439|10.450|0
+Seden|DK|55.426|10.443|3743
+Sebberup|DK|55.791|9.729|0
+Sebbersund|DK|56.961|9.566|0
+Sebbelev|DK|54.960|9.859|0
+Sædinge|DK|54.709|11.417|0
+Sædding|DK|56.026|8.544|0
+Sædder|DK|55.392|12.106|0
+Sædden|DK|55.509|8.405|0
+Sædballe|DK|54.789|10.722|0
+Sæd|DK|54.914|8.903|0
+Sæby|DK|57.332|10.523|9012
+Sæby|DK|56.763|8.907|0
+Sæby|DK|55.704|11.942|0
+Sæby|DK|55.547|11.309|0
+Saunte|DK|56.075|12.486|0
+Sattrup|DK|55.951|9.790|0
+Sasserup|DK|55.681|11.665|0
+Sarup|DK|55.200|10.100|0
+Sarup|DK|54.910|10.033|0
+Sankt Knuds By|DK|57.452|9.964|0
+Sankt Jørgensbjerg|DK|55.644|12.072|0
+Sangstrup|DK|56.463|10.899|0
+Sandvig|DK|55.287|14.785|0
+Sandvig|DK|55.060|12.118|0
+Sandved|DK|55.263|11.522|686
+Sandvad|DK|55.983|9.717|0
+Sandvad|DK|55.803|9.459|0
+Sandstræde|DK|55.233|11.767|0
+Sandkås|DK|55.255|14.820|0
+Sandholts-Lyndelse|DK|55.207|10.301|0
+Sandet|DK|55.916|8.846|0
+Sanderum|DK|55.369|10.339|0
+Sander|DK|55.989|10.153|0
+Sanddal|DK|55.548|9.726|0
+Sandby Lindelse|DK|54.850|11.069|0
+Sandby|DK|56.297|10.062|0
+Sandby|DK|55.736|11.510|0
+Sandby|DK|55.379|11.744|0
+Sandby|DK|54.875|11.088|345
+Sandbjerg|DK|55.854|12.502|0
+Sandbjerg|DK|54.893|11.184|0
+Sandager|DK|55.327|9.928|0
+Sandager|DK|55.215|10.564|0
+Sandager|DK|54.882|9.567|0
+Sandager|DK|54.667|11.589|0
+Saltvig|DK|54.872|11.383|0
+Saltuna|DK|55.176|15.019|0
+Saltum Strand|DK|57.292|9.638|0
+Saltum|DK|57.272|9.698|0
+Saltrup|DK|56.056|12.325|0
+Saltø By|DK|55.239|11.636|0
+Saltofte|DK|55.635|11.278|0
+Saltofte|DK|55.524|11.575|0
+Saltofte|DK|55.246|9.926|0
+Salten|DK|56.084|9.569|0
+Saltbæk|DK|55.735|11.112|0
+Salløv|DK|55.565|12.111|0
+Sallingsund|DK|56.743|8.858|0
+Sallinge|DK|55.226|10.338|0
+Sallerup|DK|55.084|11.821|0
+Sall|DK|56.279|9.825|233
+Salby|DK|55.493|10.658|0
+Sakskøbing|DK|54.800|11.626|4580
+Saksild|DK|55.975|10.231|0
+Saksborg|DK|54.924|9.068|0
+Sahl|DK|56.483|8.838|0
+Sahl|DK|56.337|9.639|0
+Sageby|DK|55.037|12.120|0
+Såderup|DK|55.324|10.672|0
+Sadderup|DK|55.513|8.607|0
+Såby|DK|55.987|9.789|0
+Sabro|DK|56.213|10.034|3562
+Ryslinge|DK|55.242|10.537|2009
+Ryomgård|DK|56.384|10.503|2779
+Rynkeby|DK|55.401|10.614|0
+Rynkeby|DK|55.249|10.467|0
+Rykkerup|DK|54.749|11.709|0
+Rygårde|DK|56.505|10.491|0
+Rye|DK|55.673|11.874|0
+Rye|DK|55.522|11.238|0
+Rydskov|DK|55.433|10.060|0
+Ryde|DK|56.434|8.779|0
+Ryde|DK|54.796|11.305|0
+Rydal|DK|57.427|10.387|0
+Rybjerg|DK|56.716|9.044|0
+Ry|DK|56.090|9.765|7151
+Rutsker|DK|55.208|14.742|0
+Rurup|DK|55.153|9.030|0
+Rungsted|DK|55.890|12.533|0
+Rugtved|DK|55.648|11.264|0
+Rugsted|DK|55.641|9.391|0
+Rugskov|DK|55.509|11.402|0
+Rugbjerg|DK|55.127|9.309|0
+Rue|DK|55.690|9.420|0
+Rue|DK|55.453|10.210|0
+Ruds-Vedby|DK|55.541|11.380|1661
+Rudskov Huse|DK|55.385|10.528|0
+Rudme|DK|55.198|10.485|0
+Rudkøbing|DK|54.936|10.710|4521
+Rude-Eskilstrup|DK|55.515|11.553|0
+Rude|DK|55.993|10.224|0
+Rude|DK|55.231|11.469|0
+Rudbøl|DK|54.900|8.753|0
+Rudbjerg|DK|54.741|11.121|0
+Rud|DK|55.411|9.827|0
+Rærup|DK|56.708|9.051|0
+Rærup|DK|55.784|8.349|0
+Rovstrup|DK|55.291|9.466|0
+Rovsthøje|DK|55.575|8.592|0
+Rovst|DK|55.552|8.629|0
+Roved|DK|55.467|9.212|0
+Roum|DK|56.605|9.552|0
+Rottarp|DK|55.704|8.357|0
+Rostved|DK|56.310|10.524|0
+Rostrup|DK|56.729|9.929|0
+Rostrup|DK|55.746|9.287|0
+Rostrup|DK|55.530|10.246|0
+Rosted|DK|55.371|11.413|0
+Rosmus|DK|56.304|10.772|0
+Roslev|DK|56.704|8.986|0
+Roskilde|DK|55.642|12.080|51916
+Rosendal|DK|55.467|10.333|0
+Rorup|DK|55.578|11.988|0
+Rorslev|DK|55.568|10.320|0
+Rorslev|DK|55.489|9.869|0
+Røved|DK|56.312|10.171|0
+Røstofte|DK|55.043|12.006|0
+Roost|DK|55.131|9.010|0
+Rørvig|DK|55.944|11.753|996
+Rørup|DK|55.413|10.026|0
+Rørtang|DK|56.013|12.574|0
+Rørt|DK|55.977|10.191|0
+Rørkær|DK|55.306|9.501|0
+Rørkær|DK|54.936|8.921|0
+Rørholt|DK|57.128|10.277|0
+Rørdal|DK|57.062|9.979|0
+Rørby|DK|55.646|11.164|0
+Rørbæk Langet|DK|54.828|11.688|0
+Rørbæk|DK|54.802|11.648|0
+Rønshoved|DK|54.874|9.519|0
+Rønninge|DK|55.345|10.608|0
+Rønnede|DK|55.257|12.021|2746
+Rønnebæk|DK|55.218|11.811|0
+Rønnebjerg|DK|57.348|10.072|0
+Rønne|DK|55.101|14.707|13807
+Rønholt|DK|56.781|10.186|0
+Rønge|DK|56.393|9.752|0
+Rønde|DK|56.301|10.475|3191
+Rønbjerg Huse|DK|56.891|9.168|0
+Rønbjerg|DK|56.534|8.933|0
+Rømø Kirkeby|DK|55.113|8.543|0
+Røllum|DK|54.989|9.391|0
+Røjle Tårup|DK|55.534|9.805|0
+Røjle|DK|55.520|9.809|0
+Røjerup|DK|55.350|10.600|0
+Røgind|DK|56.084|8.352|0
+Røgerup|DK|55.750|11.922|0
+Røgen|DK|56.209|9.809|0
+Røgen|DK|56.200|9.800|0
+Røgelhede|DK|57.238|10.162|0
+Rødvig|DK|55.255|12.379|1783
+Rødskebølle|DK|55.084|10.574|0
+Rødovre|DK|55.681|12.454|40652
+Rødme|DK|55.112|10.499|0
+Rødkærsbro|DK|56.353|9.505|0
+Rødeledshuse|DK|54.804|11.581|0
+Rødeled|DK|55.117|12.017|0
+Rødekro|DK|55.071|9.335|6182
+Røddinge|DK|54.947|12.159|0
+Rødding|DK|56.643|8.810|0
+Rødding|DK|56.500|9.507|0
+Rødding|DK|56.201|8.708|0
+Rødding|DK|55.366|9.063|2739
+Rødbyhavn|DK|54.659|11.355|1445
+Rødby|DK|54.695|11.389|1927
+Rø|DK|55.213|14.894|181
+Ronæs|DK|55.440|9.826|0
+Ronesbanke|DK|55.090|12.015|0
+Roneklint|DK|55.124|12.126|0
+Romlund|DK|56.482|9.304|0
+Romdrup|DK|57.003|10.036|0
+Rom By|DK|56.519|8.306|0
+Rolund|DK|55.445|9.844|0
+Rolsted|DK|55.322|10.568|0
+Rolpested|DK|54.856|10.490|0
+Roløkke|DK|54.914|11.118|0
+Rold|DK|56.773|9.815|0
+Roholte|DK|55.195|12.090|0
+Rogenstrup|DK|56.498|9.349|0
+Roe|DK|56.283|9.649|0
+Rodskov|DK|56.300|10.365|0
+Rodelund|DK|56.102|9.578|0
+Rodebæk|DK|55.592|8.761|0
+Rode|DK|55.857|11.609|0
+Rode|DK|55.299|12.053|0
+Robstrup|DK|56.445|10.884|0
+Robdrup|DK|56.391|10.124|0
+Roager|DK|55.253|8.824|319
+Rækker Mølle|DK|56.021|8.536|0
+Risum|DK|56.784|9.015|0
+Ristinge|DK|54.822|10.634|0
+Risskov|DK|56.197|10.248|0
+Rislev|DK|55.281|11.733|0
+Risgårde|DK|56.768|9.210|0
+Riserup|DK|54.896|11.829|0
+Risen|DK|55.166|15.014|0
+Rise Hjarup|DK|55.081|9.386|0
+Rise|DK|55.058|9.336|0
+Risby|DK|55.689|12.326|0
+Risby|DK|55.335|12.284|0
+Risby|DK|55.133|11.925|0
+Ris|DK|55.976|9.848|0
+Ris|DK|55.829|9.321|0
+Ris|DK|55.813|11.430|0
+Rinkenæs|DK|54.894|9.561|0
+Ringtved|DK|55.276|9.346|0
+Ringsted|DK|55.443|11.790|23086
+Ringseby|DK|54.865|11.178|0
+Ringsebølle|DK|54.693|11.416|0
+Ringsbjerg|DK|55.404|12.081|0
+Ringkøbing|DK|56.090|8.244|9894
+Ringive|DK|55.802|9.174|0
+Ring firgårde|DK|55.135|11.828|0
+Ringe|DK|55.562|10.280|0
+Ringe|DK|55.238|10.479|6474
+Ring|DK|56.406|10.358|0
+Ring|DK|55.959|9.589|0
+Ring|DK|55.133|11.850|0
+Rindum|DK|56.092|8.271|0
+Rindsholm|DK|56.401|9.435|0
+Rindebæk|DK|55.318|10.464|0
+Rindby|DK|55.424|8.400|0
+Rimsø|DK|56.479|10.797|0
+Rimmerhus|DK|56.097|8.761|0
+Rimmen|DK|57.500|10.467|0
+Rimmen|DK|57.008|9.719|0
+Rigtrup|DK|56.365|10.211|0
+Rifbjerg|DK|54.955|10.746|0
+Riddertofte|DK|54.759|11.030|0
+Ribe|DK|55.331|8.770|8403
+Ræhr|DK|57.094|8.665|0
+Revsøre|DK|55.209|10.802|0
+Revshale|DK|54.763|11.531|0
+Revninge|DK|55.418|10.656|0
+Revn|DK|56.392|10.811|0
+Rettrup|DK|56.570|8.897|0
+Rettestrup|DK|55.184|11.775|0
+Retholt|DK|57.550|10.094|0
+Resenstad|DK|56.516|8.537|0
+Resenbro|DK|56.182|9.648|0
+Resen|DK|56.582|9.033|0
+Resen|DK|56.379|9.089|0
+Resdal|DK|56.226|9.488|0
+Rens|DK|54.895|9.094|0
+Renge|DK|55.287|12.403|0
+Renderne|DK|55.980|8.140|0
+Render|DK|55.345|10.249|0
+Renden|DK|57.567|9.950|0
+Rendbæk|DK|57.240|9.720|0
+Remmer Strand|DK|56.550|8.490|0
+Remmerslund|DK|55.781|9.712|0
+Remkolde|DK|55.058|11.867|0
+Rekkende|DK|55.082|12.081|0
+Rejstrup|DK|56.516|9.853|0
+Rejsby-Ballum|DK|55.048|8.644|0
+Rejsby|DK|55.232|8.723|0
+Regstrup|DK|55.676|11.616|0
+Regstrup|DK|55.352|10.762|0
+Regnemark|DK|55.463|11.989|0
+Regerup|DK|55.339|11.663|0
+Refsvindinge|DK|55.281|10.685|0
+Refsnæs|DK|57.335|9.937|0
+Refshammer|DK|56.782|8.861|0
+Refs|DK|56.733|8.415|0
+Reerstrup|DK|55.993|12.484|0
+Reersø|DK|55.525|11.110|510
+Reersø|DK|54.788|11.635|0
+Reersnæs|DK|54.844|11.450|0
+Reerslev|DK|55.624|12.189|0
+Reerslev|DK|55.558|11.387|0
+Redsted|DK|56.739|8.653|0
+Redsø|DK|56.680|9.876|0
+Rebstrup|DK|56.833|9.630|0
+Rebæk|DK|55.483|9.519|0
+Rebild|DK|56.833|9.849|0
+Rebbøl|DK|54.982|9.206|0
+Ravsted|DK|55.009|9.126|0
+Ravnstrup|DK|57.177|10.098|0
+Ravnstrup|DK|56.947|9.259|0
+Ravnstrup|DK|56.448|9.288|0
+Ravnstrup|DK|55.267|11.874|0
+Ravnstrup|DK|54.876|11.888|0
+Ravnsø|DK|55.511|8.666|0
+Ravnsø|DK|54.902|11.902|0
+Ravnsnæs|DK|55.863|12.456|584
+Ravnshøjgyden|DK|55.274|10.464|0
+Ravnshøj|DK|57.454|10.421|0
+Ravnsholt|DK|54.945|11.257|0
+Ravnsby|DK|54.898|11.355|0
+Ravnsbæk|DK|55.691|9.598|0
+Ravnsbjerg|DK|55.532|8.439|519
+Ravnsbjerg|DK|55.237|11.911|0
+Ravnkilde|DK|56.756|9.753|341
+Ravning|DK|55.691|9.349|0
+Ravnholt|DK|56.135|9.257|0
+Ravnholt|DK|56.064|10.108|0
+Ravnholt|DK|55.770|9.901|0
+Ravnholt|DK|55.547|9.233|0
+Ravnebjerg|DK|55.379|10.265|0
+Ravnebjerg|DK|55.338|11.498|0
+Ravndrup|DK|55.214|10.592|0
+Raved|DK|55.008|9.252|0
+Råsted|DK|56.513|9.949|0
+Råst|DK|56.508|8.758|0
+Rask Mølle|DK|55.872|9.613|0
+Rask Mark|DK|55.883|10.617|0
+Rask Mark|DK|55.883|9.733|0
+Rårup|DK|55.769|9.931|0
+Rårup|DK|54.796|11.101|0
+Rårud|DK|55.118|10.580|0
+Ranum|DK|56.897|9.229|929
+Rantzausminde|DK|55.037|10.546|0
+Rannerød|DK|57.657|10.449|0
+Rangstrup|DK|55.142|9.208|0
+Rands|DK|55.621|9.692|0
+Randlev|DK|55.950|10.200|0
+Randkløve|DK|55.164|15.034|0
+Randerup|DK|55.086|8.725|0
+Randers|DK|56.461|10.036|62802
+Randbøldal|DK|55.690|9.263|0
+Randbøl|DK|55.694|9.248|0
+Ramten|DK|56.438|10.630|0
+Ramsømagle|DK|55.570|12.069|0
+Ramsølille|DK|55.553|12.085|0
+Ramsing|DK|56.596|8.843|0
+Ramme|DK|56.491|8.213|407
+Ramløse|DK|56.014|12.116|1551
+Raklev|DK|55.697|11.067|0
+Rakkeby|DK|57.405|9.926|0
+Rakkeby|DK|56.766|8.623|0
+Råhede|DK|55.267|8.695|0
+Rågelunde|DK|54.704|11.731|0
+Rågelund|DK|55.400|10.496|0
+Rågeleje|DK|56.098|12.165|681
+Ragebøl|DK|54.931|9.733|0
+Rådved|DK|55.912|9.803|0
+Raadvad|DK|55.805|12.560|0
+Rådvad|DK|55.522|9.435|0
+Radsted Langet|DK|54.808|11.675|0
+Radsted|DK|54.789|11.688|0
+Råde|DK|55.247|9.683|0
+Radby|DK|55.382|10.208|0
+Radby|DK|55.283|10.342|0
+Radby|DK|55.161|10.209|0
+Råbymagle|DK|54.984|12.432|0
+Råbylille|DK|54.988|12.383|0
+Råby|DK|56.609|10.230|0
+Råby|DK|55.338|12.361|0
+Rabjerg|DK|54.699|11.908|0
+Rå|DK|54.762|11.436|0
+Purhus|DK|56.543|9.884|0
+Pugdal|DK|57.117|8.650|0
+Præstø|DK|55.124|12.045|4028
+Præstevænge|DK|54.858|12.108|0
+Præstens Kær|DK|57.174|9.741|0
+Præstbro|DK|57.235|10.386|0
+Prejlerup|DK|55.826|11.591|0
+Povlstrup|DK|55.370|12.174|0
+Povlsker|DK|55.021|15.047|0
+Poulstrup|DK|57.350|10.018|0
+Porsheden|DK|57.027|9.701|0
+Pøl|DK|55.068|9.754|0
+Pollerup|DK|54.994|12.370|0
+Pogemosetofte|DK|54.808|11.714|0
+Plovstrup|DK|55.877|9.462|0
+Plovstrup|DK|55.420|8.844|0
+Plejerup|DK|55.791|11.630|0
+Plejelt|DK|56.043|12.411|0
+Pjedsted|DK|55.602|9.657|0
+Pirupshvarre|DK|57.281|9.621|0
+Pirup|DK|57.265|9.633|0
+Pindstrup|DK|56.393|10.415|0
+Pilshuse|DK|55.307|10.776|0
+Pillemark|DK|55.825|10.560|0
+Pilehave|DK|54.731|11.232|0
+Petersværft|DK|54.971|12.076|0
+Permelille|DK|55.808|10.582|0
+Perbøl|DK|55.000|9.267|0
+Perbøl|DK|54.919|9.341|0
+Pennsylvanien|DK|55.190|10.431|0
+Pejrup|DK|55.095|10.350|0
+Pedholt|DK|56.026|10.210|0
+Pederstrup|DK|56.546|9.526|0
+Pederstrup|DK|56.335|10.673|0
+Pederstrup|DK|56.242|9.417|0
+Pederstrup|DK|55.734|12.336|0
+Pederstrup|DK|55.285|10.488|0
+Pederstrup|DK|55.179|11.856|0
+Pederstrup|DK|54.931|10.804|0
+Pedersker|DK|55.031|14.993|204
+Pedersborg|DK|55.453|11.562|0
+Pebringe|DK|55.317|12.167|0
+Pårup|DK|56.136|9.350|0
+Pårup|DK|56.099|12.293|0
+Pårup|DK|55.997|8.805|0
+Pårup|DK|55.409|10.317|0
+Pårup|DK|55.322|10.632|0
+Pårup|DK|54.805|11.438|0
+Pannerup|DK|56.255|10.182|0
+Pandrup|DK|57.221|9.676|2849
+Pandebjerg|DK|54.800|11.817|0
+Pamhule|DK|55.214|9.421|0
+Palleshave|DK|55.248|10.416|0
+Paderup|DK|56.431|10.066|0
+Padborg|DK|54.827|9.362|4263
+Påby|DK|55.504|9.415|0
+Ovtved|DK|55.556|11.351|0
+Ovtrup|DK|56.780|8.664|0
+Outrup|DK|55.719|8.345|1003
+Ovstrup|DK|56.242|8.888|0
+Ovstrup|DK|54.856|11.911|0
+Over Vrigsted|DK|55.730|9.842|0
+Over Viskum|DK|56.463|9.576|0
+Over Vindinge|DK|55.069|11.888|0
+Over Ustrup|DK|55.806|9.870|0
+Over Slebsager|DK|55.568|8.733|0
+Over Randlev|DK|55.944|10.188|0
+Overlund|DK|56.454|9.441|0
+Over Lert|DK|55.375|9.280|0
+Overlade|DK|56.858|9.264|447
+Over Kærby|DK|55.465|10.623|0
+Over Kestrup|DK|55.195|9.481|0
+Over Jerstal|DK|55.196|9.306|0
+Over Jels|DK|55.383|9.245|0
+Over Hornbæk|DK|56.460|9.970|0
+Over Holluf|DK|55.358|10.470|1502
+Over Hadsten|DK|56.316|10.041|0
+Over Ginderup|DK|56.670|8.841|0
+Over Geestrup|DK|55.150|9.086|0
+Over Fussing|DK|56.481|9.894|0
+Over Fløjstrup|DK|56.059|10.241|0
+Over Fidde|DK|55.724|8.292|0
+Over Feldborg|DK|56.350|8.950|0
+Over Even|DK|55.190|11.935|0
+Over Dråby|DK|55.837|11.990|0
+Overby|DK|55.983|8.869|0
+Overby|DK|55.957|11.400|0
+Overby|DK|55.758|10.005|0
+Overby|DK|55.113|8.876|0
+Overbroen|DK|56.442|10.675|0
+Overbjerg|DK|55.730|11.027|0
+Over Barrit|DK|55.715|9.878|0
+Over Åstrup|DK|55.933|9.600|0
+Over Åstrup|DK|55.267|9.557|0
+Ove|DK|56.694|9.978|0
+Oure|DK|55.120|10.723|0
+Oudrup|DK|56.926|9.390|0
+Otting|DK|56.630|8.915|0
+Ottestrup|DK|55.424|11.425|0
+Otterup|DK|55.515|10.398|5264
+Ottersbøl|DK|55.131|8.767|0
+Ostrup|DK|55.812|11.623|0
+Ostrup|DK|55.538|11.613|0
+Osted|DK|55.562|11.958|2349
+Osbæk|DK|54.956|9.861|0
+Osager|DK|55.572|11.942|0
+Orup|DK|55.208|12.079|0
+Ortved|DK|55.492|11.864|247
+Orten|DK|55.664|8.436|0
+Orte|DK|55.348|10.095|0
+Ornum|DK|55.545|11.172|0
+Ornebjerg|DK|55.033|11.925|0
+Ormstrup|DK|56.328|9.646|0
+Ormslev|DK|56.125|10.063|357
+Ormeslev|DK|55.349|11.244|0
+Oringe|DK|55.000|11.911|0
+Orehoved|DK|54.953|11.852|417
+Orebygård|DK|54.829|11.597|0
+Oreby|DK|55.268|11.393|0
+Oreby|DK|55.040|11.831|0
+Oreby|DK|54.821|11.612|0
+Orebo|DK|55.550|11.527|0
+Ore|DK|55.507|10.038|0
+Ore|DK|55.296|10.521|0
+Ore|DK|55.008|11.870|0
+Ore|DK|54.884|12.062|0
+Ore|DK|54.817|10.733|0
+Ore|DK|54.802|11.209|0
+Ordrup|DK|55.819|11.407|0
+Ordrup|DK|55.764|12.569|0
+Ordrup|DK|55.647|11.805|0
+Ordrup|DK|55.524|11.720|0
+Opsneum|DK|55.482|8.625|0
+Oppe Sundby|DK|55.828|12.078|0
+Oppelstrup|DK|56.949|9.991|0
+Oplev|DK|56.834|9.798|0
+Opager|DK|54.768|11.289|0
+Øverup|DK|55.250|11.808|0
+Øverup|DK|54.810|11.903|0
+Øverste Torp|DK|55.964|12.513|0
+Øverød|DK|55.822|12.484|0
+Østrup|DK|57.258|9.685|0
+Østrup|DK|56.749|9.473|0
+Østrup|DK|56.489|10.179|0
+Østrup|DK|55.807|10.021|0
+Østrup|DK|55.728|12.201|0
+Østrup|DK|55.590|11.608|0
+Østrup|DK|55.493|10.422|0
+Østofte|DK|54.800|11.421|0
+Øster Vrøgum|DK|55.655|8.292|0
+Østervrå|DK|57.342|10.240|0
+Øster Vrå|DK|57.342|10.239|0
+Øster Vintersgård|DK|56.533|8.400|0
+Øster Velling|DK|56.429|9.856|0
+Øster Vedsted|DK|55.315|8.736|810
+Østervang|DK|55.426|11.992|0
+Øster Vandet|DK|56.998|8.621|0
+Øster Vamdrup|DK|55.419|9.309|0
+Øster Uttrup|DK|57.045|10.014|0
+Øster Ulslev|DK|54.698|11.627|235
+Øster Tørslev|DK|56.579|10.188|0
+Øster Terp|DK|55.071|9.076|0
+Øster Teglgård|DK|56.433|9.417|0
+Øster Syv|DK|55.572|12.040|0
+Øster Svenstrup|DK|57.100|9.473|0
+Øster Sundby|DK|57.042|9.979|0
+Øster Stillinge|DK|55.435|11.273|0
+Øster Starup|DK|55.599|9.443|0
+Øster Sottrup|DK|54.952|9.723|0
+Øster Snogbæk|DK|54.975|9.717|0
+Øster Snede|DK|55.794|9.646|0
+Øster Skovby|DK|54.775|11.197|0
+Østerskov|DK|55.600|9.667|0
+Østerskov|DK|54.783|10.733|0
+Øster Skørringe|DK|54.748|11.398|0
+Øster Skerninge|DK|55.070|10.472|0
+Øster Rendbæk|DK|57.235|9.733|0
+Øster Rabjerg|DK|56.016|8.434|0
+Øster Ørbæk|DK|56.967|9.288|0
+Øster Ølby|DK|56.488|8.573|0
+Øster Nordlunde|DK|54.871|11.231|0
+Øster Melholt|DK|57.104|10.365|0
+Øster Marup|DK|55.975|8.512|0
+Østermark|DK|56.199|9.084|0
+Østermark|DK|55.006|12.378|0
+Østermarie|DK|55.141|15.012|448
+Østerlund|DK|55.885|9.787|0
+Øster Løgum|DK|55.116|9.359|0
+Øster Lindet|DK|55.307|9.146|0
+Østerled|DK|57.136|10.318|0
+Østerlars|DK|55.165|14.968|262
+Øster Kondrup|DK|56.626|10.143|0
+Østerklint|DK|55.306|9.825|0
+Øster Kippinge|DK|54.899|11.799|269
+Øster Karleby|DK|54.864|11.190|0
+Øster Jølby|DK|56.835|8.715|0
+Østerild|DK|57.031|8.847|0
+Øster Hvidbjerg|DK|56.745|8.610|0
+Østerhuse|DK|55.124|10.939|0
+Øster Hurup|DK|56.804|10.271|0
+Øster Hæsinge|DK|55.181|10.315|0
+Øster Hornum|DK|56.937|9.752|0
+Øster Højst|DK|55.001|9.038|0
+Øster Holmen|DK|57.480|10.427|0
+Østerholm|DK|55.002|9.927|0
+Øster Hjermitslev|DK|57.278|9.872|0
+Øster Hjermeslev|DK|57.296|9.880|0
+Øster Hassing|DK|57.070|10.198|0
+Øster Halne Enge|DK|57.100|9.816|0
+Øster Halne|DK|57.117|9.867|0
+Øster Grønning|DK|56.649|9.079|0
+Øster Gjerndrup|DK|55.516|9.025|0
+Øster Gesten|DK|55.528|9.214|0
+Øster Gasse|DK|55.156|8.825|0
+Østergårde|DK|56.901|10.147|0
+Østergårde|DK|56.707|10.069|0
+Østergårde|DK|55.925|10.160|0
+Øster Gammelby|DK|54.995|8.766|0
+Øster Egesborg|DK|55.040|12.019|0
+Øster Doense|DK|56.709|9.840|0
+Østerby Havn|DK|57.318|11.129|0
+Østerby|DK|57.317|11.133|0
+Østerby|DK|57.058|9.610|0
+Østerby|DK|56.477|8.612|0
+Østerby|DK|56.430|8.516|0
+Østerby|DK|56.398|8.357|0
+Østerby|DK|56.083|10.140|0
+Østerby|DK|55.984|8.346|0
+Østerby|DK|55.858|10.601|0
+Østerby|DK|55.131|10.215|0
+Østerby|DK|55.100|8.545|0
+Østerby|DK|54.967|8.769|0
+Østerby|DK|54.953|11.440|0
+Østerby|DK|54.860|9.923|0
+Øster Brønderslev|DK|57.248|9.996|0
+Øster Bording|DK|56.191|9.484|0
+Øster Børsting|DK|56.465|9.094|0
+Øster Bølle|DK|56.706|9.452|0
+Øster Bjerregrav|DK|56.485|9.907|0
+Øster Bisholt|DK|55.820|9.982|0
+Østerballe|DK|56.324|10.846|0
+Østerballe|DK|55.550|10.463|0
+Øster Åst|DK|55.733|9.233|0
+Øster Assels|DK|56.701|8.695|0
+Øster Alling|DK|56.412|10.316|0
+Øster Åby|DK|55.097|10.701|0
+Øster Äbølling|DK|55.238|8.843|0
+Østenåen|DK|57.573|10.119|0
+Østby|DK|55.757|12.039|0
+Østbirk|DK|55.965|9.756|2644
+Øsløs|DK|57.028|9.010|0
+Øslev|DK|57.047|9.260|0
+Øse|DK|55.645|8.652|0
+Øsby|DK|55.252|9.646|0
+Ørvad|DK|57.291|10.233|0
+Ørup|DK|56.309|10.746|0
+Ørum Overdrev|DK|57.183|10.067|0
+Ørum|DK|57.192|10.105|0
+Ørum|DK|56.814|8.333|0
+Ørum|DK|56.481|9.625|1511
+Ørum|DK|56.442|10.681|0
+Ørum|DK|55.738|9.746|0
+Ørting|DK|55.928|10.152|0
+Ørsted|DK|56.502|10.337|0
+Ørsted|DK|55.543|12.077|0
+Ørsted|DK|55.340|9.253|0
+Ørsted|DK|55.328|10.062|0
+Ørsø|DK|57.176|10.334|0
+Ørsløkke|DK|54.900|11.245|0
+Ørslevvester|DK|55.468|11.701|0
+Ørslev under Skoven|DK|55.458|11.730|0
+Ørslev Lillevang|DK|55.047|11.941|0
+Ørslev Kohave|DK|55.025|11.975|0
+Ørslev|DK|55.476|11.380|0
+Ørslev|DK|55.406|9.911|0
+Ørslev|DK|55.387|11.937|0
+Ørslev|DK|55.224|11.406|0
+Ørslev|DK|55.083|9.185|0
+Ørslev|DK|55.044|11.968|1801
+Ørskov|DK|55.934|9.903|0
+Ørsbjerg|DK|55.359|10.009|0
+Ørritslev|DK|55.519|10.433|0
+Ørritslev|DK|55.498|10.225|0
+Ørrild|DK|56.537|9.871|0
+Ørridslev|DK|55.938|9.938|0
+Ørre|DK|56.234|8.872|0
+Ørnstrup|DK|55.815|9.811|0
+Ørninge|DK|55.509|11.990|0
+Ørnhøj|DK|56.199|8.565|0
+Ørholm|DK|55.798|12.506|0
+Ørding|DK|56.717|8.758|0
+Ørderup|DK|55.210|9.088|0
+Ørby|DK|56.118|10.503|0
+Ørby|DK|56.051|12.148|0
+Ørby|DK|55.794|10.595|0
+Ørby|DK|55.305|9.628|0
+Ørbæk|DK|56.967|9.300|0
+Ørbæk|DK|56.428|10.695|0
+Ørbæk|DK|55.857|8.796|0
+Ørbæk|DK|55.517|10.004|0
+Ørbæk|DK|55.258|10.671|1747
+Ønslev|DK|54.850|11.854|392
+Ømark|DK|55.403|11.744|0
+Øm|DK|55.596|12.013|451
+Ølund|DK|55.505|10.477|0
+Ølstykke Stationsby|DK|55.792|12.145|0
+Ølstykke|DK|55.796|12.155|5348
+Ølstrup|DK|56.114|8.424|0
+Ølsted Nederholm|DK|55.797|9.765|0
+Ølsted|DK|56.234|10.140|0
+Ølsted|DK|55.923|12.071|1946
+Ølsted|DK|55.247|10.304|0
+Ølst|DK|56.388|10.086|0
+Ølsemagle|DK|55.500|12.165|0
+Øls|DK|56.620|9.724|0
+Øllufvad|DK|55.562|8.553|0
+Øllerup|DK|55.266|11.670|0
+Øllebølle|DK|54.689|11.599|0
+Ølholm|DK|55.837|9.529|0
+Ølgod|DK|55.807|8.629|3714
+Ølby Lyng|DK|55.490|12.184|0
+Ølby|DK|56.471|8.548|0
+Ølby|DK|55.485|12.146|0
+Øksenvad|DK|56.613|9.008|0
+Øksenmølle|DK|56.278|10.696|0
+Øksenhede|DK|57.346|10.464|0
+Øksendrup|DK|55.219|10.735|0
+Øgelund|DK|55.846|9.072|0
+Øen-Smidstrup|DK|55.100|12.098|0
+Øen-Skovhuse|DK|55.119|12.098|0
+Ødum|DK|56.312|10.134|0
+Ødsted|DK|55.658|9.401|0
+Ødis Bramdrup|DK|55.390|9.358|0
+Ødis|DK|55.408|9.381|0
+Øde-Hastrup|DK|55.615|12.114|0
+Øde Førslev|DK|55.354|11.905|0
+Øby|DK|56.455|9.635|0
+Øbjerg|DK|55.139|8.925|0
+Øbening|DK|55.097|9.239|0
+Onsved|DK|55.788|11.986|0
+Onsild Stationsby|DK|56.577|9.748|0
+Onsevig|DK|54.947|11.115|0
+Onsbjerg|DK|55.850|10.573|0
+Ondrup|DK|55.948|10.123|0
+Omø By|DK|55.162|11.155|0
+Ommestrup|DK|56.327|10.396|0
+Ommel|DK|54.873|10.486|266
+Omme|DK|55.533|8.690|0
+Olstrup|DK|55.289|12.031|0
+Olstrup|DK|54.763|11.582|0
+Overholm|DK|55.805|9.773|0
+Olsker|DK|55.240|14.795|0
+Ollerup|DK|55.731|9.366|0
+Ollerup|DK|55.450|11.405|0
+Ollerup|DK|55.069|10.499|0
+Oldrup|DK|55.934|10.066|0
+Olde|DK|54.867|10.383|0
+Oksvang|DK|55.513|8.528|0
+Okslund|DK|55.592|9.015|0
+Oksenvad|DK|55.323|9.250|0
+Oksby|DK|55.556|8.144|0
+Oksbøl|DK|55.627|8.288|2815
+Oksbøl|DK|55.035|9.755|0
+Oens|DK|55.821|9.793|0
+Odense|DK|55.396|10.388|180863
+Oddesund Syd|DK|56.574|8.565|0
+Oddesund Nord|DK|56.582|8.547|0
+Oddersted|DK|55.529|9.595|0
+Odder|DK|55.973|10.153|12454
+Oddense|DK|56.654|8.933|0
+Odde|DK|56.728|10.300|0
+Odby|DK|56.607|8.526|0
+Obling|DK|55.827|8.294|0
+Obbekær|DK|55.332|8.879|0
+Ny Vemmenæs|DK|54.992|10.675|0
+Nytorp|DK|57.102|8.643|0
+Ny Tolstrup|DK|55.553|11.914|0
+Nysum|DK|56.754|9.775|0
+Ny Stenderup|DK|55.173|10.257|0
+Nysted|DK|54.665|11.734|1237
+Ny Skrøbelev|DK|54.924|10.750|0
+Nyrup|DK|57.006|9.698|0
+Nyrup|DK|56.000|12.510|0
+Nyrup|DK|55.931|11.606|0
+Nyrup|DK|55.704|11.041|0
+Nyrup|DK|55.601|11.665|0
+Nyrup|DK|55.543|11.650|0
+Nyrup|DK|55.495|11.362|0
+Nyrup|DK|55.321|10.111|0
+Nyrup|DK|55.231|11.499|0
+Nyråd|DK|55.005|11.961|2224
+Ny Pøl|DK|54.898|10.044|0
+Ny Osted|DK|55.550|11.967|0
+Nyord|DK|55.041|12.195|0
+Ny Nyby|DK|55.033|10.612|0
+Ny Nørup|DK|55.704|9.309|0
+Nymølle|DK|56.678|8.792|0
+Nymindegab|DK|55.817|8.200|205
+Nymarkshuse|DK|55.413|10.600|0
+Nymark|DK|57.244|10.094|0
+Nymark|DK|55.480|10.066|0
+Ny Lifstrup|DK|55.578|8.533|0
+Nylars|DK|55.073|14.810|204
+Nykøbing Falster|DK|54.769|11.874|19976
+Nykøbing Sjælland|DK|55.925|11.671|5002
+Nykøbing Mors|DK|56.793|8.853|9033
+Nyker|DK|55.139|14.761|674
+Nyhuse|DK|55.933|12.283|0
+Nyhuse|DK|55.430|12.021|0
+Nyhuse|DK|55.367|12.083|0
+Nyhuse|DK|54.864|11.808|0
+Ny Højen|DK|55.658|9.499|0
+Ny Hjortkær|DK|55.544|8.703|0
+Ny Hesselager|DK|55.170|10.735|0
+Ny Hagested|DK|55.731|11.594|0
+Nygård|DK|56.046|12.531|0
+Nygård|DK|55.925|11.640|0
+Ny Fårevejle|DK|55.798|11.432|0
+Nyby Strandhuse|DK|55.503|9.532|0
+Nyby|DK|56.631|8.863|0
+Nyby|DK|56.202|8.871|0
+Nyby|DK|55.749|10.945|0
+Nyby|DK|55.641|11.741|0
+Nyby|DK|55.535|9.055|0
+Nyby|DK|54.843|11.931|0
+Nyby|DK|54.815|10.662|0
+Nybro|DK|54.736|11.802|0
+Ny Borre|DK|54.994|12.454|0
+Nyborg|DK|55.313|10.790|17525
+Nybølle|DK|55.708|12.268|0
+Nybølle|DK|55.209|10.379|0
+Nybølle|DK|54.931|11.223|0
+Nybølle|DK|54.779|11.279|0
+Nybølgård|DK|55.299|8.985|0
+Nybøl|DK|55.019|9.319|0
+Nybøl|DK|54.923|9.678|0
+Nybo|DK|55.976|12.491|0
+Nybo|DK|55.060|8.893|0
+Ny Bjergby|DK|55.687|11.501|0
+Nustrup-Bæk|DK|55.284|9.211|0
+Næstved|DK|55.230|11.761|44331
+Næstrup|DK|56.935|8.620|0
+Næstelsø|DK|55.209|11.844|0
+Næsby ved Stranden|DK|55.401|11.261|0
+Næsby ved Skoven|DK|55.461|11.446|0
+Næsbyhoved-Broby|DK|55.439|10.312|0
+Næsby Fed|DK|55.398|11.240|0
+Næsby|DK|56.911|9.197|0
+Næsby|DK|56.407|10.800|0
+Næsby|DK|55.793|11.840|0
+Næsby|DK|55.420|10.355|0
+Næsby|DK|55.371|11.623|0
+Næsby|DK|54.774|11.075|0
+Næsborg|DK|56.977|9.341|0
+Næsbjerg|DK|55.624|8.599|0
+Næs|DK|55.053|11.833|0
+Næs|DK|54.875|12.108|0
+Nærum|DK|55.816|12.538|0
+Novrup|DK|55.477|8.523|0
+Notmarkskov|DK|54.983|9.983|0
+Notmark|DK|54.980|9.931|0
+Nostrup|DK|55.718|11.015|0
+Norup|DK|56.675|10.117|0
+Norup|DK|55.544|10.392|0
+Nortvig|DK|55.931|9.441|0
+Norsminde|DK|56.027|10.262|0
+Nors|DK|57.021|8.679|0
+Norring|DK|56.247|10.042|0
+Norre|DK|54.732|11.403|0
+Normsted|DK|55.201|8.765|0
+Nordstrand|DK|55.158|10.950|0
+Nordskov|DK|55.595|10.627|0
+Nordskov|DK|55.544|10.151|0
+Nordrup|DK|55.483|11.433|0
+Nordrup|DK|55.409|11.888|0
+Nordenskov|DK|55.650|8.683|0
+Nordenhuse|DK|55.373|10.772|0
+Nordenbro Vesteregn|DK|54.777|10.673|0
+Nordenbro|DK|54.786|10.713|0
+Nordby|DK|55.964|10.553|0
+Nordby|DK|55.894|11.137|0
+Nordby|DK|55.446|8.398|2736
+Nordby|DK|55.258|9.966|0
+Nordborg|DK|55.057|9.741|5661
+Nøvling|DK|56.973|9.958|0
+Nøvling|DK|56.177|8.833|0
+Nøttrup|DK|55.749|9.951|0
+Nøtten|DK|56.935|9.902|0
+Nørup|DK|55.721|9.305|0
+Nørskovlund|DK|56.275|9.515|0
+Nørskov|DK|56.655|8.618|0
+Nørskov|DK|55.793|9.231|0
+Nørreværre|DK|54.926|8.726|0
+Nørre Vorupør|DK|56.951|8.375|635
+Nørre Vong|DK|55.499|8.661|0
+Nørre Vollum|DK|55.091|8.809|0
+Nørre Vium|DK|56.036|8.716|0
+Nørre Vissing|DK|56.125|9.846|0
+Nørre Vinge|DK|56.532|9.660|0
+Nørre Vilstrup|DK|55.692|9.464|0
+Nørre Vilstrup|DK|55.205|9.517|0
+Nørre Vestud|DK|55.000|12.450|0
+Nørre Vejrup|DK|55.522|8.783|788
+Nørre Vedby|DK|54.930|11.823|0
+Nørre Vallenderød|DK|55.607|11.710|0
+Nørre Uttrup|DK|57.076|9.954|0
+Nørre Tvismark|DK|55.152|8.550|0
+Nørre Tvede|DK|55.228|11.887|0
+Nørre Tvede|DK|54.935|11.247|0
+Nørre Tranders|DK|57.033|9.982|0
+Nørre Tornby|DK|57.552|9.940|0
+Nørre Thise|DK|56.721|9.134|0
+Nørre Tåstrup|DK|54.843|12.046|0
+Nørre Tarp|DK|55.787|8.376|0
+Nørresundby|DK|57.059|9.923|24831
+Nørre Søby|DK|55.284|10.382|0
+Nørre Snede|DK|55.964|9.393|0
+Nørre Smidstrup|DK|55.157|11.990|0
+Nørreskov|DK|54.997|10.633|0
+Nørre Sejerslev|DK|55.014|8.729|0
+Nørre Rubjerg|DK|57.425|9.774|0
+Nørre Rind|DK|56.581|9.341|0
+Nørre Radsted|DK|54.804|11.697|0
+Nørre Ørum|DK|56.568|9.236|0
+Nørre Ørslev|DK|54.789|11.963|0
+Nørre Ønlev|DK|55.048|9.291|0
+Nørreøkse|DK|57.120|9.574|0
+Nørre Onsild|DK|56.609|9.770|0
+Nørre Nærå|DK|55.574|10.285|0
+Nørre Nebel|DK|55.780|8.295|1348
+Nørremølle|DK|54.920|8.708|0
+Nørre Mern|DK|55.050|12.067|0
+Nørremark|DK|55.371|8.947|0
+Nørremark|DK|55.085|15.146|0
+Nørre Lyngvig|DK|56.050|8.118|0
+Nørre Lyngby|DK|57.411|9.747|0
+Nørre Lyndelse|DK|55.301|10.398|0
+Nørre Lovrup|DK|55.483|8.850|0
+Nørre Løgum|DK|55.115|8.951|0
+Nørre Longelse|DK|54.918|10.791|0
+Nørre Lem|DK|56.602|8.772|0
+Nørre Kongerslev|DK|56.906|10.127|0
+Nørre Kollund|DK|56.096|9.030|0
+Nørre Kollemorten|DK|55.867|9.383|0
+Nørre Knudstrup|DK|56.274|9.315|0
+Nørre-Kirkeby|DK|54.878|11.863|0
+Nørre Jernløse|DK|55.666|11.619|0
+Nørre Hyllinge|DK|55.719|11.889|0
+Nørre Hvalsø|DK|55.605|11.857|0
+Nørrehus-Ballum|DK|55.054|8.652|0
+Nørre Hurup|DK|56.814|10.268|0
+Nørre Hostrup|DK|55.089|9.275|0
+Nørre Højrup|DK|55.548|10.272|0
+Nørre Hjarup|DK|55.155|9.311|0
+Nørre Herlev|DK|55.888|12.275|0
+Nørre Halne|DK|57.151|9.872|0
+Nørre Grimmelstrup|DK|54.909|11.828|0
+Nørre Frenderup|DK|54.946|12.248|0
+Nørre Folding|DK|55.467|9.018|0
+Nørre Feldingbjerg|DK|56.504|9.131|0
+Nørre Felding|DK|56.315|8.604|0
+Nørre Farup|DK|55.354|8.732|0
+Nørre Esterbølle|DK|55.557|10.187|0
+Nørre Eskilstrup|DK|55.600|11.764|0
+Nørre Dråby|DK|56.914|8.831|0
+Nørredige|DK|57.087|9.717|0
+Nørre Dalby|DK|55.480|12.007|0
+Nørreby|DK|55.593|10.256|0
+Nørreby|DK|54.980|11.533|0
+Nørre Broby|DK|55.252|10.230|1442
+Nørre Bork|DK|55.833|8.317|0
+Nørre Bøel|DK|55.907|8.468|0
+Nørre Bøel|DK|55.457|8.786|0
+Nørre Bjert|DK|55.513|9.534|0
+Nørre Bjerre|DK|55.792|9.846|0
+Nørre Bindslev|DK|57.542|10.199|963
+Nørre Balling|DK|56.623|8.881|0
+Nørreballe|DK|54.806|11.430|456
+Nørreballe|DK|54.806|10.693|0
+Nørre Asmindrup|DK|55.887|11.623|0
+Nørre Arup|DK|57.004|8.913|0
+Nørre Andrup|DK|56.674|8.878|0
+Nørre Alslev|DK|54.898|11.884|2324
+Nørre Aldum|DK|55.790|9.783|0
+Nørre Åby|DK|55.461|9.879|3129
+Nørlang|DK|57.132|9.843|0
+Nørhoved|DK|55.983|9.400|0
+Nørholm|DK|57.037|9.738|0
+Nørhå|DK|56.900|8.446|0
+Nøreng|DK|56.793|8.972|0
+Nørdam|DK|56.596|9.463|0
+Nørby|DK|57.056|8.688|0
+Nørby|DK|56.478|8.141|0
+Nørby|DK|55.810|10.012|0
+Nørby|DK|55.438|8.395|0
+Nørby|DK|55.103|9.443|0
+Nørbølling|DK|55.467|9.000|0
+Nørbæk|DK|56.533|9.829|0
+Nørballe|DK|54.983|9.500|0
+Nørager|DK|56.706|9.630|1178
+Nørager|DK|56.477|10.504|0
+Nørå|DK|55.492|8.708|0
+Nølev|DK|55.996|10.192|0
+Nøkkentved|DK|55.675|11.535|0
+Nøjsomhed|DK|54.933|11.089|0
+Nødebo|DK|55.979|12.347|2057
+Nødebo|DK|55.983|11.900|0
+Nøddelund|DK|56.338|9.685|0
+Nødager|DK|56.346|10.635|0
+Nøbbet|DK|54.927|11.270|0
+Nonnebo|DK|55.370|10.565|0
+Nonmølle|DK|56.400|9.374|0
+Nolde|DK|54.920|9.041|0
+No|DK|56.111|8.319|239
+Nældemose|DK|55.190|10.074|0
+Niverød|DK|55.938|12.500|0
+Nivå|DK|55.934|12.505|7997
+Nissum Seminarieby|DK|56.548|8.418|0
+Nissumby|DK|56.556|8.397|981
+Nissum|DK|56.754|8.973|0
+Nisset|DK|56.225|9.563|0
+Nimtofte|DK|56.408|10.569|0
+Nim|DK|55.927|9.683|0
+Niløse|DK|55.557|11.499|0
+Nielstrup|DK|57.498|10.449|0
+Nielstrup|DK|56.466|10.462|0
+Nielstrup|DK|56.363|10.146|0
+Nielstrup|DK|55.283|12.003|0
+Nibe|DK|56.981|9.639|5703
+Nellerød|DK|56.022|12.250|0
+Nexø|DK|55.061|15.131|3645
+Nejlinge|DK|56.027|12.211|0
+Nejede|DK|55.959|12.194|0
+Nees|DK|56.743|8.515|0
+Nees|DK|56.399|8.223|0
+Neder Vrønding|DK|55.876|9.707|0
+Neder Vrigsted|DK|55.721|9.837|0
+Neder Vindinge|DK|55.032|11.884|1900
+Neder Ustrup|DK|55.809|9.860|0
+Nederste Torp|DK|55.966|12.509|0
+Neder Sønderby|DK|55.781|10.007|0
+Neder Romalt|DK|56.452|10.101|0
+Neder Randlev|DK|55.958|10.187|0
+Neder Lysabild|DK|54.894|10.028|0
+Neder Lert|DK|55.340|9.270|0
+Neder Kestrup|DK|55.189|9.476|0
+Neder Jerstal|DK|55.184|9.257|0
+Neder Hvam|DK|56.326|9.336|0
+Neder Hornbæk|DK|56.467|9.997|0
+Neder Holluf|DK|55.365|10.448|5612
+Neder Hadsten|DK|56.324|10.037|0
+Neder Ginderup|DK|56.660|8.849|0
+Neder Geestrup|DK|55.156|9.094|0
+Neder Fløjstrup|DK|56.049|10.242|0
+Neder Dråby|DK|55.854|11.999|0
+Nederby|DK|56.816|9.025|0
+Neder Bjerre|DK|55.788|9.870|0
+Neder Åstrup|DK|55.256|9.544|0
+Nebstrup|DK|56.660|10.135|0
+Nebsager|DK|55.757|9.861|0
+Neble Torp|DK|55.100|11.898|0
+Neble|DK|55.088|11.902|0
+Neble|DK|54.960|12.244|0
+Neble|DK|54.893|11.862|0
+Nebel|DK|55.887|9.889|0
+Nebel|DK|55.782|9.917|0
+Nebel|DK|55.650|9.006|0
+Nebbelunde|DK|54.710|11.385|0
+Næblerød|DK|55.344|11.524|0
+Navtrup|DK|56.432|8.902|0
+Navr|DK|56.376|8.520|0
+Nautrup|DK|56.741|8.907|0
+Nårup|DK|56.254|9.764|0
+Nårup|DK|55.306|10.154|0
+Nakskov|DK|54.830|11.136|11969
+Nakke|DK|55.924|11.730|0
+Nakke|DK|55.347|9.907|0
+Najbjerg|DK|56.184|8.708|0
+Nagelsti Skovhuse|DK|54.761|11.833|0
+Nagelsti|DK|54.748|11.845|518
+Nagbøl|DK|55.461|9.289|0
+Nåby|DK|55.286|11.698|0
+Nabbe|DK|55.059|10.323|0
+Myrup|DK|55.179|11.830|0
+Myrhøj|DK|56.800|9.211|0
+Mynderup|DK|55.096|10.451|0
+Mylund|DK|57.321|10.165|0
+Mygind|DK|56.386|10.220|0
+Mygind|DK|55.307|9.957|0
+Mygget|DK|54.950|11.767|0
+Mygdal|DK|57.541|10.089|0
+Musse Mader|DK|54.723|11.685|0
+Munktoft|DK|56.384|8.675|0
+Munklinde|DK|56.226|9.184|0
+Munkerup|DK|56.106|12.368|0
+Munkeby|DK|54.764|11.105|0
+Munkebo|DK|55.456|10.554|5538
+Munke Bjergby|DK|55.504|11.532|0
+Munke|DK|55.023|10.272|0
+Munkdrup|DK|56.416|10.086|0
+Mundelstrup|DK|56.198|10.065|0
+Mulvad|DK|55.456|8.688|0
+Mulstrup|DK|55.409|11.837|0
+Mullerup Strand|DK|55.499|11.172|0
+Mullerup|DK|55.492|11.210|0
+Mullerup|DK|55.396|10.672|0
+Mullerød|DK|55.196|10.043|0
+Muleby|DK|55.156|14.719|472
+Muldbjerg|DK|56.144|8.470|0
+Mou|DK|56.969|10.222|0
+Moselund|DK|56.166|9.368|0
+Mosekær|DK|56.420|10.235|0
+Mosegård|DK|56.017|8.880|0
+Mosegård|DK|55.437|9.906|0
+Mosede|DK|55.577|12.271|0
+Moseby|DK|57.188|9.636|0
+Moseby|DK|54.839|12.101|0
+Mosebølle|DK|55.185|12.059|0
+Mosbjerg|DK|57.502|10.279|0
+Morup Mølle|DK|56.820|8.355|0
+Morum|DK|56.771|9.449|0
+Morud|DK|55.448|10.190|1972
+Mortenstrup|DK|55.539|11.880|0
+Morild|DK|57.378|10.220|0
+Møsvrå|DK|55.562|9.521|0
+Mørup|DK|55.739|9.249|0
+Mørkøv Kirkeby|DK|55.667|11.519|0
+Mørkøv|DK|55.652|11.501|1862
+Mørkhøj|DK|55.726|12.470|10000
+Mørkholt|DK|55.651|9.719|0
+Mørke|DK|56.335|10.382|0
+Mørdrupgård|DK|55.826|12.228|0
+Mørdrup|DK|56.001|12.538|0
+Mønsted|DK|56.445|9.190|0
+Mønge|DK|56.061|12.187|0
+Mølvang|DK|55.759|9.377|0
+Mølmark|DK|54.881|9.672|0
+Mølholt|DK|57.245|10.433|0
+Mølholm|DK|56.850|10.022|0
+Møldrup|DK|56.776|9.944|0
+Møldrup|DK|56.617|9.501|0
+Mølby|DK|55.320|9.266|0
+Mølby|DK|55.271|8.921|0
+Mølby|DK|55.094|8.538|0
+Møgelvang|DK|56.891|8.595|0
+Møgeltorum|DK|56.745|9.081|0
+Møgeltønder|DK|54.947|8.798|0
+Møgelkær|DK|56.917|8.477|0
+Møgelby|DK|56.237|9.795|0
+Møborg|DK|56.390|8.349|0
+Monstrup|DK|56.706|9.903|0
+Mommark|DK|54.921|10.041|0
+Moltrup|DK|55.284|9.457|0
+Mollerup|DK|56.788|8.726|0
+Mollerup|DK|56.659|8.809|0
+Mollerup|DK|56.486|9.667|0
+Mollerup|DK|56.154|9.725|0
+Mollerup|DK|55.022|8.789|0
+Molger|DK|55.892|9.698|0
+Mojbøl|DK|55.300|9.173|0
+Mogenstrup|DK|56.683|9.108|0
+Mogenstrup|DK|56.472|8.971|0
+Mogenstrup|DK|55.630|11.643|0
+Mogenstrup|DK|55.182|11.864|0
+Moderup|DK|55.514|10.128|0
+Mjøls|DK|55.071|9.299|0
+Mjolden|DK|55.119|8.757|0
+Mjels|DK|56.929|9.898|0
+Mjels|DK|55.027|9.718|0
+Mjang|DK|54.938|9.911|0
+Mintebjerg|DK|54.907|9.936|0
+Mindeshoved|DK|55.228|11.250|0
+Millinge|DK|55.135|10.199|0
+Mileskov|DK|55.056|10.884|0
+Milbakken|DK|57.180|9.898|0
+Miklenborg|DK|55.214|10.759|0
+Midtby|DK|55.551|8.144|0
+Midstrup|DK|56.299|9.492|0
+Midskov|DK|55.514|10.612|0
+Middelhede|DK|56.378|9.441|0
+Middelfart|DK|55.506|9.731|16277
+Mægård|DK|55.067|10.717|0
+Mesinge|DK|55.499|10.647|0
+Mesing|DK|56.073|9.945|0
+Mesballe|DK|56.369|10.500|0
+Mern|DK|55.048|12.056|961
+Mergelsbæk|DK|57.187|9.695|0
+Menstrup|DK|55.214|11.583|0
+Meng|DK|55.354|9.578|0
+Melsted|DK|57.132|9.961|0
+Melsted|DK|55.202|14.981|0
+Meløse|DK|55.934|12.165|0
+Mellerup|DK|56.521|10.207|0
+Mellerup|DK|55.100|9.217|0
+Mellerup|DK|55.009|9.301|0
+Mellem Jølby|DK|56.831|8.694|0
+Mellemholm|DK|57.020|9.706|0
+Mellemby|DK|56.338|8.297|0
+Mellemballe|DK|55.309|10.039|0
+Meldrup|DK|55.884|9.925|0
+Melby|DK|55.996|11.968|0
+Melby|DK|55.652|11.110|0
+Melby|DK|55.535|10.219|0
+Melby|DK|55.268|9.941|0
+Melby|DK|54.987|10.586|0
+Mejsling|DK|55.658|9.441|0
+Mejrup|DK|56.364|8.695|0
+Mejlskov|DK|55.519|10.023|0
+Mejls|DK|55.678|8.511|0
+Mejling|DK|57.458|10.395|0
+Mejlby|DK|56.755|9.672|0
+Mejlby|DK|56.515|10.088|0
+Mejlby|DK|56.301|10.212|0
+Mejlby|DK|56.213|8.184|0
+Mejlby|DK|55.400|8.949|0
+Mejlby|DK|55.346|8.741|0
+Mejeriby|DK|57.533|10.100|0
+Mejeriby|DK|56.117|8.433|0
+Mejdal|DK|56.347|8.651|0
+Meelse|DK|54.806|12.050|0
+Mæby|DK|55.160|14.789|0
+Mausing|DK|56.235|9.444|0
+Mastrup|DK|56.440|10.746|0
+Mastrup|DK|55.868|11.193|0
+Masnedsund|DK|55.005|11.880|0
+Mårup|DK|56.336|10.595|0
+Mårup|DK|55.947|10.565|0
+Marup|DK|55.641|11.777|0
+Mårum|DK|56.026|12.281|0
+Martofte|DK|55.546|10.658|0
+Marstrup|DK|55.210|9.442|0
+Marstal|DK|54.856|10.517|1989
+Mårsø|DK|55.731|11.631|0
+Marslev|DK|55.393|10.517|0
+Mårslet|DK|56.067|10.161|5176
+Marrebæk|DK|54.680|11.904|0
+Markeslev|DK|55.741|11.706|0
+Marke|DK|55.698|11.472|0
+Marie Magdalene|DK|56.388|10.479|0
+Marielyst|DK|54.692|11.964|726
+Maribo|DK|54.777|11.500|5722
+Mariager|DK|56.650|9.975|2651
+Måreskov|DK|55.247|10.559|0
+Måre|DK|55.277|10.612|0
+Marbjerg|DK|55.665|12.164|0
+Manstrup|DK|57.030|9.305|0
+Manna|DK|57.284|9.816|0
+Mandø By|DK|55.274|8.538|0
+Manderup|DK|55.749|11.987|0
+Manderup|DK|55.539|11.963|0
+Mandemarke|DK|54.967|12.492|0
+Mammen|DK|56.411|9.614|284
+Maltbæk|DK|55.460|9.069|0
+Malt|DK|55.471|9.067|0
+Måløv|DK|55.755|12.323|8663
+Malling|DK|56.036|10.196|6194
+Malle|DK|56.957|8.780|0
+Malle|DK|56.917|9.243|0
+Malle|DK|55.762|8.526|0
+Måle|DK|55.492|10.720|0
+Majbølle|DK|54.833|11.735|0
+Majbølle|DK|54.758|11.132|0
+Majbøl|DK|54.924|9.923|0
+Magtenbølle|DK|55.378|10.175|0
+Magstrup|DK|55.288|9.343|0
+Magletving|DK|54.893|11.296|0
+Magleskov Huse|DK|54.721|11.187|0
+Maglemer|DK|54.797|11.503|0
+Maglebylille|DK|55.619|12.636|0
+Magleby|DK|55.366|12.338|330
+Magleby|DK|55.235|11.320|0
+Magleby|DK|54.985|12.483|0
+Magleby|DK|54.772|10.714|0
+Maglebrænde|DK|54.864|12.019|0
+Madumflod|DK|56.253|8.329|0
+Madum|DK|56.243|8.291|0
+Madsbad|DK|56.819|9.009|0
+Maderup|DK|55.503|10.132|0
+Maderne|DK|54.795|11.973|0
+Måde|DK|55.457|8.505|0
+Måbjerg|DK|56.389|8.617|0
+Lystrup Strand|DK|56.520|10.462|0
+Lystrup|DK|56.695|10.142|0
+Lystrup|DK|56.498|10.469|10116
+Lystrup|DK|56.237|10.238|10116
+Lystrup|DK|55.862|12.222|0
+Lystrup|DK|55.797|9.794|0
+Lystrup|DK|55.361|12.240|0
+Lystager Torp|DK|55.309|11.487|0
+Lysgård|DK|56.352|9.338|0
+Lysbro|DK|56.159|9.514|0
+Lysabildskov|DK|54.891|10.053|0
+Lysabild|DK|54.901|10.006|0
+Lyø By|DK|55.043|10.153|0
+Lynæs|DK|55.948|11.859|0
+Lyngsø|DK|56.887|9.629|0
+Lyngsbæk|DK|56.241|10.616|0
+Lyngså|DK|57.251|10.517|0
+Lyngs|DK|56.666|8.452|0
+Lynghuse|DK|55.500|12.200|0
+Lyngerup|DK|55.806|11.982|0
+Lynge-Eskilstrup|DK|55.373|11.533|0
+Lynge|DK|55.839|12.277|4425
+Lynge|DK|55.400|11.566|0
+Lyngby|DK|56.870|8.315|0
+Lyngby|DK|56.843|10.042|0
+Lyngby|DK|56.367|10.745|0
+Lyngby|DK|56.225|9.792|0
+Lyngby|DK|56.171|10.041|0
+Lyngå|DK|56.316|9.980|0
+Lyng|DK|55.467|11.538|0
+Lyne|DK|55.801|8.492|0
+Lyndby|DK|55.670|11.934|0
+Lydom|DK|55.797|8.359|0
+Lydinge Gårde|DK|55.174|10.386|0
+Lydinge|DK|55.179|10.407|0
+Lyderslev|DK|55.272|12.289|0
+Lydersholm|DK|54.903|9.005|0
+Lyby|DK|56.637|9.011|0
+Lustrup|DK|55.995|8.893|0
+Lustrup|DK|55.310|8.777|298
+Lunghøj|DK|55.383|9.966|0
+Lungehave|DK|55.042|10.908|0
+Lunge|DK|55.397|9.957|0
+Lundumskov|DK|55.921|9.786|0
+Lundum|DK|55.927|9.775|0
+Lundtofte|DK|55.797|12.526|0
+Lundtoft|DK|54.917|9.457|0
+Lundtang|DK|55.746|8.370|0
+Lundstorp|DK|55.257|11.374|0
+Lundsmark|DK|55.264|8.754|0
+Lundsby|DK|56.502|8.229|0
+Lundsbæk|DK|55.282|9.245|0
+Lundsbjerg|DK|55.264|10.078|0
+Lundø|DK|56.623|9.145|0
+Lunding|DK|55.235|9.550|0
+Lundgård|DK|56.745|9.911|0
+Lundforlund|DK|55.341|11.317|0
+Lunderup|DK|55.076|9.318|0
+Lunderskov|DK|55.484|9.299|2687
+Lunderød|DK|55.625|11.757|0
+Lunden|DK|55.032|9.797|0
+Lundehøje|DK|54.644|11.523|0
+Lundegårde|DK|54.680|11.418|0
+Lundegård|DK|55.112|12.076|0
+Lundeborg|DK|55.141|10.781|0
+Lunde|DK|55.761|8.372|0
+Lunde|DK|55.489|10.354|0
+Lunde|DK|55.138|10.527|0
+Lundby Torp|DK|55.120|11.866|0
+Lundby Stationsby|DK|55.109|11.875|823
+Lundby|DK|56.970|10.006|0
+Lundby|DK|56.952|9.441|0
+Lundby|DK|56.283|8.767|0
+Lundby|DK|55.248|11.383|0
+Lundby|DK|54.992|10.608|275
+Lundby|DK|54.867|11.824|0
+Lundager|DK|55.751|8.338|0
+Lundager|DK|55.283|9.934|0
+Lund|DK|57.105|9.010|0
+Lund|DK|56.604|9.244|0
+Lund|DK|56.420|10.191|0
+Lund|DK|56.353|10.793|0
+Lund|DK|55.894|9.771|0
+Lund|DK|55.752|8.732|0
+Lund|DK|55.280|11.655|0
+Lund|DK|55.241|12.301|0
+Lund|DK|54.957|9.050|0
+Lumsås|DK|55.941|11.518|0
+Lumby Torp|DK|55.466|10.363|0
+Lumbygyde|DK|55.296|10.452|0
+Lumby|DK|55.459|10.378|797
+Lumby|DK|55.297|10.412|0
+Ludvigsro|DK|54.943|9.532|0
+Læsten|DK|56.495|9.813|0
+Læsø|DK|54.783|11.094|0
+Lovtrup|DK|54.952|9.278|0
+Lovrup|DK|55.106|8.873|0
+Lovns|DK|56.684|9.222|0
+Lov|DK|55.164|11.848|0
+Løvskal|DK|56.450|9.720|0
+Løvlund|DK|55.741|9.018|0
+Løvel|DK|56.534|9.470|0
+Løve|DK|56.012|9.486|0
+Løve|DK|55.485|11.294|0
+Løsning|DK|55.802|9.695|12220
+Løserup|DK|55.770|11.726|0
+Lørup Hede|DK|55.207|10.504|0
+Lørup|DK|55.225|10.517|0
+Lørsted|DK|57.063|9.415|0
+Lørslev|DK|57.427|10.083|0
+Lønstrup|DK|57.470|9.796|577
+Lønnestak|DK|55.791|8.241|0
+Lønnerup|DK|56.995|8.833|0
+Lønne Hede|DK|55.775|8.258|0
+Lønholt|DK|55.945|12.423|0
+Løndal|DK|56.052|9.587|0
+Lønborg|DK|55.903|8.442|0
+Løkken|DK|57.370|9.715|8828
+Løkkeby|DK|54.953|10.800|0
+Løjtved|DK|55.099|8.976|0
+Løjt Skovby|DK|55.070|9.474|0
+Løjtkloster|DK|55.083|9.467|0
+Løjt Kirkeby|DK|55.090|9.461|1975
+Løjenkær|DK|56.021|10.116|0
+Løgumkloster|DK|55.059|8.955|3458
+Løgumgårde|DK|55.073|8.933|0
+Løgtved|DK|55.675|11.294|0
+Løgtved|DK|55.589|11.350|0
+Løgten|DK|56.275|10.312|8623
+Løgstrup|DK|56.510|9.335|1881
+Løgstør|DK|56.962|9.258|3929
+Løgsted|DK|56.940|9.244|0
+Løgeskov|DK|55.147|10.467|0
+Lødderup|DK|56.782|8.796|0
+Lommelev|DK|54.884|11.837|0
+Lomborg|DK|56.501|8.266|333
+Lombjerg|DK|55.229|10.487|0
+Lohals|DK|55.133|10.906|0
+Lodshuse|DK|55.518|10.573|0
+Lobbæk|DK|55.074|14.835|305
+Læn|DK|56.469|10.715|0
+Ljørslev|DK|56.738|8.781|0
+Ljørring|DK|56.242|8.808|0
+Livø|DK|56.892|9.091|0
+Listrup|DK|54.804|11.955|0
+Listed|DK|55.144|15.110|217
+Liseleje|DK|56.013|11.965|2390
+Liseby|DK|54.912|12.212|0
+Lisby|DK|56.471|8.137|0
+Lisbjerg-Terp|DK|56.217|10.192|0
+Lisbjerg|DK|56.221|10.169|2102
+Lintrup|DK|55.554|8.928|0
+Lintrup|DK|55.409|8.973|0
+Linnerup|DK|55.901|9.501|0
+Lindved|DK|55.793|9.579|0
+Lindved|DK|55.767|9.884|0
+Lindved|DK|55.345|10.423|0
+Lindum|DK|56.767|9.047|0
+Lindum|DK|56.561|9.683|0
+Lindknud|DK|55.566|9.016|0
+Lindholm Høje|DK|57.075|9.913|0
+Lindholm|DK|57.069|9.899|0
+Lindholm|DK|55.845|12.217|0
+Lindet|DK|55.901|9.318|0
+Lindeskov|DK|55.251|10.641|0
+Linderup|DK|57.308|9.915|0
+Linderum|DK|57.427|10.178|0
+Lindelse|DK|54.862|10.729|0
+Lindebjerg|DK|55.394|11.488|0
+Lindeballe|DK|55.769|9.243|0
+Linde|DK|56.532|10.120|0
+Linde|DK|56.418|8.489|0
+Lindbjerg|DK|56.522|10.147|0
+Lindbjerg|DK|55.784|8.654|0
+Lindå|DK|56.299|10.248|0
+Lind|DK|56.106|8.979|3777
+Linå|DK|56.154|9.690|0
+Lime|DK|56.388|10.249|0
+Liltved|DK|56.431|10.326|0
+Lille Vrøj|DK|55.751|11.145|0
+Værløse|DK|55.783|12.369|13197
+Lillevorde|DK|56.978|10.052|0
+Lille Viby|DK|55.453|10.617|0
+Lille Velling|DK|55.622|9.607|0
+Lille Valby|DK|55.698|12.116|0
+Lille Valby|DK|55.441|11.355|0
+Lille Tvede|DK|55.201|11.879|0
+Lille Torup|DK|56.644|9.402|0
+Lille Torøje|DK|55.248|12.268|0
+Lille Tårnby|DK|55.361|12.268|0
+Lilleskovland|DK|54.726|11.209|0
+Lilleskov|DK|55.344|10.160|0
+Lille Skensved|DK|55.510|12.135|1696
+Lille Sjørup|DK|56.529|10.312|0
+Lille Salby|DK|55.475|12.109|0
+Lille Rørbæk|DK|55.789|12.106|0
+Lille Rørbæk|DK|54.816|11.619|0
+Lillerød|DK|55.875|12.346|16741
+Lille Rise|DK|54.858|10.427|0
+Lillering|DK|56.148|9.980|0
+Lille Nustrup|DK|55.275|9.172|0
+Lille Næstved|DK|55.230|11.739|0
+Lillenor|DK|56.034|10.233|0
+Lille Musse|DK|54.739|11.642|0
+Lille Mommark|DK|54.914|10.014|0
+Lille Lyngby|DK|55.950|12.150|0
+Lille Løjtofte|DK|54.879|11.173|0
+Lille Lindet|DK|54.880|11.333|0
+Lille Linde|DK|55.334|12.209|0
+Lille Lihme|DK|55.696|9.272|0
+Lille Ladager|DK|55.511|12.068|0
+Lille Kongsmark|DK|55.421|11.200|0
+Lillekobbel|DK|54.867|9.951|0
+Lille Knabstrup|DK|55.642|11.627|0
+Lille Karleby|DK|55.685|11.920|0
+Lille Jyndevad|DK|54.884|9.141|0
+Lille Heddinge|DK|55.272|12.392|0
+Lille Havelse|DK|55.909|12.094|0
+Lille Grandløse|DK|55.690|11.728|0
+Lille Fuglede|DK|55.594|11.275|0
+Lille Esbønderup|DK|56.011|12.445|0
+Lille Emmerske|DK|54.959|8.901|0
+Lille Egebjerg|DK|55.859|11.572|0
+Lille Ebberup|DK|55.472|11.478|0
+Lille Darum|DK|55.445|8.647|0
+Lille Dalby|DK|55.761|9.724|0
+Lille Brøndum|DK|56.828|10.148|0
+Lillebrænde|DK|54.880|11.975|0
+Lille Bredlund|DK|56.033|9.400|0
+Lille Binderup|DK|56.787|9.592|0
+Lille Avnede|DK|54.829|11.215|0
+Lille Arden|DK|56.768|9.909|0
+Lille Anslet|DK|55.339|9.582|0
+Lille Andst|DK|55.448|9.208|0
+Lille Agersende|DK|56.400|8.233|0
+Lilholt|DK|55.222|9.293|0
+Lild Strand|DK|57.150|8.966|0
+Lildfrost|DK|55.717|9.382|0
+Lilballe|DK|55.543|9.485|0
+Lihmskov|DK|55.669|9.310|0
+Lihme|DK|56.600|8.730|275
+Lifstrup|DK|55.567|8.533|0
+Lidemark|DK|55.436|12.055|0
+Levring|DK|56.307|9.467|0
+Levetofte|DK|55.344|11.918|0
+Lestrup|DK|55.860|11.671|0
+Lervad|DK|55.739|8.586|0
+Lere|DK|56.992|9.865|0
+Lerdrup|DK|55.883|10.133|0
+Lerbæk|DK|54.930|12.194|0
+Lerbjerg|DK|56.350|9.990|0
+Lendum|DK|57.410|10.289|0
+Lendrup Strand|DK|56.933|9.201|0
+Lendemarke|DK|54.980|12.277|0
+Lendemark|DK|54.948|9.097|0
+Lemvig|DK|56.549|8.310|7330
+Lemtorp|DK|56.545|8.329|0
+Lemming|DK|56.241|9.547|0
+Lemming|DK|56.120|10.099|0
+Lemmer|DK|56.382|10.265|0
+Lem|DK|56.592|8.786|0
+Lem|DK|56.503|10.061|0
+Lem|DK|56.025|8.388|0
+Lellinge|DK|55.465|12.110|0
+Lekkende|DK|55.065|12.012|0
+Lejrskov|DK|55.512|9.323|0
+Lejre|DK|55.605|11.975|3429
+Lejbølle|DK|55.029|10.877|0
+Lejbjerg|DK|57.017|9.967|0
+Legind|DK|56.762|8.820|0
+Leestrup|DK|55.203|12.036|0
+Lee|DK|56.422|9.674|0
+Ledøje|DK|55.710|12.302|0
+Leby|DK|54.913|10.282|0
+Lebøl|DK|54.906|9.961|0
+Læborg|DK|55.523|9.113|0
+Lavø|DK|56.040|12.178|0
+Lavindsgårde|DK|55.350|10.583|0
+Lavensby|DK|55.049|9.787|0
+Laven|DK|56.125|9.718|0
+Laurbjerg|DK|56.357|9.916|0
+Låstrup|DK|56.582|9.387|0
+Låsby|DK|56.150|9.807|2059
+Lårup|DK|55.567|11.517|0
+Lånum|DK|56.447|9.109|0
+Langvad|DK|57.070|8.962|0
+Langtved|DK|57.359|10.492|0
+Langtved|DK|55.668|11.827|0
+Langtved|DK|55.395|10.688|0
+Langstrup|DK|55.952|12.466|0
+Langsted|DK|55.277|10.190|0
+Langskov|DK|56.334|10.135|0
+Langskov|DK|55.822|9.530|0
+Langør|DK|55.912|10.642|0
+Langø|DK|54.813|11.020|0
+Langkær|DK|55.948|8.411|0
+Langkastrup|DK|56.452|10.219|0
+Langholm|DK|55.432|9.965|0
+Langetved|DK|55.395|9.097|0
+Langet|DK|54.789|11.390|0
+Langesø|DK|55.049|9.766|0
+Langeskov|DK|55.357|10.584|4458
+Langerhuse|DK|56.629|8.160|0
+Langemark|DK|55.846|10.624|0
+Langelund|DK|55.806|9.101|0
+Langebæk|DK|54.997|12.090|236
+Langballe|DK|56.076|10.203|0
+Langå|DK|56.390|9.895|2901
+Langå|DK|55.194|10.722|0
+Landsgrav|DK|55.396|11.332|0
+Landet|DK|54.999|10.596|0
+Landet|DK|54.761|11.277|0
+Landerslev|DK|55.825|11.988|0
+Landeby|DK|55.075|8.971|0
+Lammestrup|DK|55.510|11.948|0
+Lamdrup|DK|55.312|10.727|0
+Lamdrup|DK|55.218|10.662|0
+Lambæk|DK|56.067|8.425|0
+Lambjerg|DK|54.934|9.890|0
+Lakolk|DK|55.139|8.494|0
+Lakkendrup|DK|55.134|10.657|0
+Lågerup|DK|54.693|11.701|0
+Låge|DK|57.447|9.856|0
+Lading|DK|56.220|9.978|0
+Ladelund|DK|56.781|9.710|0
+Ladelund|DK|55.486|9.048|0
+Ladegårdshuse|DK|55.650|12.117|0
+Ladegård|DK|55.362|10.073|0
+Ladby|DK|55.431|10.618|0
+Ladby|DK|55.258|11.721|0
+Labing|DK|56.170|10.013|0
+Kyvling|DK|55.895|8.490|0
+Kytterup|DK|56.303|8.314|0
+Kysing|DK|56.007|10.258|0
+Kyse|DK|55.273|11.627|0
+Kyringe|DK|55.522|11.678|0
+Kyndeløse|DK|55.711|11.873|0
+Kyndby Huse|DK|55.809|11.885|0
+Kyndby|DK|55.795|11.919|0
+Kværs|DK|54.933|9.497|0
+Kværrede|DK|55.365|12.020|0
+Kværnholt|DK|54.947|9.061|0
+Kværndrup|DK|55.178|10.525|1673
+Kværkeby|DK|55.462|11.874|0
+Kvottrup|DK|56.216|10.083|0
+Kvorning|DK|56.496|9.704|0
+Kvong|DK|55.758|8.441|207
+Kvols|DK|56.526|9.296|0
+Kvolbæk|DK|56.285|9.927|0
+Kvium|DK|56.437|8.685|0
+Kvistrup|DK|55.263|9.633|0
+Kvistgård|DK|55.993|12.504|1235
+Kvisselbrænding|DK|57.467|10.426|0
+Kvissel|DK|57.472|10.411|0
+Kvislemark|DK|55.252|11.545|0
+Kvinderup|DK|55.871|12.176|0
+Kvie|DK|55.709|8.775|0
+Kvarmløse|DK|55.613|11.786|0
+Kvanløse|DK|55.652|11.669|0
+Kustrup|DK|55.502|9.846|0
+Kunnerup|DK|56.113|10.070|0
+Kundby|DK|55.711|11.523|776
+Kullerup|DK|55.318|10.703|0
+Kulhuse|DK|55.926|11.916|0
+Kulerup|DK|55.460|11.989|0
+Kuldbjerg|DK|55.779|9.358|0
+Kulby|DK|55.521|11.328|0
+Kuditse|DK|54.784|11.160|0
+Krusborg|DK|56.444|10.418|0
+Krusbjerg|DK|55.779|8.698|0
+Kruså|DK|54.851|9.401|1528
+Kærup|DK|57.092|9.016|0
+Kærup|DK|55.651|8.361|0
+Krungerup|DK|54.785|11.728|0
+Krummerup|DK|55.298|11.511|0
+Kærum|DK|55.259|9.948|0
+Kærsholm|DK|56.962|10.156|0
+Kærsgård Strand|DK|57.528|9.883|0
+Krønge|DK|54.727|11.509|0
+Krømlinge|DK|55.218|11.908|0
+Krøjerup|DK|55.649|11.597|0
+Krøjerup|DK|55.461|11.517|0
+Krondal|DK|55.948|9.445|0
+Kronborgdige|DK|56.433|8.600|0
+Krollerup|DK|55.813|9.660|0
+Krogstrup|DK|56.837|9.388|0
+Krogstrup|DK|55.974|10.031|0
+Krogstrup|DK|55.788|11.963|0
+Krogshede|DK|56.426|8.186|0
+Krogsbølle|DK|55.572|10.368|0
+Krogsager|DK|56.426|10.218|0
+Krogen|DK|56.650|9.917|0
+Krogager|DK|55.701|8.845|0
+Krænkerup|DK|55.467|11.300|0
+Kræmmerkrog|DK|55.547|10.060|0
+Kristrup|DK|56.446|10.057|0
+Kristiansminde|DK|55.582|10.426|0
+Kristiansdal|DK|55.233|9.388|0
+Krik|DK|56.773|8.277|0
+Kærgård|DK|55.684|8.185|0
+Kærgård|DK|54.984|8.707|0
+Krenkerup|DK|54.777|11.673|0
+Krejbjerg|DK|56.659|8.864|0
+Kregme|DK|55.944|12.034|0
+Kærby|DK|56.601|10.063|0
+Kærby|DK|56.361|10.650|0
+Kærby|DK|55.659|11.175|0
+Kærby|DK|55.531|10.086|0
+Kærby|DK|55.484|9.927|0
+Kærbølling|DK|55.700|9.404|0
+Kærbølling|DK|55.228|8.712|0
+Kærbøl|DK|55.358|8.745|322
+Kærbæk|DK|55.728|8.808|0
+Kravnsø|DK|55.578|8.349|0
+Kravlund|DK|54.914|9.199|0
+Krattet|DK|54.734|11.749|0
+Krarup|DK|56.324|10.606|0
+Krarup|DK|55.713|8.657|0
+Krarup|DK|55.165|10.421|0
+Krårup|DK|54.802|11.550|0
+Kramnitse|DK|54.705|11.263|0
+Krajbjerg|DK|56.295|10.280|0
+Kragnæs|DK|54.861|10.470|0
+Kragholm|DK|54.917|10.717|0
+Kraghede|DK|57.203|9.993|0
+Kraghave|DK|54.791|11.869|0
+Kragevig|DK|55.071|12.107|0
+Kragenæs|DK|54.917|11.353|0
+Kragelund|DK|56.194|9.409|0
+Kragelund|DK|55.807|9.648|0
+Kragelund|DK|55.805|8.225|0
+Kragelund|DK|55.578|9.172|0
+Kragelund|DK|55.443|8.701|0
+Kragelund|DK|55.296|10.617|0
+Kragelund|DK|54.859|9.305|0
+Krageborg|DK|55.217|12.086|0
+Kær|DK|54.938|9.796|0
+Kousted|DK|56.516|9.901|0
+Kostræde|DK|55.125|11.786|0
+Kosterslev|DK|55.495|10.189|0
+Koster|DK|54.975|12.193|0
+Korup|DK|56.776|10.101|0
+Korup|DK|56.302|10.547|0
+Korup|DK|55.419|10.273|0
+Korup|DK|55.043|9.154|0
+Korterup|DK|54.751|11.297|0
+Korsvej|DK|56.150|9.807|0
+Korsør|DK|55.330|11.139|14290
+Korsø|DK|57.065|8.776|0
+Korsø|DK|56.665|9.562|0
+Korsholm|DK|57.055|9.256|0
+Korshavn|DK|55.013|10.312|0
+Kornum|DK|56.958|9.320|0
+Korning|DK|55.855|9.706|0
+Kornerup|DK|55.634|11.982|0
+Korkendrup|DK|55.364|10.702|0
+Korinth|DK|55.144|10.332|0
+Køstrup|DK|55.469|9.978|0
+Kørup|DK|55.881|9.747|0
+Køng|DK|55.260|10.126|0
+Køng|DK|55.110|11.827|0
+Kølvrå|DK|56.294|9.143|0
+Kølstrup|DK|55.424|10.585|0
+Kølsen|DK|56.524|9.377|0
+Kølkær|DK|56.065|9.088|0
+Kølby|DK|56.980|9.426|0
+Køge|DK|55.458|12.182|38304
+Københoved|DK|55.420|9.100|0
+Copenhagen|DK|55.676|12.566|1153615
+Købelev|DK|54.899|11.123|0
+Kongstrup|DK|56.355|9.908|0
+Kongstrup|DK|55.879|11.170|0
+Kongstrup|DK|55.722|11.005|0
+Kongstrup|DK|55.677|11.753|0
+Kongsted-Borup|DK|55.255|11.995|0
+Kongsted|DK|55.567|11.457|0
+Kongsted|DK|55.570|9.644|0
+Kongsted|DK|55.244|12.041|0
+Kongsmark|DK|55.131|8.550|0
+Kongshoved|DK|54.880|9.927|0
+Kongsgårde|DK|56.144|10.514|0
+Kongsengene|DK|57.321|9.803|0
+Kongsbjerg|DK|54.998|8.932|0
+Køng Firgårde|DK|55.093|11.827|0
+Kongerslev|DK|56.887|10.113|0
+Kongens Tisted|DK|56.749|9.592|0
+Kongensmark|DK|55.167|14.886|0
+Kongens Lyngby|DK|55.770|12.504|10600
+Kondrup|DK|56.518|9.969|0
+Komdrup|DK|56.899|10.082|0
+Kolt|DK|56.108|10.070|5061
+Kolstrup|DK|55.333|9.362|0
+Kolsnap|DK|55.252|9.191|0
+Kolshave|DK|55.529|10.142|0
+Kolsbæk|DK|56.076|12.188|0
+Kollund|DK|54.847|9.453|0
+Kollerup|DK|57.099|9.295|0
+Kollerup|DK|55.781|9.458|0
+Kollerød|DK|55.874|12.301|0
+Kollekolle|DK|55.866|11.599|0
+Kolind|DK|56.361|10.584|0
+Koldkåd|DK|55.072|8.958|0
+Kolding|DK|55.490|9.472|61638
+Koldby|DK|56.845|8.526|0
+Koldby|DK|55.038|8.640|0
+Koldbro|DK|57.350|10.200|0
+Kolby Kås|DK|55.799|10.533|0
+Kolby|DK|56.183|8.217|0
+Kolby|DK|55.799|10.557|0
+Kokspang|DK|55.570|8.366|0
+Kokseby|DK|54.912|12.159|0
+Kokkehaverne|DK|55.235|10.682|0
+Kokkedal|DK|55.912|12.500|0
+Kohave|DK|56.040|12.351|0
+Kogtved|DK|55.048|10.584|0
+Kogsbølle|DK|55.281|10.742|0
+Koelbjerg|DK|55.400|10.138|0
+Koed|DK|56.375|10.569|0
+Kobæk Strand|DK|55.259|11.251|0
+Kobberø|DK|56.722|8.326|0
+Kobbelhuse|DK|55.011|12.416|0
+Knudstrup|DK|56.709|9.403|0
+Knudstrup|DK|56.340|9.912|0
+Knudstrup|DK|55.472|11.263|0
+Knudstrup|DK|55.414|11.619|0
+Knudsskov|DK|55.051|11.767|0
+Knudsker|DK|55.108|14.745|0
+Knudsby|DK|55.041|11.827|0
+Knudsbølle|DK|55.012|10.589|0
+Knudsbøl|DK|55.576|9.303|0
+Knud|DK|56.657|8.781|0
+Knud|DK|56.551|9.254|0
+Knud|DK|55.328|9.603|0
+Knubbeløkke|DK|54.767|11.046|0
+Kni|DK|56.431|10.711|0
+Knepholt|DK|57.125|9.825|0
+Knejsted|DK|56.597|10.213|0
+Knebel|DK|56.214|10.489|667
+Knarreborg|DK|55.317|10.217|0
+Knardrup|DK|55.774|12.289|0
+Knabstrup|DK|55.664|11.551|1105
+Klæstrup|DK|57.281|10.060|0
+Klovtoft|DK|55.061|9.175|0
+Klovby|DK|55.633|11.226|0
+Klovborg|DK|55.932|9.491|0
+Klotrup|DK|56.685|9.425|0
+Klostergårde|DK|56.279|8.295|0
+Kloster|DK|56.125|8.177|606
+Kløvested|DK|55.492|11.997|0
+Kløv|DK|57.025|8.809|0
+Klørup|DK|56.472|9.957|0
+Kløjing|DK|55.117|8.920|0
+Klokmose|DK|56.005|8.615|0
+Klokkerholm|DK|57.209|10.155|0
+Klodskov|DK|54.821|11.826|0
+Kællingeby|DK|55.050|15.012|0
+Klitmøller|DK|57.041|8.491|1298
+Klitgårds Fiskerleje|DK|57.029|9.680|0
+Klippinge|DK|55.348|12.326|0
+Klippede|DK|55.409|11.930|0
+Kliplev|DK|54.936|9.408|0
+Klintrup|DK|56.209|9.789|0
+Klinting|DK|54.905|9.851|0
+Klintholm Havn|DK|54.953|12.465|201
+Klintegårde|DK|55.084|14.847|0
+Klinteby Frihed|DK|55.197|11.596|53443
+Klinteby|DK|55.194|11.577|0
+Klinteby|DK|55.078|15.100|0
+Klintebjerg|DK|55.482|10.450|0
+Klinte|DK|55.582|10.257|0
+Klint|DK|55.955|11.585|0
+Klinkby Stationsby|DK|56.567|8.220|452
+Klingbjerg|DK|55.023|9.847|0
+Klingbjerg|DK|54.921|9.249|0
+Klim|DK|57.098|9.167|0
+Kleppehuse|DK|54.845|12.027|0
+Klemensker|DK|55.173|14.810|607
+Klejtrup|DK|56.590|9.630|0
+Klejsmølle|DK|55.733|9.933|0
+Klejs|DK|55.743|9.940|0
+Klegod|DK|56.079|8.118|0
+Klebæk|DK|55.456|9.325|0
+Klavsebølle|DK|54.971|10.785|0
+Klattrup|DK|57.387|10.506|0
+Klattrup|DK|56.666|10.216|0
+Klattrup|DK|55.634|9.540|0
+Klastrup|DK|57.044|8.830|0
+Klarup|DK|57.012|10.056|5745
+Klarskov|DK|55.067|11.871|0
+Klank|DK|56.150|9.909|0
+Klampenborg|DK|55.776|12.590|0
+Klakring|DK|55.710|9.970|0
+Kjæstrup|DK|56.777|8.462|0
+Kjelstrup|DK|56.994|8.753|0
+Kjelst|DK|55.595|8.303|0
+Kjellerup|DK|56.286|9.435|4514
+Kjeldbjerg|DK|56.474|9.052|0
+Kisum|DK|56.537|8.950|0
+Kistofte|DK|54.764|11.630|0
+Kisserup|DK|55.777|11.715|0
+Kisserup|DK|55.599|11.902|0
+Kissendrup|DK|55.386|10.706|0
+Kissendrup|DK|55.246|12.176|0
+Kiskelund|DK|54.862|9.404|0
+Kirkholt|DK|57.304|10.158|0
+Kirkholm|DK|55.760|10.020|0
+Kirke-Værløse|DK|55.787|12.321|0
+Kirke-Syv|DK|55.575|12.031|0
+Kirke Stillinge|DK|55.436|11.245|0
+Kirke-Søby|DK|55.262|10.025|0
+Kirke Sonnerup|DK|55.651|11.828|0
+Kirke-Skensved|DK|55.525|12.118|0
+Kirke Såby|DK|55.634|11.871|0
+Kirkerup|DK|55.721|12.160|0
+Kirkerup|DK|55.358|11.493|0
+Kirkendrup|DK|55.434|10.333|0
+Kirkelte|DK|55.904|12.385|0
+Kirke-Hyllinge|DK|55.707|11.900|0
+Kirke Hvalsø|DK|55.592|11.863|4294
+Kirke-Hørup|DK|54.926|9.903|0
+Kirke Helsinge|DK|55.516|11.206|0
+Kirke Flinterup|DK|55.500|11.625|0
+Kirke-Fjenneslev|DK|55.434|11.688|0
+Kirke Eskilstrup|DK|55.575|11.767|661
+Kirke-Esbønderup|DK|56.050|12.346|1190
+Kirkeby|DK|56.719|9.022|0
+Kirkeby|DK|55.726|8.242|0
+Kirkeby|DK|55.467|9.317|0
+Kirkeby|DK|55.246|8.828|0
+Kirkeby|DK|55.208|14.743|0
+Kirkeby|DK|55.113|10.531|0
+Kirkebæk|DK|56.481|9.343|0
+Kirial|DK|56.428|10.810|0
+Kindvig|DK|55.046|12.110|0
+Kindstrup|DK|55.414|9.957|0
+Kindertofte|DK|55.430|11.469|0
+Kinderballe|DK|54.802|10.688|0
+Kimmerslev|DK|55.484|11.982|0
+Killerup|DK|55.372|10.440|0
+Killerup|DK|54.828|11.640|0
+Kildekrog|DK|56.088|12.422|0
+Kildehuse|DK|55.884|11.667|0
+Kildebrønde|DK|55.609|12.271|0
+Kilde|DK|56.247|8.739|0
+Kikhavn|DK|55.982|11.876|0
+Kielstrup|DK|56.678|9.921|0
+Kibæk|DK|56.032|8.857|2667
+Kettrup|DK|57.066|9.252|0
+Kettingskov|DK|54.954|10.002|0
+Kettinge|DK|55.885|12.414|0
+Kettinge|DK|54.697|11.728|529
+Ketting|DK|54.967|9.898|0
+Kestrup|DK|55.294|9.293|0
+Kertinge|DK|55.434|10.588|0
+Kerteminde|DK|55.449|10.658|5748
+Kerte|DK|55.362|9.994|0
+Kemtrup|DK|56.737|9.678|0
+Kelstrup Strand|DK|55.193|9.582|0
+Kelstrupskov|DK|54.880|9.477|0
+Kelstrup|DK|56.357|10.625|0
+Kelstrup|DK|55.835|11.566|0
+Kelstrup|DK|55.420|11.235|0
+Kelstrup|DK|55.396|10.166|0
+Kelstrup|DK|55.198|9.555|0
+Kellerup|DK|55.222|10.470|0
+Kelleklinte|DK|55.624|11.256|0
+Kelleby|DK|55.484|10.221|0
+Keldernæsskov|DK|54.843|11.393|0
+Keldernæs|DK|54.865|11.397|0
+Keldbymagle|DK|54.992|12.342|0
+Keldbylille|DK|54.979|12.354|0
+Kejlstrup|DK|56.267|10.557|0
+Kegnæshøj|DK|54.856|9.984|0
+Kæderup|DK|56.017|12.250|0
+Kæderup|DK|55.333|12.112|0
+Kædeby Haver|DK|54.876|10.677|0
+Kædeby|DK|54.845|10.688|0
+Kavslunde|DK|55.484|9.810|0
+Kattrup|DK|56.101|10.082|0
+Kattrup|DK|55.953|9.917|0
+Kattinge|DK|55.659|12.000|0
+Katterød|DK|55.082|10.307|0
+Kattebjerg|DK|55.520|10.102|0
+Katryde|DK|54.990|9.964|0
+Kåtrup|DK|56.563|9.940|0
+Katrinedal Mark|DK|56.053|9.541|0
+Katrinedal|DK|55.717|11.502|0
+Katrevel|DK|55.783|8.550|0
+Katbjerg|DK|56.632|9.903|0
+Katballe|DK|56.359|9.355|0
+Kastvrå|DK|55.309|9.341|0
+Kåstrup|DK|57.027|8.732|0
+Kåstrup|DK|56.642|8.971|0
+Kastrup|DK|56.382|10.360|0
+Kastrup|DK|55.767|11.673|0
+Kåstrup|DK|55.688|11.135|0
+Kastrup|DK|55.635|12.649|0
+Kastrup|DK|55.264|9.079|0
+Kastrup|DK|55.034|11.897|0
+Kastelev|DK|55.069|11.850|0
+Kastel|DK|55.274|10.645|0
+Kasted|DK|56.208|10.134|0
+Kastbjerg|DK|56.644|10.153|0
+Kastbjerg|DK|56.457|10.759|0
+Kastager|DK|54.939|11.199|0
+Kassø Kådnergade|DK|55.043|9.237|0
+Kassø|DK|55.036|9.234|0
+Kassebølle|DK|54.954|10.759|0
+Kås Mark|DK|57.200|9.650|0
+Kaslunde|DK|55.339|10.004|0
+Kåse|DK|57.067|8.783|0
+Kås|DK|57.198|9.672|1990
+Kås|DK|55.241|14.851|0
+Karup|DK|57.355|10.417|0
+Kårup|DK|56.751|8.802|0
+Karup|DK|56.307|9.168|2176
+Kårup|DK|55.817|11.409|0
+Kartofte|DK|54.763|11.664|0
+Karsemose|DK|55.995|12.037|0
+Karsbæk|DK|56.063|8.397|0
+Karrebækstorp|DK|55.199|11.614|0
+Karrebæksminde|DK|55.182|11.647|0
+Karrebæk|DK|55.189|11.652|0
+Karlstrup Strand|DK|55.545|12.238|0
+Karlstrup|DK|55.553|12.204|0
+Karlsmose|DK|56.212|8.829|0
+Karlsminde|DK|55.946|11.895|0
+Karlslunde Strand|DK|55.564|12.262|0
+Karlslunde|DK|55.573|12.226|0
+Karlsgårde|DK|55.653|8.589|0
+Karleby|DK|54.791|12.027|0
+Karleby|DK|54.707|11.627|0
+Karlebo|DK|55.919|12.410|19163
+Karlby|DK|56.602|9.815|0
+Karlby|DK|56.474|10.862|0
+Karlby|DK|56.351|10.286|0
+Karise-Olstrup|DK|55.312|12.158|0
+Karise|DK|55.307|12.197|2431
+Kare|DK|56.533|10.367|0
+Karby|DK|56.754|8.561|0
+Kappendrup|DK|55.538|10.348|0
+Kappendrup|DK|55.332|10.573|0
+Kappel|DK|54.774|11.033|0
+Kannikegærdet|DK|55.039|15.078|0
+Kankbølle|DK|56.250|10.289|0
+Kandestederne|DK|57.662|10.391|0
+Kanderød|DK|55.376|12.114|0
+Kamstrup|DK|55.607|12.085|0
+Kalvslund|DK|55.370|8.873|0
+Kalvehave|DK|54.997|12.168|0
+Kalvehave|DK|54.833|10.425|0
+Kalundborg|DK|55.680|11.089|16211
+Kalum|DK|57.321|9.961|0
+Kallø Skovby|DK|54.863|11.668|0
+Kallø|DK|54.850|11.666|0
+Kallerup Gårde|DK|55.657|12.196|0
+Kallerup|DK|56.919|8.574|0
+Kallerup|DK|56.645|8.475|0
+Kallerup|DK|55.720|11.046|0
+Kallehave|DK|54.675|11.674|0
+Kalkerup|DK|55.274|11.814|0
+Kalhave|DK|55.852|9.624|0
+Kaleko|DK|55.100|10.267|0
+Kaldred|DK|55.700|11.269|0
+Kalby|DK|55.238|11.849|0
+Kalby|DK|55.061|14.893|0
+Kajerød|DK|55.845|12.424|0
+Kajemose|DK|55.607|11.415|0
+Kagstrup|DK|55.372|11.904|0
+Kagstrup|DK|55.303|11.704|0
+Kagerup|DK|55.998|12.265|0
+Kagerup|DK|55.636|11.577|0
+Kådekilde|DK|55.368|10.121|0
+Kabdrup|DK|55.307|9.541|0
+Jystrup|DK|55.517|11.864|853
+Jysted|DK|54.863|11.332|0
+Jyllinge|DK|55.753|12.103|10920
+Jyderup|DK|55.837|11.553|4207
+Jyderup|DK|55.664|11.420|4207
+Jyderup|DK|55.233|12.073|0
+Jydemark|DK|55.517|10.333|0
+Juvre|DK|55.174|8.557|0
+Jungshoved By|DK|55.101|12.137|0
+Junget|DK|56.762|9.100|0
+Jullerup|DK|55.526|10.208|0
+Julebækhus|DK|56.063|12.567|0
+Juelsminde|DK|55.709|10.017|3667
+Jorløse|DK|55.611|11.298|0
+Jordrup|DK|55.558|9.312|0
+Jordløse|DK|55.199|10.156|0
+Jordhøj|DK|55.855|12.169|0
+Jordbroen|DK|57.200|10.310|0
+Jordbjerg|DK|54.789|11.037|0
+Jørslev|DK|55.296|12.177|0
+Jørsby|DK|56.886|8.887|0
+Jørlunde|DK|55.831|12.170|299
+Jørgensø|DK|55.569|10.431|0
+Jonstrup|DK|56.011|12.429|0
+Jonstrup|DK|55.573|11.665|0
+Jægerspris|DK|55.852|11.986|4131
+Jægersborg|DK|55.759|12.535|0
+Jestrup|DK|56.859|8.463|0
+Jestrup|DK|54.939|9.958|0
+Jested|DK|55.383|8.758|0
+Jespergårde|DK|57.223|10.286|0
+Jerup|DK|57.534|10.417|514
+Jersore|DK|55.588|10.215|0
+Jerslev|DK|57.285|10.091|0
+Jerslev|DK|55.611|11.241|0
+Jersild|DK|56.251|8.781|0
+Jersie Strand|DK|55.520|12.213|0
+Jersie|DK|55.525|12.164|526
+Jernvedlund|DK|55.423|8.800|0
+Jernved|DK|55.421|8.796|313
+Jerlev|DK|55.674|9.443|0
+Jenstrup|DK|55.317|12.068|0
+Jenstrup|DK|55.249|11.628|0
+Jenslev|DK|55.682|11.893|0
+Jennum|DK|56.533|10.052|0
+Jennum|DK|55.720|9.433|0
+Jelstrup|DK|57.433|9.833|0
+Jelstrup|DK|56.796|9.448|0
+Jels Troldkær|DK|55.391|9.245|0
+Jelsskov|DK|55.384|9.202|0
+Jels|DK|55.357|9.200|0
+Jelling|DK|55.756|9.426|4038
+Jeksen|DK|56.094|9.971|0
+Jejsing|DK|54.939|8.962|0
+Jegind|DK|56.648|8.621|0
+Jegerup|DK|55.279|9.293|0
+Jedsted|DK|55.392|8.721|0
+Jebjerg|DK|56.672|9.015|0
+Jebjerg|DK|56.394|9.955|0
+Javngyde|DK|56.110|9.820|0
+Jarmsted|DK|57.123|9.454|0
+Janum|DK|57.111|9.446|0
+Jannerup|DK|56.944|8.491|0
+Janderup|DK|55.625|8.373|788
+Isterød|DK|55.875|12.477|0
+Istebjerg|DK|55.695|11.158|0
+Islev|DK|55.707|12.439|0
+Ishøj|DK|55.615|12.352|19453
+Isenvad|DK|56.099|9.205|645
+Intrup|DK|56.622|9.030|0
+Ingstrup|DK|57.314|9.711|0
+Ingslev Torp|DK|55.464|9.944|0
+Ingslev|DK|55.460|9.917|0
+Ingerslev|DK|56.564|10.339|0
+Ingerslev|DK|56.085|10.102|0
+Impgårde|DK|56.303|9.340|0
+Ilsted|DK|55.467|8.753|0
+Ilskov|DK|56.238|9.090|0
+Ilshøj|DK|56.575|10.187|0
+Illerup|DK|56.060|9.872|0
+Illerup|DK|55.721|11.115|0
+Illerisøre|DK|56.707|9.207|0
+Iller Hede|DK|56.288|9.561|0
+Iller|DK|56.289|9.598|0
+Iller|DK|54.870|9.663|0
+Illebølle|DK|54.872|10.786|0
+Ildved|DK|55.811|9.473|0
+Ilbro|DK|57.422|10.047|0
+Ilbjerg|DK|56.704|9.014|0
+Ikast|DK|56.139|9.158|14692
+Iglsø|DK|56.486|9.087|0
+Igelsø|DK|55.637|11.667|0
+Idumlund|DK|56.351|8.558|0
+Idum|DK|56.338|8.486|0
+Idskov|DK|57.252|10.360|0
+Idestrup|DK|54.743|11.957|1106
+Ibsted|DK|56.655|8.599|0
+Ibsker|DK|55.118|15.106|0
+Hytten|DK|56.479|10.640|0
+Hyrup|DK|55.712|9.822|0
+Hyrup|DK|55.230|9.645|0
+Hyrup|DK|55.178|9.153|0
+Hynding|DK|55.010|9.094|0
+Hylstrup|DK|55.418|11.654|0
+Hyllinge|DK|55.256|11.602|0
+Hyllested Skovgårde|DK|56.264|10.792|0
+Hyllested|DK|56.869|9.665|0
+Hyllested|DK|56.282|10.767|0
+Hyllested|DK|55.279|11.448|0
+Hyllerup|DK|55.403|11.312|0
+Hyllerslev|DK|55.627|8.407|0
+Hyllede|DK|55.223|12.053|0
+Hyllebjerg|DK|56.833|9.307|0
+Hylken|DK|55.940|10.236|0
+Hylke|DK|55.991|9.941|0
+Hyldtofte|DK|54.672|11.442|0
+Hyldager|DK|54.651|11.530|0
+Hygumskov|DK|55.339|9.015|0
+Hygum|DK|56.600|8.233|0
+Hygum|DK|55.776|9.434|0
+Hygum|DK|55.531|8.532|0
+Hygind|DK|55.386|9.880|0
+Hydevad|DK|55.067|9.233|0
+Hydesby|DK|54.762|11.698|0
+Hvorvarp|DK|56.824|9.456|0
+Hvorupgård|DK|57.113|9.928|0
+Hvorup|DK|57.090|9.929|0
+Hvorslev|DK|56.367|9.767|0
+Hvornum|DK|56.599|9.664|0
+Hvolbæk|DK|56.017|10.007|0
+Hvirring|DK|55.891|9.657|0
+Hvirrekær|DK|57.523|9.982|0
+Hvirp|DK|56.821|9.030|0
+Hvinningdal|DK|56.168|9.497|0
+Hvingel|DK|56.173|8.339|0
+Hvinderup|DK|55.347|9.521|0
+Hvilsted|DK|56.006|10.056|0
+Hvilsom|DK|56.658|9.613|0
+Hvilshøj|DK|57.224|10.039|0
+Hvilsager|DK|56.368|10.350|0
+Hvileholm|DK|55.371|10.586|0
+Hvidsten|DK|56.553|10.002|0
+Hvidovre|DK|55.643|12.477|53527
+Hviding|DK|55.277|8.729|0
+Hvide Sande|DK|55.999|8.126|2874
+Hvidemose|DK|56.517|8.862|0
+Hvidding|DK|56.535|9.772|0
+Hvidbjerg|DK|56.649|8.527|0
+Hvidbjerg|DK|56.569|8.936|0
+Hvidbjerg|DK|55.643|9.742|0
+Hvissinge|DK|55.680|12.419|0
+Hverrestrup|DK|56.705|9.544|0
+Hvejsel|DK|55.812|9.430|0
+Hvedstrup|DK|55.698|12.197|0
+Hvam Mejeriby|DK|56.409|8.732|0
+Hvam|DK|56.666|9.525|0
+Hvalpsund|DK|56.700|9.198|649
+Hvalløs|DK|56.379|10.145|0
+Husum-Ballum|DK|55.077|8.673|0
+Huseby|DK|56.002|12.144|0
+Husby|DK|57.056|9.294|0
+Husby|DK|56.280|8.182|0
+Husby|DK|55.371|9.854|0
+Hurup|DK|56.749|8.420|2769
+Hunstrup|DK|57.036|8.813|0
+Hunseby|DK|54.796|11.523|396
+Hune|DK|57.248|9.615|0
+Hundtofte|DK|55.142|10.502|0
+Hundstrup|DK|55.100|10.431|0
+Hundslund|DK|55.916|10.052|0
+Hundslev|DK|55.400|10.583|0
+Hundslev|DK|54.982|9.918|0
+Hundshale|DK|55.053|14.931|0
+Hundige|DK|55.596|12.312|0
+Hundested|DK|55.964|11.850|8609
+Hunderup|DK|55.435|8.720|242
+Hundelev|DK|57.425|9.844|0
+Hundborg|DK|56.926|8.508|0
+Hundal|DK|56.963|8.791|0
+Hummingen|DK|54.716|11.222|0
+Hummelure|DK|56.237|10.012|0
+Humlum|DK|56.541|8.550|0
+Humledal|DK|55.229|14.847|0
+Humlebæk|DK|55.962|12.534|8965
+Humble|DK|54.830|10.700|562
+Hulsig|DK|57.661|10.462|0
+Hullebæk|DK|54.800|11.927|0
+Hulerød|DK|56.103|12.377|0
+Hulby|DK|55.333|11.300|0
+Hulbæk|DK|56.477|9.652|0
+Hugdrup|DK|57.290|10.331|0
+Hudevad|DK|55.317|10.550|0
+Hæsum|DK|56.917|9.784|0
+Hæstrup|DK|57.406|9.988|0
+Hærup|DK|56.576|9.605|0
+Hovtved|DK|56.679|9.954|0
+Hovstrup|DK|57.393|10.101|0
+Hovstrup|DK|55.761|8.254|0
+Hovsør|DK|57.002|8.838|0
+Hovslund Stationsby|DK|55.133|9.338|0
+Hovslund|DK|55.141|9.367|0
+Hover|DK|56.143|8.431|0
+Hover|DK|55.744|9.503|0
+Hoven|DK|57.167|9.767|0
+Hoven|DK|55.851|8.764|219
+Hovedskov|DK|55.022|12.311|0
+Hovedgård|DK|55.947|9.962|0
+Hove|DK|56.557|8.225|0
+Hove|DK|55.727|12.238|0
+Hovby|DK|55.245|12.102|0
+Hovborg|DK|55.608|8.940|0
+Hov|DK|56.997|8.798|0
+Hov|DK|55.916|10.253|0
+Hov|DK|55.154|10.934|0
+Houlbjerg|DK|56.344|9.873|0
+Hou|DK|57.057|10.372|0
+Hou|DK|56.656|10.014|0
+Hostrupskov|DK|55.014|9.460|0
+Hostrup|DK|57.150|9.969|0
+Hostrup|DK|55.739|9.778|0
+Hostrup|DK|55.655|8.715|0
+Hostrup|DK|55.575|8.368|0
+Hostrup|DK|54.946|8.966|0
+Hosby|DK|55.749|10.012|0
+Horstved|DK|56.323|10.648|0
+Horslunde|DK|54.912|11.216|573
+Horsfelt|DK|56.810|8.377|0
+Horsetofte|DK|55.365|11.841|0
+Horserød|DK|56.054|12.494|0
+Horsens|DK|55.861|9.850|61074
+Horsbyg|DK|55.111|9.259|0
+Horreby|DK|54.803|11.994|298
+Hornum|DK|56.841|9.426|0
+Hornum|DK|55.745|9.809|0
+Hornsyld|DK|55.756|9.856|1634
+Hornsved|DK|55.920|11.912|0
+Hornstrup Mølleby|DK|55.752|9.572|0
+Hornstrup|DK|55.751|9.556|0
+Hornslet|DK|56.316|10.320|6446
+Hornse|DK|54.985|9.128|0
+Horneby|DK|56.081|12.456|0
+Horne|DK|57.559|9.989|0
+Horne|DK|55.725|8.532|0
+Horne|DK|55.108|10.170|0
+Horndrup|DK|56.007|9.867|0
+Hornborg|DK|55.852|9.669|0
+Hornbæk|DK|56.090|12.457|3605
+Horn|DK|56.252|9.709|0
+Horbelev|DK|54.823|12.058|524
+Hoptrup|DK|55.181|9.457|0
+Hoppeshuse|DK|55.432|9.455|0
+Høve Strand|DK|55.847|11.497|0
+Høver|DK|56.140|9.892|0
+Høvelte|DK|55.853|12.391|0
+Høve|DK|55.835|11.487|200
+Høve|DK|55.283|11.389|0
+Høstrup|DK|56.381|9.054|0
+Høsterkøb|DK|55.856|12.482|312
+Høsten Torp|DK|55.343|12.041|0
+Høsten|DK|55.334|12.050|0
+Høstemark|DK|56.949|10.207|0
+Hørve|DK|55.753|11.453|2382
+Høruphav|DK|54.910|9.899|2740
+Hørup|DK|56.583|9.482|0
+Hørup|DK|56.294|9.439|0
+Hørup|DK|55.853|12.134|0
+Hørup|DK|55.761|9.468|0
+Hørup|DK|54.912|9.895|0
+Hørsted|DK|56.871|8.495|0
+Hørslevbol|DK|56.162|9.979|0
+Hørslev|DK|56.165|9.993|0
+Hørsholm|DK|55.881|12.501|47680
+Hørret|DK|56.083|10.180|0
+Hørning|DK|56.412|10.200|8395
+Hørning|DK|56.087|10.037|8572
+Hørmested|DK|57.463|10.251|0
+Hørdum|DK|56.849|8.490|0
+Hørbygård|DK|55.739|11.665|0
+Hørby|DK|57.323|10.382|0
+Hørby|DK|56.651|9.748|0
+Hønsnap|DK|54.875|9.455|0
+Hønsinge|DK|55.866|11.556|0
+Hønning|DK|55.168|8.965|0
+Hønnerup Hovgård|DK|55.423|9.977|0
+Hønnerup|DK|55.421|9.978|0
+Hønkys|DK|55.065|9.255|0
+Høng|DK|55.507|11.289|4355
+Høndrup|DK|56.692|9.804|0
+Hømvejle|DK|55.294|8.814|0
+Hømlund|DK|55.278|8.859|0
+Hømgård|DK|55.400|11.782|0
+Høm|DK|55.410|11.782|0
+Høm|DK|55.281|8.831|0
+Høllund|DK|55.671|9.411|0
+Hølkerup|DK|55.833|11.702|0
+Høl|DK|55.631|9.744|0
+Høkkelbjerg|DK|55.372|9.479|0
+Højstrup|DK|57.055|9.018|0
+Højsted|DK|55.703|11.338|0
+Højslev Stationsby|DK|56.551|9.110|0
+Højslev|DK|56.586|9.136|224
+Højrup|DK|57.550|10.000|0
+Højrup|DK|55.557|9.603|0
+Højrup|DK|55.515|9.365|0
+Højrup|DK|55.367|9.347|0
+Højrup|DK|55.248|10.160|0
+Højrup|DK|55.229|8.993|0
+Højrup|DK|55.191|10.349|0
+Højreby|DK|54.800|11.274|0
+Højme|DK|55.357|10.321|0
+Højmark|DK|56.055|8.396|0
+Høje Tåstrup|DK|55.647|12.274|0
+Højet|DK|54.696|11.916|0
+Højerup|DK|55.280|12.438|0
+Højer|DK|54.963|8.699|1034
+Højene|DK|57.473|9.986|0
+Højen|DK|57.728|10.523|0
+Højen|DK|55.667|9.517|0
+Højelt|DK|56.085|12.229|0
+Højelse|DK|55.496|12.124|0
+Høje|DK|55.139|10.534|0
+Højby|DK|55.911|11.598|1422
+Højby|DK|55.594|11.985|0
+Højby|DK|55.332|10.437|4406
+Højbjerg|DK|56.111|10.210|0
+Højbjerg|DK|55.635|11.293|0
+Højbjerg|DK|55.411|10.238|0
+Højbjerg|DK|55.307|11.593|0
+Højbjerg|DK|55.267|10.160|0
+Høgsted|DK|57.372|10.050|0
+Høgslund|DK|54.997|8.924|0
+Høgsholt|DK|55.727|9.473|0
+Høgsbro|DK|55.252|8.706|0
+Høgelund|DK|55.205|9.352|0
+Høed|DK|55.675|11.443|0
+Høed|DK|55.513|11.846|0
+Høed|DK|55.233|10.042|0
+Høbjerg|DK|56.366|10.875|0
+Høbjerg|DK|56.340|9.542|0
+Høbjerg|DK|56.007|12.223|0
+Honum|DK|55.882|9.637|0
+Homå|DK|56.365|10.815|0
+Holtum|DK|55.785|9.523|0
+Holtug|DK|55.341|12.407|0
+Holtet|DK|57.034|10.207|0
+Holtensminde|DK|55.714|11.938|0
+Holte|DK|55.817|12.467|0
+Holte|DK|55.813|11.603|0
+Holte|DK|55.288|10.135|0
+Holt|DK|56.080|12.291|0
+Holsted Stationsby|DK|55.481|8.910|0
+Holsted|DK|55.511|8.919|3034
+Holsted|DK|55.250|11.800|0
+Holstebro|DK|56.360|8.616|32072
+Holse|DK|55.501|10.006|0
+Holmstrup Mark|DK|56.167|10.117|0
+Holmstrup|DK|55.940|11.545|0
+Holmstrup|DK|55.623|11.396|0
+Holmstrup|DK|55.408|11.330|0
+Holmstrup|DK|55.362|10.273|224
+Holmstol|DK|56.216|9.750|0
+Holmsø|DK|57.042|9.408|0
+Holmgårde|DK|56.588|9.809|0
+Holmgårde|DK|56.283|8.333|0
+Holme-Olstrup|DK|55.257|11.844|0
+Holmene|DK|55.474|10.270|0
+Holme|DK|56.787|9.402|0
+Holme|DK|56.240|10.749|0
+Holme|DK|56.114|10.174|0
+Holme|DK|55.390|9.965|0
+Holme|DK|54.982|9.065|0
+Holmdrup|DK|55.096|10.658|0
+Holm|DK|55.052|9.697|0
+Holløselund|DK|56.073|12.108|0
+Holløse|DK|56.053|12.118|0
+Holløse|DK|55.672|11.654|0
+Holløse|DK|55.292|11.676|0
+Hollensted|DK|57.220|10.072|0
+Holleby|DK|54.808|11.144|0
+Hollandsbjerg|DK|56.495|10.278|0
+Holing|DK|56.150|8.967|0
+Holevad|DK|55.308|9.947|0
+Holev|DK|55.409|10.513|0
+Holeby|DK|54.711|11.464|1352
+Hole|DK|56.700|9.213|0
+Holbøl Mark|DK|54.890|9.426|0
+Holbøl|DK|54.896|9.444|0
+Holbæk|DK|56.552|10.299|0
+Holbæk|DK|55.718|11.713|29608
+Holballe|DK|54.922|9.965|0
+Hokkerup|DK|54.895|9.491|0
+Hogager|DK|56.371|8.851|0
+Hoed|DK|56.316|10.811|0
+Hodsager|DK|56.314|8.861|0
+Hoddeskov|DK|55.714|8.695|0
+Hodde|DK|55.698|8.648|0
+Hobyskov|DK|54.737|11.262|0
+Hoby|DK|54.739|11.233|0
+Hobro|DK|56.643|9.790|12071
+Hoborg|DK|55.150|10.967|0
+Ho|DK|55.553|8.230|0
+Hækkebølle|DK|55.410|10.035|0
+Hjulebæk|DK|55.294|11.780|0
+Hjulby|DK|55.335|10.733|0
+Hjortvad|DK|55.385|8.908|0
+Hjortsvang|DK|55.889|9.500|0
+Hjortshøj|DK|56.248|10.265|3579
+Hjortsballe|DK|56.091|9.505|0
+Hjortsballe|DK|55.859|9.251|0
+Hjortø By|DK|54.964|10.488|0
+Hjortlund|DK|55.402|8.803|0
+Hjorthede|DK|56.417|9.707|0
+Hjortespring|DK|55.746|12.425|0
+Hjortekær|DK|55.792|12.541|0
+Hjorte|DK|55.367|9.967|0
+Hjorslev|DK|55.509|10.405|0
+Hjordkær|DK|55.027|9.305|1607
+Hjordkær|DK|55.025|9.307|0
+Hjørring|DK|57.464|9.982|25644
+Hjøllund|DK|56.069|9.380|0
+Hjolderup|DK|55.017|9.248|0
+Hjerup|DK|55.357|9.958|0
+Hjerting|DK|55.526|8.358|0
+Hjerting|DK|55.393|9.038|0
+Hjertebjerg|DK|54.996|12.392|0
+Hjerpsted|DK|55.023|8.657|0
+Hjerndrup|DK|55.334|9.418|0
+Hjermind|DK|56.396|9.679|0
+Hjerm|DK|56.438|8.635|0
+Hjerk|DK|56.683|8.917|0
+Hjemsted|DK|55.152|8.748|0
+Hjembæk|DK|55.698|11.409|0
+Hjelmsted|DK|57.301|10.024|0
+Hjelmsømagle|DK|55.383|11.832|0
+Hjelmsølille|DK|55.366|11.803|0
+Hjelmholt|DK|54.914|11.288|0
+Hjelmerup|DK|55.293|10.241|0
+Hjelmdrup|DK|55.612|9.361|0
+Hjelmager|DK|56.277|10.318|0
+Hjelm|DK|54.926|12.253|0
+Hjelm|DK|54.816|11.760|0
+Hjedsbæk|DK|56.862|9.707|0
+Hjeds|DK|56.882|9.687|0
+Hjarup|DK|55.446|9.361|0
+Hjartbro|DK|55.208|9.175|0
+Hjarnø By|DK|55.827|10.077|0
+Hjardemål|DK|57.056|8.813|0
+Hjarbæk|DK|56.530|9.321|0
+Hjallese Hestehave|DK|55.359|10.413|0
+Hjallese|DK|55.356|10.389|0
+Hjallerup|DK|57.165|10.146|4498
+Hjadstrup|DK|55.524|10.348|0
+Hirtshals|DK|57.588|9.959|5265
+Hinnerup|DK|56.735|9.059|8628
+Hinnerup|DK|56.266|10.063|8164
+Hinge|DK|56.371|10.055|0
+Hinge|DK|56.264|9.511|0
+Hindsig|DK|55.725|8.499|0
+Hindevad|DK|55.457|10.106|0
+Hinderup|DK|55.091|9.143|0
+Hindborg|DK|56.624|8.953|0
+Hindbjerg|DK|56.290|9.486|0
+Himmelev|DK|55.657|12.095|0
+Himmark|DK|55.033|9.830|0
+Himlingøje|DK|55.375|12.222|0
+Hillestrup|DK|54.748|11.988|0
+Hillestolpe|DK|54.719|11.499|0
+Hillested|DK|54.755|11.446|0
+Hillerup|DK|55.376|8.717|0
+Hillerslev|DK|57.012|8.732|0
+Hillerslev|DK|55.209|10.345|0
+Hillerød|DK|55.928|12.301|35357
+Hæggerup|DK|55.337|11.797|0
+Hevring|DK|56.515|10.390|0
+Hestlund|DK|56.151|9.222|0
+Hestkær|DK|56.075|8.520|0
+Hestehaven|DK|56.051|9.908|0
+Hestehave|DK|54.795|11.218|0
+Hestbjerg|DK|56.310|8.532|0
+Hessum|DK|55.510|10.455|0
+Hesselrød|DK|55.931|12.440|0
+Hessellund|DK|55.487|8.775|0
+Hesselby|DK|55.256|11.316|0
+Hesselbjerg|DK|56.936|8.880|0
+Hesselbjerg|DK|56.090|12.172|0
+Hesselbjerg|DK|55.351|11.950|0
+Hesselbjerg|DK|54.817|10.679|0
+Hesselballe|DK|56.264|10.267|0
+Hesselballe|DK|55.834|9.555|0
+Hesselballe|DK|55.611|9.417|0
+Hesselager|DK|55.176|10.745|0
+Hessel|DK|55.037|9.118|0
+Hesnæs|DK|54.825|12.138|0
+Hesle|DK|55.312|10.016|0
+Hesbjerg|DK|56.107|12.354|0
+Hesbjerg|DK|55.373|10.211|0
+Herstedvester|DK|55.676|12.349|0
+Herstedøster|DK|55.685|12.371|0
+Hersom|DK|56.554|9.558|0
+Hersnap|DK|55.522|10.676|0
+Herslev|DK|55.669|11.984|0
+Herslev|DK|55.584|9.590|0
+Herslev|DK|55.527|11.316|0
+Herslev|DK|54.880|10.743|0
+Herskind|DK|56.183|9.967|845
+Herrup|DK|56.408|8.919|0
+Herritslev|DK|54.695|11.667|0
+Herringløse|DK|55.713|12.214|0
+Herringe|DK|55.200|10.462|0
+Herrestrup|DK|55.805|11.598|0
+Herrestrup|DK|55.537|11.450|0
+Herrested|DK|55.281|10.612|0
+Herning|DK|56.136|8.977|50565
+Herlufmagle|DK|55.313|11.752|0
+Herluflille|DK|55.340|11.732|0
+Herlev|DK|55.724|12.440|0
+Herfølge|DK|55.414|12.143|0
+Herborg|DK|56.066|8.596|0
+Henninge|DK|54.915|10.732|0
+Hennetved|DK|54.850|10.736|0
+Henne Strand|DK|55.738|8.178|0
+Henne Stationsby|DK|55.709|8.305|0
+Hennebjerg|DK|55.739|8.291|0
+Henne|DK|55.732|8.221|0
+Hemstok|DK|56.089|9.869|0
+Hemmet|DK|55.850|8.376|285
+Hemmeshøj|DK|55.345|11.291|0
+Hemmerslev|DK|55.507|10.167|0
+Hemmed|DK|56.497|10.739|0
+Hemdrup|DK|56.959|9.388|0
+Hem|DK|56.613|10.035|0
+Hem|DK|56.596|8.960|0
+Hem|DK|56.023|9.784|0
+Heltborg|DK|56.753|8.450|0
+Helstrup|DK|56.428|9.892|0
+Helsted|DK|56.482|9.988|0
+Helsned|DK|54.838|10.682|0
+Helsingør|DK|56.036|12.614|35048
+Helsinge Tofte|DK|56.017|12.183|0
+Helsinge|DK|56.023|12.198|8616
+Helnæs By|DK|55.137|10.017|0
+Hellum|DK|57.269|10.166|0
+Hellum|DK|56.820|9.956|0
+Hellinge|DK|54.844|11.264|0
+Helligsø|DK|56.703|8.345|0
+Helligkilde|DK|56.634|8.550|0
+Helleved|DK|55.000|9.954|0
+Hellevad|DK|57.210|10.167|0
+Hellevad|DK|55.075|9.212|0
+Hellevad|DK|55.067|11.867|0
+Hellev|DK|54.972|10.588|0
+Helletofte|DK|55.026|10.855|0
+Hellestrup|DK|55.673|11.692|0
+Hellested|DK|55.330|12.252|0
+Hellerup|DK|55.732|12.571|0
+Hellerød|DK|56.629|8.573|0
+Hellenslev Gårde|DK|55.529|11.264|0
+Hellenæs|DK|54.845|11.096|0
+Hellebæk|DK|56.068|12.558|5790
+Heldum|DK|56.550|8.283|0
+Heldager|DK|55.093|10.592|0
+Helberskov|DK|56.735|10.289|0
+Hejsager|DK|55.217|9.616|0
+Hejringe|DK|54.882|11.360|0
+Hejring|DK|56.614|9.645|0
+Hejrede|DK|54.740|11.611|0
+Hejnsvig|DK|55.695|8.997|0
+Hejninge|DK|55.408|11.294|0
+Hejlsminde|DK|55.368|9.603|0
+Hejlskov|DK|56.616|9.223|0
+Hejlskov|DK|56.387|10.329|0
+Hejls|DK|55.383|9.576|0
+Hegningen|DK|55.028|12.282|0
+Hegngårde|DK|55.781|11.831|0
+Hegnede|DK|55.514|12.007|0
+Hegedal|DK|56.652|9.817|0
+Hee|DK|56.144|8.284|521
+Heds|DK|54.967|9.167|0
+Hedensted|DK|55.770|9.701|47099
+Heden|DK|55.248|10.368|0
+Hedehusene|DK|55.650|12.198|17953
+Hedegårde|DK|56.833|8.342|0
+Hedegård|DK|56.485|10.674|0
+Hedegård|DK|55.953|9.292|0
+Hedegård|DK|55.847|9.179|0
+Heager|DK|56.120|8.276|0
+Havsted|DK|55.004|9.168|0
+Havrum|DK|55.840|9.657|0
+Havrevænge|DK|55.267|10.435|0
+Havrekobbel|DK|54.932|10.282|0
+Havreholm|DK|56.060|12.422|0
+Havredal|DK|56.324|9.266|134
+Havrebjerg|DK|55.448|11.311|378
+Havnstrup|DK|56.122|8.808|0
+Havnsø|DK|55.752|11.328|0
+Havnsø|DK|54.930|11.945|0
+Havnskov|DK|55.275|11.599|0
+Havnemark|DK|55.670|10.957|0
+Havnelev|DK|55.268|12.341|0
+Havnebyen|DK|55.970|11.365|0
+Havneby|DK|55.088|8.565|252
+Havndrup|DK|55.293|10.567|0
+Havndal|DK|56.653|10.197|0
+Havnbjerg|DK|55.041|9.795|0
+Havløkke|DK|54.832|11.428|0
+Havhuse|DK|56.283|10.517|0
+Havervad|DK|55.202|8.697|0
+Haverup|DK|55.445|11.535|0
+Haverslev|DK|57.041|9.392|0
+Haverslev|DK|56.786|9.682|0
+Haven|DK|54.956|10.224|0
+Haved|DK|55.228|8.776|0
+Have-Borup|DK|55.569|11.736|0
+Havdrup|DK|55.545|12.124|4599
+Havbyrd|DK|55.406|11.818|0
+Havbro|DK|56.800|9.420|378
+Havbølle|DK|54.855|10.712|0
+Haurum|DK|56.302|9.866|0
+Hauge|DK|56.255|9.366|0
+Hatting|DK|55.853|9.769|2132
+Hattenæs|DK|56.147|9.583|0
+Håsum Torp|DK|56.585|8.827|0
+Håsum|DK|56.578|8.851|0
+Hastrup|DK|56.538|10.000|0
+Håstrup|DK|55.592|9.549|0
+Hastrup|DK|55.442|12.164|0
+Håstrup|DK|55.173|10.193|0
+Hastrup|DK|55.103|11.947|0
+Hassing|DK|56.824|8.455|0
+Hasseris|DK|57.039|9.886|0
+Hasselø By|DK|54.723|11.889|0
+Hasselager|DK|56.106|10.100|7437
+Hasmark|DK|55.549|10.448|0
+Haslund|DK|56.417|10.023|0
+Haslevgårde|DK|56.773|10.275|0
+Haslev|DK|55.323|11.964|12119
+Hasle|DK|56.169|10.162|0
+Hasle|DK|55.182|14.711|1627
+Hårup|DK|56.284|10.217|0
+Hårup|DK|56.153|9.649|0
+Hårup|DK|55.923|9.604|0
+Harte|DK|55.511|9.420|0
+Hårslev|DK|55.498|10.097|0
+Hårslev|DK|55.273|11.481|0
+Harritslevgård|DK|55.543|10.103|0
+Harritslev|DK|55.546|10.107|0
+Harring|DK|56.867|8.567|0
+Harridslev|DK|56.499|10.129|0
+Harrestrup|DK|55.703|12.377|0
+Harrested|DK|55.367|11.376|0
+Harresø|DK|55.800|9.372|0
+Harreshøj|DK|56.031|12.430|0
+Harres|DK|55.056|8.774|0
+Harreby|DK|55.331|8.933|0
+Harre|DK|56.713|8.926|0
+Harpelunde|DK|54.886|11.091|0
+Harndrup|DK|55.467|10.022|652
+Harløse|DK|55.920|12.202|0
+Harlev|DK|56.141|9.996|3990
+Hårlev|DK|55.349|12.234|2957
+Harknag|DK|55.080|8.688|0
+Harken|DK|57.392|9.987|0
+Hareskovby|DK|55.762|12.399|0
+Håred|DK|54.765|11.458|0
+Håre|DK|55.371|9.903|0
+Hårdmark|DK|55.812|10.556|0
+Hardeshøj|DK|55.009|9.699|0
+Hårby|DK|56.087|9.907|0
+Haarby|DK|55.224|10.123|2400
+Harboøre|DK|56.618|8.181|1745
+Hårbølle|DK|54.897|12.172|0
+Haraldsted|DK|55.491|11.769|0
+Hår|DK|56.283|10.072|0
+Hanstholm|DK|57.115|8.617|2104
+Hansted|DK|57.113|8.622|0
+Hansted|DK|55.894|9.848|0
+Hanning|DK|56.018|8.514|0
+Hannesborg|DK|55.388|10.652|0
+Hanerup|DK|55.666|11.600|0
+Hanehoved|DK|55.968|11.989|0
+Handrup|DK|56.237|10.633|0
+Handest|DK|56.570|9.820|0
+Handermelle|DK|54.667|11.569|0
+Handbjerg|DK|56.473|8.723|0
+Hampen|DK|56.019|9.355|0
+Hammerum|DK|56.134|9.061|3025
+Hammer-Torup|DK|55.145|11.896|0
+Hammershøj|DK|57.060|9.594|0
+Hammershøj|DK|56.500|9.750|0
+Hammersholt|DK|55.894|12.328|0
+Hammer|DK|55.146|11.870|0
+Hammelev|DK|56.442|10.896|0
+Hammelev|DK|55.245|9.383|0
+Hammel|DK|56.258|9.863|7373
+Halvrimmen|DK|57.111|9.591|0
+Halved|DK|56.150|9.683|0
+Haltrup|DK|55.670|8.722|0
+Halsted Tvede|DK|54.867|11.247|0
+Halsted|DK|54.849|11.222|0
+Halsskov|DK|55.342|11.133|0
+Halsmose|DK|55.166|10.163|0
+Halskov|DK|54.801|12.073|0
+Halseby|DK|55.357|11.194|0
+Hals|DK|56.996|10.308|2388
+Håls|DK|56.911|10.009|0
+Hallund|DK|57.239|10.107|0
+Hallum|DK|55.754|8.465|0
+Halling|DK|56.335|10.189|0
+Halling|DK|55.930|10.217|0
+Hallenslev|DK|55.548|11.280|0
+Hallendrup|DK|56.372|10.106|0
+Hallendrup|DK|56.343|10.689|0
+Hallelev|DK|55.471|11.400|0
+Halleby Ore|DK|55.627|11.361|0
+Halkevad|DK|55.330|11.373|0
+Halk|DK|55.203|9.641|0
+Haldum|DK|56.280|10.039|0
+Hald-Tostrup|DK|56.635|9.768|0
+Haldrup|DK|55.888|9.956|0
+Hald Ege|DK|56.412|9.350|0
+Haldagermagle|DK|55.314|11.511|0
+Haldagerlille|DK|55.331|11.509|0
+Haldager|DK|57.118|9.769|0
+Hald|DK|57.263|10.352|0
+Hald|DK|56.598|9.199|0
+Hald|DK|56.556|10.111|0
+Hald|DK|55.990|11.906|0
+Halby|DK|56.004|8.317|0
+Hajstrup|DK|55.255|9.671|0
+Hajstrup|DK|54.931|9.113|0
+Hagested|DK|55.747|11.617|0
+Hagerup|DK|55.826|12.136|0
+Hågerup|DK|55.171|10.358|0
+Hågendrup|DK|56.102|12.268|0
+Hågendrup|DK|55.977|11.956|0
+Hagendrup|DK|55.697|11.322|0
+Hage|DK|55.903|9.430|0
+Hafdrup|DK|55.441|9.234|0
+Hadsund|DK|56.715|10.117|5066
+Hadsten|DK|56.328|10.049|8254
+Hadrup|DK|55.937|10.043|0
+Haderup|DK|56.698|10.114|0
+Haderup|DK|56.390|8.994|0
+Haderslev|DK|55.249|9.488|22011
+Hadbjerg|DK|56.329|10.108|0
+Gyrup|DK|55.531|10.336|0
+Gyrstinge|DK|55.489|11.686|0
+Gyngstrup|DK|55.572|10.349|0
+Gylling|DK|55.891|10.170|0
+Gydeby|DK|55.529|10.390|0
+Gurreby|DK|54.810|11.241|0
+Gurre|DK|56.021|12.519|396
+Gurede|DK|55.756|11.645|0
+Gundtoft|DK|56.720|8.382|0
+Gundstrup|DK|55.559|10.374|0
+Gundsømagle|DK|55.736|12.152|2877
+Gundsølille|DK|55.708|12.160|0
+Gundslevmagle|DK|54.869|11.914|0
+Gundslev|DK|54.898|11.942|0
+Gundestrup|DK|56.814|9.564|0
+Gundestrup|DK|56.411|10.179|0
+Gundestrup|DK|55.784|11.606|0
+Gundestrup|DK|55.332|10.233|0
+Gundestrup|DK|55.092|10.411|0
+Gunderup|DK|57.386|9.968|0
+Gunderup|DK|56.941|10.011|0
+Gunderup|DK|56.606|9.971|0
+Gunderup|DK|55.735|8.506|0
+Gunderup|DK|55.570|8.642|0
+Gundersted|DK|56.903|9.489|0
+Gunderslevlille|DK|55.328|11.640|0
+Gunderød|DK|55.902|12.422|0
+Gummerup|DK|55.258|10.133|0
+Gummersmarke|DK|55.447|12.000|0
+Gummerød|DK|55.430|12.081|0
+Gultved|DK|55.205|10.525|0
+Gullev|DK|56.353|9.682|0
+Gullerup|DK|56.884|8.741|0
+Guldborg|DK|54.868|11.739|493
+Guldbæk|DK|56.938|9.809|0
+Guldbjerg|DK|55.538|10.148|0
+Guldager|DK|57.389|10.001|0
+Guldager|DK|56.717|9.500|0
+Guldager|DK|55.532|8.401|949
+Gug|DK|57.007|9.927|0
+Gudumlund|DK|56.939|10.102|0
+Gudumholm|DK|56.966|10.103|0
+Gudum|DK|56.950|10.065|0
+Gudum|DK|56.516|8.475|0
+Gudum|DK|55.441|11.389|0
+Gudsø|DK|55.530|9.577|0
+Gudskov|DK|55.482|10.440|0
+Gudnæs Strand|DK|56.819|8.534|0
+Gudnæs|DK|56.818|8.527|0
+Gudmindrup|DK|55.914|11.566|0
+Gudme|DK|55.150|10.708|916
+Gudmandstrup|DK|55.712|11.450|0
+Gudhjem|DK|55.210|14.971|725
+Guderup|DK|55.265|11.688|0
+Guderup|DK|54.990|9.872|2406
+Gudbjerg|DK|55.154|10.669|0
+Grynderup|DK|56.782|8.937|0
+Grynderup|DK|56.713|9.672|0
+Grydsted|DK|56.968|9.639|0
+Gryderup|DK|55.323|11.236|0
+Grurup|DK|56.786|8.410|0
+Gærup|DK|56.855|8.611|0
+Gærup|DK|54.987|8.762|0
+Grundfør|DK|56.269|10.099|0
+Grunderup|DK|55.247|12.018|0
+Grund|DK|56.465|10.291|0
+Grumstrup|DK|55.965|9.981|0
+Grumløse|DK|55.097|11.928|0
+Gærum|DK|57.401|10.435|0
+Grættrup|DK|56.744|9.116|0
+Græsted|DK|56.066|12.285|3596
+Græshave|DK|54.776|11.223|0
+Græse|DK|55.861|12.098|0
+Græsbjerg|DK|55.012|11.957|0
+Grærup|DK|55.641|8.178|0
+Grove|DK|56.313|9.041|0
+Grøttrup|DK|56.261|10.255|0
+Grønninghoved|DK|55.407|9.550|0
+Grønnerup|DK|56.765|9.248|0
+Grønnemose|DK|55.417|10.052|0
+Grønnegade|DK|55.886|12.470|0
+Grønnegade|DK|54.784|11.168|0
+Grønnegade|DK|54.704|11.689|0
+Grønnebæk|DK|55.361|9.174|0
+Grønhøj|DK|56.366|9.211|0
+Grønholt|DK|55.946|12.386|0
+Grønfelt|DK|55.819|8.682|0
+Grønfeld|DK|56.253|10.553|0
+Grønderup|DK|55.116|10.345|0
+Grønbæk Huse|DK|56.276|9.586|0
+Grønbæk|DK|56.274|9.620|0
+Grønbjerg|DK|56.177|8.539|0
+Grønbjerg|DK|55.816|9.121|0
+Grølsted|DK|56.282|9.762|0
+Grødde|DK|56.127|9.183|0
+Grænge|DK|54.771|11.765|0
+Grisby|DK|55.117|15.143|0
+Grisbæk|DK|55.539|8.756|0
+Grindsted|DK|57.147|10.047|0
+Grindsted|DK|55.757|8.928|9750
+Grindløse|DK|55.562|10.233|0
+Grinderslev|DK|56.699|9.067|0
+Grimstrup|DK|55.917|12.101|0
+Grimstrup|DK|55.527|8.659|559
+Grimstrup|DK|55.281|9.937|0
+Grimstrup|DK|55.227|11.738|0
+Grimstrup|DK|54.787|11.487|0
+Grimmeshave|DK|57.489|10.071|0
+Gribsvad|DK|55.412|10.065|0
+Gribstrup|DK|55.942|9.469|0
+Grevinge|DK|55.801|11.552|0
+Greve|DK|55.583|12.300|47671
+Greve Strand|DK|55.583|12.298|0
+Grensten|DK|56.421|9.927|0
+Grenå Strand|DK|56.396|10.919|0
+Grenaa|DK|56.416|10.878|14176
+Gremmeløkke|DK|55.451|9.971|0
+Grejs|DK|55.761|9.545|0
+Gredstedbro|DK|55.397|8.745|1071
+Gredsted|DK|55.406|8.759|0
+Grædstrup|DK|55.979|9.542|0
+Gravsholt|DK|57.123|10.087|0
+Gravlev|DK|56.848|9.809|0
+Gravlev|DK|56.268|10.735|0
+Gravens|DK|55.598|9.432|0
+Grauballe|DK|56.226|9.630|0
+Gråsten|DK|54.919|9.595|4291
+Grarup|DK|55.242|9.594|0
+Granslev|DK|56.327|9.910|0
+Granly|DK|57.280|9.951|0
+Gramrode|DK|55.754|9.910|0
+Gråmose|DK|56.235|9.321|0
+Gram|DK|56.053|9.991|0
+Gram|DK|55.777|9.886|0
+Gram|DK|55.289|9.049|2457
+Graderup|DK|55.471|10.004|0
+Gosmer|DK|55.929|10.194|0
+Gøttrup|DK|57.059|9.211|0
+Gørslev|DK|55.427|11.984|0
+Gørløse|DK|55.885|12.198|0
+Gørlev|DK|55.539|11.227|2405
+Gørding|DK|55.475|8.797|1782
+Gøngeherred|DK|55.135|14.756|0
+Gølstrup|DK|57.411|9.814|0
+Gødvad|DK|56.184|9.609|0
+Gødstrup|DK|56.156|8.893|0
+Gødstrup|DK|55.268|11.892|0
+Gødsbøl|DK|55.753|9.181|0
+Gøderup|DK|55.591|12.036|0
+Godthåb|DK|56.969|9.813|0
+Godthåb|DK|56.418|10.750|0
+Godthåb|DK|55.686|11.394|0
+Godsted|DK|54.723|11.601|0
+Glyngøre|DK|56.761|8.868|0
+Glynge|DK|56.748|8.915|0
+Glumsø|DK|55.357|11.686|2269
+Glukse|DK|54.729|11.246|0
+Gludsted|DK|56.033|9.314|0
+Glud|DK|55.808|10.006|0
+Glostrup|DK|55.844|11.667|0
+Glostrup|DK|55.667|12.404|23128
+Gloslunde|DK|54.755|11.216|0
+Glimsholt|DK|57.421|10.214|0
+Glim|DK|55.609|12.025|0
+Glibstrup|DK|55.500|9.248|0
+Glesborg|DK|56.477|10.723|0
+Glerup|DK|56.754|10.063|0
+Glerup|DK|56.693|9.385|0
+Glenstrup|DK|56.585|9.852|0
+Glejbjerg Stationsby|DK|55.567|8.833|0
+Glejbjerg|DK|55.559|8.825|0
+Glavendrup|DK|55.505|10.299|0
+Glatved|DK|56.316|10.827|0
+Glattrup|DK|55.780|9.933|0
+Glappe|DK|55.153|15.010|0
+Glamsdal|DK|55.269|10.113|0
+Glamsbjerg|DK|55.272|10.105|3308
+Gladsaxe|DK|55.738|12.482|0
+Gjurup|DK|57.456|9.928|0
+Gjørup|DK|56.655|9.370|0
+Gjøl|DK|57.068|9.720|923
+Gjessø|DK|56.116|9.495|0
+Gjesing|DK|56.456|10.429|0
+Gjesing|DK|55.989|10.024|0
+Gjerrild|DK|56.500|10.833|0
+Gjern|DK|56.230|9.739|1553
+Gjerlev|DK|56.588|10.131|0
+Gjellerup Lund|DK|56.152|9.025|0
+Gjellerup|DK|56.157|10.130|11406
+Gjellerup|DK|56.146|9.055|3731
+Gjandrup|DK|56.456|9.891|0
+Givskud|DK|55.816|9.352|0
+Giver|DK|56.827|9.584|0
+Give|DK|55.845|9.238|5215
+Gistrup|DK|56.994|9.991|3679
+Gislum|DK|56.767|9.520|0
+Gislinge|DK|55.734|11.548|0
+Gislev Holme|DK|55.214|10.608|0
+Gislev|DK|55.218|10.602|0
+Gishale|DK|55.105|11.965|0
+Ginnerup|DK|56.737|8.460|0
+Ginnerup|DK|56.411|10.744|0
+Ginnerup|DK|56.378|10.102|0
+Gimming|DK|56.494|10.097|0
+Gimlinge|DK|55.324|11.441|0
+Gilleleje|DK|56.122|12.311|6598
+Gierslev|DK|55.491|11.321|0
+Gevnø|DK|55.275|12.299|0
+Gevninge|DK|55.645|11.957|1636
+Gettrup|DK|56.721|8.357|0
+Gettrup|DK|56.603|9.872|0
+Gesten|DK|55.525|9.208|0
+Gestelev|DK|55.240|10.430|0
+Gesinge|DK|54.980|10.574|0
+Gesing|DK|55.514|8.449|0
+Gesing|DK|55.155|8.762|0
+Gerup|DK|55.140|10.320|0
+Gerskov|DK|55.493|10.460|0
+Gershøj|DK|55.713|11.970|0
+Gerringe|DK|54.718|11.348|0
+Gerning|DK|56.358|9.721|0
+Gerlev|DK|55.820|12.016|0
+Gerlev|DK|55.352|11.337|0
+Gerdrup|DK|55.716|12.124|0
+Gerdrup|DK|55.276|11.721|0
+Gerding|DK|56.895|9.955|0
+Gerå Enge|DK|57.129|10.398|0
+Gerå|DK|57.118|10.377|0
+Gentofte|DK|55.749|12.546|0
+Genner|DK|55.120|9.431|0
+Gelstrup|DK|56.973|9.674|0
+Gelstrup|DK|55.842|11.695|0
+Gelsted Tårup|DK|55.402|9.985|0
+Gelsted|DK|55.399|9.973|1676
+Gelsted|DK|55.295|11.753|0
+Gellerup|DK|55.631|8.517|0
+Gelbjerg|DK|55.434|9.907|0
+Gelballe|DK|55.486|9.353|0
+Gejsing|DK|55.498|9.270|0
+Gejlbjerg|DK|55.196|8.853|0
+Gejlbjerg|DK|55.117|9.149|0
+Gejlå|DK|54.894|9.365|0
+Gedved|DK|55.931|9.846|2475
+Gedsted|DK|56.689|9.337|863
+Gedser|DK|54.576|11.930|610
+Geding|DK|56.207|10.093|0
+Gedesby|DK|54.603|11.941|0
+Gederød|DK|55.075|12.089|0
+Gedeløkke|DK|56.683|8.900|0
+Geddal|DK|56.539|8.761|0
+Gauerslund|DK|55.652|9.666|0
+Gatten|DK|56.880|9.406|0
+Gassum|DK|56.575|9.997|0
+Gåskær|DK|54.970|9.224|0
+Gåsetofte|DK|55.703|11.109|0
+Gåser|DK|57.012|10.181|0
+Gårslev|DK|55.637|9.699|0
+Gårdeby|DK|54.905|9.253|0
+Gårde|DK|55.763|8.613|0
+Gantrup|DK|55.997|9.718|0
+Gånsager|DK|55.212|8.885|0
+Gannebro|DK|55.280|12.162|0
+Ganløse|DK|55.791|12.264|2843
+Gangsted|DK|55.927|10.000|0
+Gandrup|DK|57.057|10.181|1573
+Ganderup|DK|55.309|8.982|0
+Gamtofte|DK|55.284|9.976|0
+Gamstrup|DK|56.702|8.997|0
+Gamst|DK|55.489|9.203|0
+Gammerød|DK|55.522|11.969|0
+Gammel Ullits|DK|56.716|9.310|0
+Gammel Ullerød|DK|55.941|12.277|0
+Gammel Svebølle|DK|55.637|11.317|0
+Gammelstrup|DK|56.488|9.173|0
+Gammelstrup|DK|55.980|9.676|0
+Gammel Stenderup|DK|55.180|10.264|0
+Gammelsole|DK|55.775|9.641|0
+Gammel Skrøbelev|DK|54.930|10.760|0
+Gammel Skovbøl|DK|55.007|9.547|0
+Gammel Skørping|DK|56.864|9.890|0
+Gammel Rye|DK|56.075|9.698|0
+Gammel Rønbjerg|DK|56.536|8.873|0
+Gammel Nyby|DK|55.027|10.626|0
+Gammel Nørager|DK|56.726|9.597|0
+Gammel Lundby|DK|55.114|11.895|0
+Gammel Lejre|DK|55.618|11.969|0
+Gammel Ladegård|DK|55.232|9.342|0
+Gammel Hviding|DK|55.259|8.688|0
+Gammel Hvam|DK|56.669|9.489|0
+Gammel Holte|DK|55.838|12.512|0
+Gammel Havdrup|DK|55.552|12.159|0
+Gammel Hasseris|DK|57.025|9.871|0
+Gammel Hampen|DK|56.009|9.381|0
+Gammelgab|DK|54.864|9.691|0
+Gammelby|DK|56.784|8.438|0
+Gammelby|DK|55.740|9.345|0
+Gammelby|DK|55.716|9.795|0
+Gammelby|DK|55.514|9.091|0
+Gammelby|DK|55.296|12.199|0
+Gammel Blåhøj|DK|55.857|9.000|0
+Gammel Asmild|DK|56.453|9.446|0
+Gammel Ålbo|DK|55.466|9.678|0
+Gammel Agersted|DK|57.212|10.383|0
+Gamløse|DK|55.763|11.823|0
+Gamle Vodskov|DK|57.112|10.034|0
+Gamlevælde|DK|55.178|14.984|0
+Gamle Arnborg|DK|56.014|8.995|0
+Gamby|DK|55.479|10.103|0
+Gamborg|DK|55.464|9.801|0
+Galtrup|DK|56.845|8.723|0
+Galten|DK|56.350|10.050|0
+Galten|DK|56.159|9.917|4895
+Galsted|DK|55.160|9.215|0
+Gallehus|DK|54.958|8.813|0
+Galdbjerg|DK|55.171|10.704|0
+Gadstrup|DK|55.569|12.095|2019
+Gadstrup|DK|55.438|9.882|0
+Gadsbølle|DK|55.408|10.109|0
+Gadevang|DK|55.966|12.289|0
+Gadeby|DK|55.058|15.053|0
+Gadbjerg|DK|55.772|9.325|0
+Gabøl|DK|55.254|9.155|0
+Gåbense|DK|54.943|11.874|0
+Fyrkilde|DK|56.765|9.711|0
+Fynslund|DK|55.543|9.312|0
+Fynshav|DK|54.988|9.980|0
+Fyllested|DK|55.475|9.994|0
+Futting|DK|56.283|9.787|0
+Fusager|DK|56.455|9.234|0
+Furreby|DK|57.380|9.732|0
+Funder Kirkeby|DK|56.154|9.442|0
+Funder|DK|56.151|9.480|0
+Fulden|DK|56.074|10.224|0
+Fulby|DK|55.469|11.611|0
+Fuglsø|DK|56.193|10.536|0
+Fuglslev|DK|56.286|10.718|0
+Fuglse|DK|54.707|11.523|0
+Fuglsbølle|DK|54.903|10.762|0
+Fuglsang|DK|56.383|10.897|0
+Fuglsang|DK|55.601|9.321|0
+Fuglsang|DK|55.235|12.160|0
+Fuglsang|DK|55.118|12.134|0
+Fuglebjerg|DK|55.306|11.548|2321
+Fuglbjerg|DK|56.198|8.189|0
+Frydendal|DK|54.866|9.333|0
+Frydenborg|DK|55.454|9.687|0
+Fruerlund|DK|56.790|10.272|0
+Fruering|DK|56.035|9.994|0
+Fruens Bøge|DK|55.369|10.378|0
+Frostrup|DK|55.827|11.662|0
+Frøstrup|DK|57.087|8.996|0
+Frøslevvang|DK|56.788|8.752|0
+Frøslev|DK|56.805|8.729|0
+Frøslev|DK|55.291|12.320|0
+Frøslev|DK|54.821|9.341|0
+Frøsig|DK|55.772|8.635|0
+Frøruprød|DK|55.363|9.421|0
+Frørup|DK|55.372|9.400|0
+Frørup|DK|55.242|10.716|376
+Frølunde|DK|55.369|11.183|0
+Frølund|DK|56.161|9.085|0
+Frøbjerg|DK|55.335|10.101|0
+Frisvad|DK|55.668|8.517|0
+Fristrup|DK|57.135|9.709|0
+Fristrup|DK|56.613|9.618|0
+Frifelt|DK|55.215|8.832|0
+Frestrup|DK|54.934|9.150|0
+Fræer|DK|56.859|9.934|0
+Frenderup|DK|55.803|11.620|0
+Frenderup|DK|55.515|11.642|0
+Frenderup|DK|55.292|12.069|0
+Fremmelev|DK|55.500|10.355|0
+Freltofte|DK|55.284|10.425|0
+Frellesvig|DK|54.977|10.816|0
+Frejstrup|DK|56.943|9.434|0
+Frejlev Østermark|DK|54.698|11.796|0
+Frejlev|DK|57.006|9.817|3056
+Frejlev|DK|54.703|11.766|0
+Freerslev|DK|55.903|12.241|0
+Freerslev|DK|55.328|12.018|0
+Fredtofte|DK|55.908|12.447|0
+Fredsted|DK|55.609|9.485|0
+Fredsted|DK|55.239|9.434|0
+Fredskilde|DK|56.905|8.417|0
+Fredsgårde|DK|55.380|11.860|0
+Frederiksværk|DK|55.971|12.023|12718
+Frederikssund|DK|55.840|12.069|16850
+Frederikshof|DK|55.000|9.967|0
+Frederikshavn|DK|57.441|10.537|22672
+Frederikshåb|DK|55.668|9.196|0
+Frederiksdal|DK|56.219|9.395|0
+Frederiksberg|DK|55.679|12.535|95029
+Frederiksberg|DK|57.253|10.300|0
+Frederiksberg|DK|56.450|10.050|0
+Frederiksberg|DK|55.416|11.569|3142
+Frederiks|DK|56.340|9.255|0
+Fredericia|DK|55.566|9.753|40886
+Fredensdal|DK|57.111|9.516|0
+Fredensborg|DK|55.976|12.403|8941
+Fredbjerg|DK|56.808|9.295|0
+Fraugde Kærby|DK|55.373|10.487|0
+Fraugde|DK|55.355|10.485|0
+Frankfri|DK|55.302|10.255|0
+Frankerup|DK|55.636|11.201|0
+Frankerup|DK|55.305|11.366|0
+Framlev|DK|56.157|10.013|3067
+Fragtrup|DK|56.773|9.292|0
+Fovslet Mark|DK|55.417|9.440|0
+Fousing|DK|56.467|8.522|0
+Fovrfelt|DK|55.504|8.408|0
+Fovlum|DK|56.733|9.274|0
+Foverup|DK|55.029|9.183|0
+Foulum|DK|56.497|9.584|0
+Forum|DK|55.554|8.474|0
+Fortunen|DK|55.779|12.541|0
+Forsinge|DK|55.645|11.237|0
+Forneby|DK|54.784|11.559|0
+Formyre|DK|56.505|9.591|0
+Forlev Stationsby|DK|55.367|11.261|0
+Forlev|DK|56.065|9.897|0
+Forlev|DK|55.374|11.260|2058
+Forballum|DK|55.109|8.717|0
+Føvling|DK|55.936|9.613|0
+Føvling|DK|55.452|8.940|0
+Førstballe|DK|55.748|9.273|0
+Førslev|DK|55.277|11.579|0
+Føns|DK|55.426|9.830|0
+Føllenslev|DK|55.725|11.351|0
+Følle|DK|56.308|10.441|257
+Follerup|DK|55.598|9.603|0
+Fole|DK|55.315|8.983|0
+Foldingbro|DK|55.442|9.003|0
+Folding|DK|55.457|9.012|0
+Folby|DK|56.253|10.025|0
+Fogstrup|DK|56.069|9.496|0
+Foersum|DK|55.856|8.538|0
+Fodslette|DK|54.818|10.734|0
+Fodby|DK|55.247|11.676|0
+Flyvbjerg|DK|57.305|10.067|0
+Fly|DK|56.492|9.011|0
+Flovtrup|DK|56.791|9.079|0
+Flovt|DK|55.241|9.668|0
+Flovlev|DK|56.636|8.514|0
+Fløng|DK|55.662|12.187|11108
+Fløjterup|DK|55.406|12.054|0
+Fløjstrup|DK|56.411|10.266|0
+Fløjstrup|DK|55.771|9.504|0
+Flødstrup|DK|55.383|10.668|0
+Floes|DK|56.455|10.248|0
+Flintinge|DK|54.749|11.773|0
+Flinterup|DK|55.587|11.217|0
+Flensted|DK|56.149|9.788|0
+Fleninge|DK|55.148|10.329|0
+Flemstofte|DK|55.287|11.525|0
+Flemming|DK|55.869|9.668|0
+Flemløse|DK|55.250|10.068|0
+Flejsborg|DK|56.862|9.339|0
+Flegum|DK|57.075|9.444|0
+Flauenskjold|DK|57.250|10.287|0
+Flårupmelle|DK|54.678|11.552|0
+Flarup|DK|56.722|8.387|0
+Flårup|DK|54.690|11.550|0
+Flamsted|DK|56.912|9.962|0
+Flakkebjerg|DK|55.312|11.396|0
+Fladstrup|DK|56.376|10.784|0
+Flade|DK|56.889|8.793|0
+Fladbjerg|DK|56.666|10.047|0
+Fladbjerg|DK|56.122|8.320|0
+Fjærsted|DK|55.263|8.869|0
+Fjællebroen|DK|55.060|10.384|0
+Fjerritslev|DK|57.088|9.266|3300
+Fjerbæk|DK|55.878|8.413|0
+Fjenstrup|DK|54.871|12.010|0
+Fjenneslevmagle|DK|55.430|11.659|0
+Fjenneslev|DK|55.441|11.669|0
+Fjelstrup|DK|55.322|9.562|0
+Fjelsted|DK|56.623|9.942|0
+Fjelsted|DK|55.441|10.014|0
+Fjelsø|DK|56.665|9.434|202
+Fjellerup Strand|DK|56.516|10.607|0
+Fjellerup Mark|DK|56.484|10.591|0
+Fjellerup|DK|56.506|10.588|0
+Fjellerup|DK|55.452|10.031|0
+Fjellerup|DK|55.235|10.564|0
+Fjellerad|DK|56.925|10.019|0
+Fjellenstrup|DK|56.111|12.297|0
+Fjelde|DK|54.751|11.664|0
+Fjelby|DK|54.895|9.990|0
+Fjand Gårde|DK|56.321|8.152|0
+Fjaltring|DK|56.474|8.141|0
+Fjallerslev|DK|56.792|8.679|0
+Fitting|DK|55.623|9.143|0
+Fiskophuse|DK|55.038|10.554|0
+Fiskbæk|DK|56.511|9.309|0
+Fiskbæk|DK|56.045|8.620|0
+Fiskbæk|DK|54.941|9.601|0
+Firhøj|DK|56.096|12.356|0
+Firgårde|DK|56.087|9.806|0
+Firehuse|DK|56.345|9.210|0
+Firehuse|DK|55.632|9.414|0
+Findinge|DK|55.217|10.422|0
+Finderup|DK|56.700|9.781|0
+Finderup|DK|56.413|9.291|0
+Finderup|DK|56.058|8.504|0
+Finderup|DK|55.501|11.310|0
+Filskov Mark|DK|55.800|9.083|0
+Filskov|DK|55.811|9.036|0
+Fillerup|DK|55.962|10.107|0
+Filholm|DK|57.306|9.850|0
+Ferup|DK|55.531|9.381|0
+Ferslev|DK|56.952|9.897|0
+Ferslev|DK|55.760|11.913|0
+Ferritslev|DK|55.310|10.588|0
+Ferring|DK|56.527|8.122|0
+Ferle|DK|56.084|12.364|0
+Fensten|DK|55.905|10.188|0
+Fensmark|DK|55.279|11.804|4203
+Fensholt|DK|55.986|10.081|0
+Femmøller|DK|56.239|10.574|0
+Felstedskov|DK|55.019|9.519|0
+Felsted|DK|54.979|9.498|0
+Feldballe|DK|56.285|10.586|0
+Fejrskov Huse|DK|56.106|9.003|0
+Febbersted|DK|57.108|8.674|0
+Fæbæk|DK|55.062|10.883|0
+Favstrup|DK|55.332|9.519|0
+Favsbjerg|DK|55.050|9.183|0
+Favrvrå|DK|55.339|9.469|0
+Favrskov Mark|DK|56.326|9.996|0
+Favrlund|DK|55.297|8.837|0
+Favrholt|DK|57.434|10.435|0
+Favrholt|DK|56.181|9.131|0
+Favrby|DK|55.233|12.167|0
+Favrbo|DK|55.703|11.368|0
+Fausing|DK|56.445|10.282|0
+Fastrup|DK|56.531|9.611|0
+Fastrup|DK|56.040|10.061|0
+Fasterkær|DK|55.988|8.608|0
+Fasterholt|DK|56.010|9.114|0
+Faster|DK|55.986|8.594|0
+Fårvang|DK|56.268|9.728|0
+Fårup|DK|56.775|8.839|0
+Fårup|DK|56.545|9.851|0
+Fårup|DK|56.367|10.249|0
+Fårup|DK|56.360|9.545|0
+Fårup|DK|56.333|10.434|0
+Fårup|DK|56.209|10.070|0
+Fårup|DK|55.161|11.895|0
+Farum|DK|55.809|12.361|20312
+Farstrup|DK|56.985|9.460|426
+Farstrup|DK|55.469|10.194|0
+Farsø|DK|56.773|9.339|3324
+Farris|DK|55.385|9.268|0
+Farre Hede|DK|56.205|9.874|0
+Farre|DK|56.218|9.844|0
+Farre|DK|55.804|9.255|0
+Fårhus|DK|54.860|9.326|0
+Fårevejle Stationsby|DK|55.786|11.467|0
+Fårevejle|DK|55.804|11.440|0
+Farendløse|DK|55.392|11.887|0
+Fåre|DK|56.453|8.261|0
+Fårdrup|DK|55.321|11.344|0
+Fårbæk|DK|56.369|9.074|0
+Fårbjerg|DK|57.405|10.180|0
+Fanø Vesterhavsbad|DK|55.435|8.368|0
+Fannerup|DK|56.400|10.713|0
+Fangel Torp|DK|55.307|10.326|0
+Fangel|DK|55.312|10.319|0
+Fandrup|DK|56.764|9.301|0
+Falslev|DK|56.675|10.096|0
+Falling|DK|55.909|10.131|0
+Fallesgårde|DK|56.372|9.271|0
+Falkærgårde|DK|56.339|10.406|0
+Falkerslev|DK|54.835|12.000|0
+Falen|DK|55.835|8.275|0
+Faldsled|DK|55.150|10.149|0
+Faksinge|DK|55.113|11.987|0
+Faxe Ladeplads|DK|55.220|12.170|2496
+Faxe|DK|55.256|12.119|4204
+Fakkegrav|DK|55.682|9.774|0
+Fajstrup|DK|56.226|9.959|0
+Faddersbøl|DK|56.929|8.455|0
+Fåborg|DK|55.587|8.738|0
+Faaborg|DK|55.095|10.242|6822
+Fabjerg|DK|56.525|8.383|0
+Evetofte|DK|55.981|11.978|0
+Everdrup|DK|55.202|11.959|0
+Ettrup|DK|56.766|8.402|0
+Ettrup|DK|56.649|9.447|0
+Etterup|DK|55.420|10.068|0
+Ettehave|DK|54.737|11.629|0
+Estvad|DK|56.528|8.967|0
+Estrup Gårde|DK|56.326|10.249|0
+Estrup|DK|56.920|9.774|0
+Estrup|DK|56.349|8.484|0
+Estrup|DK|55.494|11.741|0
+Essig|DK|56.292|10.558|0
+Esrum|DK|56.051|12.379|0
+Espergærde|DK|55.995|12.547|11524
+Espe|DK|55.201|10.412|0
+Eskør|DK|55.387|9.856|0
+Eskilstrup|DK|55.856|11.634|0
+Eskilstrup|DK|55.528|10.061|0
+Eskilstrup|DK|55.272|10.522|0
+Eskilstrup|DK|55.229|12.029|0
+Eskilstrup|DK|54.856|11.887|1066
+Eskerod|DK|56.294|10.349|0
+Eskelund|DK|55.487|9.019|0
+Eskebjerg|DK|55.713|11.304|0
+Esby|DK|56.124|10.537|0
+Esbøl|DK|55.817|8.417|0
+Esbjerg|DK|55.470|8.452|71698
+Ertebølle|DK|56.810|9.177|0
+Ersted|DK|56.820|9.774|0
+Erslev|DK|56.830|8.750|0
+Erslev|DK|56.362|10.073|0
+Erritsø|DK|55.547|9.703|0
+Errindlev Fæland|DK|54.649|11.539|0
+Errindlev|DK|54.669|11.495|0
+Errested|DK|55.293|9.506|0
+Erlev|DK|55.242|9.474|0
+Erkilstrup|DK|56.957|9.435|0
+Erikstrup|DK|54.785|11.437|0
+Eriknauer|DK|55.838|9.739|0
+Ensted|DK|54.983|9.400|0
+Enslev|DK|56.615|10.125|0
+Enslev|DK|56.414|10.815|0
+Enslev|DK|56.356|9.835|0
+Enslev|DK|56.092|10.078|0
+Enø By|DK|55.173|11.671|0
+Enner|DK|55.917|9.716|0
+Ennebølle|DK|55.075|10.888|0
+Engvang|DK|55.504|11.182|0
+Engum|DK|55.742|9.658|0
+Englerup|DK|55.657|11.818|0
+Englerup|DK|55.414|11.741|0
+Engesvang|DK|56.171|9.350|0
+Engestofte|DK|54.763|11.562|0
+Engelstrup|DK|56.919|9.308|0
+Engelstrup|DK|55.801|11.577|0
+Engelstrup|DK|55.193|11.982|0
+Engelstofte|DK|55.374|11.656|0
+Engeldrup|DK|55.544|10.237|0
+Endrup|DK|55.993|12.401|0
+Endrup|DK|55.524|8.725|0
+Endeslev|DK|55.365|12.187|0
+Enderupskov|DK|55.284|8.949|0
+Enderup|DK|55.272|8.694|0
+Endelave By|DK|55.757|10.271|0
+Endegårde|DK|55.108|12.063|0
+Emtekær|DK|55.354|9.899|0
+Emmersbæk|DK|57.576|9.967|0
+Emmerlev|DK|54.982|8.677|0
+Emmerbølle|DK|55.030|10.863|0
+Emmelev|DK|56.633|10.800|0
+Emmelev|DK|55.534|10.365|0
+Emborg|DK|56.052|9.750|0
+Emb|DK|56.717|8.684|0
+Em|DK|57.344|9.913|0
+Eltang|DK|55.529|9.538|0
+Elstrup|DK|54.994|9.893|0
+Elsted|DK|56.884|8.552|0
+Elsted|DK|56.246|10.238|0
+Elsø|DK|56.803|8.794|0
+Elsmark|DK|55.040|9.812|0
+Elsegårde|DK|56.168|10.721|0
+Elsborg|DK|56.334|9.483|0
+Elmelunde|DK|54.996|12.401|0
+Elmelund|DK|55.381|10.310|0
+Ellum Mark|DK|55.024|8.906|0
+Ellum|DK|55.044|8.901|0
+Ellinge|DK|55.316|10.624|242
+Elling|DK|57.477|10.480|1081
+Elling|DK|55.962|9.823|0
+Ellidshøj|DK|56.932|9.871|0
+Ellested|DK|55.247|10.610|0
+Ellesø|DK|55.415|9.918|0
+Ellerup|DK|56.230|9.766|0
+Ellerup|DK|55.169|10.659|0
+Ellekær|DK|55.076|10.702|0
+Ellekilde|DK|56.077|12.530|0
+Ellede|DK|55.707|11.058|0
+Elkenøre|DK|54.731|11.983|0
+Eliselund|DK|55.017|9.467|0
+Elev|DK|56.243|10.197|0
+Eldrup|DK|55.944|9.868|0
+Elbæk|DK|55.921|9.998|0
+Ejstrup|DK|56.818|10.029|0
+Ejstrup|DK|56.556|9.425|0
+Ejstrup|DK|56.173|8.276|0
+Ejstrupholm|DK|55.984|9.282|0
+Ejstrup|DK|55.504|9.378|0
+Ejsingholm|DK|56.522|8.745|0
+Ejsing|DK|56.522|8.786|0
+Ejlstrup|DK|56.015|12.259|0
+Ejlskov|DK|55.498|10.060|0
+Ejlby Lunde|DK|55.542|10.186|0
+Ejlby|DK|55.538|10.178|0
+Ejersted|DK|57.293|9.670|0
+Ejerslev|DK|56.923|8.901|0
+Ejer|DK|55.982|9.821|0
+Ejdrup|DK|56.891|9.539|0
+Ejby|DK|55.700|12.410|0
+Ejby|DK|55.689|11.847|1978
+Ejby|DK|55.486|12.082|3131
+Ejby|DK|55.430|9.930|1996
+Ejby|DK|55.397|10.425|0
+Egvad|DK|55.079|9.251|0
+Egum|DK|55.594|9.710|0
+Egtved|DK|55.616|9.308|2408
+Egsmark Strand|DK|56.226|10.651|0
+Egsmark|DK|56.228|10.659|0
+Egøje|DK|55.422|12.188|0
+Egholt|DK|55.530|9.284|0
+Egholm|DK|57.069|9.837|0
+Eggeslevmagle|DK|55.286|11.349|0
+Eggeslevlille|DK|55.263|11.362|0
+Eggebæk|DK|54.904|9.203|0
+Eget|DK|54.799|12.014|0
+Egeskov|DK|55.613|9.746|0
+Egeskov|DK|55.168|10.481|0
+Egerup|DK|55.276|11.256|0
+Egerup|DK|55.264|9.972|0
+Egernsund|DK|54.905|9.607|0
+Egeris|DK|56.552|9.019|0
+Egense|DK|56.963|10.270|0
+Egense|DK|55.539|10.432|0
+Egense|DK|55.049|10.526|0
+Egense|DK|54.923|11.769|0
+Egens|DK|56.269|10.517|0
+Egen|DK|54.981|9.870|0
+Egemosedam|DK|55.301|10.055|0
+Egelund|DK|56.346|9.082|0
+Egelund|DK|54.664|11.518|0
+Egelev|DK|54.897|11.842|0
+Egeby|DK|55.062|15.001|0
+Egebølle|DK|54.767|11.183|0
+Egebæk|DK|55.282|8.727|1129
+Egebjerg|DK|56.533|8.817|0
+Egebjerg|DK|55.907|9.838|0
+Egebjerg|DK|55.844|11.677|0
+Egebjerg|DK|55.099|10.508|0
+Egebjerg|DK|54.763|11.981|0
+Egå|DK|56.214|10.264|0
+Eg|DK|56.179|10.425|0
+Eg|DK|55.767|8.800|0
+Edslev|DK|56.118|10.012|0
+Edderup|DK|56.650|10.119|0
+Ebstrup|DK|56.212|9.538|0
+Ebeltoft|DK|56.194|10.682|7437
+Ebdrup|DK|56.335|10.547|0
+Ebbeskov|DK|55.261|12.152|0
+Ebberup|DK|55.565|11.821|0
+Ebberup|DK|55.243|9.982|0
+Ebbeløkke|DK|55.956|11.486|0
+Dystrup|DK|56.300|8.383|0
+Dysted|DK|55.227|11.924|0
+Dyrvig|DK|55.873|8.746|0
+Dyrlev|DK|55.094|11.977|0
+Dyrhave|DK|55.049|9.480|0
+Dyreby|DK|55.699|8.294|0
+Dyreborg|DK|55.069|10.209|0
+Dyrby|DK|56.587|10.027|0
+Dynt|DK|54.877|9.707|0
+Dyngby|DK|55.954|10.242|0
+Dyndved|DK|54.987|9.855|0
+Dybvad|DK|57.272|10.359|596
+Dybebjerg|DK|56.523|8.209|0
+Dybe|DK|56.513|8.169|0
+Dybbøl|DK|54.911|9.736|2272
+Dvergetved|DK|57.477|10.374|0
+Durup|DK|56.744|8.950|0
+Durup|DK|56.717|9.620|0
+Dunkær|DK|54.848|10.418|0
+Dukkerup|DK|54.865|11.980|0
+Duborg|DK|54.944|9.167|0
+Dryhus|DK|54.925|8.846|0
+Dærup|DK|55.281|10.075|0
+Druestrup|DK|55.311|12.083|0
+Drostrup|DK|55.522|9.145|0
+Drøsselbjerg|DK|55.472|11.210|0
+Dronningmølle|DK|56.095|12.385|1460
+Dronninglund|DK|57.160|10.293|3769
+Drigstrup|DK|55.467|10.606|0
+Dreslette|DK|55.226|10.037|0
+Drengsted|DK|55.097|8.835|0
+Drejø|DK|54.970|10.420|0
+Drejens|DK|55.504|9.576|0
+Dræby|DK|55.450|10.521|0
+Draved|DK|55.022|8.978|0
+Drastrup|DK|57.006|9.856|0
+Drastrup|DK|56.444|10.170|0
+Drantum|DK|55.915|9.106|0
+Dramstrup|DK|55.659|11.580|0
+Drammelstrup|DK|56.321|10.701|0
+Drammelsbæk|DK|55.950|10.183|0
+Dragstrup|DK|56.820|8.671|0
+Dragstrup|DK|56.077|12.348|0
+Dragsbæk|DK|56.949|8.659|0
+Dragør|DK|55.593|12.672|12401
+Dragerup|DK|55.718|11.759|0
+Dråby|DK|56.222|10.700|0
+Doverodde|DK|56.720|8.470|0
+Dover|DK|56.717|8.451|0
+Dover|DK|55.429|9.015|0
+Dorteasminde|DK|55.855|9.596|0
+Dorf|DK|57.224|10.307|0
+Døstrup|DK|56.687|9.747|0
+Døstrup|DK|55.118|8.809|0
+Dørup|DK|56.099|10.020|0
+Dørup|DK|56.026|9.761|0
+Dørslund|DK|55.966|9.124|0
+Dørken|DK|55.879|9.264|0
+Dønnevælde|DK|56.049|12.261|0
+Dømmestrup|DK|55.309|10.373|0
+Døllefjelde Langet|DK|54.730|11.710|0
+Døllefjelde|DK|54.733|11.691|0
+Døjringe|DK|55.489|11.568|0
+Donslund|DK|55.646|8.949|0
+Donse|DK|55.894|12.419|0
+Dons|DK|55.555|9.443|0
+Dongs-Højrup|DK|55.127|10.557|0
+Dong|DK|55.196|10.637|0
+Dommerby|DK|56.553|9.076|0
+Dolmer|DK|56.428|10.853|0
+Dollerup|DK|56.963|8.572|0
+Dollerup|DK|56.877|10.033|0
+Dollerup|DK|56.371|9.319|0
+Dollerup|DK|55.473|9.289|0
+Dokkedal|DK|56.904|10.253|0
+Djørup|DK|56.939|9.590|0
+Djeld|DK|56.436|8.858|0
+Diget|DK|57.570|10.078|0
+Diernæs|DK|55.159|9.477|0
+Diernæs|DK|55.107|10.291|0
+Dianalund|DK|55.531|11.492|3605
+Demstrup|DK|56.336|9.424|0
+Dejret|DK|56.198|10.404|0
+Dejbjerg|DK|56.001|8.418|0
+Debelmose|DK|55.962|8.605|0
+Debel|DK|56.820|9.005|0
+Debel|DK|55.610|8.835|0
+Davinde|DK|55.340|10.546|0
+Davding|DK|55.979|9.573|0
+Daugstrup|DK|55.492|10.406|0
+Daugbjerg|DK|56.436|9.131|0
+Daugårdstrand|DK|55.703|9.703|0
+Daugård|DK|55.735|9.703|0
+Dåstrup|DK|55.557|12.014|0
+Darup|DK|55.610|12.058|0
+Danstrup|DK|56.371|9.737|0
+Danstrup|DK|55.995|12.437|0
+Dannemare Høje|DK|54.733|11.152|0
+Dannemare|DK|54.762|11.187|365
+Damsholte|DK|54.939|12.219|0
+Damgårde|DK|55.425|10.323|0
+Damgård|DK|54.883|10.367|0
+Dalstrup|DK|56.723|8.923|0
+Dalsgårde|DK|56.404|9.571|0
+Dalsgårde|DK|56.219|9.648|0
+Dalsgård|DK|56.283|9.550|0
+Dalsgård|DK|54.893|9.577|0
+Dalmose|DK|55.294|11.418|0
+Dall|DK|56.980|9.883|0
+Daler|DK|54.970|8.743|0
+Daldover|DK|55.690|9.259|0
+Dalbyover|DK|56.619|10.201|0
+Dalbyneder|DK|56.634|10.221|0
+Dalby-Borup|DK|55.318|12.062|0
+Dalby|DK|56.220|9.756|0
+Dalby|DK|55.793|11.954|0
+Dalby|DK|55.514|11.175|0
+Dalby|DK|55.517|10.659|0
+Dalby|DK|55.467|9.508|0
+Dalby|DK|55.311|12.064|0
+Dalager|DK|55.970|8.645|0
+Dagsvad|DK|56.416|9.898|0
+Dagstrup|DK|56.349|10.415|0
+Dageløkke|DK|55.955|12.502|0
+Dageløkke|DK|55.063|10.864|0
+Croneshvile|DK|55.333|11.317|0
+Cimbria|DK|56.683|10.050|0
+Christianshede Stationsby|DK|56.104|9.408|0
+Christiansfeld|DK|55.358|9.487|2977
+Charlottenlund|DK|55.752|12.575|40000
+Centrum|DK|56.739|8.754|0
+Bystrup|DK|56.674|9.365|0
+Bysted|DK|56.751|8.923|0
+Byskov|DK|54.838|11.841|0
+Byrum|DK|57.257|10.997|444
+Byrsted|DK|56.911|9.683|0
+Bynkel|DK|55.293|10.730|0
+Byllerup|DK|55.454|9.887|0
+Bylderup-Bov|DK|54.942|9.087|0
+Bylderup|DK|54.945|9.104|0
+Bygum|DK|56.692|9.447|0
+Bybæk|DK|55.706|9.593|0
+Bybjerg|DK|55.768|11.804|0
+Butterup|DK|55.700|11.619|0
+Buske|DK|55.362|11.772|0
+Busk|DK|56.147|9.097|0
+Busholm|DK|54.857|9.660|0
+Busene|DK|54.961|12.527|0
+Busemarke|DK|54.970|12.478|0
+Bursø|DK|54.737|11.490|0
+Burkal|DK|54.917|9.071|0
+Burgårde|DK|55.997|9.598|0
+Bur|DK|56.365|8.427|0
+Buntje-Ballum|DK|55.061|8.647|0
+Bundsgård|DK|55.891|8.634|0
+Bullerup|DK|55.427|10.471|2982
+Buksager|DK|56.646|8.870|0
+Bukkjær|DK|55.996|8.826|0
+Bukkerup|DK|55.591|11.791|0
+Bukkerup|DK|55.294|10.068|0
+Bukkehave|DK|54.722|11.386|0
+Bugtrup|DK|56.361|10.571|0
+Buerup|DK|55.593|11.340|0
+Buderup|DK|54.791|11.578|0
+Buddum|DK|56.750|10.248|0
+Buddinge|DK|55.748|12.495|0
+Bubel|DK|55.462|9.955|0
+Bryrup|DK|56.025|9.511|0
+Bryndumdam|DK|55.520|8.494|0
+Bryndum|DK|55.536|8.479|517
+Brylle|DK|55.320|10.249|0
+Brydegård|DK|55.208|9.996|0
+Brydebølle|DK|54.791|11.122|0
+Brydebjerg|DK|54.707|11.668|0
+Bruunshåb|DK|56.421|9.440|801
+Bruserup|DK|54.673|11.901|0
+Bruntofte|DK|54.833|11.872|0
+Brunsnæs|DK|54.865|9.641|0
+Brunshuse|DK|55.201|10.002|0
+Brunemose|DK|55.361|11.532|0
+Brundt|DK|56.293|9.958|0
+Brunde|DK|55.070|9.359|0
+Brundbymark|DK|55.833|10.650|0
+Brundby|DK|55.813|10.604|0
+Brund|DK|56.984|8.718|0
+Brund|DK|55.814|9.957|0
+Brunbjerg|DK|56.374|8.851|0
+Brunbjerg|DK|56.203|8.163|0
+Brudager|DK|55.116|10.675|0
+Bærs|DK|56.504|8.960|0
+Brovst|DK|57.097|9.523|2665
+Broskov|DK|55.144|11.998|0
+Brorup|DK|55.232|11.566|0
+Brorstrup|DK|56.764|9.649|0
+Brorsbøl|DK|55.239|9.521|0
+Brorfelde|DK|55.620|11.668|0
+Brordrup|DK|55.577|12.085|0
+Brøttrup|DK|56.907|9.231|0
+Brøstrup|DK|55.361|9.006|0
+Brørup|DK|55.983|9.918|0
+Brørup|DK|55.482|9.018|4596
+Brønsholm|DK|55.912|12.477|0
+Brønserod|DK|55.403|10.161|0
+Brøns|DK|55.195|8.729|0
+Brøndum|DK|57.100|9.270|0
+Brøndum|DK|56.966|9.356|0
+Brøndum|DK|56.624|9.700|0
+Brøndum|DK|56.585|8.909|0
+Brøndstrup|DK|56.514|10.793|0
+Brøndsted|DK|55.617|9.671|0
+Brønderslev|DK|57.270|9.941|12549
+Brønden|DK|57.283|10.238|0
+Brønde|DK|55.763|11.795|0
+Brøndbyvester|DK|55.645|12.410|20000
+Brøndby Strand|DK|55.618|12.422|11915
+Brøndbyøster|DK|55.657|12.442|0
+Brøndbjerg|DK|56.744|9.960|0
+Brødslev|DK|57.305|9.703|0
+Brødløs|DK|56.601|9.903|0
+Brøderup|DK|55.177|11.975|0
+Bromme|DK|55.489|11.512|0
+Brokær|DK|55.394|8.752|0
+Brokøb|DK|55.600|11.432|0
+Brokkedal|DK|56.400|10.733|0
+Brokkebjerg|DK|55.716|11.107|0
+Brohuse|DK|56.743|10.225|0
+Broholm|DK|54.787|10.700|0
+Brohave|DK|55.082|10.752|0
+Broderup|DK|54.902|9.254|0
+Brobyværk|DK|55.233|10.265|0
+Broby Overdrev|DK|55.409|11.610|0
+Broballe|DK|55.026|9.740|0
+Broager|DK|54.889|9.675|3202
+Bro|DK|55.514|9.987|0
+Bro|DK|54.951|9.895|0
+Bro|DK|54.840|10.418|0
+Brænore|DK|55.391|9.420|0
+Brændt|DK|55.874|11.633|0
+Brændstrup|DK|55.331|9.056|0
+Brændskov|DK|57.212|9.915|0
+Brændholt|DK|55.600|11.637|0
+Brændeskov|DK|55.131|10.614|0
+Brænde-Lydinge|DK|55.177|10.367|0
+Brændekilde|DK|55.348|10.267|0
+Bringstrup|DK|55.448|11.730|0
+Bringe|DK|55.767|12.333|0
+Briksbøl|DK|55.511|8.543|0
+Breum|DK|56.688|9.070|0
+Breth|DK|55.729|9.875|0
+Brestenbro|DK|55.936|9.653|0
+Brendstrup|DK|56.189|10.158|0
+Brenderup|DK|55.484|9.979|1366
+Brenderup|DK|55.186|10.663|0
+Bremdal|DK|56.507|8.585|0
+Brem|DK|55.344|9.069|0
+Brejning|DK|56.113|8.503|0
+Brejning|DK|55.666|9.672|2220
+Bregnør Fiskerleje|DK|55.480|10.597|0
+Bregnør|DK|55.471|10.597|0
+Bregninge|DK|55.685|11.307|0
+Bregninge|DK|55.023|10.607|0
+Bregninge|DK|54.891|10.313|0
+Bregninge|DK|54.813|12.078|0
+Bregninge|DK|54.716|11.700|0
+Bregnetved|DK|55.544|11.973|0
+Bregnerød|DK|56.102|12.340|0
+Bregnerød|DK|55.839|12.378|0
+Bregnemose|DK|55.283|10.164|0
+Bredstruplund|DK|55.582|9.659|0
+Bredstrup|DK|55.591|9.666|0
+Bredstrup|DK|55.561|10.312|0
+Bredsten|DK|55.701|9.385|1881
+Bredsten|DK|54.859|9.947|0
+Bredholt|DK|56.330|9.665|0
+Bredevad|DK|54.976|9.143|0
+Bredetved|DK|55.695|11.782|0
+Bredeshave|DK|55.151|12.011|0
+Brederød|DK|55.965|12.047|0
+Bredebro|DK|55.055|8.829|1428
+Brede|DK|55.792|12.491|0
+Brede|DK|55.061|8.821|0
+Bredbjerg|DK|55.435|10.241|0
+Bredballestrand|DK|55.708|9.610|0
+Bredballe|DK|55.718|9.610|0
+Bredal|DK|55.747|9.640|0
+Bred|DK|55.375|10.102|0
+Brædstrup|DK|55.972|9.611|3917
+Braup|DK|54.883|11.800|0
+Braulstrup|DK|56.814|9.680|0
+Bratten Strand|DK|57.515|10.463|0
+Bratbjerg|DK|57.134|9.493|0
+Bråskov|DK|55.763|9.828|0
+Brårup|DK|56.937|9.394|0
+Brarup|DK|54.879|11.808|0
+Brangstrup|DK|55.224|10.504|0
+Brandstrup|DK|56.363|9.507|0
+Brandstrup|DK|56.271|10.280|0
+Brandstrup|DK|55.539|11.525|0
+Brandstrup|DK|55.450|9.868|0
+Brandstrup|DK|54.742|11.359|0
+Brandsmose|DK|54.827|11.349|0
+Brandsby|DK|55.528|10.363|0
+Brandsby|DK|54.831|10.721|0
+Brandsbøl|DK|55.024|9.789|0
+Brandlund|DK|55.940|9.104|0
+Branderup Kådnere|DK|55.137|9.078|0
+Branderup|DK|55.120|9.070|0
+Branderslev|DK|54.861|11.114|0
+Branden|DK|56.797|9.032|0
+Brandelev|DK|55.212|11.867|0
+Brande|DK|55.943|9.128|7289
+Brandborg|DK|56.425|8.260|0
+Bramstrup|DK|56.363|10.153|0
+Bramming|DK|55.469|8.700|7111
+Bramdrupdam|DK|55.524|9.468|0
+Bramdrup|DK|55.522|9.473|0
+Bramdrup|DK|55.289|9.442|0
+Brakker|DK|55.600|9.400|0
+Bradsted|DK|56.893|9.685|0
+Bråde|DK|55.832|11.693|0
+Bråby|DK|55.298|11.943|0
+Brabrand|DK|56.153|10.106|0
+Brabæk|DK|55.369|9.537|0
+Brå|DK|55.769|9.820|0
+Bovrup|DK|54.996|9.583|0
+Bovnum|DK|55.755|8.569|0
+Bovlund Bjerg|DK|55.102|9.103|0
+Bovlund|DK|55.101|9.090|0
+Bovlstrup|DK|55.942|10.219|0
+Bovense|DK|55.384|10.723|0
+Bov|DK|54.841|9.367|0
+Bottrup|DK|55.821|9.753|0
+Botofte|DK|54.995|10.872|0
+Bostrup|DK|56.655|9.004|0
+Bostedhede|DK|57.317|9.782|0
+Boserup|DK|55.259|11.920|0
+Borup|DK|57.367|9.960|0
+Borup|DK|56.922|9.507|0
+Borup|DK|56.554|9.249|0
+Borup|DK|56.503|9.986|0
+Borup|DK|56.140|10.536|0
+Borup|DK|55.956|9.119|0
+Borup|DK|55.907|12.183|0
+Borup|DK|55.694|11.634|5063
+Borup|DK|55.495|11.976|5063
+Borum|DK|56.188|10.012|308
+Borsholm|DK|56.066|12.470|0
+Borris|DK|55.960|8.644|0
+Borridsø|DK|56.329|9.744|0
+Borren|DK|55.967|12.150|0
+Borregård|DK|56.849|9.239|0
+Borreby|DK|55.316|10.298|0
+Borre|DK|56.314|9.689|0
+Borre|DK|54.996|12.446|452
+Borød|DK|55.427|11.521|0
+Borlev|DK|55.611|9.395|0
+Boring|DK|55.869|9.597|0
+Borg|DK|55.042|8.799|0
+Bordrup|DK|55.594|8.239|0
+Bording Stationsby|DK|56.144|9.277|0
+Bording Mark|DK|56.179|9.207|0
+Bording Kirkeby|DK|56.169|9.244|2104
+Borbjerg|DK|56.404|8.755|442
+Bøvlingbjerg|DK|56.435|8.203|479
+Bøvl|DK|55.850|8.917|0
+Bøtterup|DK|56.047|12.434|0
+Bøtø By|DK|54.679|11.955|0
+Bøstrup Toelstang|DK|55.499|11.235|0
+Bøstrup|DK|56.611|9.252|0
+Bøstrup|DK|56.317|9.871|0
+Bøstrup|DK|55.373|11.432|0
+Bøstrup|DK|55.041|10.881|0
+Bøsserup|DK|55.866|11.684|0
+Børup|DK|56.101|10.125|0
+Børup|DK|55.542|9.634|0
+Børstingerød|DK|55.883|12.319|0
+Børsted|DK|55.350|12.133|0
+Børsmose|DK|55.664|8.181|0
+Børkop|DK|55.642|9.650|3561
+Børglum|DK|57.364|9.840|0
+Bønsvig|DK|55.113|12.172|0
+Bønnet|DK|54.823|12.100|0
+Bønnerup Strand|DK|56.528|10.723|731
+Bønnerup|DK|56.519|10.721|0
+Bønderby|DK|54.947|8.778|0
+Bølshavn|DK|55.154|15.075|0
+Bølling|DK|55.985|8.547|0
+Bølling|DK|55.589|9.343|0
+Bøl|DK|56.658|8.636|0
+Bøjstrup|DK|56.397|10.490|0
+Bøjen|DK|56.384|10.337|0
+Bøjden|DK|55.104|10.109|0
+Bøgvad|DK|55.622|9.276|0
+Bøgvad|DK|54.984|9.009|0
+Bøgildgård|DK|56.274|9.389|0
+Bøgesø|DK|55.197|11.904|0
+Bøgeskov|DK|56.023|10.095|0
+Bøgeskov|DK|54.892|11.242|0
+Bøgelunde|DK|55.239|11.427|0
+Bøgede|DK|55.460|11.952|0
+Bøgebjerg|DK|55.000|10.533|0
+Bøgballe|DK|55.825|9.618|0
+Bonnet|DK|56.522|8.223|0
+Bonderup|DK|57.060|9.369|0
+Bonderup|DK|56.748|9.590|0
+Bonderup|DK|55.831|12.098|0
+Bonderup|DK|55.767|11.963|0
+Bonderup|DK|55.224|11.855|0
+Bonderød|DK|55.277|12.176|0
+Bondebyen|DK|54.860|10.511|0
+Boltinge|DK|55.227|10.452|0
+Bolteskov|DK|55.241|10.443|0
+Bolsmose|DK|55.131|10.751|0
+Bolskov|DK|55.587|9.575|0
+Bolmerod|DK|55.534|10.277|0
+Boller|DK|55.838|9.899|0
+Bolle|DK|57.136|10.259|0
+Bolilmark|DK|55.158|8.553|0
+Boldrup|DK|56.681|9.633|0
+Bolding|DK|55.709|8.998|0
+Bolderslev|DK|54.992|9.284|0
+Bojskov|DK|55.328|9.513|0
+Bogø By|DK|54.923|12.051|0
+Bognæs|DK|55.842|11.625|0
+Bognæs|DK|55.747|11.758|0
+Bogense|DK|55.567|10.089|4059
+Bogens|DK|56.210|10.555|0
+Boestofte|DK|55.270|12.333|0
+Boest|DK|55.982|9.437|0
+Boeslunde|DK|55.301|11.271|765
+Boeslum|DK|56.202|10.715|0
+Boes|DK|56.052|9.799|0
+Bodum|DK|55.084|9.423|0
+Bodilsker|DK|55.062|15.074|0
+Bodholt|DK|56.133|9.281|0
+Boderne|DK|56.079|12.535|0
+Boderne|DK|55.023|14.912|0
+Bode|DK|56.478|10.305|0
+Boddum|DK|56.707|8.480|0
+Bobøl|DK|55.439|8.922|0
+Bobjerg|DK|55.148|10.538|0
+Bælum|DK|56.830|10.120|702
+Blæsenborg|DK|55.611|11.977|0
+Blæsenborg|DK|55.236|10.752|0
+Blæsebjerg|DK|54.894|11.987|0
+Blæsbjerg|DK|57.525|10.325|0
+Blæsbjerg|DK|56.306|8.458|0
+Blære|DK|56.864|9.516|0
+Blovstrød|DK|55.870|12.386|3019
+Blommenslyst|DK|55.390|10.263|542
+Blokhus|DK|57.248|9.590|495
+Blistrup|DK|56.087|12.210|0
+Blirup|DK|55.889|9.932|0
+Blidstrup|DK|56.716|8.693|0
+Blenstrup|DK|56.880|10.012|536
+Blenstrup|DK|56.598|10.107|0
+Bleld|DK|55.919|9.897|0
+Blegind|DK|56.067|10.072|0
+Bleggrav|DK|57.195|9.641|0
+Blåvand|DK|55.553|8.120|0
+Blans|DK|54.990|9.661|0
+Blans|DK|54.861|11.424|0
+Blanke|DK|55.494|9.876|0
+Blangstrup|DK|55.313|9.995|0
+Blangslev|DK|55.167|11.881|0
+Blåkrog|DK|55.007|9.626|0
+Blåkær|DK|56.183|10.402|0
+Blåhøj Stationsby|DK|55.874|9.033|0
+Bladstrup|DK|55.511|10.338|0
+Blåbæks Mølle|DK|55.239|12.121|0
+Bækstrup|DK|55.312|10.616|0
+Bæksgård|DK|55.849|9.197|0
+Bækmarksbro|DK|56.415|8.307|518
+Bækkeskov|DK|54.683|11.783|0
+Bækken|DK|54.885|9.526|0
+Bække Mark|DK|55.592|9.127|0
+Bækkelund|DK|56.395|9.333|0
+Bækkehave|DK|55.016|10.552|0
+Bække|DK|55.570|9.140|1042
+Bækhuse|DK|55.709|8.388|0
+Bækbo|DK|56.024|8.423|0
+Bæk|DK|55.290|9.617|0
+Bjæverskov|DK|55.458|12.037|3279
+Bjærup|DK|55.336|11.414|0
+Bjært|DK|56.467|8.783|0
+Bjøstrup|DK|56.102|10.164|0
+Bjørup|DK|54.776|11.937|0
+Bjørnstrup|DK|55.737|10.942|0
+Bjørnø By|DK|55.066|10.250|0
+Bjørnholt|DK|56.209|9.562|0
+Bjørndrup|DK|56.829|8.832|0
+Bjødstrup|DK|56.289|10.537|0
+Bjødstrup|DK|56.175|10.396|0
+Bjolderup|DK|54.995|9.254|0
+Bjælkerup|DK|55.318|12.381|0
+Bjert Strand|DK|55.432|9.603|0
+Bjertrup|DK|56.082|10.000|0
+Bjerringbro|DK|56.378|9.661|7407
+Bjerring|DK|56.381|9.621|0
+Bjerremose|DK|55.735|8.541|0
+Bjerregårde|DK|56.218|8.211|0
+Bjerregårde|DK|56.067|8.850|0
+Bjerrede|DK|55.383|12.033|0
+Bjerreby|DK|54.970|10.606|0
+Bjerre|DK|57.084|8.719|0
+Bjerre|DK|56.660|10.284|0
+Bjernæs Husby|DK|54.644|11.463|0
+Bjernæs|DK|54.656|11.467|0
+Bjernemark|DK|55.022|10.587|0
+Bjernede|DK|55.462|11.625|0
+Bjerne|DK|55.100|10.188|0
+Bjerndrup|DK|55.498|8.792|0
+Bjerndrup|DK|55.327|9.389|0
+Bjerndrup|DK|55.099|9.009|0
+Bjerndrup|DK|54.933|9.329|0
+Bjerlev|DK|55.821|9.433|0
+Bjergsted|DK|55.667|11.351|0
+Bjerget|DK|57.105|8.993|0
+Bjergesø|DK|55.754|11.417|0
+Bjergeskov|DK|54.791|11.280|0
+Bjerge|DK|55.589|11.190|0
+Bjergby|DK|57.515|10.029|0
+Bjergby|DK|56.868|8.734|0
+Bjergby|DK|56.521|10.010|0
+Bjerager|DK|55.958|10.210|0
+Bjedstrup|DK|56.066|9.853|0
+Bjalderup|DK|55.767|8.569|0
+Bitteby|DK|57.472|10.068|0
+Bitteby|DK|57.239|10.279|0
+Bistrup|DK|56.048|12.456|0
+Bistrup|DK|55.823|12.432|0
+Bistrup|DK|55.223|11.656|0
+Bissinge|DK|54.962|12.281|0
+Bisserup Strand|DK|55.202|11.505|0
+Bisserup|DK|55.208|11.495|0
+Bisnap|DK|57.003|10.338|0
+Bislev|DK|56.948|9.608|0
+Biskorup|DK|55.420|10.439|0
+Biskopstorp|DK|55.333|10.688|0
+Bisholt|DK|55.810|9.976|0
+Birkum|DK|55.336|10.504|0
+Birkmose Gårde|DK|56.079|8.599|0
+Birkmose|DK|56.153|8.738|0
+Birket|DK|54.901|11.333|214
+Birkerød|DK|55.848|12.428|21242
+Birkende|DK|55.381|10.563|655
+Birkemose|DK|54.568|11.968|0
+Birkelse|DK|57.150|9.686|645
+Birkelev|DK|55.212|8.806|0
+Birkede|DK|55.536|12.010|0
+Birkebjerg|DK|55.514|10.688|0
+Birk|DK|56.129|9.030|0
+Binderup Strand|DK|55.424|9.594|0
+Binderup|DK|56.990|9.681|0
+Binderup|DK|56.642|10.235|0
+Binderup|DK|55.435|9.558|0
+Bindeballe|DK|55.671|9.270|0
+Biltris|DK|55.723|11.930|0
+Biltoft|DK|55.624|8.638|0
+Bilstrup|DK|56.545|9.012|0
+Billund|DK|55.733|9.108|7446
+Billund|DK|55.258|9.281|0
+Billum|DK|55.617|8.333|0
+Bildsø|DK|55.463|11.248|0
+Bigum|DK|56.542|9.658|0
+Biersted|DK|57.151|9.806|0
+Bevtoft|DK|55.202|9.215|0
+Besser|DK|55.864|10.642|0
+Bernstorffsminde|DK|55.163|10.384|0
+Bergmandsdal|DK|56.017|12.617|0
+Benslehøj|DK|56.353|9.227|0
+Bennebo|DK|55.637|11.461|0
+Benløse|DK|55.463|11.794|0
+Bendstrup|DK|56.366|10.326|0
+Bendstrup|DK|56.274|10.239|0
+Bendstrup|DK|55.972|12.252|0
+Bendslev|DK|55.288|11.495|0
+Bellinge|DK|55.335|10.320|5881
+Belle|DK|55.714|9.753|0
+Beldringe|DK|55.473|10.331|0
+Bejstrup|DK|57.038|9.335|0
+Begtrup|DK|56.181|10.512|0
+Bedsted Thy|DK|56.809|8.407|0
+Bedsted|DK|55.061|9.108|0
+Bederslev|DK|55.549|10.346|0
+Beder|DK|56.060|10.212|9430
+Bavngård|DK|55.388|8.898|0
+Batum|DK|56.497|9.478|0
+Båstrup|DK|56.002|9.948|0
+Bastrup|DK|55.822|12.272|0
+Båstrup|DK|55.784|9.642|0
+Bastrup|DK|55.635|11.133|0
+Bastrup|DK|55.521|10.301|0
+Bastrup|DK|55.418|9.271|0
+Bastholm|DK|57.332|10.081|0
+Bastemose|DK|55.132|10.942|0
+Båsted Hede|DK|57.319|9.779|0
+Basnæs|DK|55.156|11.761|0
+Båslunde|DK|55.270|11.313|0
+Basballe|DK|56.241|10.557|0
+Bårup|DK|55.558|11.768|0
+Barup|DK|55.312|12.242|0
+Barup|DK|54.891|11.974|0
+Barsø By|DK|55.117|9.550|0
+Barsmark|DK|55.082|9.531|0
+Barslev|DK|56.648|8.500|0
+Bårse|DK|55.125|11.952|0
+Barsbøl|DK|56.699|10.001|0
+Barritskov By|DK|55.706|9.907|0
+Barrithule|DK|55.713|9.894|0
+Barrit|DK|55.712|9.890|0
+Barmer|DK|56.981|9.539|0
+Barløse Tårup|DK|55.325|9.959|0
+Barløse|DK|55.333|9.973|0
+Båringvad|DK|55.450|9.905|0
+Båring Mark|DK|55.504|9.893|0
+Båring|DK|55.488|9.909|933
+Bårdesø|DK|55.574|10.397|0
+Barde|DK|56.103|8.702|0
+Bannerup|DK|54.871|11.875|0
+Bankehuse|DK|55.117|11.817|0
+Bangsebro|DK|54.797|11.884|0
+Bangsbostrand|DK|57.419|10.522|0
+Banggårde|DK|55.199|10.061|0
+Bandsbøl|DK|55.860|8.341|0
+Bandholm|DK|54.836|11.483|451
+Balstrup|DK|55.433|11.817|0
+Bålsted|DK|55.103|9.058|0
+Balslev|DK|55.421|9.883|0
+Ballum|DK|55.083|8.667|0
+Balle Strand|DK|55.037|12.136|0
+Ballerup|DK|55.732|12.363|40000
+Ballen|DK|56.017|10.117|0
+Ballen|DK|55.814|10.639|0
+Ballen|DK|55.041|10.478|0
+Balle Kirkeby|DK|56.196|9.523|0
+Balleby|DK|56.547|8.244|0
+Balle By|DK|56.190|9.529|0
+Ballebro|DK|54.999|9.668|0
+Ballebo|DK|55.940|10.015|0
+Balle|DK|56.317|10.810|0
+Balle|DK|56.296|10.259|0
+Balle|DK|55.998|10.114|0
+Balle|DK|55.710|9.376|0
+Balle|DK|55.029|12.112|0
+Balka Strand|DK|55.032|15.109|0
+Balka|DK|55.039|15.106|200
+Bale|DK|56.317|10.377|0
+Baldersbrønde|DK|55.652|12.222|0
+Baldersbæk|DK|55.633|8.917|0
+Bakkerup|DK|55.660|11.541|0
+Bakkendrup|DK|55.564|11.246|0
+Bakkegårde|DK|55.917|11.917|0
+Bakkebølle Fredskov|DK|54.967|12.017|0
+Bakkebølle|DK|54.988|11.990|0
+Bakkebjerg|DK|56.087|12.187|0
+Bajstrup|DK|54.905|9.274|0
+Bajlum|DK|56.692|8.948|0
+Bagterp|DK|57.436|9.998|0
+Bagsværd|DK|55.761|12.453|0
+Bågø By|DK|55.314|9.808|0
+Bagenkop|DK|54.750|10.676|0
+Bådsted|DK|55.233|14.878|0
+Bådsbøl-Ballum|DK|55.076|8.660|0
+Babberup|DK|55.312|12.043|0
+Avnslev|DK|55.355|10.729|0
+Avnbøl|DK|54.959|9.646|0
+Avlum|DK|56.265|8.793|3232
+Avlby|DK|55.503|9.822|0
+Aversi|DK|55.345|11.854|0
+Avernak By|DK|55.032|10.257|0
+Avedøre|DK|55.627|12.456|53443
+Åved|DK|55.187|8.832|0
+Avderød|DK|55.975|12.070|0
+Avderød|DK|55.918|12.437|0
+Avdebo|DK|55.763|11.640|0
+Avbæk|DK|55.051|9.468|0
+Auning|DK|56.431|10.378|3383
+Augustenborg|DK|54.952|9.872|3164
+Attrup|DK|57.046|9.456|0
+Attrup|DK|56.388|10.557|0
+Attrup|DK|56.314|10.743|0
+Atterup|DK|55.803|11.633|0
+Atterup|DK|55.525|11.520|0
+Atterup|DK|55.306|11.248|0
+Atterup|DK|55.287|12.113|0
+Åtte|DK|55.447|8.967|0
+Åsum|DK|55.401|10.464|499
+Åstrupgård|DK|55.259|9.541|0
+Astrup|DK|57.479|10.098|558
+Astrup|DK|56.767|9.982|0
+Åstrup|DK|56.426|10.887|0
+Astrup|DK|56.350|10.617|0
+Astrup|DK|56.282|9.476|0
+Åstrup|DK|56.249|10.319|0
+Astrup|DK|56.035|10.100|0
+Astrup|DK|56.005|8.601|273
+Åstrup|DK|55.947|9.637|0
+Åstrup|DK|55.768|9.973|0
+Åstrup|DK|55.571|8.829|0
+Astrup|DK|55.175|8.717|0
+Åstrup|DK|55.080|10.340|0
+Åstrup|DK|54.849|12.086|0
+Åstorp|DK|55.407|9.498|0
+Åstofte|DK|55.822|11.520|0
+Åstedbro|DK|55.904|9.609|0
+Åsted|DK|57.442|10.408|0
+Åsted|DK|56.770|8.991|0
+Åst|DK|55.742|9.209|0
+Assing|DK|56.011|8.859|0
+Asseregårds Huse|DK|55.157|14.839|0
+Asserbo|DK|56.007|11.987|0
+Asserballeskov|DK|54.968|9.993|0
+Asserballe|DK|54.965|9.955|0
+Assentorp|DK|55.560|11.596|0
+Assentoft|DK|56.442|10.152|3985
+Assens|DK|56.676|10.062|1422
+Assens|DK|55.270|9.901|6050
+Assendrup|DK|55.973|10.014|0
+Assendrup|DK|55.734|9.661|0
+Assendrup|DK|55.505|12.087|0
+Assendløse|DK|55.565|11.996|0
+Assenbølle|DK|55.394|10.095|0
+Assenbølle|DK|54.684|11.489|0
+Assedrup|DK|56.004|10.183|0
+Asperup|DK|55.484|9.908|0
+Åspe|DK|55.048|8.823|0
+Aspa|DK|55.767|11.550|0
+Asp|DK|56.825|9.936|0
+Asp|DK|56.436|8.503|0
+Asp|DK|55.747|8.558|0
+Åsø|DK|55.008|10.825|0
+Asnæs|DK|55.812|11.501|3048
+Asmindrup|DK|55.678|11.188|0
+Asminderød|DK|55.969|12.416|0
+Ås Mark|DK|57.343|10.096|0
+Askov Huse|DK|55.187|11.924|0
+Askov|DK|56.190|8.580|0
+Askov|DK|55.471|9.097|0
+Askø By|DK|54.898|11.492|0
+Askø|DK|54.750|11.300|0
+Asklev|DK|56.092|9.470|0
+Askildrup|DK|56.869|9.984|0
+Askildrup|DK|56.393|10.063|0
+Askeby|DK|55.515|10.216|0
+Askeby|DK|54.924|12.177|0
+Ask|DK|56.031|10.126|0
+Åside|DK|55.173|11.920|0
+Åshøje|DK|55.443|12.132|0
+Asferg|DK|56.547|9.932|0
+Åsebro Huse|DK|55.983|12.017|0
+Åse|DK|55.370|11.695|0
+Asbo|DK|55.553|9.114|0
+Aså|DK|57.149|10.404|0
+Ås|DK|56.899|8.628|0
+Ås|DK|55.918|9.971|0
+Ås|DK|55.299|12.101|0
+Årup|DK|57.085|9.463|0
+Arup|DK|56.996|8.902|0
+Årup|DK|56.893|8.486|0
+Årup|DK|55.373|10.041|3254
+Årslev|DK|56.398|10.150|0
+Årslev|DK|56.152|10.068|0
+Årslev|DK|55.456|11.357|0
+Årslev|DK|55.304|10.464|4427
+Årslev|DK|55.027|9.348|0
+Årsdale|DK|55.107|15.145|264
+Årsballe|DK|55.145|14.870|0
+Aars|DK|56.804|9.514|8474
+Arrild|DK|55.152|8.960|0
+Arresødal|DK|55.976|12.033|0
+Årre|DK|55.572|8.667|0
+Årøsund|DK|55.259|9.709|321
+Årø|DK|55.261|9.738|0
+Arnum|DK|55.247|8.969|0
+Arnøje|DK|55.316|12.291|0
+Arnitlund|DK|55.197|9.331|0
+Arninge|DK|54.789|11.177|0
+Arndrup|DK|55.043|9.093|0
+Arnborg|DK|56.015|8.995|0
+Arnakke|DK|55.670|11.770|0
+Arnagerbro|DK|55.070|14.764|0
+Arnager|DK|55.054|14.779|0
+Arløse Torp|DK|55.266|11.527|0
+Årløse|DK|55.380|11.987|0
+Arløse|DK|55.275|11.554|0
+Århus|DK|56.157|10.211|285273
+Årgab|DK|55.965|8.144|0
+Årestrup|DK|56.820|9.747|0
+Årestrup|DK|56.283|9.250|0
+Arentsminde|DK|57.125|9.625|0
+Arden|DK|56.769|9.862|2516
+Årby|DK|55.647|11.142|0
+Årbjerg|DK|56.749|8.536|0
+Aptrup|DK|56.283|10.817|0
+Aptrup|DK|56.279|9.804|0
+Apperup|DK|56.077|12.529|0
+Appenæs|DK|55.196|11.750|0
+Ånum|DK|55.941|8.545|0
+Antvorskov|DK|55.389|11.369|0
+Ansager|DK|55.703|8.759|0
+Ans|DK|56.307|9.593|1912
+Annisse|DK|55.981|12.174|0
+Annerup|DK|56.906|9.849|0
+Anholt|DK|56.704|11.546|160
+Anholt|DK|55.402|9.376|0
+Andrup|DK|56.804|8.748|0
+Andrup|DK|56.240|10.495|0
+Andrup|DK|55.500|8.537|1471
+Andkær|DK|55.666|9.628|360
+Andi|DK|56.370|10.295|0
+Anderup|DK|55.434|10.391|0
+Anderup|DK|55.354|9.396|0
+Anderstrup|DK|54.787|11.538|0
+Andebølle|DK|55.414|10.118|0
+Andaks|DK|55.690|11.159|0
+Anbæk|DK|56.234|9.859|0
+Amtoft|DK|57.007|8.942|0
+Amstrup|DK|56.376|9.792|0
+Amstrup|DK|55.889|10.122|0
+Ammitsbøl|DK|55.649|9.409|0
+Ammerup|DK|55.353|12.253|0
+Ammendrup|DK|56.010|12.199|0
+Ammendrup|DK|55.090|12.028|0
+Ammelhede|DK|56.435|10.217|0
+Ambæk|DK|55.111|12.105|0
+Ålum|DK|56.453|9.833|0
+Ålstrup|DK|57.284|10.022|0
+Alstrup|DK|57.276|9.754|0
+Alstrup|DK|56.700|9.261|0
+Alstrup|DK|56.645|10.008|0
+Alstrup|DK|56.390|8.563|0
+Ålstrup|DK|55.900|10.118|0
+Alstrup|DK|55.877|10.626|0
+Alstrup|DK|54.892|11.772|0
+Alsted-Flinterup|DK|55.423|11.681|0
+Alsted|DK|56.849|8.822|0
+Alsted|DK|55.405|11.667|0
+Ålsrode|DK|56.347|10.863|0
+Alsønderup|DK|55.970|12.229|0
+Ålsø|DK|56.372|10.848|0
+Alsø|DK|54.712|11.560|0
+Alslev Kro|DK|55.039|9.027|0
+Alslev|DK|55.588|8.417|0
+Alslev|DK|55.291|12.205|0
+Alslev|DK|55.033|9.044|0
+Alslev|DK|55.014|9.292|0
+Als Hede|DK|56.770|10.251|0
+Ålsgårde|DK|56.076|12.540|5765
+Ålsbo|DK|55.413|10.005|0
+Alsbjerg|DK|57.051|9.446|0
+Als|DK|56.755|10.291|0
+Alrø By|DK|55.857|10.063|0
+Åløkke|DK|55.336|10.715|0
+Alnor|DK|54.910|9.589|0
+Almtoft|DK|56.280|9.436|0
+Almstrup|DK|54.949|9.302|0
+Almstofte|DK|55.371|11.822|0
+Almsted|DK|54.974|9.942|0
+Almind Hede|DK|55.556|9.467|0
+Alminde|DK|54.757|11.259|0
+Almind|DK|56.375|9.393|0
+Almind|DK|55.565|9.487|0
+Alme|DK|56.085|12.264|0
+Allinge|DK|55.276|14.802|1446
+Allingdam|DK|57.549|10.028|0
+Allingåbro|DK|56.464|10.320|1842
+Alling|DK|56.113|9.732|0
+Ålling|DK|55.733|8.748|0
+Allindemagle|DK|55.506|11.723|0
+Allindelille|DK|55.521|11.762|0
+Allestrup|DK|56.476|10.387|0
+Allested|DK|55.266|10.340|0
+Alleshave|DK|55.717|11.250|0
+Allese|DK|55.453|10.314|256
+Allerup Torup|DK|55.342|10.490|0
+Allerup|DK|57.230|10.195|0
+Allerup|DK|55.713|11.670|0
+Allerup|DK|55.449|8.616|0
+Allerup|DK|55.340|10.468|0
+Allerup|DK|55.235|10.232|0
+Allerup|DK|55.190|9.012|0
+Allerslev|DK|55.599|11.965|0
+Allerslev|DK|55.082|12.036|0
+Allerød|DK|55.870|12.357|25867
+Aller|DK|55.358|9.531|0
+Allelev|DK|56.386|10.758|0
+Alle|DK|56.130|8.739|0
+Alkærsig|DK|55.980|8.490|0
+Ålkær|DK|55.260|9.120|0
+Alken|DK|56.053|9.847|230
+Alholm|DK|54.665|11.723|9848
+Algestrup|DK|55.638|11.720|0
+Algestrup|DK|55.377|12.078|876
+Algestrup|DK|54.865|11.991|0
+Ålestrup|DK|56.695|9.493|2755
+Ålerne|DK|56.169|10.663|0
+Ålebæk|DK|57.012|10.261|0
+Ålebæk|DK|54.997|12.459|0
+Åle|DK|56.884|9.221|0
+Åle|DK|55.887|9.562|0
+Alderslyst|DK|56.182|9.556|0
+Aalborg|DK|57.048|9.919|142937
+Albøge|DK|56.361|10.703|0
+Albæk Hede|DK|55.994|8.784|0
+Ålbæk|DK|57.593|10.405|1379
+Albæk|DK|57.234|10.420|0
+Ålbæk|DK|56.615|8.736|0
+Albæk|DK|56.483|10.160|0
+Ålbæk|DK|55.487|8.642|1419
+Albjerg|DK|55.129|10.718|0
+Albertslund|DK|55.657|12.364|30000
+Akselholm|DK|55.643|11.401|0
+Åkær|DK|56.467|9.000|0
+Akkerup|DK|55.232|10.146|0
+Åkirkeby|DK|55.071|14.920|2109
+Ajstrup Strand|DK|56.036|10.268|0
+Ajstrup|DK|57.177|9.988|0
+Ajstrup|DK|56.686|10.163|0
+Ajstrup|DK|56.037|10.240|0
+Aidt|DK|56.317|9.800|0
+Å-Højrup|DK|55.497|9.974|0
+Agtrupskov|DK|55.483|9.567|0
+Agtrup|DK|55.467|9.567|0
+Agri|DK|56.232|10.524|0
+Aggestrup|DK|55.917|10.002|0
+Aggersund|DK|57.004|9.289|290
+Aggersborg|DK|57.000|9.267|0
+Agger|DK|56.781|8.236|0
+Ågerup|DK|56.029|12.154|0
+Ågerup|DK|55.739|10.993|0
+Ågerup|DK|55.721|12.331|0
+Ågerup|DK|55.695|12.158|0
+Ågerup|DK|55.662|11.758|0
+Ågerup|DK|55.489|11.906|0
+Agerup|DK|55.250|11.593|0
+Agersted|DK|57.200|10.381|0
+Agersø By|DK|55.212|11.190|0
+Agersnap|DK|55.800|8.683|0
+Agerskov Hede|DK|56.250|9.200|0
+Agerskov|DK|55.129|9.136|0
+Agersbæk|DK|56.150|8.267|0
+Agerø|DK|56.712|8.575|0
+Agernæs|DK|55.590|10.340|0
+Agerkrog|DK|55.722|8.596|0
+Agerfeld|DK|56.250|8.617|0
+Agerbæk|DK|55.600|8.800|0
+Agedrup|DK|55.432|10.489|0
+Ågeby|DK|54.759|11.295|0
+Agdrup Kær|DK|57.109|9.982|0
+Ågård|DK|55.583|9.433|0
+Ærøskøbing|DK|54.888|10.411|935
+Æbelnæs|DK|54.953|12.218|0
+Ådum|DK|55.875|8.594|0
+Adslev|DK|56.100|9.998|0
+Adsbøl|DK|54.939|9.620|0
+Åderup|DK|55.220|11.740|0
+Adelvad|DK|54.977|8.983|0
+Addit|DK|56.041|9.614|0
+Ådal|DK|55.817|9.467|0
+Ådal|DK|55.500|8.383|0
+Åbyskov|DK|55.069|10.735|0
+Åbyen|DK|57.562|10.031|0
+Åbybro|DK|57.162|9.730|6318
+Åby|DK|57.167|9.750|0
+Åby|DK|56.147|10.162|0
+Abterp|DK|55.083|8.783|0
+Aborg|DK|55.295|9.926|0
+Åbøl|DK|55.233|9.133|0
+Åbo|DK|56.124|10.042|0
+Abkær|DK|55.169|9.321|0
+Åbjerg|DK|55.493|9.999|0
+Abildskov|DK|56.150|9.433|0
+Abildskov|DK|55.247|10.176|0
+Abildøre|DK|55.832|11.682|0
+Abildholt|DK|56.367|8.900|0
+Abildå|DK|56.167|8.617|0
+Abild|DK|54.980|8.863|0
+Aabenraa|DK|55.044|9.417|16401
+Abed|DK|54.835|11.328|0
+Abbetved|DK|55.630|11.914|0
+Aa|DK|55.216|9.979|0
+Lappegrund|DK|56.067|12.600|0
+Mullerup|DK|55.492|11.200|0
+Stigsnæs|DK|55.200|11.267|0
+Øster Kippinge|DK|54.900|11.800|0
+Lågmade|DK|54.901|9.616|0
+Tirsbæk|DK|55.714|9.636|0
+Eskedal|DK|55.033|9.533|0
+Dyrbæk|DK|55.017|9.567|0
+Lillemark|DK|55.021|9.605|0
+Ornum|DK|55.033|9.583|0
+Peterbæk|DK|55.036|9.592|0
+Marielund|DK|55.050|9.517|0
+Spramhuse|DK|55.067|9.537|0
+Dalholt|DK|55.098|9.512|0
+Brøde|DK|55.105|9.518|0
+Bøjden|DK|55.100|10.100|0
+Skovkrogen|DK|55.179|10.055|0
+Filshuse|DK|55.333|9.912|0
+Keldet|DK|55.306|9.585|0
+Overby|DK|55.400|9.600|0
+Grønninghoved Strand|DK|55.417|9.600|0
+Vesterballe|DK|55.548|10.451|0
+Vollerup Overdrev|DK|55.733|11.079|0
+Øerne|DK|56.155|10.694|0
+Ahl|DK|56.174|10.649|0
+Hjørnet|DK|56.926|10.258|0
+Somerlyst|DK|56.994|10.226|0
+Langesminde|DK|56.989|10.256|0
+Bødkergård|DK|57.003|10.195|0
+Skelby|DK|56.989|10.182|0
+Sundby|DK|54.767|11.850|3236
+Dalsgård|DK|54.883|9.567|0
+Overby|DK|54.897|9.557|0
+Nederby|DK|54.898|9.566|0
+Naldmadebro|DK|54.914|9.577|0
+Toft|DK|54.911|9.599|0
+Skovgade|DK|54.907|9.622|0
+Kragemade|DK|54.902|9.646|0
+Rendbjerg|DK|54.897|9.624|0
+Kollund Østerskov|DK|54.846|9.473|0
+Smølled|DK|54.912|9.679|0
+Balka|DK|55.041|15.104|0
+Bork Havn|DK|55.848|8.285|0
+Rødhus Klit|DK|57.203|9.511|0
+Vittrup|DK|57.395|9.781|0
+Langkærparken|DK|56.189|10.104|0
+Vestervang|DK|56.163|10.195|0
+Svinemose|DK|55.108|14.948|0
+Mundelstrup Stationsby|DK|56.191|10.091|0
+Østerågård|DK|56.117|10.208|0
+Samsø|DK|55.880|10.608|0
+Skydebane|DK|56.731|10.094|0
+Huntinge  lodge|DK|56.726|10.088|0
+Den hvide hest|DK|56.742|10.148|0
+Visborg Forsamlingshus|DK|56.742|10.147|0
+Hedens Forsamlingshus|DK|56.770|10.260|0
+Christiansø|DK|55.320|15.187|90
+Skarrev|DK|55.049|9.501|0
+Skaven Strand|DK|55.887|8.358|0
+Paris|DK|56.514|8.490|0
+Vallensbæk Strand|DK|55.614|12.390|0
+Spøttrup|DK|56.638|8.786|0
+Skiveren|DK|57.618|10.279|0
+Dueodde|DK|54.997|15.077|0
+Vejret i Esrum|DK|56.053|12.377|0
+Cortex Park|DK|55.374|10.431|500
+Bøgeskov|DK|55.619|9.757|315
+Sottrup Sogn|DK|54.983|9.692|0
+Stepping Sogn|DK|55.356|9.360|0
+Vilstrup Sogn|DK|55.200|9.516|0
+Sporup|DK|56.226|9.826|0
+Virksund|DK|56.609|9.288|0
+Rømø Lakolk|DK|55.147|8.494|0
+Landsbyklyngen NordVestLolland|DK|54.933|11.212|0
+Landsbyklyngen Nordvest Lolland|DK|54.927|11.181|0
+Sønder Vedby Skovhuse|DK|54.761|11.913|0
+Skagen port|DK|57.718|10.594|0
+Mikkelborg|DK|55.911|12.522|0
+Blæsinge|DK|55.464|11.311|0
+Jukkerup|DK|55.622|11.634|0
+Ellinge Lyng|DK|55.882|11.546|0
+Overby Lyng|DK|55.955|11.439|0
+Snavhuse|DK|55.766|11.423|0
+Snuderup|DK|55.683|11.360|0
+Ubby Dysselod|DK|55.630|11.183|0
+Uglerup Huse|DK|55.751|11.688|0
+Suserup|DK|55.385|11.563|0
+Neble|DK|55.307|11.264|0
+Fornetofte|DK|55.224|11.272|0
+Snedinge|DK|55.224|11.426|0
+Storemark|DK|55.292|12.352|0
+Lindet|DK|55.196|8.968|0
+Uge Mark|DK|54.982|9.344|0
+Skakkenborg|DK|54.961|9.918|0
+Padholm|DK|54.983|9.962|0
+Hestehave|DK|54.946|9.777|0
+Ormstoft|DK|54.937|9.804|0
+Vallensbæk Landsby|DK|55.636|12.364|446
+Krunderup|DK|56.396|8.546|0
+Gammel Virum|DK|55.790|12.470|15000
+Hjortkjær|DK|55.544|8.702|0

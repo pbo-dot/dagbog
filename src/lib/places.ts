@@ -61,20 +61,20 @@ export function parsePayload(text: string): Payload {
   return { log, photos, thumbs, next, size, other };
 }
 
-interface City { name: string; cc: string; lat: number; lng: number }
+interface City { name: string; cc: string; lat: number; lng: number; pop: number }
 
 let cities: Promise<Map<string, City[]>> | null = null;
 const cell = (lat: number, lng: number) => `${Math.floor(lat)}:${Math.floor(lng)}`;
 
 /** Bylisten, fordelt i felter på 1×1 grad, så kun nabofelterne skal gennemsøges. */
 function loadCities(): Promise<Map<string, City[]>> {
-  cities ??= fetch(`${import.meta.env.BASE_URL}byer.txt`).then(async (r) => {
+  cities ??= fetch(`${import.meta.env?.BASE_URL ?? "/"}byer.txt`).then(async (r) => {
     if (!r.ok) throw new Error(`Bylisten kunne ikke hentes (${r.status}).`);
     const grid = new Map<string, City[]>();
     for (const line of (await r.text()).split('\n')) {
       if (!line || line.startsWith('#')) continue;
-      const [name, cc, lat, lng] = line.split('|');
-      const c = { name, cc, lat: Number(lat), lng: Number(lng) };
+      const [name, cc, lat, lng, pop] = line.split('|');
+      const c = { name, cc, lat: Number(lat), lng: Number(lng), pop: Number(pop) || 0 };
       const k = cell(c.lat, c.lng);
       const list = grid.get(k);
       if (list) list.push(c); else grid.set(k, [c]);
@@ -84,23 +84,36 @@ function loadCities(): Promise<Map<string, City[]>> {
   return cities;
 }
 
-/** Nærmeste by (højst ca. 2 grader væk), ellers null (fx på havet). */
+/** Byer under så mange indbyggere er "små" (landsbyer); de vælges kun, når man er tæt på dem. */
+const SMALL_POP = 1000;
+/** En lille by vælges, når den er højst så mange km væk (og nærmere end den store). */
+const SMALL_KM = 3;
+
+/**
+ * Nærmeste by (højst ca. 2 grader væk), ellers null (fx på havet). En stor by regnes at dække en
+ * radius efter indbyggertal (5.000 → 1,4 km, 1 mio. → 10 km); er man uden for den, og ligger en
+ * landsby nærmere og inden for SMALL_KM, får stedet landsbyens navn (fx Sønderho, ikke Nordby).
+ */
 function nearest(grid: Map<string, City[]>, lat: number, lng: number): City | null {
-  let best: City | null = null;
-  let bestD = Infinity;
+  let big: City | null = null, small: City | null = null;
+  let bigD = Infinity, smallD = Infinity;
   const k = Math.cos((lat * Math.PI) / 180);
-  for (let r = 0; r <= 2 && !best; r++) {
+  for (let r = 0; r <= 2 && (r <= 1 || !big); r++) {
     for (let a = -r; a <= r; a++) {
       for (let b = -r; b <= r; b++) {
         if (Math.max(Math.abs(a), Math.abs(b)) !== r) continue;
         for (const c of grid.get(cell(lat + a, lng + b)) ?? []) {
-          const d = (c.lat - lat) ** 2 + ((c.lng - lng) * k) ** 2;
-          if (d < bestD) { bestD = d; best = c; }
+          const d = Math.hypot(c.lat - lat, (c.lng - lng) * k) * 111.2;
+          if (c.pop < SMALL_POP) { if (d < smallD) { smallD = d; small = c; } }
+          else if (d < bigD) { bigD = d; big = c; }
         }
       }
     }
   }
-  return best;
+  if (!big) return small;
+  const radius = Math.min(10, 0.02 * Math.sqrt(big.pop));
+  if (bigD > radius && small && smallD <= SMALL_KM && smallD < bigD) return small;
+  return big;
 }
 
 type Placed = { lat?: number; lng?: number; city?: string; cc?: string };

@@ -3,7 +3,7 @@ import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
 import { hasSharedText, takeSharedDoc, takeSharedImages, takeSharedLink, takeSharedPlaces } from './lib/conversation';
-import { importPlaces } from './lib/placesImport';
+import { CITIES_V, importPlaces, relabelPlaces } from './lib/placesImport';
 import { noteFromFile } from './lib/docNote';
 import { compressImage } from './lib/photos';
 import { useGoogleAutoSync } from './lib/googleSync';
@@ -129,6 +129,19 @@ function useAutoGenerate() {
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
+/** Ny byliste: giv gemte steder deres navn igen én gang, lidt efter oplåsning (se relabelPlaces). */
+function useRelabelPlaces() {
+  const store = useStore();
+  const ref = useRef(store);
+  ref.current = store;
+  const need = (store.data.settings.places?.citiesV ?? 1) < CITIES_V && !!store.data.settings.places;
+  useEffect(() => {
+    if (!need) return;
+    const t = setTimeout(() => void relabelPlaces(ref.current), 5000);
+    return () => clearTimeout(t);
+  }, [need]);
+}
+
 function Unlocked() {
   const route = useRoute();
   const { data } = useStore();
@@ -138,6 +151,7 @@ function Unlocked() {
   useGoogleAutoSync();
   useAutoBackup();
   useSpendLog();
+  useRelabelPlaces();
 
   // Et delt link bliver til en note; anden tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
   const store = useStore();

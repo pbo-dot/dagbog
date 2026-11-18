@@ -194,3 +194,56 @@ export async function importFiles(store: Store, files: File[]): Promise<void> {
   }
   say('Færdig med alle filer.')
 }
+
+/**
+ * Udgaven af bylisten (public/byer.txt). 2 (18. nov.): alle danske byer og landsbyer fra GeoNames' DK.txt,
+ * så fx Sønderho ikke hedder Nordby. Når den skifter, får alle gemte steder deres navn igen én gang.
+ */
+export const CITIES_V = 2;
+let relabeling = false;
+
+/** Giver alle gemte ophold og billeder deres navn efter den nyeste byliste (én gang pr. udgave). */
+export async function relabelPlaces(store: Store): Promise<void> {
+  const data = store.data;
+  const places = data.settings.places;
+  if (relabeling || !places || (places.citiesV ?? 1) >= CITIES_V) return;
+  const hasAny = Object.keys(data.visits).length + Object.keys(data.phonePhotos).length > 0;
+  relabeling = true;
+  try {
+    const visits = Object.fromEntries(Object.entries(data.visits).map(([k, m]) => [k, { ...m, visits: m.visits.map((v) => ({ ...v })) }]));
+    const photos = Object.fromEntries(Object.entries(data.phonePhotos).map(([k, m]) => [k, { ...m, photos: m.photos.map((p) => ({ ...p })) }]));
+    const all = [...Object.values(visits).flatMap((m) => m.visits), ...Object.values(photos).flatMap((m) => m.photos)];
+    const before = all.map((p) => p.city);
+    if (hasAny) await addCities(all);
+    // Nye navne for et sted, der var "Ikke en rejse" eller hørte til et fast sted, følger med
+    const renamed = new Map<string, Set<string>>();
+    let changed = 0;
+    all.forEach((p, i) => {
+      const old = before[i];
+      if (!old || !p.city || old === p.city) return;
+      changed++;
+      if (!renamed.has(old)) renamed.set(old, new Set());
+      renamed.get(old)!.add(p.city);
+    });
+    const grow = (list: string[] | undefined) => {
+      if (!list?.length) return list;
+      const out = new Set(list);
+      for (const c of list) for (const n of renamed.get(c) ?? []) out.add(n);
+      return [...out];
+    };
+    if (changed) {
+      await store.putMany('visits', visits);
+      await store.putMany('phonePhotos', photos);
+    }
+    const cur = store.data.settings.places ?? places;
+    await store.saveSettings({
+      ...store.data.settings,
+      places: { ...cur, citiesV: CITIES_V, notTrip: grow(cur.notTrip), fixed: cur.fixed.map((f) => (f.also ? { ...f, also: grow(f.also) } : f)) },
+    });
+    if (changed) void noteAuto(`Stednavne: ${changed} steder fik et mere præcist navn (ny byliste)`);
+  } catch (e) {
+    void noteAuto(`Stednavne: kunne ikke opdateres (${e instanceof Error ? e.message : String(e)})`);
+  } finally {
+    relabeling = false;
+  }
+}
