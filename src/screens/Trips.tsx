@@ -5,6 +5,7 @@ import { addDays, addMonths, formatLong, today } from '../lib/dates';
 import { countryName, dayDescs, dayStays, dayThumbs, FIXED_KM, fixedStays, stayTime, trips, tripWhy } from '../lib/places';
 import { PlacesMap, stayPoints } from './PlacesMap';
 import { PhonePhotos } from './PhonePhotos';
+import { DayStoryCard } from './DayStory';
 import { daysWithoutStory, stopTelling, storyEstimate, tellAll, useStoryState } from '../lib/dayStory';
 import { aiReady } from '../lib/generate';
 import { useStore } from '../lib/store';
@@ -157,7 +158,7 @@ export function TripScreen({ id }: { id: string }) {
             {entry ? (
               <p className="serif trip-day-text">{entry.text.length > 220 ? `${entry.text.slice(0, 220).trimEnd()} …` : entry.text} <span className="tiny muted">· din tekst</span></p>
             ) : data.stories[d]?.text ? (
-              <p className="serif trip-day-text">{data.stories[d].text}</p>
+              <DayStoryCard date={d} />
             ) : descs.length > 0 ? (
               <p className="serif trip-day-text">{descs.slice(0, 3).map((x) => x.text.replace(/\.?$/, '.')).join(' ')}</p>
             ) : null}

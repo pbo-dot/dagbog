@@ -833,3 +833,6 @@ label.btn { cursor: pointer; }
 .why-card { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; }
 .why-row { display: flex; flex-direction: column; gap: 2px; }
 .why-row strong { font-size: 1.02rem; }
+/* Dagens historie inde i en dag på en rejse: lidt mindre, så den passer i kortet */
+.trip-day .story-card { padding: 12px 14px; border-radius: 18px; }
+.trip-day .story-text { font-size: 1rem; }
