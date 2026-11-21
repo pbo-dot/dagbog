@@ -369,7 +369,8 @@ export interface Draft {
   photos?: string[];
 }
 
-export const MAX_PHOTOS = 3;
+/** Egne billeder pr. dag på Skriv (før 21. nov. 3, så forsvandt knapperne). */
+export const MAX_PHOTOS = 50;
 
 export interface Photo {
   id: string;

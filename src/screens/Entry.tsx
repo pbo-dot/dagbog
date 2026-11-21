@@ -616,7 +616,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
           ))}
         </div>
       )}
-      {viewing && <PhotoViewer id={viewing} onClose={() => setViewing(null)} />}
+      {viewing && <PhotoViewer id={viewing} ids={photos} onClose={() => setViewing(null)} />}
       {photoError && <p className="tiny error">{photoError}</p>}
       <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
       <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => addPhotos(e.target.files)} />
