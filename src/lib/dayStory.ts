@@ -80,10 +80,16 @@ async function shrink(base64: string): Promise<string> {
   return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
 }
 
+/** Højst 5 af dagens billeder (der kan være op til 15), spredt fra morgen til aften. */
+function spreadFive<T>(list: T[]): T[] {
+  if (list.length <= 5) return list;
+  return [0, 1, 2, 3, 4].map((i) => list[Math.round((i * (list.length - 1)) / 4)]);
+}
+
 /** Skriver historien for én dag (henter billederne, spørger Claude) og giver den nye post. */
 async function makeStory(store: Store, date: string, withIds?: string[], notMe?: boolean): Promise<DayStory | null> {
   const data = store.data;
-  const thumbs = dayThumbs(data.phonePhotos, date).slice(0, 5);
+  const thumbs = spreadFive(dayThumbs(data.phonePhotos, date));
   if (!thumbs.length) return null;
   const images: Array<{ data: string; label: string }> = [];
   for (const [i, id] of thumbs.entries()) {

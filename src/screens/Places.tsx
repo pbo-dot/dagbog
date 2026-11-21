@@ -51,7 +51,7 @@ export function PlacesScreen() {
 
       <section className="card stack-sm" style={{ background: 'var(--accent-soft)', boxShadow: 'none' }}>
         <strong>{photos.length ? 'Hent nye billeder' : 'Hent dine billeder'}</strong>
-        {!photos.length && <span className="small">Åbner hjælpe-appen "Dagbog Billeder", som sender dato, sted og op til 5 billeder pr. dag hertil.</span>}
+        {!photos.length && <span className="small">Åbner hjælpe-appen "Dagbog Billeder", som sender dato, sted og op til 5 billeder pr. dag (15 på dage med mange billeder) hertil.</span>}
         {last > 0 && <span className="small muted">Sidst hentet {new Date(last).toLocaleString('da-DK', { dateStyle: 'medium', timeStyle: 'short' })}</span>}
         <button className="btn primary block" disabled={imp.busy} onClick={() => { location.href = openAppUrl(data.settings.places?.thumbFrom); }}>
           {imp.busy ? 'Indlæser …' : 'Hent billeder'}

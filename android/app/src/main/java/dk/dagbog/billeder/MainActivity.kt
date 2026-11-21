@@ -465,20 +465,8 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun pick(list: List<Pic>): List<Pic> {
-        val sorted = list.sortedBy { it.taken }
-        if (sorted.size <= 5) return sorted
-        val first = sorted.first().taken
-        val span = sorted.last().taken - first
-        val chosen = ArrayList<Pic>()
-        for (i in 0 until 5) {
-            val target = first + span * (2 * i + 1) / 10
-            val near = sorted.filter { p -> p !in chosen && chosen.none { kotlin.math.abs(it.taken - p.taken) < 120_000 } }
-            val best = near.minByOrNull { kotlin.math.abs(it.taken - target) } ?: continue
-            chosen.add(best)
-        }
-        return chosen.sortedBy { it.taken }
-    }
+    /** Op til 5 billeder pr. dag, på dage med mange billeder op til 15 (PickRule.kt). */
+    private fun pick(list: List<Pic>): List<Pic> = spreadOverDay(list) { it.taken }
 
     private fun small(uri: android.net.Uri): String {
         val bmp = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri)) { dec, info, _ ->

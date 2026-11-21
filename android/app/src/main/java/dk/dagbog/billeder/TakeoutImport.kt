@@ -29,7 +29,7 @@ import java.util.zip.ZipInputStream
  * Henter billeder fra en Google Takeout af Google Fotos (alle zip-filer på én gang, fordi Google lægger
  * billederne og deres json-filer i forskellige zip-filer). Læser hver fil én gang: små billeder (1080 px)
  * laves undervejs og lægges i appens mellemlager; til sidst findes datoen (Googles json → billedets EXIF →
- * filnavnet), op til 5 pr. dag vælges, og det hele skrives i filer á 120 billeder i Download/Dagbog-Takeout,
+ * filnavnet), op til 5 pr. dag (15 på dage med mange billeder, PickRule.kt) vælges, og det hele skrives i filer á 120 billeder i Download/Dagbog-Takeout,
  * som vælges i Dagbog under "Billeder fra en gammel telefon". Skærmbilleder og videoer springes over.
  */
 class TakeoutImport(
@@ -292,7 +292,7 @@ class TakeoutImport(
         done.sortBy { it.t }
         say("Fra ${day.format(Date(done.first().t))} til ${day.format(Date(done.last().t))}")
 
-        // Op til 5 pr. dag, fordelt over dagen (samme regel som for telefonens billeder)
+        // Op til 5 pr. dag (15 på dage med mange billeder), fordelt over dagen (samme regel som for telefonens billeder)
         val chosen = done.groupBy { day.format(Date(it.t)) }.toSortedMap().values.flatMap { pick(it) }
         say("Dage: ${done.groupBy { day.format(Date(it.t)) }.size} · små billeder valgt: ${chosen.size}")
 
@@ -329,19 +329,7 @@ class TakeoutImport(
         return names
     }
 
-    private fun pick(list: List<Done>): List<Done> {
-        if (list.size <= 5) return list
-        val first = list.first().t
-        val span = list.last().t - first
-        val chosen = ArrayList<Done>()
-        for (i in 0 until 5) {
-            val target = first + span * (2 * i + 1) / 10
-            val best = list.filter { p -> p !in chosen && chosen.none { kotlin.math.abs(it.t - p.t) < 120_000 } }
-                .minByOrNull { kotlin.math.abs(it.t - target) } ?: continue
-            chosen.add(best)
-        }
-        return chosen.sortedBy { it.t }
-    }
+    private fun pick(list: List<Done>): List<Done> = spreadOverDay(list) { it.t }
 
     private fun mb(b: Long) = if (b < 0) "? MB" else String.format(Locale.ROOT, "%.0f MB", b / 1_048_576.0)
 
