@@ -135,6 +135,39 @@ export interface PhonePhoto {
   hidden?: boolean; // fjernet fra Dagbog af ejeren (vises ikke og hentes ikke igen; kan lægges tilbage)
 }
 
+/** Ét kort i et emne ("Lær noget nyt"), lavet af Claude. */
+export interface CourseCard {
+  title: string;
+  text: string; // 2–5 korte sætninger
+  question: string; // til "Kan du huske?"
+  answer: string;
+  seenAt?: number; // læst
+  review?: { due: string; step: number }; // næste "Kan du huske?" (YYYY-MM-DD) og hvor mange gange husket i træk
+}
+
+/** Et emne, man lærer kort for kort (samling `courses`). */
+export interface Course {
+  id: string;
+  topic: string; // som personen skrev det, fx "Hvordan virker aktiemarkedet?"
+  title: string; // Claudes korte titel, fx "Aktiemarkedet"
+  cards: CourseCard[];
+  pos: number; // næste kort at læse (0 = første)
+  createdAt: number;
+  doneAt?: number;
+}
+
+/** En gemt idé (samling `ideas`): et kort fra et emne, et citat eller noget delt fra en anden app. */
+export interface Idea {
+  id: string;
+  title: string;
+  text: string;
+  source: string; // fx "Romerriget · kort 3" eller "Delt fra Chrome"
+  url?: string;
+  courseId?: string;
+  card?: number;
+  createdAt: number;
+}
+
 /** Claudes korte historie om en dag med billeder (nøgle YYYY-MM-DD). */
 export interface DayStory {
   date: string;

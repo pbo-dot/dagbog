@@ -110,6 +110,12 @@ export function hasSharedText(): boolean {
   return shared !== null || sharedAudio;
 }
 
+/** Delt tekst (ikke lyd), uden at tage den: til valget "Gem som idé / note / samtale". */
+export const peekSharedText = (): string | null => shared;
+
+/** Lægger tekst klar til en ny samtale (fx et delt link, man vælger at lave til en samtale). */
+export function setSharedText(t: string) { shared = t; }
+
 export interface SharedAudio {
   blob: Blob;
   name: string;

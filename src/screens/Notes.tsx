@@ -6,6 +6,7 @@ import { DOC_ACCEPT, noteFromFile } from '../lib/docNote';
 import { compressImage } from '../lib/photos';
 import { useStore } from '../lib/store';
 import type { Note } from '../lib/types';
+import { NotesTabs } from './Ideas';
 import { DoubleConfirm, go, Header, Icon, PhotoGallery, PhotoImg, uid } from '../ui';
 
 type Store = ReturnType<typeof useStore>;
@@ -135,6 +136,7 @@ export function NotesScreen() {
           <span style={{ width: 22, height: 22, display: 'inline-flex' }}>{Icon.search}</span>
         </button>
       </div>
+      <NotesTabs active="noter" />
       {searching && <input type="search" autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Søg i noter" aria-label="Søg i noter" />}
       <div className="quick-note">
         <button className="grow quick-note-text" onClick={() => go('noter/ny')}>Skriv en note …</button>

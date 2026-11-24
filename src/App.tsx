@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { keepUnlocked, updateAppBadge, waiting } from './lib/device';
 import { generateMonth, generateWeek, pendingGeneration } from './lib/generate';
 import { StoreProvider, useStore } from './lib/store';
-import { hasSharedText, takeSharedDoc, takeSharedImages, takeSharedLink, takeSharedPlaces } from './lib/conversation';
+import { hasSharedText, peekSharedText, setSharedText, takeSharedDoc, takeSharedImages, takeSharedLink, takeSharedPlaces, takeSharedText, type SharedLink } from './lib/conversation';
+import { CourseScreen, IdeasScreen, ReviewScreen, SharedChooser } from './screens/Ideas';
 import { CITIES_V, importPlaces, relabelPlaces } from './lib/placesImport';
 import { noteFromFile } from './lib/docNote';
 import { compressImage } from './lib/photos';
@@ -153,17 +154,25 @@ function Unlocked() {
   useSpendLog();
   useRelabelPlaces();
 
-  // Et delt link bliver til en note; anden tekst delt fra en anden app (fx Pixel Optager) åbner en ny samtale.
+  // Delt tekst eller link fra en anden app: vælg "Gem som idé", "Gem som note" eller "Ny samtale" (skærmen `delt`).
+  // Delt lyd (fx Pixel Optager) åbner straks en ny samtale.
   const store = useStore();
+  const [pending, setPending] = useState<{ link?: SharedLink; text: string } | null>(null);
+  const linkNote = (link: SharedLink) => {
+    const host = (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return 'Link'; } })();
+    const now = Date.now();
+    const note: Note = { id: uid(), title: link.title || host, icon: '🔗', text: link.text, links: [{ url: link.url, title: link.title || host }], createdAt: now, updatedAt: now };
+    store.put('notes', note.id, note).then(() => go(`noter/${note.id}`));
+  };
   useEffect(() => {
     const link = takeSharedLink();
     if (link) {
-      const host = (() => { try { return new URL(link.url).hostname.replace(/^www\./, ''); } catch { return 'Link'; } })();
-      const now = Date.now();
-      const note: Note = { id: uid(), title: link.title || host, icon: '🔗', text: link.text, links: [{ url: link.url, title: link.title || host }], createdAt: now, updatedAt: now };
-      store.put('notes', note.id, note).then(() => go(`noter/${note.id}`));
+      setPending({ link, text: [link.title, link.text, link.url].filter(Boolean).join('\n') });
+      go('delt');
       return;
     }
+    const text = peekSharedText();
+    if (text !== null) { setPending({ text }); go('delt'); return; }
     if (hasSharedText()) { go('samtale/ny'); return; }
     // Delte billeder bliver til en note med billederne (og en evt. tekst)
     takeSharedImages().then(async (shared) => {
@@ -248,6 +257,21 @@ function Unlocked() {
     case 'mennesker': screen = a === 'fra-kalender' ? <BirthdayImportScreen /> : a ? <PersonScreen id={a} /> : <PeopleScreen />; break;
     case 'moenstre': screen = <PatternsScreen />; break;
     case 'spoerg': screen = <AskScreen />; break;
+    case 'ideer': screen = a === 'emne' && b ? <CourseScreen key={`${b}/${route[3] ?? ''}`} id={b} start={route[3] != null ? Number(route[3]) : undefined} /> : a === 'husk' ? <ReviewScreen /> : <IdeasScreen />; break;
+    case 'delt': screen = pending ? (
+      <SharedChooser
+        shared={{ text: pending.text, url: pending.link?.url, from: pending.link ? `Delt · ${(() => { try { return new URL(pending.link!.url).hostname.replace(/^www\./, ''); } catch { return 'link'; } })()}` : 'Delt fra en anden app' }}
+        onNote={() => {
+          const p = pending; setPending(null);
+          if (p.link) { linkNote(p.link); return; }
+          const t = takeSharedText() ?? p.text;
+          const now = Date.now();
+          const note: Note = { id: uid(), title: t.split('\n')[0].slice(0, 60) || 'Delt tekst', icon: '📝', text: t, createdAt: now, updatedAt: now };
+          store.put('notes', note.id, note).then(() => go(`noter/${note.id}`));
+        }}
+        onTalk={() => { const p = pending; setPending(null); if (p.link) setSharedText(p.text); go('samtale/ny'); }}
+      />
+    ) : <EntryScreen />; break;
     case 'kalender': screen = a === 'ny' ? <CalendarScreen startAdding /> : <CalendarScreen month={a} />; break;
     case 'faste': screen = a ? <RoutineScreen key={a} id={a} earlier={b === 'tidligere'} /> : <RoutinesScreen />; break;
     case 'samtale':
@@ -271,6 +295,7 @@ function Unlocked() {
 
   const dots: Record<string, boolean> = { skriv: w.today || w.due > 0, husk: w.week || w.month || inbox.some((i) => i.done) };
   const activeTab = ['faste', 'huskeliste'].includes(tab) ? 'kalender'
+    : tab === 'ideer' ? 'noter'
     : ['samtale', 'spoerg', 'uge', 'mennesker', 'moenstre'].includes(tab) ? 'husk'
     : ['indstillinger', 'kopi', 'forbrug', 'billeder'].includes(tab) ? 'mere'
     : tab === 'tal' || tab === 'overblik' ? 'skriv' : tab;

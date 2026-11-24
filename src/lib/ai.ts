@@ -4,7 +4,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { formatFull, formatLong, formatMonth, formatWeek, weekDays, weekId, addDays } from './dates';
-import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type PhotoMonth, type DayStory, type Routine, type VisitMonth, type Settings, type Todo, type WeekSummary } from './types';
+import { moodLabel, type ChatTurn, type Conversation, type Entry, type MonthChapter, type Person, type Appointment, type GoogleMonth, type Note, type PhotoMonth, type DayStory, type Idea, type Routine, type VisitMonth, type Settings, type Todo, type WeekSummary } from './types';
 import { photoLines, placeLines } from './places';
 import { everyText } from './routines';
 import { googleEvents } from './agenda';
@@ -318,6 +318,93 @@ export async function dayStoryAI(settings: Settings, context: string, images: Ar
   }
 }
 
+// ---------------- Idéer (lær noget nyt) ----------------
+
+const CourseSchema = z.object({
+  titel: z.string().describe('Kort titel på emnet, 1-4 ord, fx "Romerriget" eller "Aktiemarkedet"'),
+  kort: z.array(z.object({
+    titel: z.string().describe('Kortets overskrift, gerne et spørgsmål, højst 8 ord, fx "Hvorfor faldt Rom?"'),
+    tekst: z.string().describe('2-5 korte, enkle sætninger med ét konkret eksempel, tal eller billede'),
+    spoergsmaal: z.string().describe('Ét kort spørgsmål om kortets vigtigste pointe, til at huske det senere'),
+    svar: z.string().describe('Svaret i én kort sætning'),
+  })).describe('10-12 kort i en god rækkefølge: fra det grundlæggende til det overraskende'),
+});
+
+const COURSE_SYSTEM = `Du laver små læsekort på dansk til en voksen, nysgerrig person, der vil lære et nyt emne et par minutter om dagen (som Deepstash, men på dansk og uden fyld).
+- 10-12 kort, der tilsammen giver et godt overblik og lidt dybde. Hvert kort kan læses for sig.
+- Enkelt, levende sprog i du-form, ingen fagord uden forklaring, ingen overskrifter i teksten, ingen emojis, ingen punktlister.
+- Skriv kun det, du er sikker på. Er du i tvivl om et tal eller årstal, så rund af ("omkring år 500") eller lad det være.
+- Penge, helbred og jura: forklar, hvordan tingene virker, men giv ikke personlige råd om at købe, sælge eller behandle.`;
+
+/** Et nyt emne: 10-12 kort med spørgsmål til "Kan du huske?". */
+export async function courseAI(settings: Settings, topic: string): Promise<{ title: string; cards: Array<{ title: string; text: string; question: string; answer: string }> }> {
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.askModel,
+      max_tokens: 8000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(CourseSchema) },
+      system: COURSE_SYSTEM,
+      messages: [{ role: 'user', content: `Emne: ${topic}` }],
+    });
+    track('ideas', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output?.kort.length) throw new AIError('Claude kunne ikke lave kort om det emne. Prøv at skrive det lidt anderledes.');
+    const o = res.parsed_output;
+    return { title: o.titel.trim(), cards: o.kort.map((k) => ({ title: k.titel.trim(), text: k.tekst.trim(), question: k.spoergsmaal.trim(), answer: k.svar.trim() })) };
+  } catch (e) {
+    explain(e);
+  }
+}
+
+const CardSchema = z.object({
+  titel: z.string().describe('Kortets overskrift, højst 8 ord'),
+  tekst: z.string().describe('Kortets tekst'),
+});
+
+/** "Lettere" eller "Mere dybde": skriver ét kort om. */
+export async function rewriteCardAI(settings: Settings, course: string, card: { title: string; text: string }, how: 'lettere' | 'dybde'): Promise<{ title: string; text: string }> {
+  const task = how === 'lettere'
+    ? 'Skriv kortet lettere: kortere sætninger, et hverdagseksempel, ingen fagord. Højst 4 sætninger.'
+    : 'Skriv kortet med mere dybde: én eller to ekstra pointer, et konkret eksempel og gerne et godt tal eller årstal. Højst 7 sætninger.';
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.askModel,
+      max_tokens: 2000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(CardSchema) },
+      system: COURSE_SYSTEM,
+      messages: [{ role: 'user', content: `Emne: ${course}\nKortet: ${card.title}\n${card.text}\n\n${task}` }],
+    });
+    track('ideas', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke skrive kortet om.');
+    return { title: res.parsed_output.titel.trim(), text: res.parsed_output.tekst.trim() };
+  } catch (e) {
+    explain(e);
+  }
+}
+
+/** "Gem som idé": laver delt tekst (fra Chrome, en podcast …) om til et kort på 2-3 linjer. */
+export async function ideaAI(settings: Settings, shared: string): Promise<{ title: string; text: string }> {
+  try {
+    const res = await client(settings).beta.messages.parse({
+      model: settings.ai.searchModel,
+      max_tokens: 1000,
+      output_config: { effort: 'low', format: betaZodOutputFormat(CardSchema) },
+      system: 'Du laver én idé om til et lille kort på dansk: en titel på højst 8 ord og 2-3 korte sætninger med den vigtigste pointe. Er det et citat, så behold citatet ordret i anførselstegn og skriv, hvem der sagde det, hvis det står der. Find ikke på noget. Ingen emojis.',
+      messages: [{ role: 'user', content: shared.slice(0, 8000) }],
+    });
+    track('ideas', res);
+    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke lave et kort af teksten.');
+    return { title: res.parsed_output.titel.trim(), text: res.parsed_output.tekst.trim() };
+  } catch (e) {
+    explain(e);
+  }
+}
+
+/** Til Spørg: de gemte idéer, nyeste først (højst 300). */
+export function ideaLines(ideas: Record<string, Idea> | undefined): string[] {
+  return Object.values(ideas ?? {}).sort((a, b) => b.createdAt - a.createdAt).slice(0, 300)
+    .map((i) => `- ${i.title}: ${i.text.replace(/\s+/g, ' ')} (${i.source})`);
+}
+
 // ---------------- Samtale ----------------
 
 const ConversationSchema = z.object({
@@ -482,6 +569,7 @@ export interface AskData {
   stories?: Record<string, DayStory>;
   phonePhotos?: Record<string, PhotoMonth>;
   visits?: Record<string, VisitMonth>;
+  ideas?: Record<string, Idea>;
 }
 
 /** Egne aftaler og Google-aftaler som linjer, sorteret efter dato. */
@@ -569,6 +657,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
       ['STEDER (fra Tidslinjen og billederne)', placeLines(data.phonePhotos ?? {}, data.visits ?? {}, inside, data.settings?.places?.fixed)],
       ['DAGENES HISTORIER (skrevet af Claude ud fra billeder, steder og kalender)', storyLines(data.stories, data.people, inside)],
       ['NOTER', noteBlocks(data)],
+      ['MINE IDÉER (gemte kort og citater)', ideaLines(data.ideas)],
       ['HUSKELISTE', todoLines(data)],
     ]);
     return {
@@ -588,6 +677,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['DAGENES HISTORIER (skrevet af Claude ud fra billeder, steder og kalender)', storyLines(data.stories, data.people)],
     ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
+    ['MINE IDÉER (gemte kort og citater)', ideaLines(data.ideas)],
     ['HUSKELISTE', todoLines(data)],
   ]);
   if (full.length <= FULL_LIMIT) {
@@ -617,6 +707,7 @@ export function askScope(data: AskData, period: { from: string; to: string; labe
     ['DAGENES HISTORIER (skrevet af Claude ud fra billeder, steder og kalender)', storyLines(data.stories, data.people)],
     ['BILLEDER (beskrevet af Claude)', photoLines(data.phonePhotos ?? {})],
     ['NOTER', noteBlocks(data)],
+    ['MINE IDÉER (gemte kort og citater)', ideaLines(data.ideas)],
     ['HUSKELISTE', todoLines(data)],
   ]);
 

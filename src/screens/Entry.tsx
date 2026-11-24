@@ -17,6 +17,7 @@ import { MAX_PHOTOS, MOODS, type Entry, type MoodId } from '../lib/types';
 import { go, Icon, MoodPicker, PhotoImg, PhotoViewer, Toast, uid } from '../ui';
 import { BackupNudge } from './Backup';
 import { RoutineCards } from './Routines';
+import { DayIdeaCard } from './Ideas';
 import { TodoCard } from './Todos';
 
 /** Klokken nu som "HH:MM". */
@@ -587,6 +588,7 @@ export function EntryScreen({ date: routeDate }: { date?: string }) {
         {isToday && <PhotoNudge />}
         {isToday && <TodayFold />}
         {isToday && <AheadFold />}
+        {isToday && <DayIdeaCard />}
         {isToday && <MeetCards />}
         {data.settings.showQuestion && <p className="question">{existing?.question ?? dayQuestion(data, date, today(), nowHM())}</p>}
         {intention && <p className="small muted">Din intention for ugen: <span className="serif">{intention}</span></p>}

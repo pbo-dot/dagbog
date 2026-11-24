@@ -836,3 +836,37 @@ label.btn { cursor: pointer; }
 /* Dagens historie inde i en dag på en rejse: lidt mindre, så den passer i kortet */
 .trip-day .story-card { padding: 12px 14px; border-radius: 18px; }
 .trip-day .story-text { font-size: 1rem; }
+
+/* Idéer (Noter → Idéer): lær et emne, gemte idéer, Kan du huske? (docs/forslag-ideer.png) */
+.idea-course { display: flex; flex-direction: column; gap: 6px; background: var(--accent-soft); box-shadow: none; }
+.idea-course-title { font-size: 1.3rem; line-height: 1.25; }
+.idea-bar { display: block; height: 8px; border-radius: 99px; background: var(--surface); overflow: hidden; margin-top: 4px; }
+.idea-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.idea-own { background: transparent; border: 1.5px dashed var(--line); color: var(--muted); }
+.idea-item { background: var(--surface); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+.idea-item p { margin: 0; font-size: 1rem; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.idea-item strong { font-size: 1.05rem; }
+.idea-review-row, .idea-done-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; border: 0; font: inherit; color: inherit; cursor: pointer; }
+.idea-review-row { background: var(--clarity-bg); }
+.idea-review-row .grow { display: flex; flex-direction: column; gap: 2px; }
+.idea-done-row { justify-content: space-between; }
+.idea-making { display: flex; align-items: center; gap: 14px; }
+.idea-making > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+.idea-big { background: var(--surface); border-radius: 28px; padding: 22px 20px; min-height: 440px; display: flex; flex-direction: column; gap: 10px; touch-action: pan-y; }
+.idea-big h2 { font-size: 1.6rem; line-height: 1.2; margin: 0; }
+.idea-big p { font-size: 1.1rem; line-height: 1.55; margin: 0; }
+.idea-big .btn .ico, .ico { width: 18px; height: 18px; display: inline-flex; }
+.idea-dots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
+.idea-dots i { width: 8px; height: 8px; border-radius: 9px; background: var(--line); transition: width .2s; }
+.idea-dots i.seen { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.idea-dots i.on { background: var(--accent); width: 22px; }
+.idea-quiz { background: var(--clarity-bg); display: flex; flex-direction: column; gap: 14px; padding: 22px 20px; border-radius: 28px; box-shadow: none; }
+.idea-quiz .overline { color: var(--clarity-ink); }
+.idea-quiz h2 { margin: 0; font-size: 1.45rem; line-height: 1.25; }
+.idea-answer { background: var(--surface); border-radius: 18px; padding: 14px; margin: 0; font-size: 1.05rem; line-height: 1.45; }
+.day-idea { background: var(--accent-soft); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.day-idea strong { font-size: 1.08rem; line-height: 1.35; }
+.share-opt { display: flex; flex-direction: column; gap: 2px; width: 100%; text-align: left; min-height: 64px; justify-content: center; padding: 12px 16px; border-radius: 18px; border: 0; background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
+.share-opt:disabled { opacity: .55; }
+.share-quote { background: var(--surface-2); border-radius: 18px; padding: 14px 16px; margin: 0; white-space: pre-wrap; max-height: 240px; overflow: auto; }
+@media (prefers-reduced-motion: reduce) { .idea-dots i { transition: none; } }
