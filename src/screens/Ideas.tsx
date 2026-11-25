@@ -6,7 +6,7 @@ import { aiReady } from '../lib/generate';
 import { speak, speechOutputAvailable, stopSpeaking } from '../lib/device';
 import {
   activeCourse, allIdeas, answerReview, clearMakeError, dayIdea, dayIdeaHidden, dueReviews, finishedCourses, hideDayIdea,
-  ideaForCard, ideaFromShared, seeCard, setCard, startCourse, SUGGESTIONS, toggleCardIdea, useMakeState,
+  dropCourse, hiddenSuggestions, hideSuggestion, ideaForCard, ideaFromShared, seeCard, setCard, SHOWN_SUGGESTIONS, startCourse, SUGGESTIONS, toggleCardIdea, useMakeState,
 } from '../lib/ideas';
 import { useStore } from '../lib/store';
 import type { Course } from '../lib/types';
@@ -24,6 +24,7 @@ export function NotesTabs({ active }: { active: 'noter' | 'ideer' }) {
 }
 
 function CourseCardBig({ c }: { c: Course }) {
+  const store = useStore();
   const left = c.cards.length - c.pos;
   return (
     <div className="card idea-course">
@@ -34,6 +35,7 @@ function CourseCardBig({ c }: { c: Course }) {
         <span className="small muted">{left} {left === 1 ? 'kort' : 'kort'} tilbage · ca. {Math.max(1, Math.round(left * 0.7))} min</span>
         <button className="btn primary" onClick={() => go(`ideer/emne/${c.id}`)}>{c.pos ? 'Fortsæt' : 'Start'}</button>
       </div>
+      <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => { if (confirm(`Drop ${c.title}? Kort, du har gemt, bliver liggende.`)) void dropCourse(store, c.id); }}>Drop emnet</button>
     </div>
   );
 }
@@ -45,7 +47,12 @@ export function IdeasScreen() {
   const make = useMakeState();
   const [topic, setTopic] = useState('');
   const [writing, setWriting] = useState(false);
+  const [nope, setNope] = useState(hiddenSuggestions);
+  const [page, setPage] = useState(0);
   const canAI = aiReady(data);
+  const pool = SUGGESTIONS.filter((s) => !nope.includes(s) && !Object.values(data.courses).some((c) => c.topic === s));
+  const pages = Math.max(1, Math.ceil(pool.length / SHOWN_SUGGESTIONS));
+  const shown = pool.slice((page % pages) * SHOWN_SUGGESTIONS, (page % pages + 1) * SHOWN_SUGGESTIONS);
   const active = activeCourse(data);
   const due = dueReviews(data);
   const ideas = allIdeas(data);
@@ -92,11 +99,15 @@ export function IdeasScreen() {
         <h3 className="overline">Lær noget nyt</h3>
         {!canAI && <p className="small muted">Kræver din Claude-nøgle under Mere → Indstillinger.</p>}
         <div className="chips">
-          {SUGGESTIONS.filter((s) => !Object.values(data.courses).some((c) => c.topic === s)).slice(0, 6).map((s) => (
-            <button key={s} className="chip" disabled={!canAI || make.busy} onClick={() => start(s)}>{s}</button>
+          {shown.map((s) => (
+            <span key={s} className="chip idea-sugg">
+              <button disabled={!canAI || make.busy} onClick={() => start(s)}>{s}</button>
+              <button className="idea-nope" aria-label={`Fjern forslaget ${s}`} onClick={() => { hideSuggestion(s); setNope(hiddenSuggestions()); }}>×</button>
+            </span>
           ))}
           <button className="chip idea-own" disabled={!canAI || make.busy} onClick={() => setWriting(true)}>+ Skriv selv …</button>
         </div>
+        {pages > 1 && <button className="link small" style={{ alignSelf: 'flex-start' }} onClick={() => setPage(page + 1)}>Andre forslag</button>}
         {writing && (
           <form className="row" style={{ gap: 8 }} onSubmit={(e) => { e.preventDefault(); if (topic.trim()) start(topic); }}>
             <input className="grow" type="text" autoFocus value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="Fx Hvordan virker en elbil?" aria-label="Emne" />
@@ -199,6 +210,7 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
           ? <button className="btn primary" onClick={() => go('ideer')}>Færdig</button>
           : <button className="btn primary" onClick={() => goTo(i + 1)}>Næste ›</button>}
       </div>
+      {!c.doneAt && <button className="link small" style={{ alignSelf: 'center' }} onClick={() => { if (confirm(`Drop ${c.title}? Kort, du har gemt, bliver liggende.`)) { void dropCourse(store, id); go('ideer'); } }}>Drop emnet</button>}
       {last && <p className="small muted center">Godt gået: {c.cards.length} kort om {c.title}. Om et par dage spørger Dagbog, hvad du kan huske.</p>}
     </div>
   );

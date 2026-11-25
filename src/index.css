@@ -870,3 +870,8 @@ label.btn { cursor: pointer; }
 .share-opt:disabled { opacity: .55; }
 .share-quote { background: var(--surface-2); border-radius: 18px; padding: 14px 16px; margin: 0; white-space: pre-wrap; max-height: 240px; overflow: auto; }
 @media (prefers-reduced-motion: reduce) { .idea-dots i { transition: none; } }
+.idea-sugg { display: inline-flex; align-items: center; padding: 0; overflow: hidden; }
+.idea-sugg button { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.idea-sugg > button:first-child { padding: 10px 4px 10px 16px; min-height: 44px; }
+.idea-sugg .idea-nope { width: 36px; min-height: 44px; color: var(--muted); font-size: 1.1rem; }
+.idea-sugg button:disabled { opacity: .55; }

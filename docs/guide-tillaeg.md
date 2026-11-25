@@ -69,3 +69,4 @@ Under **Noter** står nu **Noter | Idéer** øverst.
 - **Kan du huske?** Et par dage efter spørger Dagbog om det, du har læst. Tryk **Vis svar**, og så **Det vidste jeg** eller **Igen snart**. Det, du husker, kommer sjældnere igen.
 - **Dagens idé** står på Skriv: næste kort i dit emne eller en af dine gemte idéer.
 - **Gem som idé fra andre apps:** Del en tekst eller et link fra Chrome eller en podcast-app til Dagbog, og vælg **"Gem som idé"**. Claude laver et kort på 2–3 linjer.
+- **Gider du ikke et emne?** Tryk × på forslaget, så kommer det ikke igen. **"Andre forslag"** viser nye. Er du gået i gang med et emne, du ikke gider, så tryk **"Drop emnet"**. Kort, du har gemt, bliver liggende.

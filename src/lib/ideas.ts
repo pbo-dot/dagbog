@@ -10,7 +10,23 @@ type Store = ReturnType<typeof useStore>;
 type Data = Store['data'];
 
 /** Forslag under "Lær noget nyt". */
-export const SUGGESTIONS = ['Romerriget', 'Antikkens Grækenland', 'Hvordan virker aktiemarkedet?', 'Fodboldtaktik', 'Vin', 'Søvn', 'Universet', 'Vikingerne'];
+export const SUGGESTIONS = [
+  'Romerriget', 'Antikkens Grækenland', 'Hvordan virker aktiemarkedet?', 'Fodboldtaktik', 'Vin', 'Søvn', 'Universet', 'Vikingerne',
+  'Danmarkshistorie på 12 kort', 'Hjernen og hukommelsen', 'Kunstig intelligens', 'Klima og vejr', 'Kaffe', 'Fugle i Danmark',
+  'Renæssancen', 'Psykologi i hverdagen', 'Opfindelser, der ændrede verden', 'Den kolde krig', 'Ernæring', 'Fotografering',
+];
+/** Så mange forslag ad gangen; "Andre forslag" viser de næste. */
+export const SHOWN_SUGGESTIONS = 6;
+
+// Forslag, ejeren har fjernet med × (på denne telefon)
+const NOPE_KEY = 'dagbog-ide-fravalgt';
+export function hiddenSuggestions(): string[] { try { return JSON.parse(localStorage.getItem(NOPE_KEY) ?? '[]') as string[]; } catch { return []; } }
+export function hideSuggestion(s: string) { try { localStorage.setItem(NOPE_KEY, JSON.stringify([...new Set([...hiddenSuggestions(), s])])); } catch { /* ingen lagring */ } }
+
+/** "Drop emnet": emnet og dets "Kan du huske?" forsvinder; gemte idéer fra det bliver liggende. */
+export async function dropCourse(store: Store, id: string): Promise<void> {
+  await store.remove('courses', id);
+}
 
 /** Dage til næste "Kan du huske?", efter hvor mange gange i træk man har husket kortet. */
 const INTERVALS = [2, 7, 21, 60];
