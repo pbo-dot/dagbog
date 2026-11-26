@@ -137,7 +137,6 @@ export function TripScreen({ id }: { id: string }) {
       </div>
       <PlacesMap points={days.flatMap((d) => stayPoints(dayStays(data.phonePhotos, d, data.visits, fixed), stayTime, `${Number(d.slice(8))}/${Number(d.slice(5, 7))} · `))} fixed={fixed} height={260} />
       <TripStoriesButton days={days} />
-      {!trip.fixed && <TripWhyCard from={from} to={to} />}
       <div className="stat-row">
         <div className="card"><b>{ids.length}</b><span className="small muted">billeder</span></div>
         <div className="card"><b>{cities.length}</b><span className="small muted">{cities.length === 1 ? 'by' : 'byer'}</span></div>
@@ -165,6 +164,7 @@ export function TripScreen({ id }: { id: string }) {
           </section>
         );
       })}
+      {!trip.fixed && <TripWhyCard from={from} to={to} />}
       {!trip.fixed && trip.cities.length > 0 && (
         <DoubleConfirm className="btn" label="Ikke en rejse" first={`${trip.cities.join(', ')} tæller aldrig mere som rejse. Fortsæt?`} second="Er du sikker?" yes="Ja, ikke en rejse"
           onConfirm={async () => {
@@ -194,11 +194,16 @@ function TripWhyCard({ from, to }: { from: string; to: string }) {
   const places = data.settings.places;
   const why = useMemo(() => tripWhy(data.phonePhotos, data.visits, places?.fixed ?? NONE, places?.notTrip ?? [], from, to),
     [data.phonePhotos, data.visits, places, from, to]);
+  const [open, setOpen] = useState(false);
   if (!why.length) return null;
   const n = (k: number, one: string, many: string) => (k ? `${k} ${k === 1 ? one : many}` : '');
+  if (!open) return <button className="link small" style={{ alignSelf: 'center' }} onClick={() => setOpen(true)}>Hvorfor en rejse?</button>;
   return (
     <section className="card why-card" aria-label="Hvorfor en rejse?">
-      <span className="overline">Hvorfor en rejse?</span>
+      <div className="row between" style={{ alignItems: 'center' }}>
+        <span className="overline">Hvorfor en rejse?</span>
+        <button className="link small" onClick={() => setOpen(false)}>Skjul</button>
+      </div>
       {why.slice(0, 5).map((w) => (
         <div key={w.city} className="why-row">
           <strong>{w.city}</strong>

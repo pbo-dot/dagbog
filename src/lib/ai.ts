@@ -355,31 +355,50 @@ export async function courseAI(settings: Settings, topic: string): Promise<{ tit
   }
 }
 
+/** "Fortæl mere" på et idékort: en længere forklaring under kortet (almindelig viden, nettet hvis det hjælper). Kortet ændres ikke. */
+export async function moreAI(settings: Settings, course: string, card: { title: string; text: string }, simpler = false): Promise<{ text: string; links: Array<{ url: string; title: string }> }> {
+  // Websøgning kræver Opus eller Sonnet
+  const model = /opus|sonnet|fable/.test(settings.ai.askModel) ? settings.ai.askModel : 'claude-sonnet-5-5';
+  const task = simpler
+    ? 'Forklar kortets pointe helt enkelt, som til en nysgerrig 12-årig: korte sætninger og et hverdagseksempel. Højst 5 sætninger.'
+    : 'Fortæl mere om kortets emne: 2-3 korte afsnit med det mest interessante, et konkret eksempel og gerne et godt tal eller årstal. Brug kun nettet, hvis det giver noget nyt eller er nyere end din viden.';
+  const messages: Anthropic.MessageParam[] = [{ role: 'user', content: `Emne: ${course}\nKortet: ${card.title}\n${card.text}\n\n${task}` }];
+  const links = new Map<string, string>();
+  let text = '';
+  try {
+    for (let round = 0; round < 3; round++) {
+      const res = await client(settings).messages.create({
+        model,
+        max_tokens: 3000,
+        output_config: { effort: 'low' },
+        system: `${COURSE_SYSTEM}\n- Nu skriver du en længere forklaring til ét kort. Ren tekst i afsnit, ingen overskrifter, punktlister eller links i teksten. Start direkte med indholdet.`,
+        tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 2 }],
+        messages,
+      });
+      track('ideas', res);
+      for (const b of res.content) {
+        if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) {
+          for (const r of b.content) if (r.type === 'web_search_result') links.set(r.url, r.title);
+        } else if (b.type === 'text') text += b.text;
+      }
+      if (res.stop_reason !== 'pause_turn') {
+        if (res.stop_reason === 'refusal') throw new AIError('Claude kunne ikke fortælle mere om det.');
+        break;
+      }
+      messages.push({ role: 'assistant', content: res.content });
+    }
+  } catch (e) {
+    explain(e);
+  }
+  text = text.trim();
+  if (!text) throw new AIError('Claude svarede ikke. Prøv igen.');
+  return { text, links: [...links].slice(0, 4).map(([url, title]) => ({ url, title })) };
+}
+
 const CardSchema = z.object({
   titel: z.string().describe('Kortets overskrift, højst 8 ord'),
   tekst: z.string().describe('Kortets tekst'),
 });
-
-/** "Lettere" eller "Mere dybde": skriver ét kort om. */
-export async function rewriteCardAI(settings: Settings, course: string, card: { title: string; text: string }, how: 'lettere' | 'dybde'): Promise<{ title: string; text: string }> {
-  const task = how === 'lettere'
-    ? 'Skriv kortet lettere: kortere sætninger, et hverdagseksempel, ingen fagord. Højst 4 sætninger.'
-    : 'Skriv kortet med mere dybde: én eller to ekstra pointer, et konkret eksempel og gerne et godt tal eller årstal. Højst 7 sætninger.';
-  try {
-    const res = await client(settings).beta.messages.parse({
-      model: settings.ai.askModel,
-      max_tokens: 2000,
-      output_config: { effort: 'low', format: betaZodOutputFormat(CardSchema) },
-      system: COURSE_SYSTEM,
-      messages: [{ role: 'user', content: `Emne: ${course}\nKortet: ${card.title}\n${card.text}\n\n${task}` }],
-    });
-    track('ideas', res);
-    if (res.stop_reason === 'refusal' || !res.parsed_output) throw new AIError('Claude kunne ikke skrive kortet om.');
-    return { title: res.parsed_output.titel.trim(), text: res.parsed_output.tekst.trim() };
-  } catch (e) {
-    explain(e);
-  }
-}
 
 /** "Gem som idé": laver delt tekst (fra Chrome, en podcast …) om til et kort på 2-3 linjer. */
 export async function ideaAI(settings: Settings, shared: string): Promise<{ title: string; text: string }> {

@@ -58,14 +58,14 @@ Er det en uge eller mere siden, du sidst hentede billeder, står der **"Billeder
 
 ## Hvorfor en rejse?
 
-Øverst på en rejse (Husk → Rejser) står **"Hvorfor en rejse?"**: for hver by, hvor langt den er fra dit hjem og fra Sommerhuset, og om Dagbog ved det fra Tidslinjen eller fra billederne. En rejse er over 50 km fra hjemmet og over 8 km fra et fast sted.
+Nederst på en rejse (Husk → Rejser), lige over "Ikke en rejse", står en lille knap **"Hvorfor en rejse?"**. Tryk på den for at se for hver by, hvor langt den er fra dit hjem og fra Sommerhuset, og om Dagbog ved det fra Tidslinjen eller fra billederne. En rejse er over 50 km fra hjemmet og over 8 km fra et fast sted.
 
 Nederst på rejsen kan du vælge **"Ikke en rejse"** (byerne tæller aldrig mere) eller **"Hører til Sommerhuset"** (byerne regnes fremover som Sommerhuset, fx Asnæs).
 
 ## Idéer: lær noget nyt
 
 Under **Noter** står nu **Noter | Idéer** øverst.
-- **Lær noget nyt:** tryk på et emne (fx Romerriget eller "Hvordan virker aktiemarkedet?"), eller **"+ Skriv selv …"**. Claude laver 10–12 korte kort, ca. et halvt minut. Læs dem ét ad gangen: swipe eller **Næste**, **Læs op**, **Gem** de bedste, **Spørg Claude** for mere, og **Lettere** eller **Mere dybde**, hvis kortet ikke passer.
+- **Lær noget nyt:** tryk på et emne (fx Romerriget eller "Hvordan virker aktiemarkedet?"), eller **"+ Skriv selv …"**. Claude laver 10–12 korte kort, ca. et halvt minut. Læs dem ét ad gangen: swipe eller **Næste**, **Læs op**, **Gem** de bedste, og **Fortæl mere**: Claude skriver en længere forklaring under kortet (med nettet, hvis det hjælper), som du kan gemme. Er den for svær, tryk **Forklar enklere**. Selve kortet ændres aldrig.
 - **Kan du huske?** Et par dage efter spørger Dagbog om det, du har læst. Tryk **Vis svar**, og så **Det vidste jeg** eller **Igen snart**. Det, du husker, kommer sjældnere igen.
 - **Dagens idé** står på Skriv: næste kort i dit emne eller en af dine gemte idéer.
 - **Gem som idé fra andre apps:** Del en tekst eller et link fra Chrome eller en podcast-app til Dagbog, og vælg **"Gem som idé"**. Claude laver et kort på 2–3 linjer.

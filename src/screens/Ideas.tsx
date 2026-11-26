@@ -1,7 +1,7 @@
 // Idéer under Noter: lær et emne kort for kort, gem gode idéer og citater, og "Kan du huske?".
 // Billedforslag: docs/forslag-ideer.png (og -mork.png).
 import { useEffect, useRef, useState } from 'react';
-import { AIError, rewriteCardAI } from '../lib/ai';
+import { AIError, moreAI } from '../lib/ai';
 import { aiReady } from '../lib/generate';
 import { speak, speechOutputAvailable, stopSpeaking } from '../lib/device';
 import {
@@ -9,8 +9,7 @@ import {
   dropCourse, hiddenSuggestions, hideSuggestion, ideaForCard, ideaFromShared, seeCard, setCard, SHOWN_SUGGESTIONS, startCourse, SUGGESTIONS, toggleCardIdea, useMakeState,
 } from '../lib/ideas';
 import { useStore } from '../lib/store';
-import type { Course } from '../lib/types';
-import { askSoon } from './Ask';
+import type { Course, Idea } from '../lib/types';
 import { go, Icon } from '../ui';
 
 /** Noter | Idéer øverst under Noter-fanen. */
@@ -163,13 +162,20 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
   const last = i >= c.cards.length - 1;
   const saved = !!ideaForCard(store.data, id, i);
   const goTo = (n: number) => { stopSpeaking(); setSpeaking(false); setError(''); setI(Math.max(0, Math.min(c.cards.length - 1, n))); };
-  const rewrite = async (how: 'lettere' | 'dybde') => {
-    setBusy(how); setError('');
+  // "Fortæl mere": forklaringen gemmes på kortet, så den er der næste gang; kortet selv ændres ikke
+  const tellMore = async (simpler = false) => {
+    setBusy(simpler ? 'enkel' : 'mere'); setError('');
     try {
-      const r = await rewriteCardAI(store.data.settings, c.title, card, how);
-      await setCard(store, id, i, { title: r.title, text: r.text });
+      const r = await moreAI(store.data.settings, c.title, card, simpler);
+      await setCard(store, id, i, { more: { ...r, simple: simpler } });
     } catch (e) { setError(e instanceof AIError ? e.message : 'Noget gik galt.'); }
     setBusy('');
+  };
+  const moreSaved = !!card.more && Object.values(store.data.ideas).some((x) => x.text === card.more!.text);
+  const saveMore = async () => {
+    if (!card.more || moreSaved) return;
+    const idea: Idea = { id: crypto.randomUUID(), title: card.title, text: card.more.text, source: `${c.title} · kort ${i + 1} · Fortæl mere`, url: card.more.links[0]?.url, createdAt: Date.now() };
+    await store.put('ideas', idea.id, idea);
   };
   const read = () => {
     if (speaking) { stopSpeaking(); setSpeaking(false); return; }
@@ -199,13 +205,28 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
         <div className="row wrap" style={{ gap: 8 }}>
           {speechOutputAvailable() && <button className="btn" onClick={read}><span className="ico">{speaking ? Icon.stop : Icon.speaker}</span>{speaking ? 'Stop' : 'Læs op'}</button>}
           <button className={`btn${saved ? ' primary' : ''}`} onClick={() => void toggleCardIdea(store, c, i)}><span className="ico">{saved ? Icon.check : Icon.heart}</span>{saved ? 'Gemt' : 'Gem'}</button>
-          <button className="btn" onClick={() => askSoon(`Om "${card.title}" (${c.title}): ${card.text}\n\nFortæl mig mere om det.`)}><span className="ico">{Icon.chat}</span>Spørg Claude</button>
+          {!card.more && <button className="btn" disabled={!!busy} onClick={() => void tellMore()}><span className="ico">{Icon.chat}</span>{busy === 'mere' ? 'Claude skriver …' : 'Fortæl mere'}</button>}
         </div>
       </article>
+      {card.more && (
+        <section className="card idea-more">
+          <span className="overline">{card.more.simple ? 'Forklaret enkelt' : 'Fortæl mere'}</span>
+          {card.more.text.split(/\n+/).map((p, k) => <p key={k} className="serif">{p}</p>)}
+          {card.more.links.length > 0 && (
+            <div className="idea-more-links small">
+              {card.more.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noreferrer">{l.title || new URL(l.url).hostname}</a>)}
+            </div>
+          )}
+          <div className="row wrap" style={{ gap: 8 }}>
+            <button className={`btn small${moreSaved ? ' primary' : ''}`} disabled={moreSaved} onClick={() => void saveMore()}><span className="ico">{moreSaved ? Icon.check : Icon.heart}</span>{moreSaved ? 'Gemt' : 'Gem'}</button>
+            {!card.more.simple && <button className="btn small ghost" disabled={!!busy} onClick={() => void tellMore(true)}>{busy === 'enkel' ? 'Skriver …' : 'Forklar enklere'}</button>}
+            {card.more.simple && <button className="btn small ghost" disabled={!!busy} onClick={() => void tellMore()}>{busy === 'mere' ? 'Skriver …' : 'Mere dybde igen'}</button>}
+          </div>
+        </section>
+      )}
       {error && <p className="error small">{error}</p>}
       <div className="row between" style={{ alignItems: 'center' }}>
-        <button className="btn ghost" disabled={!!busy} onClick={() => void rewrite('lettere')}>{busy === 'lettere' ? 'Skriver …' : 'Lettere'}</button>
-        <button className="btn ghost" disabled={!!busy} onClick={() => void rewrite('dybde')}>{busy === 'dybde' ? 'Skriver …' : 'Mere dybde'}</button>
+        {i > 0 ? <button className="btn ghost" onClick={() => goTo(i - 1)}>‹ Forrige</button> : <span />}
         {last
           ? <button className="btn primary" onClick={() => go('ideer')}>Færdig</button>
           : <button className="btn primary" onClick={() => goTo(i + 1)}>Næste ›</button>}

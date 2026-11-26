@@ -875,3 +875,9 @@ label.btn { cursor: pointer; }
 .idea-sugg > button:first-child { padding: 10px 4px 10px 16px; min-height: 44px; }
 .idea-sugg .idea-nope { width: 36px; min-height: 44px; color: var(--muted); font-size: 1.1rem; }
 .idea-sugg button:disabled { opacity: .55; }
+
+/* "Fortæl mere" under et idékort */
+.idea-more { display: flex; flex-direction: column; gap: 10px; }
+.idea-more p { font-size: 1.05rem; line-height: 1.55; margin: 0; }
+.idea-more-links { display: flex; flex-direction: column; gap: 4px; }
+.idea-more-links a { color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -142,6 +142,7 @@ export interface CourseCard {
   question: string; // til "Kan du huske?"
   answer: string;
   seenAt?: number; // læst
+  more?: { text: string; links: Array<{ url: string; title: string }>; simple?: boolean }; // "Fortæl mere" (kortet selv ændres ikke)
   review?: { due: string; step: number }; // næste "Kan du huske?" (YYYY-MM-DD) og hvor mange gange husket i træk
 }
 
