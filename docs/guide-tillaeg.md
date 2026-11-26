@@ -70,3 +70,8 @@ Under **Noter** står nu **Noter | Idéer** øverst.
 - **Dagens idé** står på Skriv: næste kort i dit emne eller en af dine gemte idéer.
 - **Gem som idé fra andre apps:** Del en tekst eller et link fra Chrome eller en podcast-app til Dagbog, og vælg **"Gem som idé"**. Claude laver et kort på 2–3 linjer.
 - **Gider du ikke et emne?** Tryk × på forslaget, så kommer det ikke igen. **"Andre forslag"** viser nye. Er du gået i gang med et emne, du ikke gider, så tryk **"Drop emnet"**. Kort, du har gemt, bliver liggende.
+
+
+## Mine idéer i mapper
+
+Under Idéer → **Mine idéer** ligger dine gemte idéer nu i mapper: én pr. emne (fx Romerriget) og **Delt fra andre apps** for det, du har delt fra Chrome og andre apps. Tryk på en mappe for at åbne den. Har du mange idéer, kan du søge i dem. På et kort hedder knappen **Gem idé**, og der står kort "Gemt i Mine idéer", når du trykker.

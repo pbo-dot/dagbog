@@ -5,12 +5,12 @@ import { AIError, moreAI } from '../lib/ai';
 import { aiReady } from '../lib/generate';
 import { speak, speechOutputAvailable, stopSpeaking } from '../lib/device';
 import {
-  activeCourse, allIdeas, answerReview, clearMakeError, dayIdea, dayIdeaHidden, dueReviews, finishedCourses, hideDayIdea,
-  dropCourse, hiddenSuggestions, hideSuggestion, ideaForCard, ideaFromShared, seeCard, setCard, SHOWN_SUGGESTIONS, startCourse, SUGGESTIONS, toggleCardIdea, useMakeState,
+  activeCourse, answerReview, clearMakeError, dayIdea, dayIdeaHidden, dueReviews, finishedCourses, hideDayIdea,
+  dropCourse, hiddenSuggestions, ideaGroups, searchIdeas, SHARED_GROUP, hideSuggestion, ideaForCard, ideaFromShared, seeCard, setCard, SHOWN_SUGGESTIONS, startCourse, SUGGESTIONS, toggleCardIdea, useMakeState,
 } from '../lib/ideas';
 import { useStore } from '../lib/store';
 import type { Course, Idea } from '../lib/types';
-import { go, Icon } from '../ui';
+import { go, Icon, Toast } from '../ui';
 
 /** Noter | Idéer øverst under Noter-fanen. */
 export function NotesTabs({ active }: { active: 'noter' | 'ideer' }) {
@@ -54,7 +54,6 @@ export function IdeasScreen() {
   const shown = pool.slice((page % pages) * SHOWN_SUGGESTIONS, (page % pages + 1) * SHOWN_SUGGESTIONS);
   const active = activeCourse(data);
   const due = dueReviews(data);
-  const ideas = allIdeas(data);
   const done = finishedCourses(data);
 
   // Er et nyt emne lige lavet, så åbn det
@@ -115,20 +114,7 @@ export function IdeasScreen() {
         )}
       </section>
 
-      <section className="stack-sm">
-        <h3 className="overline">Mine idéer{ideas.length ? ` · ${ideas.length}` : ''}</h3>
-        {!ideas.length && <p className="small muted">Tryk Gem på et kort, eller del en tekst fra Chrome til Dagbog og vælg "Gem som idé".</p>}
-        {ideas.map((i) => (
-          <div key={i.id} className="idea-item">
-            <strong className="serif">{i.title}</strong>
-            <p className="serif">{i.text}</p>
-            <div className="row between" style={{ alignItems: 'center' }}>
-              <span className="tiny muted">{i.source}{i.url ? <> · <a href={i.url} target="_blank" rel="noopener">kilde</a></> : null}</span>
-              <button className="link tiny" onClick={() => { if (confirm('Slet idéen?')) void store.remove('ideas', i.id); }}>Slet</button>
-            </div>
-          </div>
-        ))}
-      </section>
+      <MyIdeas />
 
       {done.length > 0 && (
         <section className="stack-sm">
@@ -144,6 +130,53 @@ export function IdeasScreen() {
   );
 }
 
+/** Mine idéer: én mappe pr. emne (foldet sammen) og "Delt fra andre apps"; søgning, når der er mange. */
+function MyIdeas() {
+  const store = useStore();
+  const { data } = store;
+  const [open, setOpen] = useState<string[]>([]);
+  const [q, setQ] = useState('');
+  const groups = ideaGroups(data);
+  const total = groups.reduce((n, g) => n + g.ideas.length, 0);
+  const found = q.trim().length >= 2 ? searchIdeas(data, q) : null;
+  const item = (i: Idea) => (
+    <div key={i.id} className="idea-item">
+      <strong className="serif">{i.title}</strong>
+      <p className="serif">{i.text}</p>
+      <div className="row between" style={{ alignItems: 'center' }}>
+        <span className="tiny muted">{i.source}{i.url ? <> · <a href={i.url} target="_blank" rel="noopener">kilde</a></> : null}</span>
+        <button className="link tiny" onClick={() => { if (confirm('Slet idéen?')) void store.remove('ideas', i.id); }}>Slet</button>
+      </div>
+    </div>
+  );
+  return (
+    <section className="stack-sm">
+      <h3 className="overline">Mine idéer{total ? ` · ${total}` : ''}</h3>
+      {!total && <p className="small muted">Tryk "Gem idé" på et kort, eller del en tekst fra Chrome til Dagbog og vælg "Gem som idé".</p>}
+      {total > 8 && <input className="idea-search" type="search" placeholder="Søg i dine idéer" value={q} onChange={(e) => setQ(e.target.value)} />}
+      {found ? (
+        <>
+          <p className="small muted">{found.length ? `${found.length} ${found.length === 1 ? 'idé' : 'idéer'}` : 'Ingen idéer passer.'}</p>
+          {found.map(item)}
+        </>
+      ) : groups.map((g) => {
+        const isOpen = open.includes(g.name);
+        return (
+          <div key={g.name} className="idea-group">
+            <button className="idea-group-head" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? open.filter((x) => x !== g.name) : [...open, g.name])}>
+              <span className="ico">{g.name === SHARED_GROUP ? Icon.tag : Icon.note}</span>
+              <strong className="grow">{g.name}</strong>
+              <span className="small muted">{g.ideas.length} {g.ideas.length === 1 ? 'idé' : 'idéer'}</span>
+              <span className={`idea-chev${isOpen ? ' on' : ''}`} aria-hidden="true">{Icon.chevronRight}</span>
+            </button>
+            {isOpen && <div className="stack-sm idea-group-body">{g.ideas.map(item)}</div>}
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
 /** Ét emne: kortene ét ad gangen, swipe eller Næste. */
 export function CourseScreen({ id, start }: { id: string; start?: number }) {
   const store = useStore();
@@ -153,6 +186,7 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
   const [error, setError] = useState('');
   const [speaking, setSpeaking] = useState(false);
   const touch = useRef<number | null>(null);
+  const [toast, setToast] = useState('');
 
   useEffect(() => { if (c) void seeCard(store, id, i); }, [id, i]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => stopSpeaking(), []);
@@ -174,8 +208,9 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
   const moreSaved = !!card.more && Object.values(store.data.ideas).some((x) => x.text === card.more!.text);
   const saveMore = async () => {
     if (!card.more || moreSaved) return;
-    const idea: Idea = { id: crypto.randomUUID(), title: card.title, text: card.more.text, source: `${c.title} · kort ${i + 1} · Fortæl mere`, url: card.more.links[0]?.url, createdAt: Date.now() };
+    const idea: Idea = { id: crypto.randomUUID(), title: card.title, text: card.more.text, source: `${c.title} · kort ${i + 1} · Fortæl mere`, courseId: c.id, url: card.more.links[0]?.url, createdAt: Date.now() };
     await store.put('ideas', idea.id, idea);
+    setToast('Gemt i Mine idéer');
   };
   const read = () => {
     if (speaking) { stopSpeaking(); setSpeaking(false); return; }
@@ -204,7 +239,7 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
         <div className="idea-dots" aria-hidden="true">{c.cards.map((_, k) => <i key={k} className={k === i ? 'on' : k < c.pos ? 'seen' : ''} />)}</div>
         <div className="row wrap" style={{ gap: 8 }}>
           {speechOutputAvailable() && <button className="btn" onClick={read}><span className="ico">{speaking ? Icon.stop : Icon.speaker}</span>{speaking ? 'Stop' : 'Læs op'}</button>}
-          <button className={`btn${saved ? ' primary' : ''}`} onClick={() => void toggleCardIdea(store, c, i)}><span className="ico">{saved ? Icon.check : Icon.heart}</span>{saved ? 'Gemt' : 'Gem'}</button>
+          <button className={`btn${saved ? ' primary' : ''}`} onClick={async () => { if (await toggleCardIdea(store, c, i)) setToast('Gemt i Mine idéer'); }}><span className="ico">{saved ? Icon.check : Icon.heart}</span>{saved ? 'Gemt' : 'Gem idé'}</button>
           {!card.more && <button className="btn" disabled={!!busy} onClick={() => void tellMore()}><span className="ico">{Icon.chat}</span>{busy === 'mere' ? 'Claude skriver …' : 'Fortæl mere'}</button>}
         </div>
       </article>
@@ -218,7 +253,7 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
             </div>
           )}
           <div className="row wrap" style={{ gap: 8 }}>
-            <button className={`btn small${moreSaved ? ' primary' : ''}`} disabled={moreSaved} onClick={() => void saveMore()}><span className="ico">{moreSaved ? Icon.check : Icon.heart}</span>{moreSaved ? 'Gemt' : 'Gem'}</button>
+            <button className={`btn small${moreSaved ? ' primary' : ''}`} disabled={moreSaved} onClick={() => void saveMore()}><span className="ico">{moreSaved ? Icon.check : Icon.heart}</span>{moreSaved ? 'Gemt' : 'Gem idé'}</button>
             {!card.more.simple && <button className="btn small ghost" disabled={!!busy} onClick={() => void tellMore(true)}>{busy === 'enkel' ? 'Skriver …' : 'Forklar enklere'}</button>}
             {card.more.simple && <button className="btn small ghost" disabled={!!busy} onClick={() => void tellMore()}>{busy === 'mere' ? 'Skriver …' : 'Mere dybde igen'}</button>}
           </div>
@@ -232,6 +267,7 @@ export function CourseScreen({ id, start }: { id: string; start?: number }) {
           : <button className="btn primary" onClick={() => goTo(i + 1)}>Næste ›</button>}
       </div>
       {!c.doneAt && <button className="link small" style={{ alignSelf: 'center' }} onClick={() => { if (confirm(`Drop ${c.title}? Kort, du har gemt, bliver liggende.`)) { void dropCourse(store, id); go('ideer'); } }}>Drop emnet</button>}
+      {toast && <Toast text={toast} onDone={() => setToast('')} />}
       {last && <p className="small muted center">Godt gået: {c.cards.length} kort om {c.title}. Om et par dage spørger Dagbog, hvad du kan huske.</p>}
     </div>
   );

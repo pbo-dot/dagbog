@@ -112,6 +112,33 @@ export async function ideaFromShared(store: Store, text: string, url?: string, f
 
 export const allIdeas = (data: Data) => Object.values(data.ideas).sort((a, b) => b.createdAt - a.createdAt);
 
+export const SHARED_GROUP = 'Delt fra andre apps';
+/** Mappen, en idé hører til: emnet (også når emnet er droppet) eller "Delt fra andre apps". */
+export function ideaGroup(data: Data, x: Idea): string {
+  const c = x.courseId ? data.courses[x.courseId] : undefined;
+  if (c) return c.title;
+  const i = x.source.indexOf(' · kort ');
+  return i > 0 ? x.source.slice(0, i) : SHARED_GROUP;
+}
+
+/** Mine idéer i mapper: emnet, man er i gang med, først, så mappen med den nyeste idé. */
+export function ideaGroups(data: Data): Array<{ name: string; ideas: Idea[] }> {
+  const map = new Map<string, Idea[]>();
+  for (const x of allIdeas(data)) {
+    const g = ideaGroup(data, x);
+    map.set(g, [...(map.get(g) ?? []), x]);
+  }
+  const active = activeCourse(data)?.title;
+  return [...map].map(([name, ideas]) => ({ name, ideas }))
+    .sort((a, b) => Number(b.name === active) - Number(a.name === active) || b.ideas[0].createdAt - a.ideas[0].createdAt);
+}
+
+/** Søg i alle idéer (titel, tekst og kilde). */
+export function searchIdeas(data: Data, q: string): Idea[] {
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  return allIdeas(data).filter((x) => { const t = `${x.title} ${x.text} ${x.source}`.toLowerCase(); return words.every((w) => t.includes(w)); });
+}
+
 // ---------- Kan du huske? ----------
 
 export interface Due { course: Course; i: number; card: CourseCard }
